@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ title or "Hanson Kim's Blog" }}</title>
+  <link rel="stylesheet" href="/css/style.css">
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-79GWVQ2WYD"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-79GWVQ2WYD');
+  </script>
+</head>
+<body class="{{ 'has-sidebar' if (page | buildFileTree(collections)).length > 0 else '' }}">
+  <header>
+    <nav>
+      <a href="/" class="logo">Hanson Kim</a>
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/blog/">Blog</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    {{ content | safe }}
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Hanson Kim. All rights reserved.</p>
+  </footer>
+  <script src="/js/tree-navigation.js"></script>
+</body>
+</html>
