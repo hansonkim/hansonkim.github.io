@@ -48,7 +48,7 @@ tags:
 
 - **Node.js 18+** (LTS 권장)
 - **npm 9+** 또는 동등한 패키지 매니저
-- **Windows 사용자**: 특별 지침은 [Windows 설치 가이드](./ko-docs/windows-installation.md)를 참조하세요
+- **Windows 사용자**: 특별 지침은 [원격 설정 가이드](./ko-docs/setup/remote-setup.md)를 참조하세요
 
 ⚠️ **중요**: Claude Code를 먼저 설치해야 합니다:
 
@@ -211,7 +211,7 @@ claude mcp add flow-nexus npx flow-nexus@latest mcp start
 **Performance Tools:**
 - `benchmark_run`, `performance_report`, `bottleneck_analyze`
 
-📚 **전체 참조**: [MCP Tools 문서](./ko-docs/MCP-TOOLS.md)
+📚 **전체 참조**: [MCP Tools 문서](./ko-docs/reference/MCP_TOOLS.md)
 
 ---
 
@@ -297,26 +297,25 @@ npx claude-flow@alpha memory query "microservices patterns" --reasoningbank
 ## 📚 **문서**
 
 ### **핵심 문서**
-- **[설치 가이드](./ko-docs/INSTALLATION.md)** - 설정 지침
-- **[메모리 시스템 가이드](./ko-docs/MEMORY-SYSTEM.md)** - ReasoningBank 사용법
-- **[MCP Tools 참조](./ko-docs/MCP-TOOLS.md)** - 완전한 도구 카탈로그
-- **[Agent System](./ko-docs/AGENT-SYSTEM.md)** - 모든 64개 agent
+- **[설치 가이드](./ko-docs/README.md)** - 설정 지침
+- **[메모리 시스템 가이드](./ko-docs/CLI-MEMORY-COMMANDS-WORKING.md)** - ReasoningBank 사용법
+- **[MCP Tools 참조](./ko-docs/reference/MCP_TOOLS.md)** - 완전한 도구 카탈로그
+- **[Agent System](./ko-docs/reference/AGENTS.md)** - 모든 64개 agent
 
 ### **릴리스 노트**
 - **[v2.7.0-alpha.10](./ko-docs/RELEASE-NOTES-v2.7.0-alpha.10.md)** - 시맨틱 검색 수정
 - **[v2.7.0-alpha.9](./ko-docs/RELEASE-NOTES-v2.7.0-alpha.9.md)** - 프로세스 정리
-- **[Changelog](./CHANGELOG.md)** - 전체 버전 히스토리
 
 ### **고급 주제**
-- **[Neural Module](./ko-docs/NEURAL-MODULE.md)** - SAFLA 자가 학습
-- **[Goal Module](./ko-docs/GOAL-MODULE.md)** - GOAP 지능형 계획
-- **[Hive-Mind Intelligence](./ko-docs/HIVE-MIND.md)** - Queen 주도 조정
-- **[GitHub Integration](./ko-docs/GITHUB-INTEGRATION.md)** - 저장소 자동화
+- **[INDEX](./ko-docs/INDEX.md)** - 전체 문서 인덱스
+- **[Performance Metrics](./ko-docs/PERFORMANCE-METRICS-GUIDE.md)** - 성능 지표 가이드
+- **[Performance Improvements](./ko-docs/PERFORMANCE-JSON-IMPROVEMENTS.md)** - 성능 개선사항
+- **[Swarm](./ko-docs/reference/SWARM.md)** - Swarm 오케스트레이션
 
 ### **구성**
-- **[CLAUDE.md Templates](./ko-docs/CLAUDE-MD-TEMPLATES.md)** - 프로젝트 구성
-- **[SPARC Methodology](./ko-docs/SPARC.md)** - TDD 패턴
-- **[Windows Installation](./ko-docs/windows-installation.md)** - Windows 설정
+- **[MCP Setup](./ko-docs/setup/MCP-SETUP-GUIDE.md)** - MCP 설정 가이드
+- **[ENV Setup](./ko-docs/setup/ENV-SETUP-GUIDE.md)** - 환경 설정 가이드
+- **[SPARC Methodology](./ko-docs/reference/SPARC.md)** - TDD 패턴
 
 ---
 
