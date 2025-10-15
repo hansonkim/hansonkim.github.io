@@ -1,7 +1,7 @@
 ---
 title: "Claude Code Hooks를 활용한 블로그 자동 배포 시스템"
 description: "블로그 포스트를 작성할 때마다 반복되는 작업들이 있습니다. Front matter 추가, 파일 복사, Git commit과 push... 이런 작업들을 자동화할 수 있다면 얼마나 좋을까요? Claude Code의 Hooks 시스템을 활용하면 이 모든 과정을 완전히..."
-date: 2025-10-15T16:26:26+09:00
+date: 2025-10-15T16:30:10+09:00
 tags:
   - posts
   - AI
@@ -19,7 +19,7 @@ tags:
 이 글에서는 실제로 구현한 블로그 자동 배포 시스템을 소개합니다. Markdown 파일을 저장하는 순간, Front matter 추가부터 GitHub Pages 배포까지 모든 과정이 자동으로 진행됩니다.
 
 **📦 전체 소스 코드는 GitHub에 공개되어 있습니다:**
-🔗 **https://github.com/hansonkim/claude-code-blog-hook**
+🔗 **[https://github.com/hansonkim/claude-code-blog-hook](https://github.com/hansonkim/claude-code-blog-hook)**
 
 ## 시스템 아키텍처
 
@@ -408,7 +408,7 @@ Claude Code의 Hooks 시스템을 활용하면 블로그 작성 워크플로우�
 
 전체 소스 코드는 GitHub에 공개되어 있습니다:
 
-**🔗 https://github.com/hansonkim/claude-code-blog-hook**
+**🔗 [https://github.com/hansonkim/claude-code-blog-hook](https://github.com/hansonkim/claude-code-blog-hook)**
 
 ### 설치
 
@@ -447,11 +447,11 @@ claude-code config set hooks.post-write "$(pwd)/post-write-hook.js"
 
 ### 관련 기술
 
-- **Claude Code**: https://claude.com/claude-code
-- **GitHub Repository**: https://github.com/hansonkim/claude-code-blog-hook
-- **GitHub Pages**: https://pages.github.com
-- **Eleventy**: https://www.11ty.dev
-- **Node.js**: https://nodejs.org
+- **Claude Code**: [https://claude.com/claude-code](https://claude.com/claude-code)
+- **GitHub Repository**: [https://github.com/hansonkim/claude-code-blog-hook](https://github.com/hansonkim/claude-code-blog-hook)
+- **GitHub Pages**: [https://pages.github.com](https://pages.github.com)
+- **Eleventy**: [https://www.11ty.dev](https://www.11ty.dev)
+- **Node.js**: [https://nodejs.org](https://nodejs.org)
 
 ### 다음 단계
 
