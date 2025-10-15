@@ -12,8 +12,14 @@ module.exports = function(eleventyConfig) {
     });
   });
 
-  // Ignore ko-docs directory from processing
-  eleventyConfig.ignores.add("src/posts/claude-flow-ko/ko-docs/**");
+  // Add humanize filter for text formatting
+  eleventyConfig.addFilter("humanize", (str) => {
+    if (!str) return "";
+    return str
+      .replace(/[_-]/g, ' ')
+      .replace(/\b\w/g, (l) => l.toUpperCase())
+      .trim();
+  });
 
   return {
     dir: {
