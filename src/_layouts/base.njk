@@ -6,7 +6,7 @@
   <title>{{ title or "Hanson Kim's Blog" }}</title>
   <link rel="stylesheet" href="/css/style.css">
 </head>
-<body>
+<body class="{{ 'has-sidebar' if (page | buildFileTree(collections)).length > 0 else '' }}">
   <header>
     <nav>
       <a href="/" class="logo">Hanson Kim</a>
@@ -24,5 +24,6 @@
   <footer>
     <p>&copy; 2025 Hanson Kim. All rights reserved.</p>
   </footer>
+  <script src="/js/tree-navigation.js"></script>
 </body>
 </html>

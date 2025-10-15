@@ -1,8 +1,9 @@
 ---
 title: "Claude-Flow v2.7.0: 엔터프라이즈 AI 오케스트레이션 플랫폼"
 description: "hive-mind swarm 지능, 영구 메모리, 그리고 100개 이상의 고급 MCP 도구를 결합한 엔터프라이즈급 AI 오케스트레이션 플랫폼 소개"
-date: 2025-10-15
+date: 2025-10-15T08:55:00+09:00
 tags:
+  - posts
   - AI
   - Claude
   - 개발도구

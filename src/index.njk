@@ -8,6 +8,20 @@ title: Home
   <p>개발, 기술, 그리고 생각들을 공유하는 공간입니다.</p>
 </div>
 
+<section class="tags-section">
+  <h2>태그</h2>
+  <div class="tags-cloud">
+    {%- for tag in collections.tagList -%}
+    {%- set tagCount = collections[tag].length if collections[tag] else 0 -%}
+    {%- if tagCount > 0 -%}
+    <a href="/tags/{{ tag | slugify }}/" class="tag-cloud-item">
+      {{ tag }} <span class="tag-count">({{ tagCount }})</span>
+    </a>
+    {%- endif -%}
+    {%- endfor -%}
+  </div>
+</section>
+
 <section class="recent-posts">
   <h2>최근 포스트</h2>
   <ul class="post-list">

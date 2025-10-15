@@ -1,0 +1,22 @@
+{% if item.type == 'folder' %}
+<div class="tree-node tree-folder">
+  <div class="tree-node-header" data-toggle="folder">
+    <span class="tree-icon">📁</span>
+    <span class="tree-label">{{ item.title }}</span>
+    <span class="tree-toggle">▶</span>
+  </div>
+  <div class="tree-children">
+    {% for child in item.children %}
+      {% set item = child %}
+      {% include "tree-node.njk" %}
+    {% endfor %}
+  </div>
+</div>
+{% elif item.type == 'file' %}
+<div class="tree-node tree-file">
+  <a href="{{ item.path }}" class="tree-node-link">
+    <span class="tree-icon">📄</span>
+    <span class="tree-label">{{ item.title }}</span>
+  </a>
+</div>
+{% endif %}
