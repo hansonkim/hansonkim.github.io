@@ -1,7 +1,7 @@
 ---
 title: "Claude Code Hooks를 활용한 블로그 자동 배포 시스템"
 description: "블로그 포스트를 작성할 때마다 반복되는 작업들이 있습니다. Front matter 추가, 파일 복사, Git commit과 push... 이런 작업들을 자동화할 수 있다면 얼마나 좋을까요? Claude Code의 Hooks 시스템을 활용하면 이 모든 과정을 완전히..."
-date: 2025-10-15T16:11:29+09:00
+date: 2025-10-15T16:26:26+09:00
 tags:
   - posts
   - AI
@@ -17,6 +17,9 @@ tags:
 블로그 포스트를 작성할 때마다 반복되는 작업들이 있습니다. Front matter 추가, 파일 복사, Git commit과 push... 이런 작업들을 자동화할 수 있다면 얼마나 좋을까요? Claude Code의 Hooks 시스템을 활용하면 이 모든 과정을 완전히 자동화할 수 있습니다.
 
 이 글에서는 실제로 구현한 블로그 자동 배포 시스템을 소개합니다. Markdown 파일을 저장하는 순간, Front matter 추가부터 GitHub Pages 배포까지 모든 과정이 자동으로 진행됩니다.
+
+**📦 전체 소스 코드는 GitHub에 공개되어 있습니다:**
+🔗 **https://github.com/hansonkim/claude-code-blog-hook**
 
 ## 시스템 아키텍처
 
@@ -399,17 +402,53 @@ Claude Code의 Hooks 시스템을 활용하면 블로그 작성 워크플로우�
 
 단순히 시간을 절약하는 것을 넘어, 글쓰기 자체에 집중할 수 있는 환경을 만들 수 있습니다.
 
+## 소스 코드
+
+### GitHub Repository
+
+전체 소스 코드는 GitHub에 공개되어 있습니다:
+
+**🔗 https://github.com/hansonkim/claude-code-blog-hook**
+
+### 설치
+
+```bash
+# Repository clone
+git clone https://github.com/hansonkim/claude-code-blog-hook.git
+
+# 블로그 디렉토리로 복사
+cp -r claude-code-blog-hook /path/to/your/blog/.hooks
+
+# 설정
+cd /path/to/your/blog/.hooks
+cp config.example.json config.json
+# config.json을 자신의 환경에 맞게 수정
+
+# 실행 권한
+chmod +x post-write-hook.js
+
+# Claude Code에 등록
+claude-code config set hooks.post-write "$(pwd)/post-write-hook.js"
+```
+
+### 포함된 파일
+
+```
+.hooks/
+├── post-write-hook.js      # 메인 Hook 스크립트
+├── config.example.json      # 설정 템플릿
+├── .gitignore              # 개인 설정 제외
+├── README.md               # 사용 가이드
+├── INSTALL.md              # 설치 가이드
+└── LICENSE                 # MIT License
+```
+
 ## 참고 자료
-
-### 전체 소스 코드
-
-Hook 스크립트 전체 코드는 다음 위치에서 확인할 수 있습니다:
-- `/Users/hanson/blogs/.hooks/post-write-hook.js`
-- `/Users/hanson/blogs/.hooks/README.md`
 
 ### 관련 기술
 
 - **Claude Code**: https://claude.com/claude-code
+- **GitHub Repository**: https://github.com/hansonkim/claude-code-blog-hook
 - **GitHub Pages**: https://pages.github.com
 - **Eleventy**: https://www.11ty.dev
 - **Node.js**: https://nodejs.org
