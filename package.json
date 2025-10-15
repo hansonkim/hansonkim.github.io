@@ -1,0 +1,28 @@
+{
+  "name": "hansonkim.github.io",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "eleventy --serve",
+    "build": "eleventy",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "deploy": "gh-pages -d _site"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hansonkim/hansonkim.github.io.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/hansonkim/hansonkim.github.io/issues"
+  },
+  "homepage": "https://github.com/hansonkim/hansonkim.github.io#readme",
+  "devDependencies": {
+    "@11ty/eleventy": "^3.1.2",
+    "gh-pages": "^6.3.0"
+  }
+}

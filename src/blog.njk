@@ -1,0 +1,33 @@
+---
+layout: base.njk
+title: Blog
+permalink: /blog/
+---
+
+<div class="blog-header">
+  <h1>블로그</h1>
+  <p>모든 글 보기</p>
+</div>
+
+<section class="posts">
+  <ul class="post-list">
+    {%- for post in collections.posts | reverse -%}
+    <li>
+      <article>
+        <h2><a href="{{ post.url }}">{{ post.data.title }}</a></h2>
+        <time datetime="{{ post.data.date | dateDisplay }}">{{ post.data.date | dateDisplay }}</time>
+        <p>{{ post.data.description }}</p>
+        {% if post.data.tags %}
+        <div class="tags">
+          {% for tag in post.data.tags %}
+            {% if tag != "posts" %}
+            <span class="tag">{{ tag }}</span>
+            {% endif %}
+          {% endfor %}
+        </div>
+        {% endif %}
+      </article>
+    </li>
+    {%- endfor -%}
+  </ul>
+</section>
