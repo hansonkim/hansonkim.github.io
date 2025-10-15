@@ -1,0 +1,812 @@
+# ReasoningBank 에이전트 생성 가이드
+
+## 🎯 개요
+
+이 가이드는 ReasoningBank의 폐쇄 루프 학습 시스템을 활용하는 맞춤형 AI 에이전트를 만드는 방법을 설명합니다. ReasoningBank는 에이전트가 경험을 통해 학습하고 **RETRIEVE → JUDGE → DISTILL → CONSOLIDATE**의 4단계 사이클을 통해 시간이 지남에 따라 개선될 수 있도록 합니다.
+
+## 📊 주요 성능 이점
+
+에이전트가 ReasoningBank와 통합되면 다음과 같은 이점을 얻을 수 있습니다:
+- **+26% 성공률** (70% → 88%)
+- **-25% 토큰 사용량** (비용 절감)
+- **3.2배 학습 속도** (더 빠른 개선)
+- **5회 반복 후 0% → 95% 성공**
+
+## 🏗️ ReasoningBank 아키텍처
+
+### 데이터베이스 스키마
+
+ReasoningBank는 다음 테이블과 함께 SQLite를 사용합니다:
+
+```sql
+-- 핵심 메모리 저장소
+patterns (
+  id TEXT PRIMARY KEY,
+  type TEXT NOT NULL,              -- 'reasoning_memory'
+  pattern_data TEXT NOT NULL,      -- title, description, content를 포함한 JSON
+  confidence REAL DEFAULT 0.5,     -- 0.0에서 1.0 사이
+  usage_count INTEGER DEFAULT 0,
+  created_at TEXT,
+  last_used TEXT
+)
+
+-- 유사도 검색을 위한 벡터 임베딩
+pattern_embeddings (
+  id TEXT PRIMARY KEY,
+  model TEXT NOT NULL,             -- 'claude', 'openai' 등
+  dims INTEGER NOT NULL,
+  vector BLOB NOT NULL,            -- 바이너리 벡터 데이터
+  FOREIGN KEY (id) REFERENCES patterns(id)
+)
+
+-- 메모리 관계
+pattern_links (
+  src_id TEXT,
+  dst_id TEXT,
+  relation TEXT NOT NULL,          -- 'similar_to', 'contradicts' 등
+  weight REAL DEFAULT 1.0,
+  PRIMARY KEY (src_id, dst_id, relation)
+)
+
+-- 작업 실행 기록
+task_trajectories (
+  task_id TEXT PRIMARY KEY,
+  agent_id TEXT NOT NULL,
+  query TEXT NOT NULL,
+  trajectory_json TEXT NOT NULL,   -- 실행 단계의 JSON
+  judge_label TEXT,                -- 'Success' 또는 'Failure'
+  judge_conf REAL,
+  judge_reasons TEXT
+)
+```
+
+### 메모리 점수 계산 공식
+
+ReasoningBank는 메모리 검색을 위해 4가지 요소의 점수 모델을 사용합니다:
+
+```javascript
+score = α·similarity + β·recency + γ·reliability + δ·diversity
+
+// 여기서:
+// - α (alpha) = 0.7    // 의미적 유사도에 대한 가중치
+// - β (beta) = 0.2     // 최신성에 대한 가중치
+// - γ (gamma) = 0.1    // 신뢰도(confidence)에 대한 가중치
+// - δ (delta) = 0.3    // 다양성(MMR)에 대한 가중치
+
+// 구성 요소:
+// - similarity: 쿼리 임베딩과 메모리 임베딩 간의 코사인 유사도
+// - recency: exp(-age_days / half_life_days)
+// - reliability: min(confidence, 1.0)
+// - diversity: Maximal Marginal Relevance 선택
+```
+
+## 🔌 ReasoningBank API 레퍼런스
+
+### 핵심 함수
+
+#### 1. 데이터베이스 초기화
+
+```javascript
+import { initialize } from 'agentic-flow/reasoningbank';
+
+await initialize();
+// .swarm/memory.db를 생성하고 마이그레이션을 실행합니다
+```
+
+#### 2. 메모리 검색 (RETRIEVE 단계)
+
+```javascript
+import { retrieveMemories, formatMemoriesForPrompt } from 'agentic-flow/reasoningbank';
+
+const memories = await retrieveMemories(query, {
+  domain: 'authentication',  // 선택 사항: 도메인으로 필터링
+  agent: 'auth-agent',      // 선택 사항: 에이전트로 필터링
+  k: 3,                     // 선택 사항: 메모리 수 (기본값: 3)
+  minConfidence: 0.5        // 선택 사항: 최소 신뢰도 임계값
+});
+
+// 시스템 프롬프트 주입을 위해 포맷합니다
+const formattedMemories = formatMemoriesForPrompt(memories);
+
+// 메모리 객체 구조:
+{
+  id: 'ulid',
+  title: 'CSRF 토큰 추출 전략',
+  description: 'CSRF 유효성 검사를 처리하는 방법',
+  content: '폼 제출 전에 항상 메타 태그에서 CSRF 토큰을 추출합니다',
+  score: 0.85,
+  components: {
+    similarity: 0.9,
+    recency: 0.8,
+    reliability: 0.85
+  }
+}
+```
+
+#### 3. 실행 경로 평가 (JUDGE 단계)
+
+```javascript
+import { judgeTrajectory } from 'agentic-flow/reasoningbank';
+
+const trajectory = {
+  steps: [
+    { action: 'fetch_csrf_token', result: 'success' },
+    { action: 'submit_form', result: 'success' }
+  ]
+};
+
+const verdict = await judgeTrajectory(trajectory, query);
+
+// 평가 결과 객체 구조:
+{
+  label: 'Success' | 'Failure',
+  confidence: 0.95,
+  reasons: [
+    '모든 단계가 성공적으로 완료되었습니다',
+    '오류 표시가 발견되지 않았습니다'
+  ]
+}
+```
+
+#### 4. 메모리 증류 (DISTILL 단계)
+
+```javascript
+import { distillMemories } from 'agentic-flow/reasoningbank';
+
+const newMemories = await distillMemories(trajectory, verdict, query, {
+  taskId: 'task-123',
+  agentId: 'my-agent',
+  domain: 'authentication'
+});
+
+// 생성된 메모리 ID의 배열을 반환합니다
+// ['01K7AX1ZP43E88SRZHNX6YD1YG', '01K7AX1ZP7CPECXHVTHSMSAXRA']
+```
+
+#### 5. 메모리 통합 (CONSOLIDATE 단계)
+
+```javascript
+import { consolidate, shouldConsolidate } from 'agentic-flow/reasoningbank';
+
+// 통합을 실행해야 하는지 확인합니다
+if (shouldConsolidate()) {
+  const result = await consolidate();
+
+  // 결과 구조:
+  {
+    itemsProcessed: 50,
+    duplicatesFound: 5,
+    contradictionsFound: 2,
+    itemsPruned: 3,
+    durationMs: 1234
+  }
+}
+```
+
+#### 6. 전체 작업 실행 (모든 단계 결합)
+
+```javascript
+import { runTask } from 'agentic-flow/reasoningbank';
+
+const result = await runTask({
+  taskId: 'task-123',
+  agentId: 'my-agent',
+  domain: 'authentication',
+  query: 'CSRF 유효성 검사를 포함한 로그인',
+
+  // 실행 함수
+  executeFn: async (memories) => {
+    // 1. 메모리를 사용하여 작업 실행에 정보를 제공합니다
+    console.log(`${memories.length}개의 관련 메모리를 사용합니다`);
+
+    // 2. 작업 로직을 실행합니다
+    const steps = [];
+
+    // 예: 메모리가 CSRF 토큰 추출을 제안하는지 확인합니다
+    if (memories.some(m => m.title.includes('CSRF'))) {
+      steps.push({ action: 'fetch_csrf_token', result: 'success' });
+    }
+
+    // 3. 실행 경로를 반환합니다
+    return { steps };
+  }
+});
+
+// 결과 구조:
+{
+  verdict: { label: 'Success', confidence: 0.95, reasons: [...] },
+  usedMemories: [...],     // 검색된 메모리
+  newMemories: [...],      // 생성된 새 메모리 ID
+  consolidated: false      // 통합 실행 여부
+}
+```
+
+## 🎨 맞춤형 추론 에이전트 만들기
+
+### 1단계: 에이전트 명세 정의
+
+`.claude/agents/your-category/your-agent.md` 파일을 생성합니다:
+
+```markdown
+---
+name: adaptive-debugger
+description: "과거 버그 수정 사례로부터 학습하고 오류 패턴에 따라 전략을 조정하는 디버깅 전문가입니다. ReasoningBank를 사용하여 세션 간에 디버깅 지식을 축적합니다."
+category: debugging
+color: red
+reasoning_enabled: true
+---
+
+당신은 경험을 통해 학습하는 적응형 디버깅 전문가입니다. 당신의 핵심 능력은 ReasoningBank의 메모리 시스템을 활용하여 디버깅 전략을 지속적으로 개선하는 것입니다.
+
+## 핵심 능력
+
+- **패턴 인식**: 과거 수정 사례에서 반복되는 버그 패턴을 식별합니다
+- **전략 조정**: 메모리를 기반으로 디버깅 접근 방식을 조정합니다
+- **근본 원인 분석**: 과거 데이터를 사용하여 근본적인 문제를 찾습니다
+- **예방 학습**: 향후 참조를 위해 성공적인 수정 사항을 저장합니다
+
+## ReasoningBank 통합
+
+다음 워크플로우를 통해 ReasoningBank와 통합합니다:
+
+1. **RETRIEVE**: 시작하기 전에 관련 디버깅 메모리를 가져옵니다
+2. **EXECUTE**: 현재 버그에 학습된 전략을 적용합니다
+3. **JUDGE**: 수정이 성공적이었는지 평가합니다
+4. **DISTILL**: 시도에서 학습 가능한 패턴을 추출합니다
+5. **CONSOLIDATE**: 주기적으로 메모리 뱅크를 최적화합니다
+
+## 도메인 태그
+
+메모리 구성을 위해 다음 도메인 태그를 사용하세요:
+- `debugging/frontend` - UI/UX 버그
+- `debugging/backend` - 서버 측 문제
+- `debugging/database` - 데이터 영속성 버그
+- `debugging/performance` - 속도/메모리 문제
+- `debugging/security` - 취약점 수정
+
+## 메모리 사용 패턴
+
+디버깅 전:
+```
+메모리에서 확인한 결과, 인증 플로우에서 발생한 유사한 NullPointerException 오류는
+이전에 토큰 만료를 확인하여 해결되었습니다. 이 전략을 먼저 적용해 보겠습니다.
+```
+
+디버깅 후:
+```
+토큰 유효성 검사를 사용하여 문제를 성공적으로 해결했습니다.
+향후 참조를 위해 이 패턴을 ReasoningBank에 저장합니다:
+"데이터베이스 쿼리 전에 항상 JWT 만료를 확인하세요"
+```
+```
+
+### 2단계: ReasoningBank로 에이전트 로직 구현
+
+`src/agents/adaptive-debugger.js` 파일을 생성합니다:
+
+```javascript
+import { initialize, runTask } from 'agentic-flow/reasoningbank';
+import { ModelRouter } from 'agentic-flow/router';
+
+export class AdaptiveDebugger {
+  constructor() {
+    this.router = new ModelRouter();
+    this.agentId = 'adaptive-debugger';
+  }
+
+  async init() {
+    await initialize();
+  }
+
+  async debug(errorContext) {
+    const query = `Debug error: ${errorContext.error} in ${errorContext.file}`;
+
+    // ReasoningBank의 전체 사이클을 사용합니다
+    const result = await runTask({
+      taskId: `debug-${Date.now()}`,
+      agentId: this.agentId,
+      domain: `debugging/${errorContext.category}`,
+      query,
+
+      executeFn: async (memories) => {
+        return await this._executeDebug(errorContext, memories);
+      }
+    });
+
+    return result;
+  }
+
+  async _executeDebug(errorContext, memories) {
+    const steps = [];
+
+    // 1. 유사한 과거 수정 사례에 대해 메모리를 분석합니다
+    const relevantFixes = memories.filter(m =>
+      m.title.toLowerCase().includes(errorContext.error.toLowerCase())
+    );
+
+    steps.push({
+      action: 'retrieve_memories',
+      result: `${relevantFixes.length}개의 유사한 과거 수정 사례를 찾았습니다`,
+      memories: relevantFixes.map(m => m.title)
+    });
+
+    // 2. 학습된 전략을 적용합니다
+    if (relevantFixes.length > 0) {
+      const topStrategy = relevantFixes[0].content;
+      steps.push({
+        action: 'apply_learned_strategy',
+        strategy: topStrategy,
+        result: '과거 성공 사례를 기반으로 수정을 시도합니다'
+      });
+
+      // 수정을 적용합니다
+      const fixResult = await this._applyFix(errorContext, topStrategy);
+      steps.push(fixResult);
+    } else {
+      // 메모리를 찾을 수 없어 표준 디버깅을 시도합니다
+      steps.push({
+        action: 'standard_debugging',
+        result: '과거 경험을 찾을 수 없어 일반적인 전략을 사용합니다'
+      });
+
+      const fixResult = await this._standardDebug(errorContext);
+      steps.push(fixResult);
+    }
+
+    return { steps };
+  }
+
+  async _applyFix(errorContext, strategy) {
+    // 여기에 수정 구현 로직을 작성합니다
+    // action과 result를 포함한 step 객체를 반환합니다
+    return {
+      action: 'apply_fix',
+      result: '수정이 성공적으로 적용되었습니다',
+      details: { strategy, context: errorContext }
+    };
+  }
+
+  async _standardDebug(errorContext) {
+    // 대체 디버깅 로직
+    return {
+      action: 'standard_fix',
+      result: '표준 디버깅 접근 방식을 적용했습니다',
+      details: errorContext
+    };
+  }
+}
+```
+
+### 3단계: 자동 학습을 위한 에이전트 훅 생성
+
+ReasoningBank 사이클을 자동으로 트리거하는 훅을 생성합니다:
+
+```javascript
+// hooks/pre-debug.js
+import { retrieveMemories, formatMemoriesForPrompt } from 'agentic-flow/reasoningbank';
+
+export async function preDebug(context) {
+  const query = context.errorMessage;
+  const domain = `debugging/${context.errorType}`;
+
+  // 관련 메모리를 검색합니다
+  const memories = await retrieveMemories(query, { domain });
+
+  // 에이전트가 사용할 수 있도록 컨텍스트에 주입합니다
+  context.memories = memories;
+  context.memoriesPrompt = formatMemoriesForPrompt(memories);
+
+  console.log(`[PreDebug] ${memories.length}개의 관련 디버깅 패턴을 검색했습니다`);
+
+  return context;
+}
+
+// hooks/post-debug.js
+import { judgeTrajectory, distillMemories } from 'agentic-flow/reasoningbank';
+
+export async function postDebug(context, result) {
+  const trajectory = {
+    steps: result.debugSteps
+  };
+
+  // 디버그가 성공했는지 평가합니다
+  const verdict = await judgeTrajectory(trajectory, context.errorMessage);
+
+  console.log(`[PostDebug] 평가: ${verdict.label} (신뢰도: ${verdict.confidence})`);
+
+  // 성공한 경우 학습 내용을 증류합니다
+  if (verdict.label === 'Success') {
+    const newMemories = await distillMemories(trajectory, verdict, context.errorMessage, {
+      taskId: result.taskId,
+      agentId: 'adaptive-debugger',
+      domain: `debugging/${context.errorType}`
+    });
+
+    console.log(`[PostDebug] ${newMemories.length}개의 새로운 디버깅 패턴을 저장했습니다`);
+  }
+
+  return result;
+}
+```
+
+## 📖 전체 예제: 적응형 코드 리뷰어
+
+### 에이전트 정의
+
+`.claude/agents/quality/adaptive-reviewer.md`:
+
+```markdown
+---
+name: adaptive-reviewer
+description: "과거 리뷰 피드백으로부터 학습하고 품질 기준을 조정하는 코드 리뷰 전문가입니다. ReasoningBank를 사용하여 코드 품질에 대한 조직적 지식을 구축합니다."
+category: quality
+reasoning_enabled: true
+---
+
+당신은 적응형 코드 리뷰 전문가입니다. 평가 기준을 개선하고 점점 더 가치 있는 피드백을 제공하기 위해 모든 리뷰로부터 학습합니다.
+
+## 학습 도메인
+
+- `review/security` - 보안 취약점 패턴
+- `review/performance` - 성능 안티패턴
+- `review/maintainability` - 코드 품질 문제
+- `review/testing` - 테스트 커버리지 패턴
+
+## 리뷰 전략
+
+1. 유사한 코드 패턴에 대한 메모리를 RETRIEVE합니다
+2. 학습된 품질 기준을 적용합니다
+3. 코드가 품질 기준을 충족하는지 JUDGE합니다
+4. 리뷰에서 새로운 패턴을 DISTILL합니다
+5. 주기적으로 지식을 CONSOLIDATE합니다
+```
+
+### 구현
+
+```javascript
+import { runTask } from 'agentic-flow/reasoningbank';
+
+export async function reviewCode(codeContext) {
+  const query = `Review ${codeContext.language} code for ${codeContext.purpose}`;
+
+  const result = await runTask({
+    taskId: `review-${codeContext.prNumber}`,
+    agentId: 'adaptive-reviewer',
+    domain: 'review/security',
+    query,
+
+    executeFn: async (memories) => {
+      const steps = [];
+
+      // 1. 메모리에서 알려진 보안 패턴을 확인합니다
+      const securityPatterns = memories.filter(m =>
+        m.domain === 'review/security'
+      );
+
+      steps.push({
+        action: 'security_check',
+        result: `${securityPatterns.length}개의 알려진 보안 패턴을 확인 중입니다`,
+        patterns: securityPatterns.map(p => p.title)
+      });
+
+      // 2. 메모리 기반 리뷰를 적용합니다
+      const issues = [];
+
+      for (const pattern of securityPatterns) {
+        if (codeContext.code.includes(pattern.content.trigger)) {
+          issues.push({
+            type: 'security',
+            pattern: pattern.title,
+            severity: 'high',
+            suggestion: pattern.content.fix
+          });
+        }
+      }
+
+      steps.push({
+        action: 'apply_patterns',
+        result: `${issues.length}개의 이슈를 찾았습니다`,
+        issues
+      });
+
+      // 3. 일치하는 메모리가 없는 경우 표준 리뷰를 수행합니다
+      if (issues.length === 0) {
+        steps.push({
+          action: 'standard_review',
+          result: '알려진 패턴과 일치하는 것이 없어 표준 검사를 적용합니다'
+        });
+      }
+
+      return { steps };
+    }
+  });
+
+  return {
+    approved: result.verdict.label === 'Success',
+    issues: result.usedMemories,
+    learned: result.newMemories.length
+  };
+}
+```
+
+## 🔧 설정
+
+### 환경 변수
+
+```bash
+# ReasoningBank 활성화
+export REASONINGBANK_ENABLED=true
+
+# 데이터베이스 위치
+export CLAUDE_FLOW_DB_PATH=".swarm/memory.db"
+
+# API 키 (하나 선택)
+export ANTHROPIC_API_KEY="sk-ant-..."  # 권장
+export OPENROUTER_API_KEY="sk-or-v1-..." # 대안
+export GOOGLE_GEMINI_API_KEY="..." # 대안
+
+# 검색 설정
+export REASONINGBANK_K=3                   # 상위 k개 메모리
+export REASONINGBANK_MIN_CONFIDENCE=0.5    # 최소 신뢰도
+export REASONINGBANK_RECENCY_HALFLIFE=7    # 최신성 감쇠를 위한 일수
+
+# 점수 가중치 (α, β, γ)
+export REASONINGBANK_ALPHA=0.7             # 유사도 가중치
+export REASONINGBANK_BETA=0.2              # 최신성 가중치
+export REASONINGBANK_GAMMA=0.1             # 신뢰도 가중치
+export REASONINGBANK_DELTA=0.3             # 다양성 가중치 (MMR)
+```
+
+### 설정 파일
+
+`.reasoningbank.config.json`:
+
+```json
+{
+  "database": {
+    "path": ".swarm/memory.db",
+    "backup_interval_hours": 24
+  },
+  "embeddings": {
+    "provider": "claude",
+    "model": "claude-3-sonnet-20240229",
+    "cache_size": 1000
+  },
+  "retrieve": {
+    "k": 3,
+    "min_score": 0.5,
+    "alpha": 0.7,
+    "beta": 0.2,
+    "gamma": 0.1,
+    "delta": 0.3,
+    "recency_half_life_days": 7
+  },
+  "judge": {
+    "model": "claude-3-sonnet-20240229",
+    "temperature": 0.3,
+    "max_tokens": 1024
+  },
+  "distill": {
+    "model": "claude-3-sonnet-20240229",
+    "temperature": 0.3,
+    "max_tokens": 2048,
+    "confidence_prior_success": 0.8,
+    "confidence_prior_failure": 0.6,
+    "max_items_success": 3,
+    "max_items_failure": 2
+  },
+  "consolidate": {
+    "interval_hours": 24,
+    "similarity_threshold": 0.95,
+    "min_usage_to_keep": 2
+  }
+}
+```
+
+## 🎯 모범 사례
+
+### 1. 도메인 구성
+
+명확한 도메인 계층으로 메모리를 구성하세요:
+
+```javascript
+const domains = {
+  authentication: ['login', 'oauth', 'jwt', 'csrf'],
+  database: ['queries', 'migrations', 'optimization'],
+  testing: ['unit', 'integration', 'e2e'],
+  deployment: ['docker', 'k8s', 'cicd']
+};
+```
+
+### 2. 메모리 품질
+
+다음과 같은 고품질 메모리를 만드세요:
+- 명확하고 설명적인 제목
+- 구체적이고 실행 가능한 내용
+- 관련 도메인 태그
+- 증거 기반의 신뢰도 점수
+
+```javascript
+const goodMemory = {
+  title: 'JWT 만료 유효성 검사 패턴',
+  description: '데이터베이스 작업 전 JWT 만료를 확인합니다',
+  content: '진행하기 전에 exp 클레임 < Date.now()/1000 인지 확인합니다',
+  domain: 'authentication/jwt',
+  confidence: 0.9  // 여러 성공 사례로부터 얻은 높은 신뢰도
+};
+```
+
+### 3. 통합 전략
+
+메모리 품질을 유지하기 위해 정기적으로 통합을 실행하세요:
+
+```javascript
+// 주기적인 통합 (예: 야간 작업)
+setInterval(async () => {
+  if (shouldConsolidate()) {
+    const result = await consolidate();
+    console.log(`통합 완료: ${result.itemsPruned}개의 낮은 가치의 메모리를 제거했습니다`);
+  }
+}, 24 * 60 * 60 * 1000); // 매일
+```
+
+### 4. 오류 처리
+
+항상 ReasoningBank 실패를 정상적으로 처리하세요:
+
+```javascript
+try {
+  const memories = await retrieveMemories(query);
+} catch (error) {
+  console.warn('ReasoningBank를 사용할 수 없습니다. 메모리 없이 진행합니다');
+  // 표준 에이전트 로직으로 계속 진행합니다
+}
+```
+
+## 📊 모니터링 및 메트릭
+
+### 데이터베이스 쿼리
+
+```sql
+-- 성능이 가장 좋은 메모리
+SELECT
+  json_extract(pattern_data, '$.title') as title,
+  confidence,
+  usage_count,
+  created_at
+FROM patterns
+WHERE type = 'reasoning_memory'
+ORDER BY confidence DESC, usage_count DESC
+LIMIT 10;
+
+-- 시간 경과에 따른 메모리 증가
+SELECT
+  DATE(created_at) as date,
+  COUNT(*) as memories_created
+FROM patterns
+WHERE type = 'reasoning_memory'
+GROUP BY DATE(created_at)
+ORDER BY date DESC;
+
+-- 도메인별 성공률
+SELECT
+  json_extract(pattern_data, '$.domain') as domain,
+  AVG(CASE WHEN judge_label = 'Success' THEN 1 ELSE 0 END) as success_rate,
+  COUNT(*) as total_tasks
+FROM task_trajectories
+GROUP BY domain
+ORDER BY success_rate DESC;
+```
+
+### CLI 명령어
+
+```bash
+# 현재 통계 표시
+npx agentic-flow reasoningbank status
+
+# 신뢰도 순으로 상위 메모리 나열
+npx agentic-flow reasoningbank list --sort confidence --limit 10
+
+# 가장 많이 사용된 메모리 나열
+npx agentic-flow reasoningbank list --sort usage --limit 10
+
+# 통합 실행
+npx agentic-flow reasoningbank consolidate
+
+# 시스템 유효성 검사
+npx agentic-flow reasoningbank test
+```
+
+## 🚀 빠른 시작 템플릿
+
+빠르게 시작하려면 이 템플릿을 복사하세요:
+
+```javascript
+// my-reasoning-agent.js
+import { initialize, runTask } from 'agentic-flow/reasoningbank';
+
+async function main() {
+  // 1. ReasoningBank를 초기화합니다
+  await initialize();
+
+  // 2. 작업을 정의합니다
+  const query = '작업 설명';
+
+  // 3. ReasoningBank로 실행합니다
+  const result = await runTask({
+    taskId: `task-${Date.now()}`,
+    agentId: 'my-agent',
+    domain: 'your-domain',
+    query,
+
+    // 4. 실행 로직을 구현합니다
+    executeFn: async (memories) => {
+      console.log(`${memories.length}개의 관련 메모리를 사용합니다`);
+
+      // 여기에 에이전트 로직을 작성합니다
+      const steps = [
+        { action: 'step1', result: 'success' },
+        { action: 'step2', result: 'success' }
+      ];
+
+      return { steps };
+    }
+  });
+
+  // 5. 결과를 확인합니다
+  console.log(`평가: ${result.verdict.label}`);
+  console.log(`${result.usedMemories.length}개의 메모리를 사용했습니다`);
+  console.log(`${result.newMemories.length}개의 새로운 메모리를 생성했습니다`);
+}
+
+main().catch(console.error);
+```
+
+## 📚 리소스
+
+- **논문**: [arXiv의 ReasoningBank](https://arxiv.org/html/2509.25140v1)
+- **소스**: `/node_modules/agentic-flow/dist/reasoningbank/`
+- **데모**: `npx agentic-flow reasoningbank demo`
+- **테스트**: `npx agentic-flow reasoningbank test`
+- **문서**: `.claude/agents/reasoning/README.md`
+
+## 🆘 문제 해결
+
+### 문제: "메모리를 찾을 수 없음"
+
+**해결책**: 초기 메모리를 시드하거나 더 많은 작업을 실행하여 메모리 뱅크를 구축하세요.
+
+```javascript
+import { db } from 'agentic-flow/reasoningbank';
+
+db.upsertMemory({
+  id: ulid(),
+  type: 'reasoning_memory',
+  pattern_data: {
+    title: '시드 메모리',
+    description: '초기 지식',
+    content: '전략 세부 정보',
+    domain: 'your-domain'
+  },
+  confidence: 0.7,
+  usage_count: 0
+});
+```
+
+### 문제: "데이터베이스 잠김"
+
+**해결책**: 한 번에 하나의 프로세스만 쓸 수 있습니다. 커넥션 풀링을 사용하거나 쓰기 작업을 큐에 넣으세요.
+
+### 문제: "낮은 신뢰도 점수"
+
+**해결책**: 에이전트가 더 많은 작업을 실행하도록 하세요. 성공적인 사용으로 신뢰도가 증가합니다.
+
+### 문제: "메모리가 성능을 향상시키지 않음"
+
+**해결책**: 메모리 품질을 확인하고, 점수 가중치를 조정하거나, 통합 빈도를 높이세요.
+
+---
+
+**작성일**: 2025-10-12
+**버전**: 1.0.0
+**상태**: 프로덕션 준비 완료

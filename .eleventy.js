@@ -12,6 +12,9 @@ module.exports = function(eleventyConfig) {
     });
   });
 
+  // Ignore ko-docs directory from processing
+  eleventyConfig.ignores.add("src/posts/claude-flow-ko/ko-docs/**");
+
   return {
     dir: {
       input: "src",
