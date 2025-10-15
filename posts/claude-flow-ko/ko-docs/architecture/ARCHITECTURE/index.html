@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ARCHITECTURE</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="/" class="logo">Hanson Kim</a>
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/blog/">Blog</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    
+<article class="post">
+  <header class="post-header">
+    <h1>ARCHITECTURE</h1>
+    <time datetime="2025년 10월 15일">2025년 10월 15일</time>
+    
+    <div class="tags">
+      
+        
+      
+        
+        <span class="tag">Claude-Flow</span>
+        
+      
+        
+        <span class="tag">문서</span>
+        
+      
+        
+        <span class="tag">AI</span>
+        
+      
+    </div>
+    
+  </header>
+
+  <div class="post-content">
+    <h1>🏗️ Claude-Flow Architecture 문서</h1>
+<h2>목차</h2>
+<ul>
+<li><a href="#%EC%8B%9C%EC%8A%A4%ED%85%9C-%EA%B0%9C%EC%9A%94">시스템 개요</a></li>
+<li><a href="#%ED%95%B5%EC%8B%AC-architecture">핵심 Architecture</a></li>
+<li><a href="#component-architecture">Component Architecture</a></li>
+<li><a href="#%EB%8D%B0%EC%9D%B4%ED%84%B0-%ED%9D%90%EB%A6%84">데이터 흐름</a></li>
+<li><a href="#design-pattern">Design Pattern</a></li>
+<li><a href="#%EA%B8%B0%EC%88%A0-%EC%8A%A4%ED%83%9D">기술 스택</a></li>
+<li><a href="#%EB%B0%B0%ED%8F%AC-architecture">배포 Architecture</a></li>
+<li><a href="#%EB%B3%B4%EC%95%88-architecture">보안 Architecture</a></li>
+<li><a href="#performance-architecture">Performance Architecture</a></li>
+<li><a href="#%ED%99%95%EC%9E%A5%EC%84%B1-%EC%84%A4%EA%B3%84">확장성 설계</a></li>
+</ul>
+<hr>
+<h2>시스템 개요</h2>
+<p>Claude-Flow는 이벤트 기반 통신을 사용하는 microservice architecture를 기반으로 구축되어 높은 확장성, 장애 허용성 및 확장 가능성을 제공하도록 설계되었습니다.</p>
+<h3>High-Level Architecture</h3>
+<pre><code>┌─────────────────────────────────────────────────────────────────┐
+│                         Client Layer                             │
+│  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐       │
+│  │   CLI    │  │   API    │  │WebSocket │  │   MCP    │       │
+│  └──────────┘  └──────────┘  └──────────┘  └──────────┘       │
+└─────────────────────────────────────────────────────────────────┘
+                                │
+┌─────────────────────────────────────────────────────────────────┐
+│                      API Gateway Layer                           │
+│  ┌─────────────────────────────────────────────────────────┐   │
+│  │  Load Balancer │ Rate Limiter │ Auth │ Router          │   │
+│  └─────────────────────────────────────────────────────────┘   │
+└─────────────────────────────────────────────────────────────────┘
+                                │
+┌─────────────────────────────────────────────────────────────────┐
+│                      Core Services Layer                         │
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐         │
+│  │ Orchestrator │  │Swarm Manager │  │Task Engine   │         │
+│  └──────────────┘  └──────────────┘  └──────────────┘         │
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐         │
+│  │Agent Manager │  │Memory System │  │MCP Server    │         │
+│  └──────────────┘  └──────────────┘  └──────────────┘         │
+└─────────────────────────────────────────────────────────────────┘
+                                │
+┌─────────────────────────────────────────────────────────────────┐
+│                    Infrastructure Layer                          │
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐         │
+│  │   Database   │  │Message Queue │  │Cache Layer   │         │
+│  └──────────────┘  └──────────────┘  └──────────────┘         │
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐         │
+│  │File Storage  │  │Monitoring    │  │Logging       │         │
+│  └──────────────┘  └──────────────┘  └──────────────┘         │
+└─────────────────────────────────────────────────────────────────┘
+</code></pre>
+<h3>주요 Architecture 원칙</h3>
+<ol>
+<li><strong>Microservice Architecture</strong> - 느슨하게 결합되고 독립적으로 배포 가능한 service</li>
+<li><strong>Event-Driven Design</strong> - event bus를 통한 비동기 통신</li>
+<li><strong>Domain-Driven Design</strong> - 명확한 경계와 풍부한 domain model</li>
+<li><strong>CQRS Pattern</strong> - command와 query의 분리</li>
+<li><strong>Hexagonal Architecture</strong> - 외부 의존성을 위한 port와 adapter</li>
+</ol>
+<hr>
+<h2>핵심 Architecture</h2>
+<h3>Component Diagram</h3>
+<pre><code class="language-mermaid">graph TB
+    subgraph &quot;Client Applications&quot;
+        CLI[CLI Tool]
+        API[REST API]
+        WS[WebSocket]
+        MCP[MCP Client]
+    end
+
+    subgraph &quot;Core Engine&quot;
+        ORCH[Orchestrator]
+        AGENT[Agent Manager]
+        TASK[Task Engine]
+        SWARM[Swarm Coordinator]
+        MEM[Memory Manager]
+    end
+
+    subgraph &quot;Provider Layer&quot;
+        CLAUDE[Claude Provider]
+        OPENAI[OpenAI Provider]
+        LOCAL[Local Provider]
+    end
+
+    subgraph &quot;Storage Layer&quot;
+        DB[(SQLite DB)]
+        CACHE[(Redis Cache)]
+        FS[File System]
+    end
+
+    CLI --&gt; ORCH
+    API --&gt; ORCH
+    WS --&gt; ORCH
+    MCP --&gt; ORCH
+
+    ORCH --&gt; AGENT
+    ORCH --&gt; TASK
+    ORCH --&gt; SWARM
+    ORCH --&gt; MEM
+
+    AGENT --&gt; CLAUDE
+    AGENT --&gt; OPENAI
+    AGENT --&gt; LOCAL
+
+    MEM --&gt; DB
+    MEM --&gt; CACHE
+    TASK --&gt; DB
+    SWARM --&gt; FS
+</code></pre>
+<h3>핵심 Component</h3>
+<h4>1. Orchestrator (<code>src/core/orchestrator.ts</code>)</h4>
+<p>모든 시스템 작업을 관리하는 중앙 조정 component입니다.</p>
+<pre><code class="language-typescript">class Orchestrator {
+  private agentManager: AgentManager;
+  private taskEngine: TaskEngine;
+  private swarmCoordinator: SwarmCoordinator;
+  private memoryManager: MemoryManager;
+  private eventBus: EventBus;
+
+  async initialize(): Promise&lt;void&gt; {
+    // 모든 하위 시스템 초기화
+    await this.memoryManager.initialize();
+    await this.agentManager.initialize();
+    await this.taskEngine.initialize();
+    await this.swarmCoordinator.initialize();
+
+    // Event handler 설정
+    this.setupEventHandlers();
+  }
+
+  async executeTask(task: Task): Promise&lt;TaskResult&gt; {
+    // Agent 조정을 통한 task 실행 로직
+    const agent = await this.agentManager.selectAgent(task);
+    const context = await this.memoryManager.getContext(task);
+    return await agent.execute(task, context);
+  }
+}
+</code></pre>
+<h4>2. Agent Manager (<code>src/agents/manager.ts</code>)</h4>
+<p>AI agent의 라이프사이클과 조정을 관리합니다.</p>
+<pre><code class="language-typescript">class AgentManager {
+  private agents: Map&lt;string, Agent&gt;;
+  private pool: AgentPool;
+  private selector: AgentSelector;
+
+  async spawnAgent(config: AgentConfig): Promise&lt;Agent&gt; {
+    const agent = await this.createAgent(config);
+    await this.pool.add(agent);
+    this.agents.set(agent.id, agent);
+    return agent;
+  }
+
+  async selectAgent(task: Task): Promise&lt;Agent&gt; {
+    return await this.selector.select(task, this.agents);
+  }
+}
+</code></pre>
+<h4>3. Task Engine (<code>src/task/engine.ts</code>)</h4>
+<p>Task scheduling, 실행 및 모니터링을 처리합니다.</p>
+<pre><code class="language-typescript">class TaskEngine {
+  private queue: TaskQueue;
+  private scheduler: TaskScheduler;
+  private executor: TaskExecutor;
+
+  async submitTask(task: Task): Promise&lt;string&gt; {
+    await this.queue.enqueue(task);
+    await this.scheduler.schedule(task);
+    return task.id;
+  }
+
+  async executeTask(taskId: string): Promise&lt;TaskResult&gt; {
+    const task = await this.queue.dequeue(taskId);
+    return await this.executor.execute(task);
+  }
+}
+</code></pre>
+<h4>4. Swarm Coordinator (<code>src/swarm/coordinator.ts</code>)</h4>
+<p>다중 agent swarm 작업 및 topology를 관리합니다.</p>
+<pre><code class="language-typescript">class SwarmCoordinator {
+  private topology: SwarmTopology;
+  private agents: Agent[];
+  private communicator: SwarmCommunicator;
+
+  async initializeSwarm(config: SwarmConfig): Promise&lt;Swarm&gt; {
+    this.topology = this.createTopology(config.topology);
+    this.agents = await this.spawnAgents(config.agents);
+    return new Swarm(this.topology, this.agents);
+  }
+
+  async coordinate(objective: string): Promise&lt;SwarmResult&gt; {
+    const tasks = await this.decomposeTasks(objective);
+    return await this.topology.execute(tasks, this.agents);
+  }
+}
+</code></pre>
+<h4>5. Memory Manager (<code>src/memory/manager.ts</code>)</h4>
+<p>영구 상태 및 지식을 위한 분산 memory 시스템입니다.</p>
+<pre><code class="language-typescript">class MemoryManager {
+  private backend: MemoryBackend;
+  private cache: MemoryCache;
+  private indexer: MemoryIndexer;
+
+  async store(key: string, value: any, options?: MemoryOptions): Promise&lt;void&gt; {
+    await this.cache.set(key, value);
+    await this.backend.store(key, value, options);
+    await this.indexer.index(key, value);
+  }
+
+  async retrieve(key: string): Promise&lt;any&gt; {
+    const cached = await this.cache.get(key);
+    if (cached) return cached;
+
+    const value = await this.backend.retrieve(key);
+    await this.cache.set(key, value);
+    return value;
+  }
+}
+</code></pre>
+<hr>
+<h2>Component Architecture</h2>
+<h3>Agent Architecture</h3>
+<pre><code>┌─────────────────────────────────────────┐
+│              Agent                       │
+├─────────────────────────────────────────┤
+│  Properties:                            │
+│  - id: string                           │
+│  - type: AgentType                      │
+│  - status: AgentStatus                  │
+│  - capabilities: Capability[]           │
+├─────────────────────────────────────────┤
+│  Methods:                               │
+│  - execute(task: Task): TaskResult      │
+│  - communicate(msg: Message): void      │
+│  - updateStatus(status: Status): void   │
+└─────────────────────────────────────────┘
+              │
+              ├── CoderAgent
+              ├── ReviewerAgent
+              ├── TesterAgent
+              ├── ArchitectAgent
+              └── [50+ 전문 agent]
+</code></pre>
+<h3>Task Architecture</h3>
+<pre><code>┌─────────────────────────────────────────┐
+│              Task                        │
+├─────────────────────────────────────────┤
+│  Properties:                            │
+│  - id: string                           │
+│  - type: TaskType                       │
+│  - priority: Priority                   │
+│  - status: TaskStatus                   │
+│  - dependencies: Task[]                 │
+├─────────────────────────────────────────┤
+│  Methods:                               │
+│  - validate(): boolean                  │
+│  - execute(): TaskResult                │
+│  - rollback(): void                     │
+└─────────────────────────────────────────┘
+</code></pre>
+<h3>Swarm Topology</h3>
+<p>Claude-Flow는 실시간 적응을 통한 정교한 swarm 조정 pattern을 구현합니다:</p>
+<h4>1. Centralized (Queen-Led) Topology</h4>
+<pre><code>         ┌──────────────────┐
+         │   Queen Agent    │
+         │ ┌──────────────┐ │
+         │ │ Consensus    │ │
+         │ │ Engine       │ │
+         │ └──────────────┘ │
+         └─────────┬────────┘
+                   │ Commands
+    ┌──────────────┼──────────────┐
+    │              │              │
+┌───▼────┐   ┌────▼────┐   ┌────▼────┐
+│Worker1 │   │Worker2  │   │Worker3  │
+│(Coder) │   │(Tester) │   │(Review) │
+└───┬────┘   └────┬────┘   └────┬────┘
+    │             │             │
+    └─────────────┼─────────────┘
+                  ▼ Results
+         ┌─────────────────┐
+         │ Result Aggr.    │
+         └─────────────────┘
+</code></pre>
+<p><strong>특징:</strong></p>
+<ul>
+<li>66% threshold를 갖춘 Byzantine fault tolerance</li>
+<li>Consensus 기반 task 할당</li>
+<li>중앙집중식 결과 집계</li>
+<li>Performance: 2.8-4.4배 속도 향상</li>
+</ul>
+<h4>2. Mesh (Peer-to-Peer) Topology</h4>
+<pre><code>┌─────────────┐     ┌─────────────┐
+│   Agent1    │◄───►│   Agent2    │
+│ Researcher  │     │  Architect  │
+└─────┬───────┘     └─────┬───────┘
+      │       ╳             │
+      │     ╱   ╲           │
+      │   ╱       ╲         │
+┌─────▼─────┐     ┌───────▼─┐
+│  Agent3   │◄───►│  Agent4 │
+│  Coder    │     │  Monitor│
+└───────────┘     └─────────┘
+</code></pre>
+<p><strong>특징:</strong></p>
+<ul>
+<li>투표를 통한 분산 consensus</li>
+<li>Message routing을 갖춘 P2P 통신</li>
+<li>적응형 load balancing</li>
+<li>Circuit breaker를 갖춘 fault-tolerant</li>
+</ul>
+<h4>3. Hierarchical (Multi-Level) Topology</h4>
+<pre><code>              ┌─────────────────────┐
+              │   Root Coordinator  │
+              │  ┌───────────────┐  │
+              │  │ Neural Pattern│  │
+              │  │ &amp; Memory Mgmt │  │
+              │  └───────────────┘  │
+              └──────────┬──────────┘
+                         │
+            ┌────────────┴────────────┐
+            │                         │
+      ┌─────▼──────┐           ┌─────▼──────┐
+      │ Manager1   │           │ Manager2   │
+      │(Frontend)  │           │(Backend)   │
+      └─────┬──────┘           └─────┬──────┘
+            │                         │
+     ┌──────┴──────┐           ┌──────┴──────┐
+     │             │           │             │
+┌────▼────┐   ┌───▼────┐  ┌───▼────┐   ┌───▼────┐
+│React    │   │Mobile  │  │API     │   │Database│
+│Agent    │   │Agent   │  │Agent   │   │Agent   │
+└─────────┘   └────────┘  └────────┘   └────────┘
+</code></pre>
+<p><strong>특징:</strong></p>
+<ul>
+<li>다층 command 계층</li>
+<li>Domain별 agent cluster</li>
+<li>Resource pooling 및 최적화</li>
+<li>클러스터 간 통신</li>
+</ul>
+<h4>4. Distributed (Cloud-Native) Topology</h4>
+<pre><code>┌─────────────────────────────────────────────────────┐
+│              Load Balancer                          │
+└─────────────────┬───────────────────────────────────┘
+                  │
+     ┌────────────┼────────────┐
+     │            │            │
+┌────▼────┐  ┌───▼────┐  ┌───▼────┐
+│Region 1 │  │Region 2│  │Region 3│
+│ ┌─────┐ │  │ ┌─────┐│  │ ┌─────┐│
+│ │Agent│ │  │ │Agent││  │ │Agent││
+│ │Pool │ │  │ │Pool ││  │ │Pool ││
+│ └─────┘ │  │ └─────┘│  │ └─────┘│
+└─────────┘  └────────┘  └────────┘
+     │            │            │
+     └────────────┼────────────┘
+                  ▼
+      ┌─────────────────────┐
+      │ Distributed Memory  │
+      │ &amp; State Management  │
+      └─────────────────────┘
+</code></pre>
+<p><strong>특징:</strong></p>
+<ul>
+<li>지리적 분산</li>
+<li>부하 기반 auto-scaling</li>
+<li>분산 상태 동기화</li>
+<li>Edge computing 기능</li>
+</ul>
+<hr>
+<h2>데이터 흐름</h2>
+<h3>Request 처리 흐름</h3>
+<pre><code class="language-mermaid">sequenceDiagram
+    participant Client
+    participant Gateway
+    participant Orchestrator
+    participant TaskEngine
+    participant AgentManager
+    participant Agent
+    participant Memory
+
+    Client-&gt;&gt;Gateway: Submit Request
+    Gateway-&gt;&gt;Gateway: Authenticate &amp; Validate
+    Gateway-&gt;&gt;Orchestrator: Forward Request
+    Orchestrator-&gt;&gt;TaskEngine: Create Task
+    TaskEngine-&gt;&gt;AgentManager: Request Agent
+    AgentManager-&gt;&gt;AgentManager: Select Best Agent
+    AgentManager-&gt;&gt;Agent: Assign Task
+    Agent-&gt;&gt;Memory: Get Context
+    Memory--&gt;&gt;Agent: Return Context
+    Agent-&gt;&gt;Agent: Execute Task
+    Agent-&gt;&gt;Memory: Store Results
+    Agent--&gt;&gt;TaskEngine: Return Results
+    TaskEngine--&gt;&gt;Orchestrator: Task Complete
+    Orchestrator--&gt;&gt;Gateway: Response
+    Gateway--&gt;&gt;Client: Return Results
+</code></pre>
+<h3>Event 흐름</h3>
+<pre><code class="language-mermaid">graph LR
+    A[Event Producer] --&gt; B[Event Bus]
+    B --&gt; C[Event Router]
+    C --&gt; D[Handler 1]
+    C --&gt; E[Handler 2]
+    C --&gt; F[Handler 3]
+    D --&gt; G[Action 1]
+    E --&gt; H[Action 2]
+    F --&gt; I[Action 3]
+</code></pre>
+<hr>
+<h2>Design Pattern</h2>
+<h3>1. Repository Pattern</h3>
+<pre><code class="language-typescript">interface Repository&lt;T&gt; {
+  findById(id: string): Promise&lt;T&gt;;
+  findAll(): Promise&lt;T[]&gt;;
+  save(entity: T): Promise&lt;void&gt;;
+  delete(id: string): Promise&lt;void&gt;;
+}
+
+class AgentRepository implements Repository&lt;Agent&gt; {
+  constructor(private db: Database) {}
+
+  async findById(id: string): Promise&lt;Agent&gt; {
+    const data = await this.db.query('SELECT * FROM agents WHERE id = ?', [id]);
+    return this.mapToAgent(data);
+  }
+
+  async save(agent: Agent): Promise&lt;void&gt; {
+    await this.db.execute(
+      'INSERT OR REPLACE INTO agents VALUES (?, ?, ?, ?)',
+      [agent.id, agent.type, agent.status, JSON.stringify(agent.config)]
+    );
+  }
+}
+</code></pre>
+<h3>2. Strategy Pattern</h3>
+<pre><code class="language-typescript">interface CoordinationStrategy {
+  coordinate(agents: Agent[], tasks: Task[]): Promise&lt;ExecutionPlan&gt;;
+}
+
+class CentralizedStrategy implements CoordinationStrategy {
+  async coordinate(agents: Agent[], tasks: Task[]): Promise&lt;ExecutionPlan&gt; {
+    // Queen-led 조정 로직
+  }
+}
+
+class MeshStrategy implements CoordinationStrategy {
+  async coordinate(agents: Agent[], tasks: Task[]): Promise&lt;ExecutionPlan&gt; {
+    // Peer-to-peer 조정 로직
+  }
+}
+
+class SwarmCoordinator {
+  constructor(private strategy: CoordinationStrategy) {}
+
+  async execute(agents: Agent[], tasks: Task[]): Promise&lt;void&gt; {
+    const plan = await this.strategy.coordinate(agents, tasks);
+    await this.executePlan(plan);
+  }
+}
+</code></pre>
+<h3>3. Observer Pattern</h3>
+<pre><code class="language-typescript">interface Observer {
+  update(event: Event): void;
+}
+
+class EventBus {
+  private observers: Map&lt;string, Observer[]&gt; = new Map();
+
+  subscribe(eventType: string, observer: Observer): void {
+    if (!this.observers.has(eventType)) {
+      this.observers.set(eventType, []);
+    }
+    this.observers.get(eventType)!.push(observer);
+  }
+
+  publish(event: Event): void {
+    const observers = this.observers.get(event.type) || [];
+    observers.forEach(observer =&gt; observer.update(event));
+  }
+}
+</code></pre>
+<h3>4. Factory Pattern</h3>
+<pre><code class="language-typescript">abstract class AgentFactory {
+  abstract createAgent(type: string): Agent;
+
+  spawn(type: string, config: AgentConfig): Agent {
+    const agent = this.createAgent(type);
+    agent.configure(config);
+    return agent;
+  }
+}
+
+class SpecializedAgentFactory extends AgentFactory {
+  createAgent(type: string): Agent {
+    switch(type) {
+      case 'coder': return new CoderAgent();
+      case 'reviewer': return new ReviewerAgent();
+      case 'tester': return new TesterAgent();
+      default: throw new Error(`Unknown agent type: ${type}`);
+    }
+  }
+}
+</code></pre>
+<h3>5. Decorator Pattern</h3>
+<pre><code class="language-typescript">interface Agent {
+  execute(task: Task): Promise&lt;TaskResult&gt;;
+}
+
+class BaseAgent implements Agent {
+  async execute(task: Task): Promise&lt;TaskResult&gt; {
+    // 기본 실행 로직
+  }
+}
+
+class LoggingDecorator implements Agent {
+  constructor(private agent: Agent) {}
+
+  async execute(task: Task): Promise&lt;TaskResult&gt; {
+    console.log(`Starting task: ${task.id}`);
+    const result = await this.agent.execute(task);
+    console.log(`Completed task: ${task.id}`);
+    return result;
+  }
+}
+
+class MetricsDecorator implements Agent {
+  constructor(private agent: Agent) {}
+
+  async execute(task: Task): Promise&lt;TaskResult&gt; {
+    const start = Date.now();
+    const result = await this.agent.execute(task);
+    const duration = Date.now() - start;
+    await this.recordMetrics(task.id, duration);
+    return result;
+  }
+}
+</code></pre>
+<hr>
+<h2>기술 스택</h2>
+<h3>핵심 기술</h3>
+<table>
+<thead>
+<tr>
+<th>Layer</th>
+<th>Technology</th>
+<th>Version</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Runtime</td>
+<td>Node.js</td>
+<td>v20.0.0+</td>
+<td>ES2022+ 기능을 갖춘 JavaScript runtime</td>
+</tr>
+<tr>
+<td>Language</td>
+<td>TypeScript</td>
+<td>v5.3.3</td>
+<td>고급 generic을 사용한 type-safe 개발</td>
+</tr>
+<tr>
+<td>Framework</td>
+<td>Custom ESM</td>
+<td>v2.0.0-alpha.88</td>
+<td>경량 모듈식 architecture</td>
+</tr>
+<tr>
+<td>Database</td>
+<td>SQLite</td>
+<td>v3.40+</td>
+<td>WAL 모드를 갖춘 embedded database</td>
+</tr>
+<tr>
+<td>Database Driver</td>
+<td>better-sqlite3</td>
+<td>v12.2.0</td>
+<td>고성능 SQLite driver</td>
+</tr>
+<tr>
+<td>Cache</td>
+<td>In-memory + TTL</td>
+<td>Custom</td>
+<td>TTL 지원을 갖춘 다층 caching</td>
+</tr>
+<tr>
+<td>Queue</td>
+<td>P-Queue</td>
+<td>v8.1.0</td>
+<td>우선순위를 갖춘 고급 task queue</td>
+</tr>
+<tr>
+<td>CLI</td>
+<td>Commander.js</td>
+<td>v11.1.0</td>
+<td>Command-line interface framework</td>
+</tr>
+<tr>
+<td>API</td>
+<td>Express</td>
+<td>v5.1.0</td>
+<td>최신 기능을 갖춘 REST API server</td>
+</tr>
+<tr>
+<td>WebSocket</td>
+<td>ws</td>
+<td>v8.18.3</td>
+<td>실시간 양방향 통신</td>
+</tr>
+<tr>
+<td>Testing</td>
+<td>Jest</td>
+<td>v29.7.0</td>
+<td>종합 testing framework</td>
+</tr>
+<tr>
+<td>Swarm Engine</td>
+<td>ruv-swarm</td>
+<td>v1.0.14</td>
+<td>다중 agent 조정 시스템</td>
+</tr>
+<tr>
+<td>MCP Protocol</td>
+<td>@modelcontextprotocol/sdk</td>
+<td>v1.0.4</td>
+<td>Model Context Protocol 통합</td>
+</tr>
+</tbody>
+</table>
+<h3>의존성</h3>
+<h4>핵심 의존성</h4>
+<pre><code class="language-json">{
+  &quot;@modelcontextprotocol/sdk&quot;: &quot;^1.0.4&quot;,
+  &quot;better-sqlite3&quot;: &quot;^12.2.0&quot;,
+  &quot;commander&quot;: &quot;^11.1.0&quot;,
+  &quot;express&quot;: &quot;^5.1.0&quot;,
+  &quot;ws&quot;: &quot;^8.18.3&quot;,
+  &quot;yaml&quot;: &quot;^2.8.0&quot;
+}
+</code></pre>
+<h4>개발 의존성</h4>
+<pre><code class="language-json">{
+  &quot;@types/node&quot;: &quot;^20.19.7&quot;,
+  &quot;typescript&quot;: &quot;^5.3.3&quot;,
+  &quot;jest&quot;: &quot;^29.7.0&quot;,
+  &quot;eslint&quot;: &quot;^8.57.1&quot;,
+  &quot;prettier&quot;: &quot;^3.1.1&quot;
+}
+</code></pre>
+<h3>파일 구조</h3>
+<pre><code>claude-flow/
+├── src/
+│   ├── core/           # 핵심 orchestration 로직
+│   ├── agents/         # Agent 구현
+│   ├── swarm/          # Swarm 조정
+│   ├── task/           # Task 관리
+│   ├── memory/         # Memory 시스템
+│   ├── providers/      # LLM provider
+│   ├── api/            # REST API
+│   ├── cli/            # CLI command
+│   ├── mcp/            # MCP protocol
+│   ├── utils/          # Utility
+│   └── types/          # TypeScript type
+├── tests/              # Test suite
+├── docs/               # 문서
+├── examples/           # 예제 code
+└── scripts/            # Build &amp; deploy script
+</code></pre>
+<hr>
+<h2>배포 Architecture</h2>
+<h3>Container Architecture</h3>
+<pre><code class="language-dockerfile"># Multi-stage build
+FROM node:20-alpine AS builder
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci
+COPY . .
+RUN npm run build
+
+FROM node:20-alpine AS runtime
+WORKDIR /app
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/node_modules ./node_modules
+COPY package*.json ./
+EXPOSE 3000
+CMD [&quot;node&quot;, &quot;dist/index.js&quot;]
+</code></pre>
+<h3>Kubernetes Deployment</h3>
+<pre><code class="language-yaml">apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: claude-flow
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: claude-flow
+  template:
+    metadata:
+      labels:
+        app: claude-flow
+    spec:
+      containers:
+      - name: claude-flow
+        image: claude-flow:latest
+        ports:
+        - containerPort: 3000
+        resources:
+          requests:
+            memory: &quot;512Mi&quot;
+            cpu: &quot;500m&quot;
+          limits:
+            memory: &quot;2Gi&quot;
+            cpu: &quot;2000m&quot;
+        env:
+        - name: NODE_ENV
+          value: &quot;production&quot;
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 3000
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: 3000
+          initialDelaySeconds: 5
+          periodSeconds: 5
+</code></pre>
+<h3>Cloud Architecture</h3>
+<pre><code>┌─────────────────────────────────────────────────────┐
+│                   CDN Layer                         │
+│              (CloudFlare/Fastly)                    │
+└─────────────────────────────────────────────────────┘
+                        │
+┌─────────────────────────────────────────────────────┐
+│              Load Balancer (ALB)                    │
+└─────────────────────────────────────────────────────┘
+                        │
+┌─────────────────────────────────────────────────────┐
+│           Auto-Scaling Group (ASG)                  │
+│  ┌──────────┐  ┌──────────┐  ┌──────────┐         │
+│  │Instance 1│  │Instance 2│  │Instance 3│         │
+│  └──────────┘  └──────────┘  └──────────┘         │
+└─────────────────────────────────────────────────────┘
+                        │
+┌─────────────────────────────────────────────────────┐
+│              Managed Services                       │
+│  ┌──────────┐  ┌──────────┐  ┌──────────┐         │
+│  │    RDS   │  │   Redis  │  │    S3    │         │
+│  └──────────┘  └──────────┘  └──────────┘         │
+└─────────────────────────────────────────────────────┘
+</code></pre>
+<hr>
+<h2>보안 Architecture</h2>
+<h3>보안 계층</h3>
+<pre><code>┌─────────────────────────────────────────────────────┐
+│              Application Layer                       │
+│  - Input validation                                 │
+│  - Output encoding                                  │
+│  - CSRF protection                                  │
+└─────────────────────────────────────────────────────┘
+                        │
+┌─────────────────────────────────────────────────────┐
+│            Authentication Layer                      │
+│  - JWT token                                        │
+│  - API key                                          │
+│  - OAuth 2.0                                        │
+└─────────────────────────────────────────────────────┘
+                        │
+┌─────────────────────────────────────────────────────┐
+│           Authorization Layer                        │
+│  - Role-based access control (RBAC)                 │
+│  - Attribute-based access control (ABAC)            │
+│  - Policy engine                                    │
+└─────────────────────────────────────────────────────┘
+                        │
+┌─────────────────────────────────────────────────────┐
+│              Network Layer                           │
+│  - TLS/SSL encryption                               │
+│  - VPC isolation                                    │
+│  - Security group                                   │
+└─────────────────────────────────────────────────────┘
+</code></pre>
+<p>이 문서는 계속됩니다... (파일이 매우 크므로 분할 저장이 필요합니다)</p>
+
+  </div>
+</article>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Hanson Kim. All rights reserved.</p>
+  </footer>
+</body>
+</html>

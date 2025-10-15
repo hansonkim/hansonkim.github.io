@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PERFORMANCE METRICS GUIDE</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="/" class="logo">Hanson Kim</a>
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/blog/">Blog</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    
+<article class="post">
+  <header class="post-header">
+    <h1>PERFORMANCE METRICS GUIDE</h1>
+    <time datetime="2025년 10월 15일">2025년 10월 15일</time>
+    
+    <div class="tags">
+      
+        
+      
+        
+        <span class="tag">Claude-Flow</span>
+        
+      
+        
+        <span class="tag">문서</span>
+        
+      
+        
+        <span class="tag">AI</span>
+        
+      
+    </div>
+    
+  </header>
+
+  <div class="post-content">
+    <h1>성능 지표 향상 가이드</h1>
+<h2>개요</h2>
+<p><code>performance.json</code> 파일에 메모리 작업, 모드 사용량, ReasoningBank 전용 성능을 추적할 수 있는 포괄적인 메트릭이 추가되었습니다.</p>
+<h2>확장된 구조</h2>
+<h3>세션 정보</h3>
+<pre><code class="language-json">{
+  &quot;startTime&quot;: 1234567890,
+  &quot;sessionId&quot;: &quot;session-1234567890&quot;,
+  &quot;lastActivity&quot;: 1234567890,
+  &quot;sessionDuration&quot;: 12345
+}
+</code></pre>
+<p>세션 시작 시각, 고유 세션 ID, 마지막 활동 타임스탬프, 총 세션 지속 시간을 밀리초 단위로 추적합니다.</p>
+<h3>메모리 모드 추적</h3>
+<pre><code class="language-json">{
+  &quot;memoryMode&quot;: {
+    &quot;reasoningbankOperations&quot;: 45,
+    &quot;basicOperations&quot;: 12,
+    &quot;autoModeSelections&quot;: 50,
+    &quot;modeOverrides&quot;: 7,
+    &quot;currentMode&quot;: &quot;auto&quot;
+  }
+}
+</code></pre>
+<p>어떤 메모리 모드(ReasoningBank vs Basic/JSON)를 사용 중인지, AUTO MODE가 각 모드를 얼마나 자주 선택하는지, 수동 재정의가 얼마나 발생했는지를 추적합니다.</p>
+<h3>작업 유형 분해</h3>
+<pre><code class="language-json">{
+  &quot;operations&quot;: {
+    &quot;store&quot;: { &quot;count&quot;: 20, &quot;totalDuration&quot;: 1234, &quot;errors&quot;: 0 },
+    &quot;retrieve&quot;: { &quot;count&quot;: 45, &quot;totalDuration&quot;: 2345, &quot;errors&quot;: 1 },
+    &quot;query&quot;: { &quot;count&quot;: 30, &quot;totalDuration&quot;: 15000, &quot;errors&quot;: 0 },
+    &quot;list&quot;: { &quot;count&quot;: 10, &quot;totalDuration&quot;: 500, &quot;errors&quot;: 0 },
+    &quot;delete&quot;: { &quot;count&quot;: 3, &quot;totalDuration&quot;: 200, &quot;errors&quot;: 0 },
+    &quot;search&quot;: { &quot;count&quot;: 25, &quot;totalDuration&quot;: 12000, &quot;errors&quot;: 0 },
+    &quot;init&quot;: { &quot;count&quot;: 1, &quot;totalDuration&quot;: 500, &quot;errors&quot;: 0 }
+  }
+}
+</code></pre>
+<p>각 작업 유형의 실행 횟수, 총 소요 시간, 오류 횟수를 자세히 분류합니다.</p>
+<h3>성능 통계</h3>
+<pre><code class="language-json">{
+  &quot;performance&quot;: {
+    &quot;avgOperationDuration&quot;: 450.5,
+    &quot;minOperationDuration&quot;: 10,
+    &quot;maxOperationDuration&quot;: 5000,
+    &quot;slowOperations&quot;: 3,
+    &quot;fastOperations&quot;: 100,
+    &quot;totalOperationTime&quot;: 45050
+  }
+}
+</code></pre>
+<ul>
+<li><code>avgOperationDuration</code>: 작업당 평균 시간(ms)</li>
+<li><code>minOperationDuration</code>: 가장 빠른 작업 시간(ms)</li>
+<li><code>maxOperationDuration</code>: 가장 느린 작업 시간(ms)</li>
+<li><code>slowOperations</code>: 5000ms를 초과한 작업 횟수</li>
+<li><code>fastOperations</code>: 100ms 미만 작업 횟수</li>
+<li><code>totalOperationTime</code>: 모든 작업의 누적 시간(ms)</li>
+</ul>
+<h3>저장소 통계</h3>
+<pre><code class="language-json">{
+  &quot;storage&quot;: {
+    &quot;totalEntries&quot;: 150,
+    &quot;reasoningbankEntries&quot;: 120,
+    &quot;basicEntries&quot;: 30,
+    &quot;databaseSize&quot;: 2048000,
+    &quot;lastBackup&quot;: 1234567890,
+    &quot;growthRate&quot;: 12.5
+  }
+}
+</code></pre>
+<ul>
+<li><code>totalEntries</code>: 모든 모드를 합친 메모리 엔트리 수</li>
+<li><code>reasoningbankEntries</code>: ReasoningBank 데이터베이스의 엔트리 수</li>
+<li><code>basicEntries</code>: JSON 저장소의 엔트리 수</li>
+<li><code>databaseSize</code>: 데이터베이스 파일 크기(byte)</li>
+<li><code>lastBackup</code>: 마지막 백업 타임스탬프</li>
+<li><code>growthRate</code>: 시간당 엔트리 증가율</li>
+</ul>
+<h3>오류 추적</h3>
+<pre><code class="language-json">{
+  &quot;errors&quot;: {
+    &quot;total&quot;: 5,
+    &quot;byType&quot;: {
+      &quot;timeout&quot;: 2,
+      &quot;connection&quot;: 1,
+      &quot;validation&quot;: 2
+    },
+    &quot;byOperation&quot;: {
+      &quot;query&quot;: 3,
+      &quot;store&quot;: 2
+    },
+    &quot;recent&quot;: [
+      {
+        &quot;operation&quot;: &quot;query&quot;,
+        &quot;type&quot;: &quot;timeout&quot;,
+        &quot;timestamp&quot;: 1234567890,
+        &quot;mode&quot;: &quot;reasoningbank&quot;
+      }
+    ]
+  }
+}
+</code></pre>
+<p>오류 유형, 작업, 최근 오류 이력에 대한 포괄적인 추적을 제공합니다.</p>
+<h3>ReasoningBank 전용 메트릭</h3>
+<pre><code class="language-json">{
+  &quot;reasoningbank&quot;: {
+    &quot;semanticSearches&quot;: 45,
+    &quot;sqlFallbacks&quot;: 12,
+    &quot;embeddingGenerated&quot;: 40,
+    &quot;consolidations&quot;: 3,
+    &quot;avgQueryTime&quot;: 450.5,
+    &quot;cacheHits&quot;: 25,
+    &quot;cacheMisses&quot;: 20
+  }
+}
+</code></pre>
+<ul>
+<li><code>semanticSearches</code>: 시맨틱 벡터 검색 횟수</li>
+<li><code>sqlFallbacks</code>: SQL fallback 쿼리 횟수(시맨틱 검색이 비어 있을 때)</li>
+<li><code>embeddingGenerated</code>: 생성된 텍스트 임베딩 수</li>
+<li><code>consolidations</code>: 메모리 통합 실행 횟수</li>
+<li><code>avgQueryTime</code>: 평균 쿼리 실행 시간(ms)</li>
+<li><code>cacheHits</code>: 성공적인 캐시 조회 수</li>
+<li><code>cacheMisses</code>: 추가 계산이 필요한 캐시 미스 수</li>
+</ul>
+<h2>사용 예시</h2>
+<h3>메모리 작업 추적</h3>
+<pre><code class="language-javascript">import { trackMemoryOperation } from './performance-metrics.js';
+
+// 성공한 쿼리를 추적합니다
+const startTime = Date.now();
+const result = await queryMemory('search term');
+const duration = Date.now() - startTime;
+
+await trackMemoryOperation('query', 'reasoningbank', duration, true);
+
+// 오류가 발생한 실패한 작업을 추적합니다
+try {
+  await storeMemory(data);
+} catch (error) {
+  const duration = Date.now() - startTime;
+  await trackMemoryOperation('store', 'basic', duration, false, 'validation_error');
+}
+</code></pre>
+<h3>모드 선택 추적</h3>
+<pre><code class="language-javascript">import { trackModeSelection } from './performance-metrics.js';
+
+// AUTO MODE 선택을 추적합니다
+const mode = await detectMemoryMode();
+await trackModeSelection(mode, true); // true = automatic selection
+
+// 수동 재정의를 추적합니다
+if (flags.reasoningbank) {
+  await trackModeSelection('reasoningbank', false); // false = manual override
+}
+</code></pre>
+<h3>ReasoningBank 작업 추적</h3>
+<pre><code class="language-javascript">import { trackReasoningBankOperation } from './performance-metrics.js';
+
+// 시맨틱 검색을 추적합니다
+const startTime = Date.now();
+const results = await semanticSearch(query);
+const duration = Date.now() - startTime;
+
+if (results.length === 0) {
+  // 시맨틱 검색 결과가 없어 SQL fallback을 사용합니다
+  await trackReasoningBankOperation('sql_fallback', duration);
+} else {
+  await trackReasoningBankOperation('semantic_search', duration);
+}
+
+// 캐시 히트/미스를 추적합니다
+if (cacheHit) {
+  await trackReasoningBankOperation('cache_hit', 0);
+} else {
+  await trackReasoningBankOperation('cache_miss', duration);
+}
+</code></pre>
+<h3>성능 요약 가져오기</h3>
+<pre><code class="language-javascript">import { getMemoryPerformanceSummary } from './performance-metrics.js';
+
+const summary = await getMemoryPerformanceSummary();
+
+console.log('Session:', summary.session);
+console.log('Mode Usage:', summary.mode);
+console.log('Operations:', summary.operations);
+console.log('Performance:', summary.performance);
+console.log('Storage:', summary.storage);
+console.log('ReasoningBank:', summary.reasoningbank);
+console.log('Errors:', summary.errors);
+</code></pre>
+<p>이 요약에는 다음과 같은 계산된 메트릭이 포함됩니다:</p>
+<ul>
+<li>오류율(%)</li>
+<li>SQL fallback 비율(시맨틱 검색이 SQL로 대체된 비율)</li>
+<li>캐시 히트율(성공적으로 캐시를 조회한 비율)</li>
+</ul>
+<h2>통합 지점</h2>
+<p>다음 구성 요소에 해당 추적 함수를 통합해야 합니다:</p>
+<ol>
+<li>
+<p><strong>Memory Command</strong> (<code>src/cli/simple-commands/memory.js</code>)</p>
+<ul>
+<li>store, retrieve, query, list, delete 작업을 모두 추적합니다</li>
+<li>모드 감지와 선택을 추적합니다</li>
+</ul>
+</li>
+<li>
+<p><strong>ReasoningBank Adapter</strong> (<code>src/reasoningbank/reasoningbank-adapter.js</code>)</p>
+<ul>
+<li>시맨틱 검색을 추적합니다</li>
+<li>SQL fallback을 추적합니다</li>
+<li>임베딩 생성을 추적합니다</li>
+<li>캐시 히트/미스를 추적합니다</li>
+</ul>
+</li>
+<li>
+<p><strong>Session Hooks</strong> (hooks system)</p>
+<ul>
+<li>세션 시작 시 메트릭을 초기화합니다</li>
+<li>세션 종료 시 메트릭을 내보냅니다</li>
+<li>저장소 통계를 주기적으로 업데이트합니다</li>
+</ul>
+</li>
+</ol>
+<h2>이점</h2>
+<ol>
+<li><strong>가시성</strong>: AUTO MODE가 실제 사용 환경에서 어떻게 동작하는지 파악합니다</li>
+<li><strong>성능 튜닝</strong>: 느린 작업과 병목 지점을 식별합니다</li>
+<li><strong>오류 분석</strong>: 오류 패턴과 발생 빈도를 추적합니다</li>
+<li><strong>모드 최적화</strong>: 워크로드별로 어떤 모드가 더 잘 동작하는지 확인합니다</li>
+<li><strong>리소스 계획</strong>: 증가율과 저장소 사용량을 모니터링합니다</li>
+<li><strong>캐시 효율성</strong>: 최적화를 위해 캐시 히트율을 측정합니다</li>
+</ol>
+<h2>향후 확장</h2>
+<p>추가로 고려할 수 있는 항목:</p>
+<ul>
+<li>쿼리 패턴 분석(가장 자주 사용되는 쿼리)</li>
+<li>작업 빈도 히트맵</li>
+<li>성능 저하 알림</li>
+<li>자동 추천 시스템</li>
+<li>장기 분석을 위한 시계열 데이터베이스 내보내기</li>
+<li>실시간 대시보드</li>
+</ul>
+
+  </div>
+</article>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Hanson Kim. All rights reserved.</p>
+  </footer>
+</body>
+</html>

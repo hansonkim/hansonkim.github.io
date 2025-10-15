@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>REASONINGBANK CORE INTEGRATION</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="/" class="logo">Hanson Kim</a>
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/blog/">Blog</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    
+<article class="post">
+  <header class="post-header">
+    <h1>REASONINGBANK CORE INTEGRATION</h1>
+    <time datetime="2025년 10월 15일">2025년 10월 15일</time>
+    
+    <div class="tags">
+      
+        
+      
+        
+        <span class="tag">Claude-Flow</span>
+        
+      
+        
+        <span class="tag">문서</span>
+        
+      
+        
+        <span class="tag">AI</span>
+        
+      
+    </div>
+    
+  </header>
+
+  <div class="post-content">
+    <h1>ReasoningBank 코어 메모리 통합</h1>
+<h2>🎯 개요</h2>
+<p>기존 설치와의 완전한 하위 호환성을 유지하면서, ReasoningBank를 <code>claude-flow memory</code>의 <strong>선택적 강화 모드</strong>로 통합합니다.</p>
+<h2>📊 현재 상태</h2>
+<h3>두 개의 분리된 시스템</h3>
+<p><strong>코어 메모리</strong> (<code>claude-flow memory</code>)</p>
+<ul>
+<li>기본적인 key-value 저장소</li>
+<li>파일 기반 (JSON): <code>./memory/memory-store.json</code></li>
+<li>명령어: store, query, stats, export, import, clear, list</li>
+<li>AI/학습 기능 없음</li>
+<li>항상 사용 가능, 의존성 없음</li>
+</ul>
+<p><strong>ReasoningBank</strong> (<code>claude-flow agent memory</code>)</p>
+<ul>
+<li>AI 기반 학습 메모리</li>
+<li>데이터베이스 기반 (SQLite): <code>.swarm/memory.db</code></li>
+<li>명령어: init, status, list, demo, test, benchmark</li>
+<li>작업 실행 패턴으로부터 학습</li>
+<li>초기화 및 API 키 필요</li>
+</ul>
+<h2>🚀 제안된 통합 방안</h2>
+<h3>통합 인터페이스</h3>
+<pre><code class="language-bash"># 기본 모드 (현재 동작 - 하위 호환)
+claude-flow memory store api_key &quot;sk-ant-xxx&quot; --redact
+claude-flow memory query research
+
+# 강화 모드 (신규 - 플래그를 통한 선택적 사용)
+claude-flow memory store api_key &quot;sk-ant-xxx&quot; --reasoningbank
+claude-flow memory query research --reasoningbank
+claude-flow memory status --reasoningbank
+
+# 단축형
+claude-flow memory store api_key &quot;sk-ant-xxx&quot; --rb
+claude-flow memory query research --rb
+</code></pre>
+<h3>자동 감지</h3>
+<pre><code class="language-bash"># 어떤 모드가 적절한지 자동으로 감지
+claude-flow memory query research --auto
+
+# ReasoningBank 사용 가능 여부 확인
+claude-flow memory detect
+</code></pre>
+<h2>🏗️ 아키텍처</h2>
+<h3>명령어 흐름</h3>
+<pre><code>┌─────────────────────────────────────────┐
+│  claude-flow memory &lt;cmd&gt; [--rb|--auto] │
+└────────────────┬────────────────────────┘
+                 │
+        ┌────────▼─────────┐
+        │  플래그 파싱     │
+        └────────┬─────────┘
+                 │
+     ┌───────────▼────────────┐
+     │  모드 감지             │
+     │  • 플래그 없음 → 기본  │
+     │  • --rb → ReasoningBank│
+     │  • --auto → 감지       │
+     └───────────┬────────────┘
+                 │
+        ┌────────▼─────────┐
+        │  명령어 실행     │
+        └──────────────────┘
+</code></pre>
+<h3>기능 매트릭스</h3>
+<table>
+<thead>
+<tr>
+<th>명령어</th>
+<th>기본 모드</th>
+<th>ReasoningBank 모드</th>
+<th>비고</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>store</code></td>
+<td>JSON 파일</td>
+<td>SQLite + 임베딩</td>
+<td>RB가 패턴 학습</td>
+</tr>
+<tr>
+<td><code>query</code></td>
+<td>정확/유사 일치</td>
+<td>시맨틱 검색</td>
+<td>RB가 임베딩 사용</td>
+</tr>
+<tr>
+<td><code>stats</code></td>
+<td>파일 통계</td>
+<td>AI 메트릭 (신뢰도, 사용량)</td>
+<td>RB가 학습 통계 표시</td>
+</tr>
+<tr>
+<td><code>export</code></td>
+<td>JSON 내보내기</td>
+<td>JSON + 임베딩</td>
+<td>RB가 벡터 포함</td>
+</tr>
+<tr>
+<td><code>import</code></td>
+<td>JSON 가져오기</td>
+<td>JSON + 벡터 재생성</td>
+<td>RB가 임베딩 재생성</td>
+</tr>
+<tr>
+<td><code>clear</code></td>
+<td>항목 삭제</td>
+<td>아카이브 + 정리</td>
+<td>RB가 학습 내용 보존</td>
+</tr>
+<tr>
+<td><code>list</code></td>
+<td>키 목록</td>
+<td>신뢰도 점수와 함께 목록 표시</td>
+<td>RB가 품질 메트릭 표시</td>
+</tr>
+</tbody>
+</table>
+<h3>새로운 명령어</h3>
+<pre><code class="language-bash"># ReasoningBank 초기화 (최초 1회 설정)
+claude-flow memory init --reasoningbank
+
+# ReasoningBank 상태 확인
+claude-flow memory status --reasoningbank
+
+# 활성화된 모드 표시
+claude-flow memory mode
+
+# ReasoningBank 사용 가능 여부 감지
+claude-flow memory detect
+
+# 기본 → ReasoningBank 마이그레이션
+claude-flow memory migrate --to reasoningbank
+
+# ReasoningBank 통합/최적화
+claude-flow memory consolidate --reasoningbank
+</code></pre>
+<h2>🔄 하위 호환성</h2>
+<h3>호환성 보장</h3>
+<ol>
+<li>
+<p><strong>기존 명령어 변경 없이 작동</strong></p>
+<pre><code class="language-bash"># 이 명령어들은 이전과 정확히 동일하게 작동합니다
+claude-flow memory store key value
+claude-flow memory query search
+</code></pre>
+</li>
+<li>
+<p><strong>호환성이 깨지는 변경 없음</strong></p>
+<ul>
+<li>기본 동작 변경 없음 (기본 모드 사용)</li>
+<li>기존 JSON 파일에 영향을 주지 않음</li>
+<li>강제 마이그레이션 없음</li>
+</ul>
+</li>
+<li>
+<p><strong>선택적(Opt-in) 강화</strong></p>
+<ul>
+<li>사용자는 명시적으로 <code>--reasoningbank</code> 또는 <code>--rb</code>를 사용해야 합니다</li>
+<li>또는 먼저 <code>memory init --reasoningbank</code>를 실행해야 합니다</li>
+<li>그 후 선택적으로 기본 모드를 설정할 수 있습니다</li>
+</ul>
+</li>
+</ol>
+<h3>마이그레이션 경로</h3>
+<pre><code class="language-bash"># 1단계: 현재 메모리 확인
+claude-flow memory stats
+# 표시: 기본 모드에 150개 항목
+
+# 2단계: ReasoningBank 초기화
+claude-flow memory init --reasoningbank
+# .swarm/memory.db 생성
+
+# 3단계: (선택) 기존 데이터 마이그레이션
+claude-flow memory migrate --to reasoningbank
+# 150개 항목 모두 가져오기 + 임베딩 생성
+
+# 4단계: ReasoningBank 모드 사용
+claude-flow memory query api --reasoningbank
+# 이제 AI를 이용한 시맨틱 검색 사용
+</code></pre>
+<h2>📝 구현 계획</h2>
+<h3>1단계: 코어 통합 (1주차)</h3>
+<p><strong>파일</strong>: <code>src/cli/simple-commands/memory.js</code></p>
+<p>모드 감지 추가:</p>
+<pre><code class="language-javascript">export async function memoryCommand(subArgs, flags) {
+  const memorySubcommand = subArgs[0];
+
+  // 신규: 모드 감지
+  const mode = detectMemoryMode(flags);
+  // 반환값: 'basic' | 'reasoningbank' | 'auto'
+
+  if (mode === 'reasoningbank') {
+    // ReasoningBank 구현으로 위임
+    return await reasoningBankMemoryCommand(subArgs, flags);
+  }
+
+  // 기존 기본 구현 계속 진행...
+}
+</code></pre>
+<h3>2단계: 자동 감지 (1주차)</h3>
+<p>지능형 감지 기능 추가:</p>
+<pre><code class="language-javascript">async function detectMemoryMode(flags) {
+  // 명시적 플래그가 우선 적용됩니다
+  if (flags.reasoningbank || flags.rb) {
+    return 'reasoningbank';
+  }
+
+  // 자동 모드: ReasoningBank가 초기화되었는지 확인
+  if (flags.auto) {
+    const rbAvailable = await isReasoningBankInitialized();
+    return rbAvailable ? 'reasoningbank' : 'basic';
+  }
+
+  // 기본값: 기본 모드 (하위 호환)
+  return 'basic';
+}
+</code></pre>
+<h3>3단계: 강화된 명령어 (2주차)</h3>
+<p>ReasoningBank 관련 기능 추가:</p>
+<pre><code class="language-javascript">// ReasoningBank 모드에서만 사용 가능한 새로운 명령어
+case 'init':
+  if (mode === 'reasoningbank') {
+    await initializeReasoningBank();
+  }
+  break;
+
+case 'status':
+  if (mode === 'reasoningbank') {
+    await showReasoningBankStatus();
+  } else {
+    await showBasicMemoryStats();
+  }
+  break;
+</code></pre>
+<h3>4단계: 마이그레이션 도구 (2주차)</h3>
+<p>마이그레이션 유틸리티 추가:</p>
+<pre><code class="language-javascript">case 'migrate':
+  await migrateMemoryData(flags.to); // 'reasoningbank' 또는 'basic'
+  break;
+
+case 'detect':
+  await detectAndShowAvailableModes();
+  break;
+</code></pre>
+<h2>🎯 사용자 경험</h2>
+<h3>처음 사용자</h3>
+<pre><code class="language-bash"># 즉시 기본 메모리 설치 및 사용
+$ claude-flow memory store project &quot;Started new API project&quot;
+✅ Stored: project
+
+$ claude-flow memory query project
+✅ Found 1 result:
+   project: Started new API project
+
+# 추후: ReasoningBank 발견
+$ claude-flow memory detect
+ℹ️  사용 가능한 메모리 모드:
+   ✅ 기본 모드 (활성)
+   ⚠️  ReasoningBank (초기화되지 않음)
+
+💡 AI 기반 메모리를 활성화하려면:
+   claude-flow memory init --reasoningbank
+</code></pre>
+<h3>기존 사용자 (하위 호환)</h3>
+<pre><code class="language-bash"># 기존 설치 - 모든 것이 변경 없이 작동
+$ claude-flow memory stats
+📊 메모리 통계:
+   총 항목 수: 247
+   네임스페이스: 5
+   크기: 45.2 KB
+   모드: Basic
+
+# ReasoningBank 선택적 사용
+$ claude-flow memory init --reasoningbank
+🧠 ReasoningBank 초기화 중...
+✅ 생성됨: .swarm/memory.db
+✅ ReasoningBank 준비 완료!
+
+# 기존 데이터 마이그레이션 (선택 사항)
+$ claude-flow memory migrate --to reasoningbank
+📦 247개 항목 마이그레이션 중...
+⏳ 임베딩 생성 중... (시간이 걸릴 수 있습니다)
+✅ 마이그레이션 성공!
+
+# 이제 두 모드 중 하나를 사용
+$ claude-flow memory query api
+# 기본 모드 사용 (기본값)
+
+$ claude-flow memory query api --reasoningbank
+# 시맨틱 검색과 함께 ReasoningBank 사용
+</code></pre>
+<h3>고급 사용자</h3>
+<pre><code class="language-bash"># 설정을 통해 기본 모드 설정
+$ claude-flow config set memory.default_mode reasoningbank
+✅ 기본 메모리 모드: ReasoningBank
+
+# 이제 모든 명령어가 기본적으로 ReasoningBank를 사용
+$ claude-flow memory query performance
+# 자동으로 ReasoningBank 사용
+
+# 기본 모드를 사용하도록 재정의
+$ claude-flow memory query performance --basic
+# 강제로 기본 모드 사용
+</code></pre>
+<h2>🔐 보안 및 개인정보 보호</h2>
+<h3>데이터 분리</h3>
+<ul>
+<li>기본 모드: <code>./memory/memory-store.json</code></li>
+<li>ReasoningBank: <code>.swarm/memory.db</code></li>
+<li>두 모드 모두 <code>--redact</code> 플래그 지원</li>
+<li>ReasoningBank 임베딩은 원본 API 키를 절대 노출하지 않음</li>
+</ul>
+<h3>개인정보 보호 제어</h3>
+<pre><code class="language-bash"># 두 모드에서 민감한 데이터 수정
+claude-flow memory store api &quot;sk-ant-xxx&quot; --redact
+
+# 개인정보 보호 우선 로컬 임베딩을 사용하는 ReasoningBank
+claude-flow memory init --reasoningbank --local-embeddings
+# ONNX 로컬 모델을 사용하며, 외부 API로 데이터를 전송하지 않음
+</code></pre>
+<h2>📊 성능 비교</h2>
+<table>
+<thead>
+<tr>
+<th>메트릭</th>
+<th>기본 모드</th>
+<th>ReasoningBank</th>
+<th>개선점</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>쿼리 속도</td>
+<td>2ms</td>
+<td>15ms</td>
+<td>-6.5배 느림</td>
+</tr>
+<tr>
+<td>쿼리 정확도</td>
+<td>60%</td>
+<td>88%</td>
+<td>+46% 향상</td>
+</tr>
+<tr>
+<td>학습</td>
+<td>없음</td>
+<td>가능</td>
+<td>∞ 향상</td>
+</tr>
+<tr>
+<td>메모리 사용량</td>
+<td>1MB</td>
+<td>50MB</td>
+<td>-49배 더 많음</td>
+</tr>
+<tr>
+<td>설정 시간</td>
+<td>0s</td>
+<td>30s</td>
+<td>-30초 더 김</td>
+</tr>
+</tbody>
+</table>
+<p><strong>권장 사항</strong>: 간단한 key-value 저장에는 기본 모드를, AI 기반 학습 및 시맨틱 검색에는 ReasoningBank를 사용하세요.</p>
+<h2>🧪 테스트 전략</h2>
+<h3>하위 호환성 테스트</h3>
+<pre><code class="language-bash"># 테스트 1: 기존 명령어가 변경 없이 작동하는지 확인
+claude-flow memory store test &quot;value&quot;
+claude-flow memory query test
+
+# 테스트 2: 강제 마이그레이션이 없는지 확인
+claude-flow memory stats
+# 기본적으로 기본 모드를 표시해야 함
+
+# 테스트 3: 선택적 사용(Opt-in)이 작동하는지 확인
+claude-flow memory query test --reasoningbank
+# 초기화되지 않은 경우 정상적으로 실패해야 함
+</code></pre>
+<h3>통합 테스트</h3>
+<pre><code class="language-bash"># 테스트 4: ReasoningBank 초기화
+claude-flow memory init --reasoningbank
+claude-flow memory status --reasoningbank
+
+# 테스트 5: 마이그레이션
+claude-flow memory migrate --to reasoningbank
+claude-flow memory stats --reasoningbank
+
+# 테스트 6: 모드 감지
+claude-flow memory detect
+</code></pre>
+<h2>📚 문서 업데이트</h2>
+<h3>도움말 텍스트 업데이트</h3>
+<pre><code class="language-bash">$ claude-flow memory --help
+
+메모리 관리
+
+사용법:
+  claude-flow memory &lt;command&gt; [options]
+
+모드:
+  기본 모드 (기본값)     JSON 파일에 간단한 key-value 저장
+  ReasoningBank 모드       시맨틱 검색을 통한 AI 기반 학습
+
+플래그:
+  --reasoningbank, --rb    ReasoningBank 모드 사용 (AI 기반)
+  --auto                   최적 모드 자동 감지
+  --basic                  강제로 기본 모드 사용
+  --redact                 API 키 수정 활성화
+
+명령어:
+  store &lt;key&gt; &lt;value&gt;      key-value 쌍 저장
+  query &lt;search&gt;           항목 검색
+  stats                    메모리 통계 표시
+  export [filename]        메모리를 파일로 내보내기
+  import &lt;filename&gt;        파일에서 메모리 가져오기
+  clear --namespace &lt;ns&gt;   네임스페이스 비우기
+  list                     모든 네임스페이스 목록 표시
+
+  # ReasoningBank 명령어 (--reasoningbank 필요)
+  init --reasoningbank     ReasoningBank 시스템 초기화
+  status --reasoningbank   ReasoningBank 통계 표시
+  consolidate --rb         ReasoningBank 데이터베이스 최적화
+
+  # 모드 관리
+  detect                   사용 가능한 메모리 모드 표시
+  migrate --to &lt;mode&gt;      기본/reasoningbank 모드 간 마이그레이션
+  mode                     현재 기본 모드 표시
+
+예시:
+  # 기본 모드 (항상 작동)
+  memory store api_key &quot;sk-ant-xxx&quot; --redact
+  memory query research
+
+  # ReasoningBank 모드 (초기화 필요)
+  memory init --reasoningbank
+  memory store api_key &quot;sk-ant-xxx&quot; --reasoningbank
+  memory query research --reasoningbank
+
+  # 자동 감지 (사용 가능한 최적의 모드 사용)
+  memory query research --auto
+</code></pre>
+<h2>🚦 출시 계획</h2>
+<h3>버전 2.6.1 (현재)</h3>
+<ul>
+<li>✅ <code>agent memory</code> 명령어를 통해 ReasoningBank 사용 가능</li>
+<li>✅ 코어 메모리는 독립적으로 작동</li>
+</ul>
+<h3>버전 2.7.0 (다음 - 이 통합)</h3>
+<ul>
+<li>🎯 <code>memory</code> 명령어에 <code>--reasoningbank</code> 플래그 추가</li>
+<li>🎯 모드 감지 및 자동 선택 기능 추가</li>
+<li>🎯 마이그레이션 도구 추가</li>
+<li>🎯 도움말 및 문서 업데이트</li>
+<li>🎯 완전한 하위 호환성 유지</li>
+</ul>
+<h3>버전 2.8.0 (미래)</h3>
+<ul>
+<li>🔮 하이브리드 모드 추가 (둘 다 동시 사용)</li>
+<li>🔮 기본 ↔ ReasoningBank 간 동기화 추가</li>
+<li>🔮 클라우드 ReasoningBank 동기화 추가</li>
+</ul>
+<h2>✅ 이점</h2>
+<h3>사용자 측면</h3>
+<ol>
+<li><strong>원활한 업그레이드 경로</strong>: 강제 변경 없음</li>
+<li><strong>모드 선택</strong>: 간단한 작업에는 기본 모드, AI 기능에는 ReasoningBank</li>
+<li><strong>점진적 마이그레이션</strong>: 기존 데이터 손실 없이 ReasoningBank 시도 가능</li>
+<li><strong>성능 옵션</strong>: 빠른 기본 모드 vs. 스마트한 ReasoningBank</li>
+</ol>
+<h3>개발 측면</h3>
+<ol>
+<li><strong>호환성을 깨는 변경 없음</strong>: 기존 코드가 계속 작동</li>
+<li><strong>기능 플래그 패턴</strong>: 활성화/비활성화 용이</li>
+<li><strong>독립적인 테스트</strong>: 각 모드를 개별적으로 테스트</li>
+<li><strong>깔끔한 아키텍처</strong>: 명확한 관심사 분리</li>
+</ol>
+<h2>🔌 MCP 도구 통합</h2>
+<h3>현재 MCP 도구</h3>
+<p><strong>기존</strong> (<code>mcp__claude-flow__memory_usage</code>)</p>
+<pre><code class="language-javascript">// 현재 구현 - 기본 모드만 해당
+mcp__claude-flow__memory_usage({
+  action: &quot;store&quot;,
+  key: &quot;api_config&quot;,
+  value: &quot;some data&quot;
+})
+</code></pre>
+<h3>강화된 MCP 도구</h3>
+<p><strong>옵션 1: 모드 매개변수 추가</strong></p>
+<pre><code class="language-javascript">// 하위 호환 - 기본적으로 기본 모드 사용
+mcp__claude-flow__memory_usage({
+  action: &quot;store&quot;,
+  key: &quot;api_config&quot;,
+  value: &quot;some data&quot;,
+  mode: &quot;basic&quot;  // 신규: 선택 사항, 기본값 &quot;basic&quot;
+})
+
+// ReasoningBank 선택적 사용
+mcp__claude-flow__memory_usage({
+  action: &quot;store&quot;,
+  key: &quot;api_config&quot;,
+  value: &quot;some data&quot;,
+  mode: &quot;reasoningbank&quot;  // 신규: AI 기반 모드 사용
+})
+
+// 최적 모드 자동 감지
+mcp__claude-flow__memory_usage({
+  action: &quot;store&quot;,
+  key: &quot;api_config&quot;,
+  value: &quot;some data&quot;,
+  mode: &quot;auto&quot;  // 신규: 지능적 선택
+})
+</code></pre>
+<p><strong>옵션 2: 별도의 MCP 도구</strong> (권장)</p>
+<p>하위 호환성을 유지하고 새로운 도구를 추가합니다:</p>
+<pre><code class="language-javascript">// 기존 도구 - 변경 없음 (기본 모드)
+mcp__claude-flow__memory_usage({
+  action: &quot;store&quot;,
+  key: &quot;api_config&quot;,
+  value: &quot;some data&quot;
+})
+
+// 신규 도구 - ReasoningBank
+mcp__claude-flow__reasoningbank_memory({
+  action: &quot;store&quot;,
+  key: &quot;api_config&quot;,
+  value: &quot;some data&quot;,
+  domain: &quot;api&quot;,           // 신규: 시맨틱 도메인
+  confidence: 0.8          // 신규: 학습 신뢰도
+})
+
+// 신규 도구 - 시맨틱 쿼리
+mcp__claude-flow__reasoningbank_query({
+  query: &quot;how to configure API&quot;,
+  k: 3,                    // 상위 k개 결과
+  min_confidence: 0.7      // 최소 신뢰도 임계값
+})
+</code></pre>
+<h3>MCP 도구 스키마 업데이트</h3>
+<p><strong>강화된 memory_usage 도구</strong>:</p>
+<pre><code class="language-json">{
+  &quot;name&quot;: &quot;mcp__claude-flow__memory_usage&quot;,
+  &quot;description&quot;: &quot;선택적인 ReasoningBank 모드로 메모리 저장/검색&quot;,
+  &quot;parameters&quot;: {
+    &quot;action&quot;: {
+      &quot;type&quot;: &quot;string&quot;,
+      &quot;enum&quot;: [&quot;store&quot;, &quot;retrieve&quot;, &quot;list&quot;, &quot;delete&quot;, &quot;search&quot;]
+    },
+    &quot;key&quot;: { &quot;type&quot;: &quot;string&quot; },
+    &quot;value&quot;: { &quot;type&quot;: &quot;string&quot; },
+    &quot;namespace&quot;: { &quot;type&quot;: &quot;string&quot; },
+    &quot;mode&quot;: {
+      &quot;type&quot;: &quot;string&quot;,
+      &quot;enum&quot;: [&quot;basic&quot;, &quot;reasoningbank&quot;, &quot;auto&quot;],
+      &quot;default&quot;: &quot;basic&quot;,
+      &quot;description&quot;: &quot;메모리 모드: basic (JSON), reasoningbank (AI), auto (감지)&quot;
+    },
+    &quot;ttl&quot;: { &quot;type&quot;: &quot;number&quot; }
+  }
+}
+</code></pre>
+<p><strong>신규 ReasoningBank 전용 도구</strong>:</p>
+<pre><code class="language-json">{
+  &quot;name&quot;: &quot;mcp__claude-flow__reasoningbank_store&quot;,
+  &quot;description&quot;: &quot;AI 학습으로 메모리 저장 (ReasoningBank)&quot;,
+  &quot;parameters&quot;: {
+    &quot;key&quot;: { &quot;type&quot;: &quot;string&quot; },
+    &quot;value&quot;: { &quot;type&quot;: &quot;string&quot; },
+    &quot;domain&quot;: {
+      &quot;type&quot;: &quot;string&quot;,
+      &quot;description&quot;: &quot;시맨틱 도메인 (예: 'api', 'security', 'performance')&quot;
+    },
+    &quot;confidence&quot;: {
+      &quot;type&quot;: &quot;number&quot;,
+      &quot;minimum&quot;: 0,
+      &quot;maximum&quot;: 1,
+      &quot;description&quot;: &quot;이 메모리에 대한 신뢰도 점수&quot;
+    },
+    &quot;metadata&quot;: {
+      &quot;type&quot;: &quot;object&quot;,
+      &quot;description&quot;: &quot;학습을 위한 추가 메타데이터&quot;
+    }
+  }
+}
+</code></pre>
+<h3>MCP 사용 예시</h3>
+<p><strong>ReasoningBank와 함께 사용하는 Claude Desktop</strong>:</p>
+<pre><code class="language-typescript">// Claude Desktop 대화에서
+&quot;방금 배운 API 설정을 저장해줘&quot;
+
+// Claude Code MCP 호출 (모드 자동 감지):
+await mcp__claude-flow__memory_usage({
+  action: &quot;store&quot;,
+  key: &quot;api_config_pattern&quot;,
+  value: &quot;Always use environment variables for API keys&quot;,
+  mode: &quot;auto&quot;  // 초기화된 경우 ReasoningBank를 사용합니다
+})
+
+// 나중에, 새로운 대화에서:
+&quot;API 설정에 대해 내가 배운 게 뭐지?&quot;
+
+// Claude Code MCP 호출:
+await mcp__claude-flow__reasoningbank_query({
+  query: &quot;API configuration best practices&quot;,
+  k: 3
+})
+
+// 신뢰도 점수와 함께 시맨틱 검색 결과를 반환합니다:
+// 1. [0.92] Always use environment variables for API keys
+// 2. [0.85] API keys should be in .env files
+// 3. [0.78] Never commit API keys to git
+</code></pre>
+<h3>MCP 통합의 이점</h3>
+<ol>
+<li><strong>호환성을 깨는 변경 없음</strong>: 기존 MCP 호출이 변경 없이 작동</li>
+<li><strong>선택적 강화</strong>: ReasoningBank를 활성화하기 위해 <code>mode</code> 매개변수 추가</li>
+<li><strong>지능적인 기본값</strong>: <code>mode: &quot;auto&quot;</code>가 사용 가능한 최적의 모드를 감지</li>
+<li><strong>전용 도구</strong>: ReasoningBank 관련 기능을 위한 새로운 도구</li>
+<li><strong>세션 간 학습</strong>: MCP 도구는 Claude Desktop 세션 간에 유지됨</li>
+</ol>
+<h3>MCP 도구 마이그레이션 경로</h3>
+<pre><code class="language-typescript">// 1단계: 현재 (v2.6.x)
+mcp__claude-flow__memory_usage({ action: &quot;store&quot;, ... })
+// 항상 기본 모드 사용
+
+// 2단계: 강화 (v2.7.0)
+mcp__claude-flow__memory_usage({
+  action: &quot;store&quot;,
+  mode: &quot;auto&quot;,  // 신규 매개변수 (선택 사항)
+  ...
+})
+// ReasoningBank 사용 가능 시 자동 감지
+
+// 3단계: 전용 (v2.7.0)
+mcp__claude-flow__reasoningbank_store({
+  key: &quot;pattern&quot;,
+  value: &quot;learned behavior&quot;,
+  domain: &quot;coding&quot;,
+  confidence: 0.9
+})
+// 모든 기능을 갖춘 ReasoningBank 전용 도구
+</code></pre>
+<h2>🎉 요약</h2>
+<p>이 통합은 ReasoningBank를 코어 메모리의 <strong>선택적 강화 기능</strong>으로 추가합니다:</p>
+<p>✅ <strong>하위 호환성</strong>: 기존 설치가 변경 없이 작동합니다
+✅ <strong>선택적 사용(Opt-In)</strong>: 사용자가 ReasoningBank 활성화 시점을 선택합니다
+✅ <strong>자동 감지</strong>: <code>--auto</code>를 통한 지능적인 모드 선택
+✅ <strong>마이그레이션 도구</strong>: 기본 모드에서 ReasoningBank로의 쉬운 업그레이드 경로
+✅ <strong>유연성</strong>: 필요에 따라 기본, ReasoningBank 또는 둘 다 사용 가능
+✅ <strong>문서화</strong>: 두 모드를 모두 보여주는 명확한 도움말 텍스트
+✅ <strong>MCP 통합</strong>: Claude Desktop이 두 메모리 모드를 원활하게 사용 가능</p>
+<p><strong>결과</strong>: 두 가지 장점을 모두 누리세요 - 간단한 JSON 저장소 또는 AI 기반 학습 메모리! 🚀</p>
+
+  </div>
+</article>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Hanson Kim. All rights reserved.</p>
+  </footer>
+</body>
+</html>

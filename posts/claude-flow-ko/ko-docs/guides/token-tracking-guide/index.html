@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Token Tracking Guide</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="/" class="logo">Hanson Kim</a>
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/blog/">Blog</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    
+<article class="post">
+  <header class="post-header">
+    <h1>Token Tracking Guide</h1>
+    <time datetime="2025년 10월 15일">2025년 10월 15일</time>
+    
+    <div class="tags">
+      
+        
+      
+        
+        <span class="tag">Claude-Flow</span>
+        
+      
+        
+        <span class="tag">문서</span>
+        
+      
+        
+        <span class="tag">AI</span>
+        
+      
+    </div>
+    
+  </header>
+
+  <div class="post-content">
+    <h1>Claude Token 추적 가이드</h1>
+<h2>개요</h2>
+<p>Claude Flow는 이제 시뮬레이션 데이터가 아닌 실제 Claude API 사용량을 캡처하는 <strong>실제</strong> token 추적 기능을 포함합니다. 이 가이드는 Claude Code CLI로 token 추적을 활성화하고 사용하는 방법을 보여줍니다.</p>
+<h2>빠른 시작</h2>
+<h3>단계 1: Telemetry 활성화</h3>
+<p>먼저 token 추적을 위한 telemetry를 활성화하세요:</p>
+<pre><code class="language-bash">./claude-flow analysis setup-telemetry
+</code></pre>
+<p>이 명령은 다음을 수행합니다:</p>
+<ul>
+<li><code>CLAUDE_CODE_ENABLE_TELEMETRY=1</code> 환경 변수 설정</li>
+<li>telemetry 설정으로 <code>.env</code> 파일 생성</li>
+<li>token 추적 디렉토리 초기화 (<code>.claude-flow/metrics/</code>)</li>
+</ul>
+<h3>단계 2: Token 추적으로 Claude 실행</h3>
+<p>telemetry가 활성화된 <code>--claude</code> 플래그 사용:</p>
+<pre><code class="language-bash"># 옵션 1: 환경 변수를 인라인으로 설정
+CLAUDE_CODE_ENABLE_TELEMETRY=1 ./claude-flow swarm &quot;your task&quot; --claude
+
+# 옵션 2: 환경 변수 내보내기
+export CLAUDE_CODE_ENABLE_TELEMETRY=1
+./claude-flow swarm &quot;your task&quot; --claude
+
+# 옵션 3: wrapper 직접 사용
+./claude-flow analysis claude-monitor  # 한 터미널에서 모니터링 시작
+./claude-flow swarm &quot;your task&quot; --claude  # 다른 터미널에서 Claude 실행
+</code></pre>
+<h3>단계 3: Token 사용량 보기</h3>
+<p>Claude 명령어 실행 후:</p>
+<pre><code class="language-bash"># 종합 token 사용량 리포트 보기
+./claude-flow analysis token-usage --breakdown --cost-analysis
+
+# 현재 세션 비용 확인
+./claude-flow analysis claude-cost
+
+# 실시간 세션 모니터링
+./claude-flow analysis claude-monitor [session-id]
+</code></pre>
+<h2>아키텍처</h2>
+<h3>작동 방식</h3>
+<ol>
+<li><strong>Claude Telemetry 통합</strong>: 시스템이 Claude의 기본 OpenTelemetry 지원과 통합됨</li>
+<li><strong>프로세스 래핑</strong>: telemetry가 활성화되면 Claude 명령어가 출력을 캡처하도록 래핑됨</li>
+<li><strong>Token 추출</strong>: Token 사용량이 다음에서 추출됨:
+<ul>
+<li>Claude CLI 출력 패턴</li>
+<li>세션 JSONL 파일 (접근 가능한 경우)</li>
+<li><code>/cost</code> 명령어 출력</li>
+</ul>
+</li>
+<li><strong>영구 스토리지</strong>: Token 데이터가 <code>.claude-flow/metrics/token-usage.json</code>에 저장됨</li>
+</ol>
+<h3>주요 구성요소</h3>
+<ul>
+<li><strong><code>claude-telemetry.js</code></strong>: 핵심 telemetry wrapper 모듈</li>
+<li><strong><code>token-tracker.js</code></strong>: Token 추적 및 비용 계산</li>
+<li><strong><code>analysis.js</code></strong>: 분석 명령어 및 리포트</li>
+</ul>
+<h2>기능</h2>
+<h3>실시간 모니터링</h3>
+<p>Claude 세션을 실행 중에 모니터링:</p>
+<pre><code class="language-bash"># 기본 5초 간격으로 모니터링
+./claude-flow analysis claude-monitor
+
+# 사용자 정의 간격(3초)으로 모니터링
+./claude-flow analysis claude-monitor current --interval 3000
+</code></pre>
+<h3>비용 분석</h3>
+<p>Claude 3 가격 기반 비용 추적:</p>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th>Input (100만 token당)</th>
+<th>Output (100만 token당)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Opus</td>
+<td>$15.00</td>
+<td>$75.00</td>
+</tr>
+<tr>
+<td>Sonnet</td>
+<td>$3.00</td>
+<td>$15.00</td>
+</tr>
+<tr>
+<td>Haiku</td>
+<td>$0.25</td>
+<td>$1.25</td>
+</tr>
+</tbody>
+</table>
+<h3>Token 분석</h3>
+<p>다음별 token 사용량 보기:</p>
+<ul>
+<li>Agent 유형</li>
+<li>명령어</li>
+<li>세션</li>
+<li>기간</li>
+</ul>
+<pre><code class="language-bash"># 상세 분석
+./claude-flow analysis token-usage --breakdown
+
+# Agent별 분석
+./claude-flow analysis token-usage --agent coordinator --cost-analysis
+</code></pre>
+<h2>고급 사용법</h2>
+<h3>프로그래밍 방식 Token 추적</h3>
+<p>telemetry wrapper를 프로그래밍 방식으로도 사용할 수 있습니다:</p>
+<pre><code class="language-javascript">import { runClaudeWithTelemetry } from './claude-telemetry.js';
+
+const result = await runClaudeWithTelemetry(
+  ['chat', 'Hello, Claude!'],
+  {
+    sessionId: 'my-session-123',
+    agentType: 'custom-agent'
+  }
+);
+</code></pre>
+<h3>세션 모니터링</h3>
+<p>특정 세션 모니터링:</p>
+<pre><code class="language-javascript">import { monitorClaudeSession } from './claude-telemetry.js';
+
+const stopMonitor = await monitorClaudeSession('session-id', 5000);
+
+// 완료되면 모니터링 중지
+stopMonitor();
+</code></pre>
+<h2>문제 해결</h2>
+<h3>Token 데이터가 표시되지 않음</h3>
+<ol>
+<li>
+<p>telemetry가 활성화되었는지 확인:</p>
+<pre><code class="language-bash">echo $CLAUDE_CODE_ENABLE_TELEMETRY  # 출력: 1
+</code></pre>
+</li>
+<li>
+<p>token 사용량 파일이 존재하는지 확인:</p>
+<pre><code class="language-bash">cat .claude-flow/metrics/token-usage.json
+</code></pre>
+</li>
+<li>
+<p>Claude가 설치되었는지 확인:</p>
+<pre><code class="language-bash">which claude  # Claude 경로를 표시해야 함
+</code></pre>
+</li>
+</ol>
+<h3>Token 추적이 작동하지 않음</h3>
+<ol>
+<li>
+<p>기존 지표 정리:</p>
+<pre><code class="language-bash">rm -rf .claude-flow/metrics/token-usage.json
+</code></pre>
+</li>
+<li>
+<p>telemetry 재활성화:</p>
+<pre><code class="language-bash">./claude-flow analysis setup-telemetry
+</code></pre>
+</li>
+<li>
+<p>명시적 telemetry로 실행:</p>
+<pre><code class="language-bash">CLAUDE_CODE_ENABLE_TELEMETRY=1 ./claude-flow swarm &quot;test&quot; --claude
+</code></pre>
+</li>
+</ol>
+<h2>CI/CD 통합</h2>
+<p>자동화된 환경을 위해:</p>
+<pre><code class="language-yaml"># GitHub Actions 예제
+env:
+  CLAUDE_CODE_ENABLE_TELEMETRY: '1'
+
+steps:
+  - name: Setup telemetry
+    run: ./claude-flow analysis setup-telemetry
+
+  - name: Run Claude task
+    run: ./claude-flow swarm &quot;$&quot; --claude
+
+  - name: Report costs
+    run: ./claude-flow analysis claude-cost
+</code></pre>
+<h2>개인정보 보호 및 보안</h2>
+<ul>
+<li><strong>민감한 데이터 없음</strong>: token 수와 비용만 추적됨</li>
+<li><strong>로컬 스토리지</strong>: 모든 데이터가 로컬 <code>.claude-flow/metrics/</code>에 저장됨</li>
+<li><strong>선택 사항</strong>: Telemetry는 명시적으로 활성화해야 함</li>
+<li><strong>외부 전송 없음</strong>: 데이터가 외부 서버로 전송되지 않음</li>
+</ul>
+<h2>모범 사례</h2>
+<ol>
+<li><strong>한 번만 telemetry 활성화</strong>: 지속성을 위해 <code>.env</code> 파일에 설정</li>
+<li><strong>긴 작업 모니터링</strong>: 5분 이상 작업에는 <code>claude-monitor</code> 사용</li>
+<li><strong>정기적인 비용 확인</strong>: 비용이 많이 드는 작업 후 <code>claude-cost</code> 실행</li>
+<li><strong>배치 작업</strong>: token 사용량을 최적화하기 위해 Claude 호출을 그룹화</li>
+<li><strong>적절한 모델 사용</strong>: 간단한 작업에는 Haiku, 복잡한 작업에는 Opus 선택</li>
+</ol>
+<h2>API 참조</h2>
+<h3>명령어</h3>
+<table>
+<thead>
+<tr>
+<th>명령어</th>
+<th>설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>analysis setup-telemetry</code></td>
+<td>token 추적 구성</td>
+</tr>
+<tr>
+<td><code>analysis token-usage</code></td>
+<td>token 사용량 리포트 보기</td>
+</tr>
+<tr>
+<td><code>analysis claude-monitor</code></td>
+<td>실시간 세션 모니터링</td>
+</tr>
+<tr>
+<td><code>analysis claude-cost</code></td>
+<td>현재 세션 비용 확인</td>
+</tr>
+</tbody>
+</table>
+<h3>환경 변수</h3>
+<table>
+<thead>
+<tr>
+<th>변수</th>
+<th>설명</th>
+<th>기본값</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>CLAUDE_CODE_ENABLE_TELEMETRY</code></td>
+<td>token 추적 활성화</td>
+<td><code>0</code></td>
+</tr>
+<tr>
+<td><code>OTEL_METRICS_EXPORTER</code></td>
+<td>OpenTelemetry exporter</td>
+<td><code>console</code></td>
+</tr>
+<tr>
+<td><code>OTEL_LOGS_EXPORTER</code></td>
+<td>Log exporter 유형</td>
+<td><code>console</code></td>
+</tr>
+</tbody>
+</table>
+<h3>파일</h3>
+<table>
+<thead>
+<tr>
+<th>파일</th>
+<th>목적</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>.claude-flow/metrics/token-usage.json</code></td>
+<td>Token 사용량 데이터</td>
+</tr>
+<tr>
+<td><code>.claude-flow/metrics/sessions/*.json</code></td>
+<td>세션 지표</td>
+</tr>
+<tr>
+<td><code>.env</code></td>
+<td>환경 구성</td>
+</tr>
+</tbody>
+</table>
+<h2>예제</h2>
+<h3>완전한 워크플로</h3>
+<pre><code class="language-bash"># 1. 설정
+./claude-flow analysis setup-telemetry
+
+# 2. 추적과 함께 작업 실행
+export CLAUDE_CODE_ENABLE_TELEMETRY=1
+./claude-flow swarm &quot;Create a REST API with authentication&quot; --claude
+
+# 3. 사용량 확인
+./claude-flow analysis token-usage --breakdown --cost-analysis
+
+# 4. 다음 세션 모니터링
+./claude-flow analysis claude-monitor &amp;  # 백그라운드에서 실행
+./claude-flow swarm &quot;Add tests to the API&quot; --claude
+
+# 5. 최종 비용 리포트
+./claude-flow analysis claude-cost
+</code></pre>
+<h3>최적화 예제</h3>
+<pre><code class="language-bash"># token 사용량 패턴 분석
+./claude-flow analysis token-usage --breakdown
+
+# 높은 소비 agent 식별
+./claude-flow analysis token-usage --agent coordinator
+
+# 최적화 제안 받기
+./claude-flow analysis bottleneck-detect --scope agent
+</code></pre>
+<h2>지원</h2>
+<p>문제 또는 질문이 있는 경우:</p>
+<ul>
+<li>GitHub Issues: https://github.com/ruvnet/claude-flow/issues</li>
+<li>문서: https://github.com/ruvnet/claude-flow/docs</li>
+</ul>
+<h2>결론</h2>
+<p>Claude Flow의 실제 token 추적은 API 사용량과 비용에 대한 투명성을 제공합니다. 이 가이드를 따르면 다음을 수행할 수 있습니다:</p>
+<ul>
+<li>실제 Claude API token 소비 추적</li>
+<li>실시간 비용 모니터링</li>
+<li>token 사용 패턴 최적화</li>
+<li>모델 선택에 대한 정보에 입각한 결정</li>
+</ul>
+<p>기억하세요: 이것은 시뮬레이션 데이터가 아닌 <strong>실제</strong> 사용량을 추적합니다!</p>
+
+  </div>
+</article>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Hanson Kim. All rights reserved.</p>
+  </footer>
+</body>
+</html>

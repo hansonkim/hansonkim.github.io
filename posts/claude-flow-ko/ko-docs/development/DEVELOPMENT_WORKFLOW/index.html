@@ -1,0 +1,974 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DEVELOPMENT WORKFLOW</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="/" class="logo">Hanson Kim</a>
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/blog/">Blog</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    
+<article class="post">
+  <header class="post-header">
+    <h1>DEVELOPMENT WORKFLOW</h1>
+    <time datetime="2025년 10월 15일">2025년 10월 15일</time>
+    
+    <div class="tags">
+      
+        
+      
+        
+        <span class="tag">Claude-Flow</span>
+        
+      
+        
+        <span class="tag">문서</span>
+        
+      
+        
+        <span class="tag">AI</span>
+        
+      
+    </div>
+    
+  </header>
+
+  <div class="post-content">
+    <h1>🛠️ Development Workflow 가이드</h1>
+<h2>📋 목차</h2>
+<ul>
+<li><a href="#%EA%B0%9C%EB%B0%9C-%ED%99%98%EA%B2%BD-%EC%84%A4%EC%A0%95">개발 환경 설정</a></li>
+<li><a href="#%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8-%EA%B5%AC%EC%A1%B0">프로젝트 구조</a></li>
+<li><a href="#git-workflow">Git Workflow</a></li>
+<li><a href="#sparc-%EA%B0%9C%EB%B0%9C-%EB%AA%A8%EB%93%9C">SPARC 개발 모드</a></li>
+<li><a href="#swarm-development">Swarm Development</a></li>
+<li><a href="#%ED%85%8C%EC%8A%A4%ED%8A%B8-%EC%A0%84%EB%9E%B5">테스트 전략</a></li>
+<li><a href="#%EC%BD%94%EB%93%9C-%ED%91%9C%EC%A4%80">코드 표준</a></li>
+<li><a href="#cicd-pipeline">CI/CD Pipeline</a></li>
+<li><a href="#%EB%A6%B4%EB%A6%AC%EC%8A%A4-%ED%94%84%EB%A1%9C%EC%84%B8%EC%8A%A4">릴리스 프로세스</a></li>
+<li><a href="#%EB%AA%A8%EB%B2%94-%EC%82%AC%EB%A1%80">모범 사례</a></li>
+<li><a href="#%EB%AC%B8%EC%A0%9C-%ED%95%B4%EA%B2%B0">문제 해결</a></li>
+</ul>
+<hr>
+<h2>개발 환경 설정</h2>
+<h3>필수 요구사항</h3>
+<ul>
+<li><strong>Node.js</strong>: 18.x LTS 이상</li>
+<li><strong>npm</strong>: 9.x 이상</li>
+<li><strong>Git</strong>: 2.x 이상</li>
+<li><strong>Claude Code</strong>: 최신 버전</li>
+<li><strong>VS Code</strong> (권장) 또는 다른 코드 편집기</li>
+</ul>
+<h3>초기 설정</h3>
+<pre><code class="language-bash"># Repository clone
+git clone https://github.com/ruvnet/claude-flow.git
+cd claude-flow
+
+# Dependencies 설치
+npm install
+
+# Claude Code 설치 (전역)
+npm install -g @anthropic-ai/claude-code
+
+# MCP 서버 추가
+claude mcp add claude-flow npx claude-flow@alpha mcp start
+claude mcp add ruv-swarm npx ruv-swarm mcp start
+
+# 개발 환경 초기화
+npx claude-flow@alpha init --force
+
+# 환경 변수 설정
+cp .env.example .env
+# .env 파일을 편집하여 API key 설정
+</code></pre>
+<h3>VS Code 설정</h3>
+<p><strong>.vscode/settings.json</strong>:</p>
+<pre><code class="language-json">{
+  &quot;editor.formatOnSave&quot;: true,
+  &quot;editor.defaultFormatter&quot;: &quot;esbenp.prettier-vscode&quot;,
+  &quot;editor.codeActionsOnSave&quot;: {
+    &quot;source.fixAll.eslint&quot;: true
+  },
+  &quot;typescript.tsdk&quot;: &quot;node_modules/typescript/lib&quot;,
+  &quot;typescript.enablePromptUseWorkspaceTsdk&quot;: true,
+  &quot;files.exclude&quot;: {
+    &quot;**/node_modules&quot;: true,
+    &quot;**/dist&quot;: true,
+    &quot;**/.git&quot;: true
+  },
+  &quot;search.exclude&quot;: {
+    &quot;**/node_modules&quot;: true,
+    &quot;**/dist&quot;: true,
+    &quot;**/.swarm&quot;: true
+  }
+}
+</code></pre>
+<p><strong>.vscode/extensions.json</strong>:</p>
+<pre><code class="language-json">{
+  &quot;recommendations&quot;: [
+    &quot;dbaeumer.vscode-eslint&quot;,
+    &quot;esbenp.prettier-vscode&quot;,
+    &quot;ms-vscode.vscode-typescript-next&quot;,
+    &quot;yoavbls.pretty-ts-errors&quot;,
+    &quot;streetsidesoftware.code-spell-checker&quot;,
+    &quot;github.copilot&quot;
+  ]
+}
+</code></pre>
+<h3>환경 변수</h3>
+<p><strong>.env.development</strong>:</p>
+<pre><code class="language-bash"># Development environment
+NODE_ENV=development
+LOG_LEVEL=debug
+
+# Anthropic API
+ANTHROPIC_API_KEY=sk-ant-xxxxx
+CLAUDE_MODEL=claude-3-5-sonnet-20241022
+
+# Development features
+ENABLE_HOT_RELOAD=true
+ENABLE_DEBUG_MODE=true
+ENABLE_TELEMETRY=true
+
+# Local services
+DATABASE_URL=postgresql://localhost:5432/claude_flow_dev
+REDIS_URL=redis://localhost:6379
+
+# Testing
+TEST_TIMEOUT=30000
+JEST_WORKERS=4
+</code></pre>
+<hr>
+<h2>프로젝트 구조</h2>
+<pre><code>claude-flow/
+├── src/                      # Source code
+│   ├── commands/            # CLI commands
+│   ├── core/                # Core functionality
+│   ├── agents/              # Agent implementations
+│   ├── swarm/               # Swarm coordination
+│   ├── memory/              # Memory system
+│   ├── neural/              # Neural features
+│   └── utils/               # Utilities
+├── tests/                   # Test files
+│   ├── unit/               # Unit tests
+│   ├── integration/        # Integration tests
+│   ├── e2e/                # End-to-end tests
+│   └── performance/        # Performance tests
+├── docs/                    # Documentation
+│   ├── api/                # API documentation
+│   ├── guides/             # User guides
+│   ├── architecture/       # Architecture docs
+│   └── reference/          # Reference docs
+├── examples/               # Example projects
+├── scripts/                # Build and utility scripts
+├── .claude/                # Claude Code configuration
+│   ├── agents/             # Agent definitions
+│   ├── commands/           # Slash commands
+│   └── hooks/              # Workflow hooks
+├── .swarm/                 # Swarm runtime data
+│   └── memory.db           # ReasoningBank database
+└── dist/                   # Compiled output
+</code></pre>
+<h3>주요 디렉토리 설명</h3>
+<ul>
+<li><strong>src/commands/</strong>: CLI 명령어 구현 (swarm, hive-mind, memory, analysis 등)</li>
+<li><strong>src/core/</strong>: 핵심 기능 (orchestration, coordination, scheduling)</li>
+<li><strong>src/agents/</strong>: 54+ agent 구현 (coder, researcher, tester 등)</li>
+<li><strong>src/swarm/</strong>: Swarm topology 관리 (mesh, hierarchical, adaptive 등)</li>
+<li><strong>src/memory/</strong>: ReasoningBank 통합 및 영구 storage</li>
+<li><strong>src/neural/</strong>: Neural pattern recognition 및 training</li>
+<li><strong>tests/</strong>: 모든 테스트 파일 (각 src/ 파일과 대응)</li>
+</ul>
+<hr>
+<h2>Git Workflow</h2>
+<h3>Branch 전략</h3>
+<pre><code>main                    # Stable production code
+├── develop             # Active development
+├── feature/*          # Feature branches
+├── bugfix/*           # Bug fixes
+├── hotfix/*           # Production hotfixes
+└── release/*          # Release preparation
+</code></pre>
+<h3>Branch 명명 규칙</h3>
+<pre><code class="language-bash"># Feature development
+feature/add-neural-patterns
+feature/improve-swarm-coordination
+
+# Bug fixes
+bugfix/fix-memory-leak
+bugfix/resolve-agent-timeout
+
+# Hotfixes (production)
+hotfix/critical-security-fix
+
+# Releases
+release/v2.7.0
+</code></pre>
+<h3>Commit 메시지 규칙</h3>
+<pre><code class="language-bash"># Format: &lt;type&gt;(&lt;scope&gt;): &lt;subject&gt;
+
+# Types:
+feat:     # New feature
+fix:      # Bug fix
+docs:     # Documentation only
+style:    # Code style (formatting, no logic change)
+refactor: # Code refactoring
+perf:     # Performance improvement
+test:     # Adding/updating tests
+chore:    # Build process, dependencies, etc.
+ci:       # CI/CD changes
+
+# Examples:
+feat(swarm): add adaptive topology optimization
+fix(memory): resolve semantic search bug
+docs(api): update MCP tools documentation
+perf(neural): optimize pattern recognition speed
+test(agents): add integration tests for coordinators
+</code></pre>
+<h3>개발 워크플로</h3>
+<pre><code class="language-bash"># 1. Feature 브랜치 생성
+git checkout develop
+git pull origin develop
+git checkout -b feature/my-new-feature
+
+# 2. 변경사항 커밋
+git add .
+git commit -m &quot;feat(scope): description&quot;
+
+# 3. 최신 develop와 rebase
+git fetch origin
+git rebase origin/develop
+
+# 4. Push 및 Pull Request 생성
+git push origin feature/my-new-feature
+# GitHub에서 PR 생성
+
+# 5. Code review 및 approval 후 merge
+# PR이 main 또는 develop으로 merge됨
+
+# 6. Local 브랜치 정리
+git checkout develop
+git pull origin develop
+git branch -d feature/my-new-feature
+</code></pre>
+<hr>
+<h2>SPARC 개발 모드</h2>
+<h3>사용 가능한 모드 (16개)</h3>
+<pre><code class="language-bash"># 모든 모드 나열
+npx claude-flow@alpha sparc modes
+
+# 모드 카테고리:
+# 1. 전체 워크플로 (5)
+- spec-pseudocode    # Specification + Pseudocode
+- dev                # Complete development flow
+- api                # API development
+- ui                 # UI development
+- refactor           # Refactoring
+
+# 2. 개별 단계 (8)
+- spec               # Specification only
+- pseudo             # Pseudocode only
+- architect          # Architecture design
+- code               # Implementation
+- test               # Testing
+- review             # Code review
+- integration        # Integration
+- completion         # Final completion
+
+# 3. TDD 워크플로 (3)
+- tdd                # Test-Driven Development
+- tdd-london         # London School TDD (mocking)
+- tdd-detroit        # Detroit School TDD (state)
+</code></pre>
+<h3>SPARC 워크플로 예제</h3>
+<pre><code class="language-bash"># 1. Full Development Flow
+npx claude-flow@alpha sparc run dev &quot;Build REST API for user management&quot;
+
+# 2. API Development
+npx claude-flow@alpha sparc run api &quot;Create authentication endpoints&quot;
+
+# 3. TDD Workflow
+npx claude-flow@alpha sparc tdd &quot;Implement token validation&quot;
+
+# 4. Individual Steps
+npx claude-flow@alpha sparc run spec &quot;Define user story requirements&quot;
+npx claude-flow@alpha sparc run pseudo &quot;Design authentication algorithm&quot;
+npx claude-flow@alpha sparc run architect &quot;Design microservices architecture&quot;
+npx claude-flow@alpha sparc run code &quot;Implement user service&quot;
+npx claude-flow@alpha sparc run test &quot;Create comprehensive test suite&quot;
+
+# 5. Batch Execution (parallel)
+npx claude-flow@alpha sparc batch spec,pseudo,architect &quot;Multi-tenant system&quot;
+
+# 6. Pipeline (sequential)
+npx claude-flow@alpha sparc pipeline &quot;E-commerce checkout flow&quot;
+</code></pre>
+<h3>SPARC Mode 상세</h3>
+<h4>1. <strong>dev</strong> (Complete Development)</h4>
+<pre><code class="language-bash">npx claude-flow@alpha sparc run dev &quot;Feature description&quot;
+
+# 실행 단계:
+# 1. Specification analysis
+# 2. Pseudocode design
+# 3. Architecture design
+# 4. TDD implementation
+# 5. Code review
+# 6. Integration
+# 7. Documentation
+</code></pre>
+<h4>2. <strong>api</strong> (API Development)</h4>
+<pre><code class="language-bash">npx claude-flow@alpha sparc run api &quot;REST API description&quot;
+
+# 포함사항:
+# - OpenAPI/Swagger schema
+# - Endpoint implementation
+# - Request/response validation
+# - Authentication/authorization
+# - Error handling
+# - API documentation
+</code></pre>
+<h4>3. <strong>tdd</strong> (Test-Driven Development)</h4>
+<pre><code class="language-bash">npx claude-flow@alpha sparc tdd &quot;Feature with tests&quot;
+
+# TDD 사이클:
+# 1. Red: Write failing test
+# 2. Green: Make test pass
+# 3. Refactor: Improve code quality
+# 4. Repeat
+</code></pre>
+<hr>
+<h2>Swarm Development</h2>
+<h3>Swarm 초기화</h3>
+<pre><code class="language-bash"># Topology 옵션: mesh, hierarchical, ring, star, adaptive
+npx claude-flow@alpha swarm init --topology mesh --max-agents 8
+
+# Agent 생성
+npx claude-flow@alpha swarm spawn coder &quot;Implement feature X&quot;
+npx claude-flow@alpha swarm spawn tester &quot;Create test suite&quot;
+npx claude-flow@alpha swarm spawn reviewer &quot;Review implementation&quot;
+
+# 상태 확인
+npx claude-flow@alpha swarm status
+</code></pre>
+<h3>Hive-Mind Development</h3>
+<pre><code class="language-bash"># Interactive wizard
+npx claude-flow@alpha hive-mind wizard
+
+# Quick spawn
+npx claude-flow@alpha hive-mind spawn &quot;Build full-stack app&quot; --claude
+
+# Session 관리
+npx claude-flow@alpha hive-mind status
+npx claude-flow@alpha hive-mind resume session-xxxxx
+npx claude-flow@alpha hive-mind sessions --list
+</code></pre>
+<h3>Memory 활용</h3>
+<pre><code class="language-bash"># Store development decisions
+npx claude-flow@alpha memory store architecture &quot;Using microservices pattern&quot; \
+  --namespace project --reasoningbank
+
+# Query past decisions
+npx claude-flow@alpha memory query &quot;architecture&quot; \
+  --namespace project --reasoningbank
+
+# Export session memory
+npx claude-flow@alpha memory export session-xxxxx --format json
+</code></pre>
+<hr>
+<h2>테스트 전략</h2>
+<h3>테스트 유형</h3>
+<h4>1. Unit Tests</h4>
+<pre><code class="language-javascript">// tests/unit/agents/coder.test.js
+import { describe, it, expect } from '@jest/globals';
+import { CoderAgent } from '../../../src/agents/coder.js';
+
+describe('CoderAgent', () =&gt; {
+  it('should generate code from specification', async () =&gt; {
+    const agent = new CoderAgent();
+    const spec = {
+      type: 'function',
+      name: 'calculateTotal',
+      params: ['items'],
+      returns: 'number'
+    };
+
+    const code = await agent.generateCode(spec);
+
+    expect(code).toContain('function calculateTotal');
+    expect(code).toContain('return');
+  });
+
+  it('should validate generated code syntax', async () =&gt; {
+    const agent = new CoderAgent();
+    const code = 'function test() { return 42; }';
+
+    const isValid = await agent.validateSyntax(code);
+
+    expect(isValid).toBe(true);
+  });
+});
+</code></pre>
+<h4>2. Integration Tests</h4>
+<pre><code class="language-javascript">// tests/integration/swarm-coordination.test.js
+import { describe, it, expect, beforeAll, afterAll } from '@jest/globals';
+import { SwarmOrchestrator } from '../../src/swarm/orchestrator.js';
+import { MemoryManager } from '../../src/memory/manager.js';
+
+describe('Swarm Coordination', () =&gt; {
+  let swarm;
+  let memory;
+
+  beforeAll(async () =&gt; {
+    swarm = new SwarmOrchestrator({ topology: 'mesh' });
+    memory = new MemoryManager({ persistToDisk: true });
+    await swarm.initialize();
+  });
+
+  afterAll(async () =&gt; {
+    await swarm.destroy();
+    await memory.close();
+  });
+
+  it('should coordinate multiple agents', async () =&gt; {
+    const agents = [
+      await swarm.spawnAgent('coder'),
+      await swarm.spawnAgent('tester'),
+      await swarm.spawnAgent('reviewer')
+    ];
+
+    const task = {
+      description: 'Build feature X',
+      steps: ['design', 'implement', 'test', 'review']
+    };
+
+    const result = await swarm.orchestrate(task);
+
+    expect(result.status).toBe('completed');
+    expect(result.stepsCompleted).toBe(4);
+  });
+
+  it('should share memory between agents', async () =&gt; {
+    const coder = await swarm.spawnAgent('coder');
+    const tester = await swarm.spawnAgent('tester');
+
+    await memory.store('design-decisions', {
+      architecture: 'microservices',
+      database: 'postgresql'
+    });
+
+    const decisions = await memory.retrieve('design-decisions');
+
+    expect(decisions.architecture).toBe('microservices');
+  });
+});
+</code></pre>
+<h4>3. E2E Tests</h4>
+<pre><code class="language-javascript">// tests/e2e/full-workflow.test.js
+import { describe, it, expect } from '@jest/globals';
+import { exec } from 'child_process';
+import { promisify } from 'util';
+
+const execAsync = promisify(exec);
+
+describe('End-to-End Workflow', () =&gt; {
+  it('should complete full SPARC development cycle', async () =&gt; {
+    const { stdout } = await execAsync(
+      'npx claude-flow@alpha sparc run dev &quot;Simple calculator&quot;'
+    );
+
+    expect(stdout).toContain('✅ Specification');
+    expect(stdout).toContain('✅ Pseudocode');
+    expect(stdout).toContain('✅ Architecture');
+    expect(stdout).toContain('✅ Implementation');
+    expect(stdout).toContain('✅ Tests');
+  }, 120000); // 2 minute timeout
+
+  it('should persist memory across sessions', async () =&gt; {
+    // Session 1: Store data
+    await execAsync(
+      'npx claude-flow@alpha memory store test &quot;value&quot; --reasoningbank'
+    );
+
+    // Session 2: Retrieve data
+    const { stdout } = await execAsync(
+      'npx claude-flow@alpha memory query &quot;test&quot; --reasoningbank'
+    );
+
+    expect(stdout).toContain('value');
+  });
+});
+</code></pre>
+<h4>4. Performance Tests</h4>
+<pre><code class="language-javascript">// tests/performance/swarm-scaling.test.js
+import { describe, it, expect } from '@jest/globals';
+import { SwarmOrchestrator } from '../../src/swarm/orchestrator.js';
+
+describe('Swarm Scaling Performance', () =&gt; {
+  it('should handle 10 concurrent agents', async () =&gt; {
+    const swarm = new SwarmOrchestrator({ topology: 'mesh' });
+    const startTime = Date.now();
+
+    const agents = await Promise.all(
+      Array(10).fill(0).map(() =&gt; swarm.spawnAgent('coder'))
+    );
+
+    const endTime = Date.now();
+    const duration = endTime - startTime;
+
+    expect(agents).toHaveLength(10);
+    expect(duration).toBeLessThan(5000); // Under 5 seconds
+  });
+
+  it('should maintain low latency under load', async () =&gt; {
+    const swarm = new SwarmOrchestrator({ topology: 'mesh' });
+    const iterations = 100;
+    const latencies = [];
+
+    for (let i = 0; i &lt; iterations; i++) {
+      const start = Date.now();
+      await swarm.orchestrate({ description: 'Simple task' });
+      latencies.push(Date.now() - start);
+    }
+
+    const avgLatency = latencies.reduce((a, b) =&gt; a + b) / latencies.length;
+    const p95 = latencies.sort((a, b) =&gt; a - b)[Math.floor(iterations * 0.95)];
+
+    expect(avgLatency).toBeLessThan(100); // Under 100ms average
+    expect(p95).toBeLessThan(200); // Under 200ms p95
+  });
+});
+</code></pre>
+<h3>테스트 실행</h3>
+<pre><code class="language-bash"># 모든 테스트 실행
+npm test
+
+# Unit tests만
+npm run test:unit
+
+# Integration tests만
+npm run test:integration
+
+# E2E tests만
+npm run test:e2e
+
+# Performance tests만
+npm run test:performance
+
+# Coverage 리포트
+npm run test:coverage
+
+# Watch mode (개발 중)
+npm run test:watch
+
+# 특정 파일
+npm test -- tests/unit/agents/coder.test.js
+
+# 특정 describe block
+npm test -- --testNamePattern=&quot;CoderAgent&quot;
+</code></pre>
+<h3>Jest 구성</h3>
+<p><strong>jest.config.js</strong>:</p>
+<pre><code class="language-javascript">export default {
+  testEnvironment: 'node',
+  transform: {},
+  extensionsToTreatAsEsm: ['.js'],
+  moduleNameMapper: {
+    '^(\\.{1,2}/.*)\\.js$': '$1',
+  },
+  testMatch: [
+    '**/tests/**/*.test.js',
+    '**/__tests__/**/*.js',
+  ],
+  collectCoverageFrom: [
+    'src/**/*.js',
+    '!src/**/*.test.js',
+    '!src/**/index.js',
+  ],
+  coverageThreshold: {
+    global: {
+      branches: 80,
+      functions: 80,
+      lines: 80,
+      statements: 80,
+    },
+  },
+  testTimeout: 30000,
+  maxWorkers: '50%',
+};
+</code></pre>
+<hr>
+<h2>코드 표준</h2>
+<h3>TypeScript/JavaScript 표준</h3>
+<p><strong>.eslintrc.json</strong>:</p>
+<pre><code class="language-json">{
+  &quot;env&quot;: {
+    &quot;node&quot;: true,
+    &quot;es2022&quot;: true
+  },
+  &quot;extends&quot;: [
+    &quot;eslint:recommended&quot;,
+    &quot;prettier&quot;
+  ],
+  &quot;parserOptions&quot;: {
+    &quot;ecmaVersion&quot;: 2022,
+    &quot;sourceType&quot;: &quot;module&quot;
+  },
+  &quot;rules&quot;: {
+    &quot;no-console&quot;: [&quot;warn&quot;, { &quot;allow&quot;: [&quot;warn&quot;, &quot;error&quot;] }],
+    &quot;no-unused-vars&quot;: [&quot;error&quot;, { &quot;argsIgnorePattern&quot;: &quot;^_&quot; }],
+    &quot;prefer-const&quot;: &quot;error&quot;,
+    &quot;no-var&quot;: &quot;error&quot;,
+    &quot;eqeqeq&quot;: [&quot;error&quot;, &quot;always&quot;],
+    &quot;curly&quot;: [&quot;error&quot;, &quot;all&quot;],
+    &quot;brace-style&quot;: [&quot;error&quot;, &quot;1tbs&quot;],
+    &quot;quotes&quot;: [&quot;error&quot;, &quot;single&quot;, { &quot;avoidEscape&quot;: true }],
+    &quot;semi&quot;: [&quot;error&quot;, &quot;always&quot;],
+    &quot;comma-dangle&quot;: [&quot;error&quot;, &quot;always-multiline&quot;]
+  }
+}
+</code></pre>
+<p><strong>.prettierrc.json</strong>:</p>
+<pre><code class="language-json">{
+  &quot;printWidth&quot;: 100,
+  &quot;tabWidth&quot;: 2,
+  &quot;useTabs&quot;: false,
+  &quot;semi&quot;: true,
+  &quot;singleQuote&quot;: true,
+  &quot;trailingComma&quot;: &quot;es5&quot;,
+  &quot;bracketSpacing&quot;: true,
+  &quot;arrowParens&quot;: &quot;always&quot;,
+  &quot;endOfLine&quot;: &quot;lf&quot;
+}
+</code></pre>
+<h3>코드 스타일 가이드</h3>
+<pre><code class="language-javascript">// ✅ Good
+async function processTask(task) {
+  try {
+    const result = await executor.run(task);
+    return { success: true, data: result };
+  } catch (error) {
+    logger.error('Task processing failed:', error);
+    return { success: false, error: error.message };
+  }
+}
+
+// ❌ Bad
+function processTask(task) {
+  return executor.run(task)
+    .then(result =&gt; ({ success: true, data: result }))
+    .catch(error =&gt; {
+      console.log(error);
+      return { success: false, error };
+    });
+}
+
+// ✅ Good - Named exports
+export class CoderAgent {
+  constructor(options) {
+    this.options = options;
+  }
+
+  async generateCode(spec) {
+    // Implementation
+  }
+}
+
+// ❌ Bad - Default export
+export default class {
+  // Anonymous class
+}
+
+// ✅ Good - Descriptive variable names
+const userAuthentication = new AuthService();
+const taskExecutionResults = await processAllTasks();
+
+// ❌ Bad - Abbreviated names
+const auth = new AuthService();
+const results = await process();
+</code></pre>
+<h3>Documentation 표준</h3>
+<pre><code class="language-javascript">/**
+ * Orchestrates a swarm of AI agents to complete a complex task.
+ *
+ * @param {Object} config - Swarm configuration
+ * @param {string} config.topology - Swarm topology (mesh, hierarchical, adaptive)
+ * @param {number} config.maxAgents - Maximum number of concurrent agents
+ * @param {Object} task - Task to orchestrate
+ * @param {string} task.description - Task description
+ * @param {Array&lt;string&gt;} task.requirements - Task requirements
+ *
+ * @returns {Promise&lt;Object&gt;} Orchestration result
+ * @returns {string} result.status - Completion status (completed, failed, partial)
+ * @returns {Array&lt;Object&gt;} result.agentResults - Individual agent results
+ * @returns {Object} result.metrics - Performance metrics
+ *
+ * @throws {SwarmInitializationError} If swarm cannot be initialized
+ * @throws {TaskExecutionError} If task execution fails
+ *
+ * @example
+ * const result = await orchestrateSwarm(
+ *   { topology: 'mesh', maxAgents: 5 },
+ *   { description: 'Build REST API', requirements: ['auth', 'validation'] }
+ * );
+ */
+export async function orchestrateSwarm(config, task) {
+  // Implementation
+}
+</code></pre>
+<hr>
+<h2>CI/CD Pipeline</h2>
+<h3>GitHub Actions Workflow</h3>
+<p><strong>.github/workflows/ci.yml</strong>:</p>
+<pre><code class="language-yaml">name: 🔄 CI Pipeline
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  lint:
+    name: 📝 Lint Code
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+      - run: npm ci
+      - run: npm run lint
+
+  test:
+    name: 🧪 Run Tests
+    runs-on: $
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        node: ['18', '20']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: $
+          cache: 'npm'
+      - run: npm ci
+      - run: npm run test:coverage
+      - uses: codecov/codecov-action@v3
+        with:
+          files: ./coverage/lcov.info
+
+  build:
+    name: 🏗️ Build Package
+    runs-on: ubuntu-latest
+    needs: [lint, test]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+      - run: npm ci
+      - run: npm run build
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+</code></pre>
+<h3>Pre-commit Hooks</h3>
+<p><strong>.husky/pre-commit</strong>:</p>
+<pre><code class="language-bash">#!/usr/bin/env sh
+. &quot;$(dirname -- &quot;$0&quot;)/_/husky.sh&quot;
+
+# Run linting
+npm run lint-staged
+
+# Run type checking
+npm run typecheck
+
+# Run affected tests
+npm run test:changed
+</code></pre>
+<p><strong>lint-staged.config.js</strong>:</p>
+<pre><code class="language-javascript">export default {
+  '*.js': [
+    'eslint --fix',
+    'prettier --write',
+    'jest --bail --findRelatedTests'
+  ],
+  '*.{json,md}': [
+    'prettier --write'
+  ]
+};
+</code></pre>
+<hr>
+<h2>릴리스 프로세스</h2>
+<h3>Alpha 릴리스</h3>
+<pre><code class="language-bash"># 1. Version bump
+npm version prerelease --preid=alpha
+
+# 2. Build package
+npm run build
+
+# 3. Publish to npm
+npm publish --tag alpha
+
+# 4. Create GitHub release
+gh release create v2.7.0-alpha.11 \
+  --title &quot;v2.7.0-alpha.11&quot; \
+  --notes &quot;Release notes here&quot; \
+  --prerelease
+</code></pre>
+<h3>Production 릴리스</h3>
+<pre><code class="language-bash"># 1. Merge release branch to main
+git checkout main
+git merge release/v2.7.0
+
+# 2. Version bump
+npm version minor  # or major/patch
+
+# 3. Build and test
+npm run build
+npm run test:all
+
+# 4. Publish
+npm publish
+
+# 5. Create GitHub release
+gh release create v2.7.0 \
+  --title &quot;v2.7.0 - Feature Release&quot; \
+  --notes-file RELEASE_NOTES.md
+</code></pre>
+<hr>
+<h2>모범 사례</h2>
+<h3>1. 코드 구성</h3>
+<ul>
+<li>Small, focused functions (&lt; 50 lines)</li>
+<li>Single Responsibility Principle</li>
+<li>DRY (Don't Repeat Yourself)</li>
+<li>Clear naming conventions</li>
+</ul>
+<h3>2. 에러 처리</h3>
+<pre><code class="language-javascript">// ✅ Good
+try {
+  const result = await riskyOperation();
+  return { success: true, data: result };
+} catch (error) {
+  logger.error('Operation failed:', { error, context });
+  throw new CustomError('Descriptive message', { cause: error });
+}
+
+// ❌ Bad
+try {
+  const result = await riskyOperation();
+  return result;
+} catch (error) {
+  console.log(error);
+  return null;
+}
+</code></pre>
+<h3>3. Async/Await</h3>
+<pre><code class="language-javascript">// ✅ Good - Parallel execution
+const [users, posts, comments] = await Promise.all([
+  fetchUsers(),
+  fetchPosts(),
+  fetchComments()
+]);
+
+// ❌ Bad - Sequential execution
+const users = await fetchUsers();
+const posts = await fetchPosts();
+const comments = await fetchComments();
+</code></pre>
+<h3>4. Memory 관리</h3>
+<pre><code class="language-javascript">// ✅ Good - Cleanup resources
+async function processLargeDataset(data) {
+  const processor = new DataProcessor();
+
+  try {
+    return await processor.process(data);
+  } finally {
+    await processor.cleanup();
+  }
+}
+
+// ❌ Bad - Resource leak
+async function processLargeDataset(data) {
+  const processor = new DataProcessor();
+  return await processor.process(data);
+  // processor never cleaned up
+}
+</code></pre>
+<hr>
+<h2>문제 해결</h2>
+<h3>일반적인 개발 문제</h3>
+<h4>1. Module Resolution Errors</h4>
+<pre><code class="language-bash"># 증상: Cannot find module errors
+# 해결:
+rm -rf node_modules package-lock.json
+npm install
+npm run build
+</code></pre>
+<h4>2. Jest ESM Issues</h4>
+<pre><code class="language-bash"># 증상: Jest fails with ESM syntax
+# 해결: jest.config.js 확인
+{
+  transform: {},
+  extensionsToTreatAsEsm: ['.js'],
+  moduleNameMapper: {
+    '^(\\.{1,2}/.*)\\.js$': '$1',
+  }
+}
+</code></pre>
+<h4>3. Memory Leaks</h4>
+<pre><code class="language-bash"># 증상: Node process memory grows over time
+# 해결: Memory profiling
+node --expose-gc --inspect src/index.js
+
+# Chrome DevTools에서 heap snapshot 분석
+</code></pre>
+<h4>4. Slow Tests</h4>
+<pre><code class="language-bash"># 증상: Tests take too long
+# 해결:
+# - Parallel execution
+npm test -- --maxWorkers=50%
+
+# - Mock external dependencies
+# - Reduce test data size
+# - Use test.concurrent for independent tests
+</code></pre>
+<hr>
+<h2>추가 리소스</h2>
+<ul>
+<li><a href="https://github.com/goldbergyoni/nodebestpractices">Node.js Best Practices</a></li>
+<li><a href="https://jestjs.io/docs/getting-started">Jest Documentation</a></li>
+<li><a href="https://eslint.org/docs/rules/">ESLint Rules</a></li>
+<li><a href="https://docs.github.com/en/actions">GitHub Actions</a></li>
+<li><a href="https://www.conventionalcommits.org/">Conventional Commits</a></li>
+</ul>
+<hr>
+<p><strong>문서 버전</strong>: 2.7.0
+<strong>마지막 업데이트</strong>: 2025-01-15</p>
+
+  </div>
+</article>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Hanson Kim. All rights reserved.</p>
+  </footer>
+</body>
+</html>

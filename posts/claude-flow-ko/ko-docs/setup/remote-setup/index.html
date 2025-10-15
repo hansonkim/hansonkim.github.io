@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Remote Setup</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="/" class="logo">Hanson Kim</a>
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/blog/">Blog</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    
+<article class="post">
+  <header class="post-header">
+    <h1>Remote Setup</h1>
+    <time datetime="2025년 10월 15일">2025년 10월 15일</time>
+    
+    <div class="tags">
+      
+        
+      
+        
+        <span class="tag">Claude-Flow</span>
+        
+      
+        
+        <span class="tag">문서</span>
+        
+      
+        
+        <span class="tag">AI</span>
+        
+      
+    </div>
+    
+  </header>
+
+  <div class="post-content">
+    <h1>Claude Flow 원격 설정 가이드</h1>
+<h2>문제</h2>
+<p>원격에서 <code>npx claude-flow@alpha</code>를 사용할 때 다음을 경험할 수 있습니다:</p>
+<ul>
+<li><code>ENOTEMPTY</code> npm 캐시 오류</li>
+<li>버전 불일치 문제</li>
+<li><strong>init 후 <code>./claude-flow@alpha</code> 래퍼 누락</strong> ⭐ <strong>수정됨!</strong></li>
+<li>Hook 기능이 작동하지 않음</li>
+</ul>
+<h2>빠른 수정</h2>
+<h3>방법 1: 원라인 설치</h3>
+<pre><code class="language-bash">curl -fsSL https://raw.githubusercontent.com/ruvnet/claude-flow/main/install-remote.sh | bash
+</code></pre>
+<h3>방법 2: 수동 설치</h3>
+<pre><code class="language-bash"># npm 캐시 정리 및 재설치
+npm cache clean --force
+npm uninstall -g claude-flow
+npm install -g claude-flow@alpha --no-optional --legacy-peer-deps
+
+# 확인 및 초기화
+claude-flow --version
+claude-flow init
+</code></pre>
+<h3>방법 3: 로컬 개발 설정</h3>
+<p>소스 코드로 작업하는 경우:</p>
+<pre><code class="language-bash"># claude-code-flow 디렉토리에서
+npm pack
+npm install -g ./claude-flow-*.tgz
+claude-flow --version
+</code></pre>
+<h2>검증</h2>
+<p>모든 것이 작동하는지 테스트:</p>
+<pre><code class="language-bash"># 버전 확인
+claude-flow --version
+
+# hooks 테스트
+claude-flow hooks notify --message &quot;Setup complete&quot; --level &quot;success&quot;
+
+# 시스템 상태 확인
+claude-flow status
+
+# ⭐ 신규: 래퍼 생성 테스트
+npx claude-flow@alpha init --force
+ls -la ./claude-flow*
+# 표시되어야 함: ./claude-flow@alpha (실행 가능)
+./claude-flow@alpha --version
+</code></pre>
+<h2>문제 해결</h2>
+<h3>캐시 문제</h3>
+<pre><code class="language-bash">npm cache clean --force
+rm -rf ~/.npm/_npx
+</code></pre>
+<h3>권한 문제</h3>
+<pre><code class="language-bash">sudo npm install -g claude-flow@alpha
+# 또는 sudo를 피하기 위해 nvm 사용
+</code></pre>
+<h3>바이너리를 찾을 수 없음</h3>
+<pre><code class="language-bash"># 전역 bin 디렉토리 확인
+npm config get prefix
+# 필요한 경우 PATH에 추가
+export PATH=&quot;$(npm config get prefix)/bin:$PATH&quot;
+</code></pre>
+<h2>원격 사용 팁</h2>
+<ol>
+<li><strong>안정적인 alpha 버전 사용</strong>: 특정 버전 대신 <code>claude-flow@alpha</code> 사용</li>
+<li><strong>먼저 캐시 정리</strong>: 설치 전 항상 <code>npm cache clean --force</code> 실행</li>
+<li><strong>--legacy-peer-deps 사용</strong>: 의존성 충돌 해결에 도움</li>
+<li><strong>hooks 즉시 테스트</strong>: 설치 후 기능 확인</li>
+</ol>
+<h2>성공 지표</h2>
+<p>✅ <code>claude-flow --version</code>이 현재 버전 표시
+✅ <code>claude-flow status</code>가 시스템 실행 중 표시
+✅ <code>claude-flow hooks notify</code>가 오류 없이 작동
+✅ 모든 명령어를 전역적으로 사용 가능</p>
+
+  </div>
+</article>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Hanson Kim. All rights reserved.</p>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MCP SETUP GUIDE</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="/" class="logo">Hanson Kim</a>
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/blog/">Blog</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    
+<article class="post">
+  <header class="post-header">
+    <h1>MCP SETUP GUIDE</h1>
+    <time datetime="2025년 10월 15일">2025년 10월 15일</time>
+    
+    <div class="tags">
+      
+        
+      
+        
+        <span class="tag">Claude-Flow</span>
+        
+      
+        
+        <span class="tag">문서</span>
+        
+      
+        
+        <span class="tag">AI</span>
+        
+      
+    </div>
+    
+  </header>
+
+  <div class="post-content">
+    <h1>Claude Flow MCP 서버 설정 가이드</h1>
+<h2>🎯 개요</h2>
+<p>Claude Flow는 MCP(Model Context Protocol) 서버를 통해 Claude Code와 통합됩니다. 이 가이드는 MCP 서버를 올바르게 설정하는 방법을 설명합니다.</p>
+<h2>📋 초기화하는 두 가지 방법</h2>
+<h3>1. <strong>자동 설정 (권장)</strong></h3>
+<pre><code class="language-bash"># 이 명령어는 MCP 서버를 자동으로 추가합니다
+npx claude-flow@alpha init --force
+</code></pre>
+<p><strong>수행 작업:</strong></p>
+<ul>
+<li>프로젝트 파일 생성 (CLAUDE.md, settings.json 등)</li>
+<li>자동으로 실행: <code>claude mcp add claude-flow npx claude-flow@alpha mcp start</code></li>
+<li>ruv-swarm 및 flow-nexus MCP 서버 설정 (선택 사항)</li>
+<li>hooks 및 권한 구성</li>
+</ul>
+<h3>2. <strong>수동 설정</strong></h3>
+<p>Claude Code가 이미 설치되어 있지만 MCP 서버를 추가해야 하는 경우:</p>
+<pre><code class="language-bash"># Claude Flow MCP 서버 추가
+claude mcp add claude-flow npx claude-flow@alpha mcp start
+
+# 선택 사항: 향상된 조정 추가
+claude mcp add ruv-swarm npx ruv-swarm mcp start
+
+# 선택 사항: 클라우드 기능 추가
+claude mcp add flow-nexus npx flow-nexus@latest mcp start
+</code></pre>
+<h2>✅ 설정 확인</h2>
+<p>MCP 서버가 실행 중인지 확인:</p>
+<pre><code class="language-bash">claude mcp list
+</code></pre>
+<p>예상 출력:</p>
+<pre><code>claude-flow: npx claude-flow@alpha mcp start - ✓ Connected
+ruv-swarm: npx ruv-swarm mcp start - ✓ Connected
+flow-nexus: npx flow-nexus@latest mcp start - ✓ Connected
+</code></pre>
+<h2>🔧 문제 해결</h2>
+<h3>문제: MCP 서버가 npx 대신 로컬 경로를 표시</h3>
+<p><strong>예:</strong></p>
+<pre><code>claude-flow: /workspaces/claude-code-flow/bin/claude-flow mcp start - ✓ Connected
+</code></pre>
+<p><strong>해결:</strong>
+claude-flow 저장소 자체에서 작업할 때 이런 일이 발생합니다. 개발에는 실제로 괜찮습니다! MCP 서버가 올바르게 작동합니다.</p>
+<p>대신 npx 명령어를 사용하려면:</p>
+<pre><code class="language-bash"># 기존 서버 제거
+claude mcp remove claude-flow
+
+# npx 명령어로 다시 추가
+claude mcp add claude-flow npx claude-flow@alpha mcp start
+</code></pre>
+<h3>문제: &quot;claude: command not found&quot;</h3>
+<p><strong>해결:</strong>
+먼저 Claude Code 설치:</p>
+<pre><code class="language-bash">npm install -g @anthropic-ai/claude-code
+</code></pre>
+<h3>문제: MCP 서버 연결 실패</h3>
+<p><strong>원인 및 해결 방법:</strong></p>
+<ol>
+<li>
+<p><strong>패키지가 전역으로 설치되지 않음:</strong></p>
+<pre><code class="language-bash"># 패키지 설치
+npm install -g claude-flow@alpha
+</code></pre>
+</li>
+<li>
+<p><strong>로컬 개발 버전 사용:</strong></p>
+<pre><code class="language-bash"># claude-flow 저장소에서 먼저 빌드
+npm run build
+</code></pre>
+</li>
+<li>
+<p><strong>권한 문제:</strong></p>
+<pre><code class="language-bash"># 테스트용으로 --dangerously-skip-permissions 사용
+claude --dangerously-skip-permissions
+</code></pre>
+</li>
+</ol>
+<h2>📚 명령어 이해하기</h2>
+<h3><code>npx claude-flow@alpha init</code></h3>
+<ul>
+<li>Claude Flow 프로젝트 파일 초기화</li>
+<li><strong>자동으로</strong> <code>claude mcp add</code> 호출</li>
+<li>프로젝트당 한 번만 실행하면 됨</li>
+</ul>
+<h3><code>claude init</code></h3>
+<ul>
+<li>Claude Code 자체 초기화</li>
+<li>Claude Flow MCP 서버를 자동으로 추가하지 <strong>않음</strong></li>
+<li>Claude Flow 초기화와 별개</li>
+</ul>
+<h3><code>claude mcp add &lt;name&gt; &lt;command&gt;</code></h3>
+<ul>
+<li>Claude Code의 전역 구성에 MCP 서버 추가</li>
+<li>프로젝트 간 유지</li>
+<li><code>~/.config/claude/</code>에 위치</li>
+</ul>
+<h2>🎯 권장 워크플로우</h2>
+<pre><code class="language-bash"># 1. Claude Code 설치 (한 번만)
+npm install -g @anthropic-ai/claude-code
+
+# 2. Claude Flow로 프로젝트 초기화 (프로젝트당)
+cd your-project
+npx claude-flow@alpha init --force
+
+# 3. MCP 서버가 연결되었는지 확인
+claude mcp list
+
+# 4. MCP 도구와 함께 Claude Code 사용 시작
+claude
+</code></pre>
+<h2>💡 주요 사항</h2>
+<ul>
+<li>**<code>npx claude-flow@alpha init</code>**는 파일 설정과 MCP 구성을 모두 수행</li>
+<li>**<code>claude init</code>**는 Claude Code용이며 Claude Flow용이 아님</li>
+<li>MCP 서버는 <strong>전역</strong> (모든 Claude Code 세션에 영향)</li>
+<li>프로젝트 파일 (.claude/, CLAUDE.md)은 각 프로젝트에 <strong>로컬</strong></li>
+</ul>
+<h2>🔗 관련 문서</h2>
+<ul>
+<li><a href="../setup/remote-setup.md">설치 가이드</a></li>
+<li><a href="../setup/ENV-SETUP-GUIDE.md">환경 설정</a></li>
+<li><a href="../reference/MCP_TOOLS.md">MCP 도구 참조</a></li>
+</ul>
+<hr>
+<p><strong>질문이 있으신가요?</strong> <a href="https://github.com/ruvnet/claude-flow/issues">GitHub Issues</a>를 참조하거나 <a href="https://discord.com/invite/dfxmpwkG2D">Discord</a>에 참여하세요</p>
+
+  </div>
+</article>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Hanson Kim. All rights reserved.</p>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,2081 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MCP TOOLS</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="/" class="logo">Hanson Kim</a>
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/blog/">Blog</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    
+<article class="post">
+  <header class="post-header">
+    <h1>MCP TOOLS</h1>
+    <time datetime="2025년 10월 15일">2025년 10월 15일</time>
+    
+    <div class="tags">
+      
+        
+      
+        
+        <span class="tag">Claude-Flow</span>
+        
+      
+        
+        <span class="tag">문서</span>
+        
+      
+        
+        <span class="tag">AI</span>
+        
+      
+    </div>
+    
+  </header>
+
+  <div class="post-content">
+    <h1>Claude Flow MCP Tools 참조</h1>
+<p>이 문서는 Claude Flow 생태계에서 사용 가능한 112개의 MCP (Model Context Protocol) tool에 대한 포괄적인 참조를 제공합니다.</p>
+<h2>개요</h2>
+<p>Claude Flow는 두 가지 MCP tool 제공자와 통합됩니다:</p>
+<ul>
+<li><strong>claude-flow tools</strong>: 87개의 핵심 기능 tool</li>
+<li><strong>ruv-swarm tools</strong>: 25개의 고급 swarm intelligence tool</li>
+</ul>
+<p>모든 tool은 다음 명명 규칙을 따릅니다: <code>mcp__provider__tool_name</code></p>
+<hr>
+<h2>Claude Flow Tools (87개 tool)</h2>
+<p>claude-flow tool은 8개 카테고리로 구성되어 종합적인 개발, 조정 및 시스템 관리 기능을 제공합니다.</p>
+<h3>Swarm Coordination (12개 tool)</h3>
+<p>이 tool들은 swarm 초기화, agent 생성 및 조정 작업을 관리합니다.</p>
+<h4><code>mcp__claude-flow__swarm_init</code></h4>
+<p><strong>기능</strong>: 지정된 topology 및 구성으로 새 swarm 초기화
+<strong>매개변수</strong>:</p>
+<ul>
+<li><code>topology</code> (string): Swarm topology 타입 - &quot;hierarchical&quot;, &quot;mesh&quot;, &quot;distributed&quot;, &quot;centralized&quot;</li>
+<li><code>maxAgents</code> (number): Swarm의 최대 agent 수 (기본값: 8)</li>
+<li><code>strategy</code> (string): 조정 전략 - &quot;auto&quot;, &quot;manual&quot;, &quot;adaptive&quot;</li>
+<li><code>swarmId</code> (string, 선택): 사용자 정의 swarm 식별자</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-json">{
+  &quot;topology&quot;: &quot;hierarchical&quot;,
+  &quot;maxAgents&quot;: 12,
+  &quot;strategy&quot;: &quot;auto&quot;,
+  &quot;swarmId&quot;: &quot;project-alpha&quot;
+}
+</code></pre>
+<h4><code>mcp__claude-flow__agent_spawn</code></h4>
+<p><strong>기능</strong>: 특정 역할 및 기능을 가진 새 agent 생성 및 생성
+<strong>매개변수</strong>:</p>
+<ul>
+<li><code>type</code> (string): Agent 타입 - &quot;coder&quot;, &quot;researcher&quot;, &quot;tester&quot;, &quot;coordinator&quot;, &quot;architect&quot;</li>
+<li><code>name</code> (string, 선택): 사용자 정의 agent 이름</li>
+<li><code>swarmId</code> (string): 대상 swarm 식별자</li>
+<li><code>capabilities</code> (array, 선택): 활성화할 특정 기능</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-json">{
+  &quot;type&quot;: &quot;coder&quot;,
+  &quot;name&quot;: &quot;BackendSpecialist&quot;,
+  &quot;swarmId&quot;: &quot;project-alpha&quot;,
+  &quot;capabilities&quot;: [&quot;nodejs&quot;, &quot;database&quot;, &quot;api-design&quot;]
+}
+</code></pre>
+<h4><code>mcp__claude-flow__task_orchestrate</code></h4>
+<p><strong>기능</strong>: Agent 간 작업 배분 및 실행 조정
+<strong>매개변수</strong>:</p>
+<ul>
+<li><code>task</code> (string): 작업 설명</li>
+<li><code>strategy</code> (string): 실행 전략 - &quot;parallel&quot;, &quot;sequential&quot;, &quot;adaptive&quot;</li>
+<li><code>priority</code> (number): 작업 우선순위 (1-10)</li>
+<li><code>swarmId</code> (string): 대상 swarm 식별자</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-json">{
+  &quot;task&quot;: &quot;Implement user authentication system&quot;,
+  &quot;strategy&quot;: &quot;parallel&quot;,
+  &quot;priority&quot;: 8,
+  &quot;swarmId&quot;: &quot;project-alpha&quot;
+}
+</code></pre>
+<h4><code>mcp__claude-flow__swarm_status</code></h4>
+<p><strong>기능</strong>: 모든 swarm 및 구성 요소의 종합 상태 확인
+<strong>매개변수</strong>:</p>
+<ul>
+<li><code>swarmId</code> (string, 선택): 조회할 특정 swarm</li>
+<li><code>includeMetrics</code> (boolean): 성능 metrics 포함</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-json">{
+  &quot;swarmId&quot;: &quot;project-alpha&quot;,
+  &quot;includeMetrics&quot;: true
+}
+</code></pre>
+<h4><code>mcp__claude-flow__agent_list</code></h4>
+<p><strong>기능</strong>: 현재 상태 및 할당과 함께 모든 agent 목록
+<strong>매개변수</strong>:</p>
+<ul>
+<li><code>status</code> (string, 선택): 상태별 필터링 - &quot;active&quot;, &quot;idle&quot;, &quot;offline&quot;</li>
+<li><code>type</code> (string, 선택): Agent 타입별 필터링</li>
+<li><code>swarmId</code> (string, 선택): Swarm별 필터링</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-json">{
+  &quot;status&quot;: &quot;active&quot;,
+  &quot;swarmId&quot;: &quot;project-alpha&quot;
+}
+</code></pre>
+<h4><code>mcp__claude-flow__agent_metrics</code></h4>
+<p><strong>기능</strong>: Agent의 상세 성능 metrics 검색
+<strong>매개변수</strong>:</p>
+<ul>
+<li><code>agentId</code> (string, 선택): 특정 agent ID</li>
+<li><code>timeframe</code> (string): 시간 기간 - &quot;1h&quot;, &quot;24h&quot;, &quot;7d&quot;, &quot;30d&quot;</li>
+<li><code>metrics</code> (array): 포함할 특정 metrics</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-json">{
+  &quot;timeframe&quot;: &quot;24h&quot;,
+  &quot;metrics&quot;: [&quot;tasks_completed&quot;, &quot;success_rate&quot;, &quot;avg_response_time&quot;]
+}
+</code></pre>
+<h4><code>mcp__claude-flow__swarm_monitor</code></h4>
+<p><strong>기능</strong>: Swarm 활동 및 성능의 실시간 모니터링
+<strong>매개변수</strong>:</p>
+<ul>
+<li><code>interval</code> (number): 업데이트 간격 (밀리초)</li>
+<li><code>swarmId</code> (string, 선택): 모니터링할 특정 swarm</li>
+<li><code>alerts</code> (boolean): Alert 알림 활성화</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-json">{
+  &quot;interval&quot;: 5000,
+  &quot;swarmId&quot;: &quot;project-alpha&quot;,
+  &quot;alerts&quot;: true
+}
+</code></pre>
+<h4><code>mcp__claude-flow__topology_optimize</code></h4>
+<p><strong>기능</strong>: 현재 작업량 및 성능 기반으로 swarm topology 최적화
+<strong>매개변수</strong>:</p>
+<ul>
+<li><code>swarmId</code> (string): 대상 swarm 식별자</li>
+<li><code>criteria</code> (string): 최적화 기준 - &quot;performance&quot;, &quot;cost&quot;, &quot;reliability&quot;</li>
+<li><code>autoApply</code> (boolean): 최적화 자동 적용</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-json">{
+  &quot;swarmId&quot;: &quot;project-alpha&quot;,
+  &quot;criteria&quot;: &quot;performance&quot;,
+  &quot;autoApply&quot;: false
+}
+</code></pre>
+<h4><code>mcp__claude-flow__load_balance</code></h4>
+<p><strong>기능</strong>: 사용 가능한 agent에 작업량 균등 분배
+<strong>매개변수</strong>:</p>
+<ul>
+<li><code>swarmId</code> (string): 대상 swarm 식별자</li>
+<li><code>strategy</code> (string): 분산 전략 - &quot;round_robin&quot;, &quot;least_loaded&quot;, &quot;capability_based&quot;</li>
+<li><code>tasks</code> (array): 분배할 작업</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-json">{
+  &quot;swarmId&quot;: &quot;project-alpha&quot;,
+  &quot;strategy&quot;: &quot;capability_based&quot;,
+  &quot;tasks&quot;: [&quot;task-1&quot;, &quot;task-2&quot;, &quot;task-3&quot;]
+}
+</code></pre>
+<h4><code>mcp__claude-flow__coordination_sync</code></h4>
+<p><strong>기능</strong>: Swarm 내 모든 agent 간 조정 상태 동기화
+<strong>매개변수</strong>:</p>
+<ul>
+<li><code>swarmId</code> (string): 대상 swarm 식별자</li>
+<li><code>force</code> (boolean): Agent가 바쁘더라도 강제 동기화</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-json">{
+  &quot;swarmId&quot;: &quot;project-alpha&quot;,
+  &quot;force&quot;: false
+}
+</code></pre>
+<h4><code>mcp__claude-flow__swarm_scale</code></h4>
+<p><strong>기능</strong>: 작업량 수요에 따라 swarm 크기 동적 확장
+<strong>매개변수</strong>:</p>
+<ul>
+<li><code>swarmId</code> (string): 대상 swarm 식별자</li>
+<li><code>direction</code> (string): 확장 방향 - &quot;up&quot;, &quot;down&quot;, &quot;auto&quot;</li>
+<li><code>targetSize</code> (number, 선택): 원하는 agent 수</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-json">{
+  &quot;swarmId&quot;: &quot;project-alpha&quot;,
+  &quot;direction&quot;: &quot;up&quot;,
+  &quot;targetSize&quot;: 15
+}
+</code></pre>
+<h4><code>mcp__claude-flow__swarm_destroy</code></h4>
+<p><strong>기능</strong>: Swarm을 안전하게 종료하고 관련 리소스 정리
+<strong>매개변수</strong>:</p>
+<ul>
+<li><code>swarmId</code> (string): 대상 swarm 식별자</li>
+<li><code>preserveData</code> (boolean): 분석을 위해 swarm 데이터 보존</li>
+<li><code>graceful</code> (boolean): Agent가 현재 작업을 완료하도록 허용</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-json">{
+  &quot;swarmId&quot;: &quot;project-alpha&quot;,
+  &quot;preserveData&quot;: true,
+  &quot;graceful&quot;: true
+}
+</code></pre>
+<h3>Neural Networks &amp; AI (15개 tool)</h3>
+<p>패턴 인식 및 적응형 동작을 위한 고급 AI 및 machine learning 기능.</p>
+<h4><code>mcp__claude-flow__neural_status</code></h4>
+<p><strong>기능</strong>: Neural network 모델 및 훈련 프로세스의 상태 확인
+<strong>매개변수</strong>:</p>
+<ul>
+<li><code>modelId</code> (string, 선택): 특정 모델 식별자</li>
+<li><code>includeWeights</code> (boolean): 응답에 모델 가중치 포함</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-json">{
+  &quot;includeWeights&quot;: false
+}
+</code></pre>
+<h4><code>mcp__claude-flow__neural_train</code></h4>
+<p><strong>기능</strong>: 조정 패턴 및 작업 결과에 대한 neural network 훈련
+<strong>매개변수</strong>:</p>
+<ul>
+<li><code>pattern_type</code> (string): 패턴 타입 - &quot;coordination&quot;, &quot;optimization&quot;, &quot;prediction&quot;</li>
+<li><code>epochs</code> (number): 훈련 epoch 수</li>
+<li><code>data_source</code> (string): 훈련 데이터 소스</li>
+<li><code>swarmId</code> (string, 선택): 컨텍스트를 위한 관련 swarm</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-json">{
+  &quot;pattern_type&quot;: &quot;coordination&quot;,
+  &quot;epochs&quot;: 100,
+  &quot;data_source&quot;: &quot;swarm_interactions&quot;,
+  &quot;swarmId&quot;: &quot;project-alpha&quot;
+}
+</code></pre>
+<h4><code>mcp__claude-flow__neural_patterns</code></h4>
+<p><strong>기능</strong>: Swarm 동작 및 결과에서 패턴 분석 및 추출
+<strong>매개변수</strong>:</p>
+<ul>
+<li><code>analysis_type</code> (string): 분석 타입 - &quot;behavior&quot;, &quot;performance&quot;, &quot;communication&quot;</li>
+<li><code>timeframe</code> (string): 분석할 시간 기간</li>
+<li><code>swarmId</code> (string, 선택): 대상 swarm</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-json">{
+  &quot;analysis_type&quot;: &quot;behavior&quot;,
+  &quot;timeframe&quot;: &quot;7d&quot;,
+  &quot;swarmId&quot;: &quot;project-alpha&quot;
+}
+</code></pre>
+<h4><code>mcp__claude-flow__neural_predict</code></h4>
+<p><strong>기능</strong>: 작업 결과 및 최적 전략 예측
+<strong>매개변수</strong>:</p>
+<ul>
+<li><code>input_data</code> (object): 예측을 위한 입력 데이터</li>
+<li><code>modelId</code> (string): 예측에 사용할 모델</li>
+<li><code>confidence_threshold</code> (number): 최소 신뢰 수준</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-json">{
+  &quot;input_data&quot;: {&quot;task_complexity&quot;: 7, &quot;agent_count&quot;: 5},
+  &quot;modelId&quot;: &quot;coordination_predictor&quot;,
+  &quot;confidence_threshold&quot;: 0.8
+}
+</code></pre>
+<h4><code>mcp__claude-flow__model_load</code></h4>
+<p><strong>기능</strong>: 사전 훈련된 neural network 모델 로드
+<strong>매개변수</strong>:</p>
+<ul>
+<li><code>modelId</code> (string): 모델 식별자</li>
+<li><code>version</code> (string, 선택): 특정 모델 버전</li>
+<li><code>cache</code> (boolean): 메모리에 모델 캐시</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-json">{
+  &quot;modelId&quot;: &quot;task_optimizer_v2&quot;,
+  &quot;version&quot;: &quot;1.2.0&quot;,
+  &quot;cache&quot;: true
+}
+</code></pre>
+<h4><code>mcp__claude-flow__model_save</code></h4>
+<p><strong>기능</strong>: 현재 neural network 모델 상태 저장
+<strong>매개변수</strong>:</p>
+<ul>
+<li><code>modelId</code> (string): 모델 식별자</li>
+<li><code>version</code> (string): 버전 태그</li>
+<li><code>metadata</code> (object): 추가 모델 metadata</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-json">{
+  &quot;modelId&quot;: &quot;task_optimizer_v2&quot;,
+  &quot;version&quot;: &quot;1.3.0&quot;,
+  &quot;metadata&quot;: {&quot;training_date&quot;: &quot;2024-01-15&quot;, &quot;accuracy&quot;: 0.92}
+}
+</code></pre>
+<h4><code>mcp__claude-flow__wasm_optimize</code></h4>
+<p><strong>기능</strong>: WebAssembly를 사용하여 neural network 실행 최적화
+<strong>매개변수</strong>:</p>
+<ul>
+<li><code>modelId</code> (string): 최적화할 모델</li>
+<li><code>optimization_level</code> (string): 최적화 수준 - &quot;basic&quot;, &quot;aggressive&quot;, &quot;max&quot;</li>
+<li><code>target_platform</code> (string): 대상 플랫폼 - &quot;browser&quot;, &quot;node&quot;, &quot;edge&quot;</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-json">{
+  &quot;modelId&quot;: &quot;coordination_predictor&quot;,
+  &quot;optimization_level&quot;: &quot;aggressive&quot;,
+  &quot;target_platform&quot;: &quot;node&quot;
+}
+</code></pre>
+<h4><code>mcp__claude-flow__inference_run</code></h4>
+<p><strong>기능</strong>: 로드된 neural network 모델에서 inference 실행
+<strong>매개변수</strong>:</p>
+<ul>
+<li><code>modelId</code> (string): 모델 식별자</li>
+<li><code>input_data</code> (object): 입력 데이터</li>
+<li><code>batch_size</code> (number, 선택): Batch 처리 크기</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-json">{
+  &quot;modelId&quot;: &quot;task_classifier&quot;,
+  &quot;input_data&quot;: {&quot;description&quot;: &quot;Implement API endpoint&quot;, &quot;complexity&quot;: &quot;medium&quot;},
+  &quot;batch_size&quot;: 1
+}
+</code></pre>
+<h4><code>mcp__claude-flow__pattern_recognize</code></h4>
+<p><strong>기능</strong>: Agent 동작 및 작업 실행의 패턴 인식
+<strong>매개변수</strong>:</p>
+<ul>
+<li><code>data_type</code> (string): 분석할 데이터 타입 - &quot;logs&quot;, &quot;metrics&quot;, &quot;communications&quot;</li>
+<li><code>pattern_types</code> (array): 찾을 패턴 타입</li>
+<li><code>swarmId</code> (string, 선택): 대상 swarm</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-json">{
+  &quot;data_type&quot;: &quot;communications&quot;,
+  &quot;pattern_types&quot;: [&quot;bottlenecks&quot;, &quot;inefficiencies&quot;, &quot;optimal_flows&quot;],
+  &quot;swarmId&quot;: &quot;project-alpha&quot;
+}
+</code></pre>
+<h4><code>mcp__claude-flow__cognitive_analyze</code></h4>
+<p><strong>기능</strong>: 의사 결정 프로세스의 인지 분석 수행
+<strong>매개변수</strong>:</p>
+<ul>
+<li><code>decision_context</code> (object): 의사 결정의 컨텍스트</li>
+<li><code>analysis_depth</code> (string): 분석 깊이 - &quot;surface&quot;, &quot;deep&quot;, &quot;comprehensive&quot;</li>
+<li><code>include_alternatives</code> (boolean): 대안 결정 경로 포함</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-json">{
+  &quot;decision_context&quot;: {&quot;task&quot;: &quot;architecture_choice&quot;, &quot;constraints&quot;: [&quot;time&quot;, &quot;budget&quot;]},
+  &quot;analysis_depth&quot;: &quot;deep&quot;,
+  &quot;include_alternatives&quot;: true
+}
+</code></pre>
+<h4><code>mcp__claude-flow__learning_adapt</code></h4>
+<p><strong>기능</strong>: 과거 경험으로부터의 학습을 기반으로 동작 적응
+<strong>매개변수</strong>:</p>
+<ul>
+<li><code>experience_data</code> (object): 학습할 경험 데이터</li>
+<li><code>adaptation_type</code> (string): 적응 타입 - &quot;strategy&quot;, &quot;communication&quot;, &quot;resource_allocation&quot;</li>
+<li><code>swarmId</code> (string): 대상 swarm</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-json">{
+  &quot;experience_data&quot;: {&quot;task_type&quot;: &quot;api_development&quot;, &quot;outcome&quot;: &quot;success&quot;, &quot;duration&quot;: 240},
+  &quot;adaptation_type&quot;: &quot;strategy&quot;,
+  &quot;swarmId&quot;: &quot;project-alpha&quot;
+}
+</code></pre>
+<h4><code>mcp__claude-flow__neural_compress</code></h4>
+<p><strong>기능</strong>: 효율적인 배포를 위해 neural network 모델 압축
+<strong>매개변수</strong>:</p>
+<ul>
+<li><code>modelId</code> (string): 압축할 모델</li>
+<li><code>compression_ratio</code> (number): 대상 압축 비율 (0.1~0.9)</li>
+<li><code>quality_threshold</code> (number): 유지할 최소 품질</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-json">{
+  &quot;modelId&quot;: &quot;large_coordination_model&quot;,
+  &quot;compression_ratio&quot;: 0.3,
+  &quot;quality_threshold&quot;: 0.85
+}
+</code></pre>
+<h4><code>mcp__claude-flow__ensemble_create</code></h4>
+<p><strong>기능</strong>: 여러 neural network에서 ensemble 모델 생성
+<strong>매개변수</strong>:</p>
+<ul>
+<li><code>modelIds</code> (array): Ensemble에 포함할 모델</li>
+<li><code>voting_strategy</code> (string): Voting 전략 - &quot;majority&quot;, &quot;weighted&quot;, &quot;soft&quot;</li>
+<li><code>ensembleId</code> (string): 새 ensemble 식별자</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-json">{
+  &quot;modelIds&quot;: [&quot;predictor_1&quot;, &quot;predictor_2&quot;, &quot;predictor_3&quot;],
+  &quot;voting_strategy&quot;: &quot;weighted&quot;,
+  &quot;ensembleId&quot;: &quot;task_prediction_ensemble&quot;
+}
+</code></pre>
+<h4><code>mcp__claude-flow__transfer_learn</code></h4>
+<p><strong>기능</strong>: 한 도메인에서 다른 도메인으로 transfer learning 적용
+<strong>매개변수</strong>:</p>
+<ul>
+<li><code>source_model</code> (string): 소스 모델 식별자</li>
+<li><code>target_domain</code> (string): 대상 도메인</li>
+<li><code>freeze_layers</code> (array): Transfer 중 동결할 layer</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-json">{
+  &quot;source_model&quot;: &quot;general_coordinator&quot;,
+  &quot;target_domain&quot;: &quot;mobile_development&quot;,
+  &quot;freeze_layers&quot;: [&quot;layer1&quot;, &quot;layer2&quot;]
+}
+</code></pre>
+<h4><code>mcp__claude-flow__neural_explain</code></h4>
+<p><strong>기능</strong>: Neural network 결정 및 예측에 대한 설명 제공
+<strong>매개변수</strong>:</p>
+<ul>
+<li><code>modelId</code> (string): 설명할 모델</li>
+<li><code>input_data</code> (object): 예측에 사용된 입력 데이터</li>
+<li><code>explanation_type</code> (string): 설명 타입 - &quot;feature_importance&quot;, &quot;decision_path&quot;, &quot;counterfactual&quot;</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-json">{
+  &quot;modelId&quot;: &quot;task_prioritizer&quot;,
+  &quot;input_data&quot;: {&quot;urgency&quot;: 8, &quot;complexity&quot;: 6, &quot;resources&quot;: 3},
+  &quot;explanation_type&quot;: &quot;feature_importance&quot;
+}
+</code></pre>
+<h3>Memory &amp; Persistence (12개 tool)</h3>
+<p>Swarm 세션 간 영구 메모리, 상태 및 데이터 관리를 위한 tool.</p>
+<h4><code>mcp__claude-flow__memory_usage</code></h4>
+<p><strong>기능</strong>: Namespace 지원을 통한 영구 메모리에 데이터 저장 및 검색
+<strong>매개변수</strong>:</p>
+<ul>
+<li><code>action</code> (string): 작업 타입 - &quot;store&quot;, &quot;retrieve&quot;, &quot;delete&quot;</li>
+<li><code>key</code> (string): 메모리 키</li>
+<li><code>value</code> (any, store용): 저장할 데이터</li>
+<li><code>namespace</code> (string, 선택): 메모리 namespace</li>
+<li><code>type</code> (string, 선택): 데이터 타입 - &quot;knowledge&quot;, &quot;config&quot;, &quot;metrics&quot;, &quot;state&quot;</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-json">{
+  &quot;action&quot;: &quot;store&quot;,
+  &quot;key&quot;: &quot;project_requirements&quot;,
+  &quot;value&quot;: {&quot;features&quot;: [&quot;auth&quot;, &quot;dashboard&quot;], &quot;deadline&quot;: &quot;2024-02-01&quot;},
+  &quot;namespace&quot;: &quot;project-alpha&quot;,
+  &quot;type&quot;: &quot;knowledge&quot;
+}
+</code></pre>
+<h4><code>mcp__claude-flow__memory_search</code></h4>
+<p><strong>기능</strong>: 패턴 및 필터를 사용하여 메모리 검색
+<strong>매개변수</strong>:</p>
+<ul>
+<li><code>pattern</code> (string): 검색 패턴 또는 쿼리</li>
+<li><code>namespace</code> (string, 선택): 검색할 namespace</li>
+<li><code>type_filter</code> (string, 선택): 데이터 타입별 필터링</li>
+<li><code>limit</code> (number, 선택): 반환할 최대 결과 수</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-json">{
+  &quot;pattern&quot;: &quot;authentication&quot;,
+  &quot;namespace&quot;: &quot;project-alpha&quot;,
+  &quot;type_filter&quot;: &quot;knowledge&quot;,
+  &quot;limit&quot;: 10
+}
+</code></pre>
+<h4><code>mcp__claude-flow__memory_persist</code></h4>
+<p><strong>기능</strong>: 메모리 데이터를 영구 저장소에 지속
+<strong>매개변수</strong>:</p>
+<ul>
+<li><code>namespace</code> (string, 선택): 지속할 특정 namespace</li>
+<li><code>compression</code> (boolean): 압축 활성화</li>
+<li><code>backup_existing</code> (boolean): 지속 전 백업 생성</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-json">{
+  &quot;namespace&quot;: &quot;project-alpha&quot;,
+  &quot;compression&quot;: true,
+  &quot;backup_existing&quot;: true
+}
+</code></pre>
+<h4><code>mcp__claude-flow__memory_namespace</code></h4>
+<p><strong>기능</strong>: 메모리 namespace 관리 (생성, 삭제, 목록)
+<strong>매개변수</strong>:</p>
+<ul>
+<li><code>action</code> (string): 작업 타입 - &quot;create&quot;, &quot;delete&quot;, &quot;list&quot;, &quot;info&quot;</li>
+<li><code>namespace</code> (string): Namespace 이름</li>
+<li><code>maxSize</code> (number, 선택): 최대 namespace 크기 (MB)</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-json">{
+  &quot;action&quot;: &quot;create&quot;,
+  &quot;namespace&quot;: &quot;experiment-beta&quot;,
+  &quot;maxSize&quot;: 500
+}
+</code></pre>
+<h4><code>mcp__claude-flow__memory_backup</code></h4>
+<p><strong>기능</strong>: 메모리 데이터 백업 생성
+<strong>매개변수</strong>:</p>
+<ul>
+<li><code>namespace</code> (string, 선택): 백업할 특정 namespace</li>
+<li><code>backup_name</code> (string): 백업 식별자</li>
+<li><code>incremental</code> (boolean): 증분 백업 생성</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-json">{
+  &quot;namespace&quot;: &quot;project-alpha&quot;,
+  &quot;backup_name&quot;: &quot;milestone_1_complete&quot;,
+  &quot;incremental&quot;: false
+}
+</code></pre>
+<h4><code>mcp__claude-flow__memory_restore</code></h4>
+<p><strong>기능</strong>: 백업에서 메모리 데이터 복원
+<strong>매개변수</strong>:</p>
+<ul>
+<li><code>backup_name</code> (string): 복원할 백업 식별자</li>
+<li><code>namespace</code> (string, 선택): 대상 namespace</li>
+<li><code>merge_strategy</code> (string): 병합 전략 - &quot;overwrite&quot;, &quot;merge&quot;, &quot;skip_conflicts&quot;</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-json">{
+  &quot;backup_name&quot;: &quot;milestone_1_complete&quot;,
+  &quot;namespace&quot;: &quot;project-alpha&quot;,
+  &quot;merge_strategy&quot;: &quot;merge&quot;
+}
+</code></pre>
+<h4><code>mcp__claude-flow__memory_compress</code></h4>
+<p><strong>기능</strong>: 저장 공간 절약을 위해 메모리 데이터 압축
+<strong>매개변수</strong>:</p>
+<ul>
+<li><code>namespace</code> (string, 선택): 압축할 특정 namespace</li>
+<li><code>compression_level</code> (number): 압축 수준 (1-9)</li>
+<li><code>preserve_access_patterns</code> (boolean): 접근 패턴 최적화</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-json">{
+  &quot;namespace&quot;: &quot;archived_projects&quot;,
+  &quot;compression_level&quot;: 7,
+  &quot;preserve_access_patterns&quot;: false
+}
+</code></pre>
+<h4><code>mcp__claude-flow__memory_sync</code></h4>
+<p><strong>기능</strong>: 여러 swarm 인스턴스 간 메모리 동기화
+<strong>매개변수</strong>:</p>
+<ul>
+<li><code>source_namespace</code> (string): 소스 namespace</li>
+<li><code>target_namespaces</code> (array): 대상 namespace</li>
+<li><code>sync_strategy</code> (string): 동기화 전략 - &quot;full&quot;, &quot;incremental&quot;, &quot;selective&quot;</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-json">{
+  &quot;source_namespace&quot;: &quot;master_project&quot;,
+  &quot;target_namespaces&quot;: [&quot;dev_branch&quot;, &quot;test_branch&quot;],
+  &quot;sync_strategy&quot;: &quot;incremental&quot;
+}
+</code></pre>
+<h4><code>mcp__claude-flow__cache_manage</code></h4>
+<p><strong>기능</strong>: 자주 접근하는 메모리 데이터를 위한 cache 관리
+<strong>매개변수</strong>:</p>
+<ul>
+<li><code>action</code> (string): 작업 타입 - &quot;clear&quot;, &quot;optimize&quot;, &quot;stats&quot;, &quot;configure&quot;</li>
+<li><code>cache_size</code> (number, 선택): Cache 크기 (MB)</li>
+<li><code>eviction_policy</code> (string, 선택): 제거 정책 - &quot;lru&quot;, &quot;lfu&quot;, &quot;ttl&quot;</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-json">{
+  &quot;action&quot;: &quot;configure&quot;,
+  &quot;cache_size&quot;: 128,
+  &quot;eviction_policy&quot;: &quot;lru&quot;
+}
+</code></pre>
+<h4><code>mcp__claude-flow__state_snapshot</code></h4>
+<p><strong>기능</strong>: 현재 swarm 상태의 snapshot 생성
+<strong>매개변수</strong>:</p>
+<ul>
+<li><code>swarmId</code> (string): 대상 swarm 식별자</li>
+<li><code>snapshot_name</code> (string): Snapshot 식별자</li>
+<li><code>include_memory</code> (boolean): 메모리 데이터 포함</li>
+<li><code>include_agent_state</code> (boolean): Agent 상태 포함</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-json">{
+  &quot;swarmId&quot;: &quot;project-alpha&quot;,
+  &quot;snapshot_name&quot;: &quot;pre_deployment&quot;,
+  &quot;include_memory&quot;: true,
+  &quot;include_agent_state&quot;: true
+}
+</code></pre>
+<h4><code>mcp__claude-flow__context_restore</code></h4>
+<p><strong>기능</strong>: Snapshot에서 swarm 컨텍스트 복원
+<strong>매개변수</strong>:</p>
+<ul>
+<li><code>snapshot_name</code> (string): 복원할 snapshot</li>
+<li><code>swarmId</code> (string): 대상 swarm 식별자</li>
+<li><code>selective_restore</code> (array, 선택): 복원할 특정 구성 요소</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-json">{
+  &quot;snapshot_name&quot;: &quot;pre_deployment&quot;,
+  &quot;swarmId&quot;: &quot;project-alpha&quot;,
+  &quot;selective_restore&quot;: [&quot;agent_states&quot;, &quot;task_queue&quot;]
+}
+</code></pre>
+<h4><code>mcp__claude-flow__memory_analytics</code></h4>
+<p><strong>기능</strong>: 메모리 사용 패턴 및 최적화 기회 분석
+<strong>매개변수</strong>:</p>
+<ul>
+<li><code>namespace</code> (string, 선택): 분석할 특정 namespace</li>
+<li><code>analysis_type</code> (string): 분석 타입 - &quot;usage&quot;, &quot;patterns&quot;, &quot;optimization&quot;</li>
+<li><code>timeframe</code> (string): 분석할 시간 기간</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-json">{
+  &quot;namespace&quot;: &quot;project-alpha&quot;,
+  &quot;analysis_type&quot;: &quot;optimization&quot;,
+  &quot;timeframe&quot;: &quot;30d&quot;
+}
+</code></pre>
+<h3>Analysis &amp; Monitoring (13개 tool)</h3>
+<p>시스템 성능을 위한 종합 모니터링, 분석 및 보고 tool.</p>
+<h4><code>mcp__claude-flow__performance_report</code></h4>
+<p><strong>기능</strong>: 상세 성능 보고서 생성
+<strong>매개변수</strong>:</p>
+<ul>
+<li><code>timeframe</code> (string): 시간 기간 - &quot;1h&quot;, &quot;24h&quot;, &quot;7d&quot;, &quot;30d&quot;</li>
+<li><code>format</code> (string): 보고서 형식 - &quot;summary&quot;, &quot;detailed&quot;, &quot;csv&quot;, &quot;json&quot;</li>
+<li><code>include_predictions</code> (boolean): 성능 예측 포함</li>
+<li><code>swarmId</code> (string, 선택): 보고할 특정 swarm</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-json">{
+  &quot;timeframe&quot;: &quot;24h&quot;,
+  &quot;format&quot;: &quot;detailed&quot;,
+  &quot;include_predictions&quot;: true,
+  &quot;swarmId&quot;: &quot;project-alpha&quot;
+}
+</code></pre>
+<h4><code>mcp__claude-flow__bottleneck_analyze</code></h4>
+<p><strong>기능</strong>: 성능 병목 현상 식별 및 분석
+<strong>매개변수</strong>:</p>
+<ul>
+<li><code>component</code> (string): 분석할 구성 요소 - &quot;agents&quot;, &quot;tasks&quot;, &quot;communication&quot;, &quot;memory&quot;</li>
+<li><code>analysis_depth</code> (string): 분석 깊이 - &quot;quick&quot;, &quot;thorough&quot;, &quot;comprehensive&quot;</li>
+<li><code>swarmId</code> (string, 선택): 대상 swarm</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-json">{
+  &quot;component&quot;: &quot;communication&quot;,
+  &quot;analysis_depth&quot;: &quot;thorough&quot;,
+  &quot;swarmId&quot;: &quot;project-alpha&quot;
+}
+</code></pre>
+<h4><code>mcp__claude-flow__token_usage</code></h4>
+<p><strong>기능</strong>: 작업 전반의 token 소비 추적 및 분석
+<strong>매개변수</strong>:</p>
+<ul>
+<li><code>operation</code> (string, 선택): 분석할 특정 작업</li>
+<li><code>breakdown_by</code> (string): 분류 기준 - &quot;agent&quot;, &quot;task&quot;, &quot;time&quot;, &quot;operation&quot;</li>
+<li><code>optimize_suggestions</code> (boolean): 최적화 제안 포함</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-json">{
+  &quot;operation&quot;: &quot;code_generation&quot;,
+  &quot;breakdown_by&quot;: &quot;agent&quot;,
+  &quot;optimize_suggestions&quot;: true
+}
+</code></pre>
+<h4><code>mcp__claude-flow__task_status</code></h4>
+<p><strong>기능</strong>: Swarm 전반의 작업에 대한 종합 상태 확인
+<strong>매개변수</strong>:</p>
+<ul>
+<li><code>taskId</code> (string, 선택): 특정 작업 식별자</li>
+<li><code>swarmId</code> (string, 선택): Swarm별 필터링</li>
+<li><code>status_filter</code> (string, 선택): 상태별 필터링 - &quot;pending&quot;, &quot;in_progress&quot;, &quot;completed&quot;, &quot;failed&quot;</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-json">{
+  &quot;swarmId&quot;: &quot;project-alpha&quot;,
+  &quot;status_filter&quot;: &quot;in_progress&quot;
+}
+</code></pre>
+<h4><code>mcp__claude-flow__task_results</code></h4>
+<p><strong>기능</strong>: 완료된 작업의 상세 결과 및 출력 검색
+<strong>매개변수</strong>:</p>
+<ul>
+<li><code>taskId</code> (string): 작업 식별자</li>
+<li><code>include_logs</code> (boolean): 실행 로그 포함</li>
+<li><code>include_artifacts</code> (boolean): 생성된 artifact 포함</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-json">{
+  &quot;taskId&quot;: &quot;task_api_impl_001&quot;,
+  &quot;include_logs&quot;: true,
+  &quot;include_artifacts&quot;: true
+}
+</code></pre>
+<h4><code>mcp__claude-flow__benchmark_run</code></h4>
+<p><strong>기능</strong>: Swarm 작업에 대한 성능 benchmark 실행
+<strong>매개변수</strong>:</p>
+<ul>
+<li><code>benchmark_type</code> (string): Benchmark 타입 - &quot;throughput&quot;, &quot;latency&quot;, &quot;resource_usage&quot;, &quot;accuracy&quot;</li>
+<li><code>test_duration</code> (number): 테스트 지속 시간 (초)</li>
+<li><code>concurrent_operations</code> (number): 동시 작업 수</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-json">{
+  &quot;benchmark_type&quot;: &quot;throughput&quot;,
+  &quot;test_duration&quot;: 300,
+  &quot;concurrent_operations&quot;: 10
+}
+</code></pre>
+<h4><code>mcp__claude-flow__metrics_collect</code></h4>
+<p><strong>기능</strong>: 모든 시스템 구성 요소에서 metrics 수집 및 집계
+<strong>매개변수</strong>:</p>
+<ul>
+<li><code>metrics</code> (array): 수집할 특정 metrics</li>
+<li><code>granularity</code> (string): 데이터 세분성 - &quot;minute&quot;, &quot;hour&quot;, &quot;day&quot;</li>
+<li><code>retention_period</code> (number): Metrics 보존 기간 (일)</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-json">{
+  &quot;metrics&quot;: [&quot;cpu_usage&quot;, &quot;memory_usage&quot;, &quot;task_completion_rate&quot;],
+  &quot;granularity&quot;: &quot;minute&quot;,
+  &quot;retention_period&quot;: 30
+}
+</code></pre>
+<h4><code>mcp__claude-flow__trend_analysis</code></h4>
+<p><strong>기능</strong>: 시간 경과에 따른 성능 및 동작의 추세 분석
+<strong>매개변수</strong>:</p>
+<ul>
+<li><code>metric</code> (string): 분석할 metric</li>
+<li><code>timeframe</code> (string): 분석 기간</li>
+<li><code>prediction_horizon</code> (string): 미래 예측 기간</li>
+<li><code>alert_thresholds</code> (object, 선택): Alert 임계값 설정</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-json">{
+  &quot;metric&quot;: &quot;task_completion_rate&quot;,
+  &quot;timeframe&quot;: &quot;7d&quot;,
+  &quot;prediction_horizon&quot;: &quot;3d&quot;,
+  &quot;alert_thresholds&quot;: {&quot;warning&quot;: 0.8, &quot;critical&quot;: 0.6}
+}
+</code></pre>
+<h4><code>mcp__claude-flow__cost_analysis</code></h4>
+<p><strong>기능</strong>: Swarm 작업과 관련된 비용 분석
+<strong>매개변수</strong>:</p>
+<ul>
+<li><code>cost_type</code> (string): 비용 타입 - &quot;tokens&quot;, &quot;compute&quot;, &quot;storage&quot;, &quot;total&quot;</li>
+<li><code>breakdown_by</code> (string): 비용 분류 - &quot;swarm&quot;, &quot;agent&quot;, &quot;task&quot;, &quot;operation&quot;</li>
+<li><code>budget_tracking</code> (boolean): 예산 한도 대비 추적</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-json">{
+  &quot;cost_type&quot;: &quot;total&quot;,
+  &quot;breakdown_by&quot;: &quot;swarm&quot;,
+  &quot;budget_tracking&quot;: true
+}
+</code></pre>
+<h4><code>mcp__claude-flow__quality_assess</code></h4>
+<p><strong>기능</strong>: 출력 및 프로세스의 품질 평가
+<strong>매개변수</strong>:</p>
+<ul>
+<li><code>assessment_type</code> (string): 평가 타입 - &quot;code_quality&quot;, &quot;task_completion&quot;, &quot;communication&quot;</li>
+<li><code>quality_metrics</code> (array): 평가할 특정 품질 metrics</li>
+<li><code>swarmId</code> (string, 선택): 대상 swarm</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-json">{
+  &quot;assessment_type&quot;: &quot;code_quality&quot;,
+  &quot;quality_metrics&quot;: [&quot;complexity&quot;, &quot;maintainability&quot;, &quot;test_coverage&quot;],
+  &quot;swarmId&quot;: &quot;project-alpha&quot;
+}
+</code></pre>
+<h4><code>mcp__claude-flow__error_analysis</code></h4>
+<p><strong>기능</strong>: 개선 기회 식별을 위한 오류 및 실패 분석
+<strong>매개변수</strong>:</p>
+<ul>
+<li><code>error_category</code> (string, 선택): 집중할 오류 범주</li>
+<li><code>timeframe</code> (string): 분석 기간</li>
+<li><code>include_resolution</code> (boolean): 해결 제안 포함</li>
+<li><code>severity_filter</code> (string, 선택): 심각도별 필터링</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-json">{
+  &quot;error_category&quot;: &quot;communication_failures&quot;,
+  &quot;timeframe&quot;: &quot;7d&quot;,
+  &quot;include_resolution&quot;: true,
+  &quot;severity_filter&quot;: &quot;high&quot;
+}
+</code></pre>
+<h4><code>mcp__claude-flow__usage_stats</code></h4>
+<p><strong>기능</strong>: 사용 통계 및 인사이트 생성
+<strong>매개변수</strong>:</p>
+<ul>
+<li><code>stat_type</code> (string): 통계 타입 - &quot;agent_utilization&quot;, &quot;feature_usage&quot;, &quot;resource_consumption&quot;</li>
+<li><code>aggregation</code> (string): 집계 수준 - &quot;hourly&quot;, &quot;daily&quot;, &quot;weekly&quot;</li>
+<li><code>comparative_analysis</code> (boolean): 비교 분석 포함</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-json">{
+  &quot;stat_type&quot;: &quot;agent_utilization&quot;,
+  &quot;aggregation&quot;: &quot;daily&quot;,
+  &quot;comparative_analysis&quot;: true
+}
+</code></pre>
+<h4><code>mcp__claude-flow__health_check</code></h4>
+<p><strong>기능</strong>: 시스템 구성 요소에 대한 종합 상태 확인 수행
+<strong>매개변수</strong>:</p>
+<ul>
+<li><code>component</code> (string, 선택): 확인할 특정 구성 요소</li>
+<li><code>check_depth</code> (string): 확인 깊이 - &quot;basic&quot;, &quot;standard&quot;, &quot;comprehensive&quot;</li>
+<li><code>auto_remediate</code> (boolean): 탐지된 문제 자동 수정</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-json">{
+  &quot;component&quot;: &quot;memory_system&quot;,
+  &quot;check_depth&quot;: &quot;comprehensive&quot;,
+  &quot;auto_remediate&quot;: false
+}
+</code></pre>
+<h3>Workflow &amp; Automation (11개 tool)</h3>
+<p>자동화된 workflow 및 프로세스 생성 및 관리를 위한 tool.</p>
+<h4><code>mcp__claude-flow__workflow_create</code></h4>
+<p><strong>기능</strong>: 새 자동화 workflow 생성
+<strong>매개변수</strong>:</p>
+<ul>
+<li><code>workflow_name</code> (string): Workflow 식별자</li>
+<li><code>steps</code> (array): Workflow 단계 정의</li>
+<li><code>triggers</code> (array): Workflow trigger</li>
+<li><code>schedule</code> (string, 선택): 자동 실행을 위한 Cron 일정</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-json">{
+  &quot;workflow_name&quot;: &quot;daily_health_check&quot;,
+  &quot;steps&quot;: [
+    {&quot;action&quot;: &quot;health_check&quot;, &quot;params&quot;: {}},
+    {&quot;action&quot;: &quot;generate_report&quot;, &quot;params&quot;: {&quot;format&quot;: &quot;summary&quot;}}
+  ],
+  &quot;triggers&quot;: [&quot;schedule&quot;, &quot;system_alert&quot;],
+  &quot;schedule&quot;: &quot;0 9 * * *&quot;
+}
+</code></pre>
+<h4><code>mcp__claude-flow__sparc_mode</code></h4>
+<p><strong>기능</strong>: SPARC (Specification, Pseudocode, Architecture, Refinement, Completion) workflow 실행
+<strong>매개변수</strong>:</p>
+<ul>
+<li><code>mode</code> (string): SPARC 모드 - &quot;specification&quot;, &quot;pseudocode&quot;, &quot;architecture&quot;, &quot;refinement&quot;, &quot;completion&quot;</li>
+<li><code>project_context</code> (object): 프로젝트 컨텍스트 및 요구사항</li>
+<li><code>previous_artifacts</code> (array, 선택): 이전 SPARC 단계의 artifact</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-json">{
+  &quot;mode&quot;: &quot;architecture&quot;,
+  &quot;project_context&quot;: {
+    &quot;description&quot;: &quot;E-commerce API&quot;,
+    &quot;requirements&quot;: [&quot;authentication&quot;, &quot;product_catalog&quot;, &quot;order_processing&quot;]
+  },
+  &quot;previous_artifacts&quot;: [&quot;specification_doc&quot;, &quot;pseudocode_outline&quot;]
+}
+</code></pre>
+<h4><code>mcp__claude-flow__workflow_execute</code></h4>
+<p><strong>기능</strong>: 정의된 workflow 실행
+<strong>매개변수</strong>:</p>
+<ul>
+<li><code>workflow_id</code> (string): 실행할 workflow 식별자</li>
+<li><code>execution_params</code> (object, 선택): Runtime 매개변수</li>
+<li><code>async_execution</code> (boolean): 비동기 실행</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-json">{
+  &quot;workflow_id&quot;: &quot;daily_health_check&quot;,
+  &quot;execution_params&quot;: {&quot;verbose&quot;: true},
+  &quot;async_execution&quot;: false
+}
+</code></pre>
+<h4><code>mcp__claude-flow__workflow_export</code></h4>
+<p><strong>기능</strong>: 공유 또는 백업을 위해 workflow 정의 내보내기
+<strong>매개변수</strong>:</p>
+<ul>
+<li><code>workflow_ids</code> (array): 내보낼 workflow</li>
+<li><code>format</code> (string): 내보내기 형식 - &quot;json&quot;, &quot;yaml&quot;, &quot;xml&quot;</li>
+<li><code>include_history</code> (boolean): 실행 기록 포함</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-json">{
+  &quot;workflow_ids&quot;: [&quot;daily_health_check&quot;, &quot;deployment_pipeline&quot;],
+  &quot;format&quot;: &quot;yaml&quot;,
+  &quot;include_history&quot;: false
+}
+</code></pre>
+<h4><code>mcp__claude-flow__automation_setup</code></h4>
+<p><strong>기능</strong>: 자동화 규칙 및 trigger 설정
+<strong>매개변수</strong>:</p>
+<ul>
+<li><code>rule_name</code> (string): 자동화 규칙 이름</li>
+<li><code>conditions</code> (array): Trigger 조건</li>
+<li><code>actions</code> (array): 수행할 작업</li>
+<li><code>enabled</code> (boolean): 즉시 규칙 활성화</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-json">{
+  &quot;rule_name&quot;: &quot;auto_scale_on_load&quot;,
+  &quot;conditions&quot;: [{&quot;metric&quot;: &quot;cpu_usage&quot;, &quot;threshold&quot;: 80, &quot;duration&quot;: &quot;5m&quot;}],
+  &quot;actions&quot;: [{&quot;type&quot;: &quot;scale_swarm&quot;, &quot;direction&quot;: &quot;up&quot;, &quot;amount&quot;: 2}],
+  &quot;enabled&quot;: true
+}
+</code></pre>
+<h4><code>mcp__claude-flow__pipeline_create</code></h4>
+<p><strong>기능</strong>: CI/CD 스타일 pipeline 생성
+<strong>매개변수</strong>:</p>
+<ul>
+<li><code>pipeline_name</code> (string): Pipeline 식별자</li>
+<li><code>stages</code> (array): Pipeline 단계</li>
+<li><code>parallel_execution</code> (boolean): 병렬 단계 실행 허용</li>
+<li><code>failure_strategy</code> (string): 실패 처리 - &quot;abort&quot;, &quot;continue&quot;, &quot;retry&quot;</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-json">{
+  &quot;pipeline_name&quot;: &quot;code_quality_pipeline&quot;,
+  &quot;stages&quot;: [
+    {&quot;name&quot;: &quot;lint&quot;, &quot;commands&quot;: [&quot;npm run lint&quot;]},
+    {&quot;name&quot;: &quot;test&quot;, &quot;commands&quot;: [&quot;npm test&quot;]},
+    {&quot;name&quot;: &quot;build&quot;, &quot;commands&quot;: [&quot;npm run build&quot;]}
+  ],
+  &quot;parallel_execution&quot;: false,
+  &quot;failure_strategy&quot;: &quot;abort&quot;
+}
+</code></pre>
+<h4><code>mcp__claude-flow__scheduler_manage</code></h4>
+<p><strong>기능</strong>: 작업 스케줄링 및 cron job 관리
+<strong>매개변수</strong>:</p>
+<ul>
+<li><code>action</code> (string): 작업 타입 - &quot;create&quot;, &quot;update&quot;, &quot;delete&quot;, &quot;list&quot;, &quot;status&quot;</li>
+<li><code>schedule_id</code> (string, 선택): Schedule 식별자</li>
+<li><code>cron_expression</code> (string, 선택): Cron schedule 표현식</li>
+<li><code>task_definition</code> (object, 선택): 스케줄할 작업</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-json">{
+  &quot;action&quot;: &quot;create&quot;,
+  &quot;schedule_id&quot;: &quot;weekly_optimization&quot;,
+  &quot;cron_expression&quot;: &quot;0 2 * * 0&quot;,
+  &quot;task_definition&quot;: {&quot;type&quot;: &quot;topology_optimize&quot;, &quot;swarmId&quot;: &quot;production&quot;}
+}
+</code></pre>
+<h4><code>mcp__claude-flow__trigger_setup</code></h4>
+<p><strong>기능</strong>: 이벤트 기반 trigger 구성
+<strong>매개변수</strong>:</p>
+<ul>
+<li><code>trigger_name</code> (string): Trigger 식별자</li>
+<li><code>event_type</code> (string): 수신할 이벤트 타입</li>
+<li><code>conditions</code> (object): Trigger 조건</li>
+<li><code>webhook_url</code> (string, 선택): 알림을 위한 Webhook endpoint</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-json">{
+  &quot;trigger_name&quot;: &quot;deployment_complete&quot;,
+  &quot;event_type&quot;: &quot;task_completed&quot;,
+  &quot;conditions&quot;: {&quot;task_type&quot;: &quot;deployment&quot;, &quot;status&quot;: &quot;success&quot;},
+  &quot;webhook_url&quot;: &quot;https://api.example.com/deploy-webhook&quot;
+}
+</code></pre>
+<h4><code>mcp__claude-flow__workflow_template</code></h4>
+<p><strong>기능</strong>: 재사용성을 위한 workflow template 관리
+<strong>매개변수</strong>:</p>
+<ul>
+<li><code>action</code> (string): 작업 타입 - &quot;create&quot;, &quot;update&quot;, &quot;delete&quot;, &quot;list&quot;, &quot;instantiate&quot;</li>
+<li><code>template_name</code> (string): Template 식별자</li>
+<li><code>template_definition</code> (object, 선택): Template 정의</li>
+<li><code>parameters</code> (object, 선택): Instantiation을 위한 template 매개변수</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-json">{
+  &quot;action&quot;: &quot;instantiate&quot;,
+  &quot;template_name&quot;: &quot;api_development_template&quot;,
+  &quot;parameters&quot;: {
+    &quot;project_name&quot;: &quot;user-service&quot;,
+    &quot;database_type&quot;: &quot;postgresql&quot;
+  }
+}
+</code></pre>
+<h4><code>mcp__claude-flow__batch_process</code></h4>
+<p><strong>기능</strong>: Batch 처리 작업 실행
+<strong>매개변수</strong>:</p>
+<ul>
+<li><code>batch_name</code> (string): Batch 작업 식별자</li>
+<li><code>operations</code> (array): Batch에서 실행할 작업</li>
+<li><code>concurrency_limit</code> (number): 최대 동시 작업 수</li>
+<li><code>retry_failed</code> (boolean): 실패한 작업 재시도</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-json">{
+  &quot;batch_name&quot;: &quot;migrate_projects&quot;,
+  &quot;operations&quot;: [
+    {&quot;type&quot;: &quot;update_project&quot;, &quot;project_id&quot;: &quot;proj1&quot;},
+    {&quot;type&quot;: &quot;update_project&quot;, &quot;project_id&quot;: &quot;proj2&quot;}
+  ],
+  &quot;concurrency_limit&quot;: 5,
+  &quot;retry_failed&quot;: true
+}
+</code></pre>
+<h4><code>mcp__claude-flow__parallel_execute</code></h4>
+<p><strong>기능</strong>: 여러 작업을 병렬로 실행
+<strong>매개변수</strong>:</p>
+<ul>
+<li><code>operations</code> (array): 실행할 작업</li>
+<li><code>max_concurrency</code> (number): 최대 동시 작업 수</li>
+<li><code>timeout</code> (number): 작업당 timeout (초)</li>
+<li><code>collect_results</code> (boolean): 모든 결과 수집 및 반환</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-json">{
+  &quot;operations&quot;: [
+    {&quot;tool&quot;: &quot;health_check&quot;, &quot;params&quot;: {&quot;component&quot;: &quot;agents&quot;}},
+    {&quot;tool&quot;: &quot;health_check&quot;, &quot;params&quot;: {&quot;component&quot;: &quot;memory&quot;}},
+    {&quot;tool&quot;: &quot;health_check&quot;, &quot;params&quot;: {&quot;component&quot;: &quot;neural&quot;}}
+  ],
+  &quot;max_concurrency&quot;: 3,
+  &quot;timeout&quot;: 30,
+  &quot;collect_results&quot;: true
+}
+</code></pre>
+<h3>GitHub Integration (8개 tool)</h3>
+<p>Repository 관리 및 협업을 위한 종합 GitHub 통합.</p>
+<h4><code>mcp__claude-flow__github_repo_analyze</code></h4>
+<p><strong>기능</strong>: 구조, 패턴 및 인사이트를 위해 GitHub repository 분석
+<strong>매개변수</strong>:</p>
+<ul>
+<li><code>repo_url</code> (string): GitHub repository URL</li>
+<li><code>analysis_type</code> (string): 분석 타입 - &quot;structure&quot;, &quot;activity&quot;, &quot;contributors&quot;, &quot;issues&quot;, &quot;code_quality&quot;</li>
+<li><code>depth</code> (string): 분석 깊이 - &quot;shallow&quot;, &quot;moderate&quot;, &quot;deep&quot;</li>
+<li><code>include_history</code> (boolean): Commit 기록 분석 포함</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-json">{
+  &quot;repo_url&quot;: &quot;https://github.com/example/project&quot;,
+  &quot;analysis_type&quot;: &quot;code_quality&quot;,
+  &quot;depth&quot;: &quot;moderate&quot;,
+  &quot;include_history&quot;: true
+}
+</code></pre>
+<h4><code>mcp__claude-flow__github_pr_manage</code></h4>
+<p><strong>기능</strong>: GitHub pull request 관리 (생성, 리뷰, 병합)
+<strong>매개변수</strong>:</p>
+<ul>
+<li><code>action</code> (string): 작업 타입 - &quot;create&quot;, &quot;review&quot;, &quot;merge&quot;, &quot;close&quot;, &quot;list&quot;</li>
+<li><code>repo</code> (string): Repository 식별자</li>
+<li><code>pr_number</code> (number, 선택): Pull request 번호</li>
+<li><code>title</code> (string, 선택): 생성을 위한 PR 제목</li>
+<li><code>description</code> (string, 선택): PR 설명</li>
+<li><code>base_branch</code> (string, 선택): PR의 base branch</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-json">{
+  &quot;action&quot;: &quot;create&quot;,
+  &quot;repo&quot;: &quot;example/project&quot;,
+  &quot;title&quot;: &quot;Add user authentication feature&quot;,
+  &quot;description&quot;: &quot;Implements JWT-based authentication system&quot;,
+  &quot;base_branch&quot;: &quot;main&quot;
+}
+</code></pre>
+<h4><code>mcp__claude-flow__github_issue_track</code></h4>
+<p><strong>기능</strong>: GitHub issue 추적 및 관리
+<strong>매개변수</strong>:</p>
+<ul>
+<li><code>action</code> (string): 작업 타입 - &quot;create&quot;, &quot;update&quot;, &quot;close&quot;, &quot;list&quot;, &quot;assign&quot;</li>
+<li><code>repo</code> (string): Repository 식별자</li>
+<li><code>issue_number</code> (number, 선택): Issue 번호</li>
+<li><code>title</code> (string, 선택): Issue 제목</li>
+<li><code>labels</code> (array, 선택): Issue label</li>
+<li><code>assignee</code> (string, 선택): Issue 할당자</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-json">{
+  &quot;action&quot;: &quot;create&quot;,
+  &quot;repo&quot;: &quot;example/project&quot;,
+  &quot;title&quot;: &quot;Bug: Login form validation&quot;,
+  &quot;labels&quot;: [&quot;bug&quot;, &quot;frontend&quot;],
+  &quot;assignee&quot;: &quot;dev-team&quot;
+}
+</code></pre>
+<h4><code>mcp__claude-flow__github_release_coord</code></h4>
+<p><strong>기능</strong>: GitHub release 및 버전 관리 조정
+<strong>매개변수</strong>:</p>
+<ul>
+<li><code>action</code> (string): 작업 타입 - &quot;create&quot;, &quot;update&quot;, &quot;delete&quot;, &quot;list&quot;</li>
+<li><code>repo</code> (string): Repository 식별자</li>
+<li><code>tag_name</code> (string, 선택): Release tag</li>
+<li><code>release_name</code> (string, 선택): Release 제목</li>
+<li><code>description</code> (string, 선택): Release 설명</li>
+<li><code>draft</code> (boolean, 선택): Draft로 생성</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-json">{
+  &quot;action&quot;: &quot;create&quot;,
+  &quot;repo&quot;: &quot;example/project&quot;,
+  &quot;tag_name&quot;: &quot;v2.1.0&quot;,
+  &quot;release_name&quot;: &quot;Version 2.1.0 - Feature Release&quot;,
+  &quot;description&quot;: &quot;Added new dashboard and improved performance&quot;,
+  &quot;draft&quot;: false
+}
+</code></pre>
+<h4><code>mcp__claude-flow__github_workflow_auto</code></h4>
+<p><strong>기능</strong>: GitHub Actions workflow 자동화
+<strong>매개변수</strong>:</p>
+<ul>
+<li><code>repo</code> (string): Repository 식별자</li>
+<li><code>workflow_action</code> (string): 작업 타입 - &quot;trigger&quot;, &quot;status&quot;, &quot;list&quot;, &quot;create&quot;</li>
+<li><code>workflow_name</code> (string, 선택): Workflow 이름</li>
+<li><code>inputs</code> (object, 선택): Workflow 입력</li>
+<li><code>branch</code> (string, 선택): 대상 branch</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-json">{
+  &quot;repo&quot;: &quot;example/project&quot;,
+  &quot;workflow_action&quot;: &quot;trigger&quot;,
+  &quot;workflow_name&quot;: &quot;deploy-to-production&quot;,
+  &quot;inputs&quot;: {&quot;environment&quot;: &quot;production&quot;},
+  &quot;branch&quot;: &quot;main&quot;
+}
+</code></pre>
+<h4><code>mcp__claude-flow__github_code_review</code></h4>
+<p><strong>기능</strong>: AI를 사용한 자동화된 코드 리뷰 수행
+<strong>매개변수</strong>:</p>
+<ul>
+<li><code>repo</code> (string): Repository 식별자</li>
+<li><code>pr_number</code> (number, 선택): 리뷰할 pull request</li>
+<li><code>review_type</code> (string): 리뷰 타입 - &quot;security&quot;, &quot;performance&quot;, &quot;style&quot;, &quot;comprehensive&quot;</li>
+<li><code>auto_comment</code> (boolean): 발견 사항에 자동으로 댓글 달기</li>
+<li><code>review_criteria</code> (array, 선택): 확인할 특정 기준</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-json">{
+  &quot;repo&quot;: &quot;example/project&quot;,
+  &quot;pr_number&quot;: 42,
+  &quot;review_type&quot;: &quot;comprehensive&quot;,
+  &quot;auto_comment&quot;: true,
+  &quot;review_criteria&quot;: [&quot;security_vulnerabilities&quot;, &quot;performance_issues&quot;, &quot;code_style&quot;]
+}
+</code></pre>
+<h4><code>mcp__claude-flow__github_sync_coord</code></h4>
+<p><strong>기능</strong>: GitHub와 로컬 개발 간 동기화 조정
+<strong>매개변수</strong>:</p>
+<ul>
+<li><code>repos</code> (array): 동기화할 repository</li>
+<li><code>sync_direction</code> (string): 동기화 방향 - &quot;push&quot;, &quot;pull&quot;, &quot;bidirectional&quot;</li>
+<li><code>conflict_resolution</code> (string): 충돌 해결 전략</li>
+<li><code>sync_branches</code> (array, 선택): 동기화할 특정 branch</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-json">{
+  &quot;repos&quot;: [&quot;example/project&quot;, &quot;example/shared-lib&quot;],
+  &quot;sync_direction&quot;: &quot;bidirectional&quot;,
+  &quot;conflict_resolution&quot;: &quot;manual_review&quot;,
+  &quot;sync_branches&quot;: [&quot;main&quot;, &quot;develop&quot;]
+}
+</code></pre>
+<h4><code>mcp__claude-flow__github_metrics</code></h4>
+<p><strong>기능</strong>: GitHub repository metrics 수집 및 분석
+<strong>매개변수</strong>:</p>
+<ul>
+<li><code>repo</code> (string): Repository 식별자</li>
+<li><code>metrics</code> (array): 수집할 metrics - &quot;commits&quot;, &quot;contributors&quot;, &quot;issues&quot;, &quot;prs&quot;, &quot;releases&quot;</li>
+<li><code>timeframe</code> (string): 분석 기간</li>
+<li><code>export_format</code> (string, 선택): Metrics 내보내기 형식</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-json">{
+  &quot;repo&quot;: &quot;example/project&quot;,
+  &quot;metrics&quot;: [&quot;commits&quot;, &quot;issues&quot;, &quot;prs&quot;],
+  &quot;timeframe&quot;: &quot;30d&quot;,
+  &quot;export_format&quot;: &quot;csv&quot;
+}
+</code></pre>
+<h3>DAA (Dynamic Agent Architecture) (8개 tool)</h3>
+<p>고급 동적 agent 관리 및 architecture tool.</p>
+<h4><code>mcp__claude-flow__daa_agent_create</code></h4>
+<p><strong>기능</strong>: 적응형 기능을 가진 동적 agent 생성
+<strong>매개변수</strong>:</p>
+<ul>
+<li><code>agent_type</code> (string): Agent 타입 또는 기능 프로필</li>
+<li><code>adaptation_rules</code> (array): 동적 적응을 위한 규칙</li>
+<li><code>resource_constraints</code> (object): 리소스 할당 제약</li>
+<li><code>lifecycle_policy</code> (string): Agent 수명 주기 관리 정책</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-json">{
+  &quot;agent_type&quot;: &quot;adaptive_coder&quot;,
+  &quot;adaptation_rules&quot;: [
+    {&quot;condition&quot;: &quot;high_complexity&quot;, &quot;action&quot;: &quot;request_specialist&quot;},
+    {&quot;condition&quot;: &quot;low_workload&quot;, &quot;action&quot;: &quot;hibernate&quot;}
+  ],
+  &quot;resource_constraints&quot;: {&quot;max_memory&quot;: &quot;512MB&quot;, &quot;max_cpu&quot;: &quot;2_cores&quot;},
+  &quot;lifecycle_policy&quot;: &quot;auto_scale&quot;
+}
+</code></pre>
+<h4><code>mcp__claude-flow__daa_capability_match</code></h4>
+<p><strong>기능</strong>: Agent 기능과 작업 요구사항 매칭
+<strong>매개변수</strong>:</p>
+<ul>
+<li><code>task_requirements</code> (object): 작업에 필요한 기능</li>
+<li><code>available_agents</code> (array, 선택): 고려할 agent</li>
+<li><code>match_criteria</code> (string): 매칭 기준 - &quot;exact&quot;, &quot;partial&quot;, &quot;adaptive&quot;</li>
+<li><code>optimization_goal</code> (string): 최적화 목표 - &quot;speed&quot;, &quot;quality&quot;, &quot;cost&quot;</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-json">{
+  &quot;task_requirements&quot;: {
+    &quot;skills&quot;: [&quot;python&quot;, &quot;machine_learning&quot;, &quot;data_analysis&quot;],
+    &quot;experience_level&quot;: &quot;senior&quot;,
+    &quot;availability&quot;: &quot;immediate&quot;
+  },
+  &quot;match_criteria&quot;: &quot;adaptive&quot;,
+  &quot;optimization_goal&quot;: &quot;quality&quot;
+}
+</code></pre>
+<h4><code>mcp__claude-flow__daa_resource_alloc</code></h4>
+<p><strong>기능</strong>: 수요 기반으로 agent에 리소스 동적 할당
+<strong>매개변수</strong>:</p>
+<ul>
+<li><code>allocation_strategy</code> (string): 전략 - &quot;fair&quot;, &quot;priority_based&quot;, &quot;demand_based&quot;, &quot;predictive&quot;</li>
+<li><code>resource_pool</code> (object): 사용 가능한 리소스</li>
+<li><code>constraints</code> (object): 할당 제약</li>
+<li><code>monitoring_interval</code> (number): 리소스 모니터링 간격 (초)</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-json">{
+  &quot;allocation_strategy&quot;: &quot;demand_based&quot;,
+  &quot;resource_pool&quot;: {&quot;cpu_cores&quot;: 16, &quot;memory_gb&quot;: 64, &quot;storage_gb&quot;: 1000},
+  &quot;constraints&quot;: {&quot;min_cpu_per_agent&quot;: 1, &quot;max_memory_per_agent&quot;: &quot;8GB&quot;},
+  &quot;monitoring_interval&quot;: 30
+}
+</code></pre>
+<h4><code>mcp__claude-flow__daa_lifecycle_manage</code></h4>
+<p><strong>기능</strong>: 동적 agent 수명 주기 관리 (생성, 확장, 종료)
+<strong>매개변수</strong>:</p>
+<ul>
+<li><code>lifecycle_action</code> (string): 작업 - &quot;spawn&quot;, &quot;scale&quot;, &quot;hibernate&quot;, &quot;terminate&quot;, &quot;migrate&quot;</li>
+<li><code>agent_ids</code> (array, 선택): 관리할 특정 agent</li>
+<li><code>scaling_policy</code> (object): 확장 정책 및 trigger</li>
+<li><code>migration_target</code> (string, 선택): Agent migration을 위한 대상</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-json">{
+  &quot;lifecycle_action&quot;: &quot;scale&quot;,
+  &quot;scaling_policy&quot;: {
+    &quot;scale_up_threshold&quot;: 80,
+    &quot;scale_down_threshold&quot;: 20,
+    &quot;cooldown_period&quot;: 300
+  }
+}
+</code></pre>
+<h4><code>mcp__claude-flow__daa_communication</code></h4>
+<p><strong>기능</strong>: Agent 간 동적 통신 패턴 관리
+<strong>매개변수</strong>:</p>
+<ul>
+<li><code>communication_pattern</code> (string): 패턴 - &quot;broadcast&quot;, &quot;peer_to_peer&quot;, &quot;hierarchical&quot;, &quot;mesh&quot;</li>
+<li><code>message_routing</code> (object): 메시지 라우팅 구성</li>
+<li><code>protocol_adaptation</code> (boolean): Protocol 적응 활성화</li>
+<li><code>bandwidth_management</code> (object): Bandwidth 할당 규칙</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-json">{
+  &quot;communication_pattern&quot;: &quot;mesh&quot;,
+  &quot;message_routing&quot;: {&quot;priority_queues&quot;: true, &quot;load_balancing&quot;: true},
+  &quot;protocol_adaptation&quot;: true,
+  &quot;bandwidth_management&quot;: {&quot;max_per_agent&quot;: &quot;10Mbps&quot;, &quot;priority_levels&quot;: 3}
+}
+</code></pre>
+<h4><code>mcp__claude-flow__daa_consensus</code></h4>
+<p><strong>기능</strong>: 분산 의사 결정을 위한 consensus 메커니즘 구현
+<strong>매개변수</strong>:</p>
+<ul>
+<li><code>consensus_algorithm</code> (string): 알고리즘 - &quot;raft&quot;, &quot;byzantine&quot;, &quot;proof_of_stake&quot;, &quot;democratic&quot;</li>
+<li><code>decision_topic</code> (string): Consensus가 필요한 주제</li>
+<li><code>voting_power</code> (object, 선택): Voting power 분배</li>
+<li><code>timeout_seconds</code> (number): Consensus timeout</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-json">{
+  &quot;consensus_algorithm&quot;: &quot;democratic&quot;,
+  &quot;decision_topic&quot;: &quot;architecture_choice&quot;,
+  &quot;voting_power&quot;: {&quot;senior_agents&quot;: 2, &quot;junior_agents&quot;: 1},
+  &quot;timeout_seconds&quot;: 120
+}
+</code></pre>
+<h4><code>mcp__claude-flow__daa_fault_tolerance</code></h4>
+<p><strong>기능</strong>: Fault tolerance 및 복구 메커니즘 구현
+<strong>매개변수</strong>:</p>
+<ul>
+<li><code>fault_detection</code> (object): Fault 탐지 구성</li>
+<li><code>recovery_strategy</code> (string): 복구 전략 - &quot;restart&quot;, &quot;migrate&quot;, &quot;replicate&quot;, &quot;degrade&quot;</li>
+<li><code>health_monitoring</code> (object): 상태 모니터링 설정</li>
+<li><code>backup_agents</code> (number): 유지할 백업 agent 수</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-json">{
+  &quot;fault_detection&quot;: {&quot;heartbeat_interval&quot;: 10, &quot;failure_threshold&quot;: 3},
+  &quot;recovery_strategy&quot;: &quot;migrate&quot;,
+  &quot;health_monitoring&quot;: {&quot;check_interval&quot;: 30, &quot;metrics&quot;: [&quot;cpu&quot;, &quot;memory&quot;, &quot;response_time&quot;]},
+  &quot;backup_agents&quot;: 2
+}
+</code></pre>
+<h4><code>mcp__claude-flow__daa_optimization</code></h4>
+<p><strong>기능</strong>: 성능 및 효율성을 위해 동적 agent architecture 최적화
+<strong>매개변수</strong>:</p>
+<ul>
+<li><code>optimization_target</code> (string): 대상 - &quot;performance&quot;, &quot;cost&quot;, &quot;reliability&quot;, &quot;energy&quot;</li>
+<li><code>constraints</code> (object): 최적화 제약</li>
+<li><code>optimization_algorithm</code> (string): 사용할 알고리즘</li>
+<li><code>continuous_optimization</code> (boolean): 지속적인 최적화 활성화</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-json">{
+  &quot;optimization_target&quot;: &quot;performance&quot;,
+  &quot;constraints&quot;: {&quot;max_cost&quot;: 1000, &quot;min_reliability&quot;: 0.99},
+  &quot;optimization_algorithm&quot;: &quot;genetic&quot;,
+  &quot;continuous_optimization&quot;: true
+}
+</code></pre>
+<h3>System &amp; Utilities (8개 tool)</h3>
+<p>핵심 시스템 관리 및 유틸리티 기능.</p>
+<h4><code>mcp__claude-flow__terminal_execute</code></h4>
+<p><strong>기능</strong>: 안전 제어를 통한 터미널 명령어 실행
+<strong>매개변수</strong>:</p>
+<ul>
+<li><code>command</code> (string): 실행할 명령어</li>
+<li><code>working_directory</code> (string, 선택): 작업 디렉토리</li>
+<li><code>timeout</code> (number, 선택): 실행 timeout (초)</li>
+<li><code>capture_output</code> (boolean): 명령어 출력 캡처</li>
+<li><code>environment_vars</code> (object, 선택): Environment 변수</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-json">{
+  &quot;command&quot;: &quot;npm test&quot;,
+  &quot;working_directory&quot;: &quot;/path/to/project&quot;,
+  &quot;timeout&quot;: 300,
+  &quot;capture_output&quot;: true,
+  &quot;environment_vars&quot;: {&quot;NODE_ENV&quot;: &quot;test&quot;}
+}
+</code></pre>
+<h4><code>mcp__claude-flow__config_manage</code></h4>
+<p><strong>기능</strong>: 시스템 구성 설정 관리
+<strong>매개변수</strong>:</p>
+<ul>
+<li><code>action</code> (string): 작업 - &quot;get&quot;, &quot;set&quot;, &quot;update&quot;, &quot;delete&quot;, &quot;list&quot;, &quot;backup&quot;, &quot;restore&quot;</li>
+<li><code>config_key</code> (string, 선택): 구성 키</li>
+<li><code>config_value</code> (any, 선택): 구성 값</li>
+<li><code>namespace</code> (string, 선택): 구성 namespace</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-json">{
+  &quot;action&quot;: &quot;set&quot;,
+  &quot;config_key&quot;: &quot;swarm.default_topology&quot;,
+  &quot;config_value&quot;: &quot;hierarchical&quot;,
+  &quot;namespace&quot;: &quot;system&quot;
+}
+</code></pre>
+<h4><code>mcp__claude-flow__features_detect</code></h4>
+<p><strong>기능</strong>: 사용 가능한 기능 및 성능 탐지
+<strong>매개변수</strong>:</p>
+<ul>
+<li><code>component</code> (string, 선택): 확인할 특정 구성 요소</li>
+<li><code>detailed_info</code> (boolean): 상세 기능 정보 포함</li>
+<li><code>compatibility_check</code> (boolean): 기능 호환성 확인</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-json">{
+  &quot;component&quot;: &quot;neural_networks&quot;,
+  &quot;detailed_info&quot;: true,
+  &quot;compatibility_check&quot;: true
+}
+</code></pre>
+<h4><code>mcp__claude-flow__security_scan</code></h4>
+<p><strong>기능</strong>: 시스템 구성 요소에 대한 보안 스캔 수행
+<strong>매개변수</strong>:</p>
+<ul>
+<li><code>scan_type</code> (string): 스캔 타입 - &quot;vulnerability&quot;, &quot;compliance&quot;, &quot;access_control&quot;, &quot;data_integrity&quot;</li>
+<li><code>scope</code> (string): 스캔 범위 - &quot;system&quot;, &quot;agents&quot;, &quot;communications&quot;, &quot;storage&quot;</li>
+<li><code>severity_threshold</code> (string): 보고할 최소 심각도</li>
+<li><code>remediation_suggestions</code> (boolean): Remediation 제안 포함</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-json">{
+  &quot;scan_type&quot;: &quot;vulnerability&quot;,
+  &quot;scope&quot;: &quot;system&quot;,
+  &quot;severity_threshold&quot;: &quot;medium&quot;,
+  &quot;remediation_suggestions&quot;: true
+}
+</code></pre>
+<h4><code>mcp__claude-flow__backup_create</code></h4>
+<p><strong>기능</strong>: 시스템 백업 생성
+<strong>매개변수</strong>:</p>
+<ul>
+<li><code>backup_type</code> (string): 백업 타입 - &quot;full&quot;, &quot;incremental&quot;, &quot;differential&quot;</li>
+<li><code>components</code> (array): 백업할 구성 요소</li>
+<li><code>compression</code> (boolean): 압축 활성화</li>
+<li><code>encryption</code> (boolean): 암호화 활성화</li>
+<li><code>retention_days</code> (number): 백업 보존 기간</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-json">{
+  &quot;backup_type&quot;: &quot;incremental&quot;,
+  &quot;components&quot;: [&quot;memory&quot;, &quot;configs&quot;, &quot;agent_states&quot;],
+  &quot;compression&quot;: true,
+  &quot;encryption&quot;: true,
+  &quot;retention_days&quot;: 30
+}
+</code></pre>
+<h4><code>mcp__claude-flow__restore_system</code></h4>
+<p><strong>기능</strong>: 백업에서 시스템 복원
+<strong>매개변수</strong>:</p>
+<ul>
+<li><code>backup_id</code> (string): 복원할 백업 식별자</li>
+<li><code>restore_components</code> (array): 복원할 구성 요소</li>
+<li><code>verification</code> (boolean): 복원 전 백업 무결성 확인</li>
+<li><code>rollback_plan</code> (boolean): 복원 전 rollback 지점 생성</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-json">{
+  &quot;backup_id&quot;: &quot;backup_2024_01_15_001&quot;,
+  &quot;restore_components&quot;: [&quot;memory&quot;, &quot;configs&quot;],
+  &quot;verification&quot;: true,
+  &quot;rollback_plan&quot;: true
+}
+</code></pre>
+<h4><code>mcp__claude-flow__log_analysis</code></h4>
+<p><strong>기능</strong>: 인사이트 및 문제를 위한 시스템 로그 분석
+<strong>매개변수</strong>:</p>
+<ul>
+<li><code>log_source</code> (string): 로그 소스 - &quot;system&quot;, &quot;agents&quot;, &quot;tasks&quot;, &quot;communications&quot;</li>
+<li><code>analysis_type</code> (string): 분석 타입 - &quot;errors&quot;, &quot;performance&quot;, &quot;patterns&quot;, &quot;anomalies&quot;</li>
+<li><code>timeframe</code> (string): 분석할 시간 기간</li>
+<li><code>export_results</code> (boolean): 분석 결과 내보내기</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-json">{
+  &quot;log_source&quot;: &quot;agents&quot;,
+  &quot;analysis_type&quot;: &quot;errors&quot;,
+  &quot;timeframe&quot;: &quot;24h&quot;,
+  &quot;export_results&quot;: true
+}
+</code></pre>
+<h4><code>mcp__claude-flow__diagnostic_run</code></h4>
+<p><strong>기능</strong>: 종합 시스템 진단 실행
+<strong>매개변수</strong>:</p>
+<ul>
+<li><code>diagnostic_level</code> (string): 진단 수준 - &quot;quick&quot;, &quot;standard&quot;, &quot;comprehensive&quot;</li>
+<li><code>components</code> (array, 선택): 진단할 특정 구성 요소</li>
+<li><code>include_recommendations</code> (boolean): 개선 권장사항 포함</li>
+<li><code>auto_fix</code> (boolean): 탐지된 문제 자동 수정</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-json">{
+  &quot;diagnostic_level&quot;: &quot;comprehensive&quot;,
+  &quot;components&quot;: [&quot;memory&quot;, &quot;agents&quot;, &quot;neural_networks&quot;],
+  &quot;include_recommendations&quot;: true,
+  &quot;auto_fix&quot;: false
+}
+</code></pre>
+<hr>
+<h2>Ruv-Swarm Tools (25개 tool)</h2>
+<p>ruv-swarm tool은 고급 swarm intelligence, 분산 컴퓨팅 및 협업 AI 기능을 제공합니다. 모든 ruv-swarm tool은 <code>mcp__ruv-swarm__</code> 접두사를 사용합니다.</p>
+<h3>Core Swarm Intelligence (8개 tool)</h3>
+<h4><code>mcp__ruv-swarm__memory_usage</code></h4>
+<p><strong>기능</strong>: Swarm network 전반의 고급 분산 메모리 관리
+<strong>매개변수</strong>:</p>
+<ul>
+<li><code>action</code> (string): 작업 타입 - &quot;store&quot;, &quot;retrieve&quot;, &quot;sync&quot;, &quot;replicate&quot;, &quot;compress&quot;</li>
+<li><code>key</code> (string): 계층적 지원이 있는 메모리 키</li>
+<li><code>value</code> (any, store용): 자동 직렬화로 저장할 데이터</li>
+<li><code>namespace</code> (string, 선택): 격리를 위한 메모리 namespace</li>
+<li><code>replication_factor</code> (number, 선택): 노드 간 replica 수</li>
+<li><code>consistency_level</code> (string, 선택): Consistency 수준 - &quot;eventual&quot;, &quot;strong&quot;, &quot;bounded&quot;</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-json">{
+  &quot;action&quot;: &quot;store&quot;,
+  &quot;key&quot;: &quot;distributed/project_state&quot;,
+  &quot;value&quot;: {&quot;phase&quot;: &quot;implementation&quot;, &quot;completion&quot;: 0.75},
+  &quot;namespace&quot;: &quot;project-alpha&quot;,
+  &quot;replication_factor&quot;: 3,
+  &quot;consistency_level&quot;: &quot;strong&quot;
+}
+</code></pre>
+<h4><code>mcp__ruv-swarm__swarm_monitor</code></h4>
+<p><strong>기능</strong>: 분산 swarm 작업의 실시간 모니터링
+<strong>매개변수</strong>:</p>
+<ul>
+<li><code>monitoring_mode</code> (string): 모드 - &quot;realtime&quot;, &quot;batch&quot;, &quot;event_driven&quot;</li>
+<li><code>metrics</code> (array): 모니터링할 metrics - &quot;performance&quot;, &quot;health&quot;, &quot;communication&quot;, &quot;resource_usage&quot;</li>
+<li><code>alert_thresholds</code> (object): Alert 임계값 구성</li>
+<li><code>dashboard_update</code> (boolean): 모니터링 대시보드 업데이트</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-json">{
+  &quot;monitoring_mode&quot;: &quot;realtime&quot;,
+  &quot;metrics&quot;: [&quot;performance&quot;, &quot;health&quot;, &quot;communication&quot;],
+  &quot;alert_thresholds&quot;: {&quot;cpu_usage&quot;: 80, &quot;memory_usage&quot;: 75},
+  &quot;dashboard_update&quot;: true
+}
+</code></pre>
+<h4><code>mcp__ruv-swarm__task_orchestrate</code></h4>
+<p><strong>기능</strong>: 지능형 agent 할당을 통한 고급 작업 오케스트레이션
+<strong>매개변수</strong>:</p>
+<ul>
+<li><code>orchestration_strategy</code> (string): 전략 - &quot;capability_based&quot;, &quot;load_balanced&quot;, &quot;priority_weighted&quot;, &quot;ml_optimized&quot;</li>
+<li><code>task_graph</code> (object): 작업 dependency graph</li>
+<li><code>resource_constraints</code> (object): 리소스 할당 제약</li>
+<li><code>optimization_goals</code> (array): 목표 - &quot;speed&quot;, &quot;quality&quot;, &quot;cost&quot;, &quot;energy_efficiency&quot;</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-json">{
+  &quot;orchestration_strategy&quot;: &quot;ml_optimized&quot;,
+  &quot;task_graph&quot;: {
+    &quot;nodes&quot;: [&quot;research&quot;, &quot;design&quot;, &quot;implement&quot;, &quot;test&quot;],
+    &quot;edges&quot;: [[&quot;research&quot;, &quot;design&quot;], [&quot;design&quot;, &quot;implement&quot;], [&quot;implement&quot;, &quot;test&quot;]]
+  },
+  &quot;resource_constraints&quot;: {&quot;max_parallel_tasks&quot;: 5, &quot;memory_limit&quot;: &quot;16GB&quot;},
+  &quot;optimization_goals&quot;: [&quot;speed&quot;, &quot;quality&quot;]
+}
+</code></pre>
+<h4><code>mcp__ruv-swarm__neural_train</code></h4>
+<p><strong>기능</strong>: Swarm 노드 전반의 분산 neural network 훈련
+<strong>매개변수</strong>:</p>
+<ul>
+<li><code>training_mode</code> (string): 모드 - &quot;federated&quot;, &quot;distributed&quot;, &quot;ensemble&quot;, &quot;transfer&quot;</li>
+<li><code>model_architecture</code> (object): Neural network architecture 정의</li>
+<li><code>training_data</code> (string): 훈련 데이터 소스 또는 식별자</li>
+<li><code>hyperparameters</code> (object): 훈련 hyperparameter</li>
+<li><code>convergence_criteria</code> (object): 훈련 중단 조건</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-json">{
+  &quot;training_mode&quot;: &quot;federated&quot;,
+  &quot;model_architecture&quot;: {&quot;type&quot;: &quot;transformer&quot;, &quot;layers&quot;: 12, &quot;hidden_size&quot;: 768},
+  &quot;training_data&quot;: &quot;swarm_collaboration_logs&quot;,
+  &quot;hyperparameters&quot;: {&quot;learning_rate&quot;: 0.001, &quot;batch_size&quot;: 32},
+  &quot;convergence_criteria&quot;: {&quot;min_accuracy&quot;: 0.95, &quot;max_epochs&quot;: 100}
+}
+</code></pre>
+<h4><code>mcp__ruv-swarm__consensus_vote</code></h4>
+<p><strong>기능</strong>: 분산 consensus voting 메커니즘 구현
+<strong>매개변수</strong>:</p>
+<ul>
+<li><code>vote_type</code> (string): Vote 타입 - &quot;simple_majority&quot;, &quot;weighted&quot;, &quot;byzantine_tolerant&quot;, &quot;proof_of_stake&quot;</li>
+<li><code>proposal</code> (object): 제안 세부사항 및 옵션</li>
+<li><code>voting_power</code> (object, 선택): Voting 가중치 분배</li>
+<li><code>quorum_threshold</code> (number): 유효한 투표를 위한 최소 참여</li>
+<li><code>timeout_duration</code> (number): Vote timeout (초)</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-json">{
+  &quot;vote_type&quot;: &quot;weighted&quot;,
+  &quot;proposal&quot;: {
+    &quot;id&quot;: &quot;architecture_decision_001&quot;,
+    &quot;description&quot;: &quot;Choose database architecture&quot;,
+    &quot;options&quot;: [&quot;PostgreSQL&quot;, &quot;MongoDB&quot;, &quot;Hybrid&quot;]
+  },
+  &quot;voting_power&quot;: {&quot;senior_agents&quot;: 2.0, &quot;junior_agents&quot;: 1.0},
+  &quot;quorum_threshold&quot;: 0.67,
+  &quot;timeout_duration&quot;: 300
+}
+</code></pre>
+<h4><code>mcp__ruv-swarm__agent_spawn</code></h4>
+<p><strong>기능</strong>: 적응형 기능을 가진 지능형 agent 생성
+<strong>매개변수</strong>:</p>
+<ul>
+<li><code>agent_template</code> (string): Agent template 또는 타입</li>
+<li><code>specialization</code> (array): Agent 전문화 및 스킬</li>
+<li><code>autonomy_level</code> (string): 자율성 수준 - &quot;supervised&quot;, &quot;semi_autonomous&quot;, &quot;fully_autonomous&quot;</li>
+<li><code>learning_enabled</code> (boolean): 지속적인 학습 활성화</li>
+<li><code>collaboration_preferences</code> (object): 협업 설정</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-json">{
+  &quot;agent_template&quot;: &quot;adaptive_researcher&quot;,
+  &quot;specialization&quot;: [&quot;data_analysis&quot;, &quot;pattern_recognition&quot;, &quot;report_generation&quot;],
+  &quot;autonomy_level&quot;: &quot;semi_autonomous&quot;,
+  &quot;learning_enabled&quot;: true,
+  &quot;collaboration_preferences&quot;: {&quot;preferred_team_size&quot;: 3, &quot;communication_style&quot;: &quot;structured&quot;}
+}
+</code></pre>
+<h4><code>mcp__ruv-swarm__swarm_status</code></h4>
+<p><strong>기능</strong>: 예측 분석이 포함된 종합 swarm 상태
+<strong>매개변수</strong>:</p>
+<ul>
+<li><code>status_depth</code> (string): 상태 깊이 - &quot;overview&quot;, &quot;detailed&quot;, &quot;comprehensive&quot;, &quot;predictive&quot;</li>
+<li><code>include_predictions</code> (boolean): 미래 상태 예측 포함</li>
+<li><code>health_assessment</code> (boolean): 상태 평가 수행</li>
+<li><code>performance_analysis</code> (boolean): 성능 분석 포함</li>
+<li><code>export_format</code> (string, 선택): 내보내기 형식 - &quot;json&quot;, &quot;dashboard&quot;, &quot;report&quot;</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-json">{
+  &quot;status_depth&quot;: &quot;comprehensive&quot;,
+  &quot;include_predictions&quot;: true,
+  &quot;health_assessment&quot;: true,
+  &quot;performance_analysis&quot;: true,
+  &quot;export_format&quot;: &quot;dashboard&quot;
+}
+</code></pre>
+<h4><code>mcp__ruv-swarm__collective_intelligence</code></h4>
+<p><strong>기능</strong>: 문제 해결을 위한 집단 지능 활용
+<strong>매개변수</strong>:</p>
+<ul>
+<li><code>intelligence_mode</code> (string): 모드 - &quot;aggregated&quot;, &quot;emergent&quot;, &quot;collective_reasoning&quot;, &quot;wisdom_of_crowds&quot;</li>
+<li><code>problem_context</code> (object): 문제 정의 및 컨텍스트</li>
+<li><code>participation_criteria</code> (object): Agent 참여 요구사항</li>
+<li><code>synthesis_method</code> (string): 인사이트 결합 방법</li>
+<li><code>confidence_weighting</code> (boolean): 신뢰도별 기여도 가중치</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-json">{
+  &quot;intelligence_mode&quot;: &quot;collective_reasoning&quot;,
+  &quot;problem_context&quot;: {
+    &quot;domain&quot;: &quot;software_architecture&quot;,
+    &quot;complexity&quot;: &quot;high&quot;,
+    &quot;constraints&quot;: [&quot;scalability&quot;, &quot;maintainability&quot;, &quot;cost&quot;]
+  },
+  &quot;participation_criteria&quot;: {&quot;min_experience&quot;: &quot;intermediate&quot;, &quot;domain_expertise&quot;: true},
+  &quot;synthesis_method&quot;: &quot;weighted_consensus&quot;,
+  &quot;confidence_weighting&quot;: true
+}
+</code></pre>
+<h3>Advanced Coordination (7개 tool)</h3>
+<h4><code>mcp__ruv-swarm__dynamic_topology</code></h4>
+<p><strong>기능</strong>: 성능 기반으로 swarm topology 동적 적응
+<strong>매개변수</strong>:</p>
+<ul>
+<li><code>adaptation_trigger</code> (string): Trigger - &quot;performance_threshold&quot;, &quot;workload_change&quot;, &quot;failure_detection&quot;, &quot;optimization_cycle&quot;</li>
+<li><code>topology_options</code> (array): 사용 가능한 topology 구성</li>
+<li><code>transition_strategy</code> (string): 전환 전략 - &quot;gradual&quot;, &quot;immediate&quot;, &quot;rolling&quot;</li>
+<li><code>performance_metrics</code> (object): 최적화할 metrics</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-json">{
+  &quot;adaptation_trigger&quot;: &quot;performance_threshold&quot;,
+  &quot;topology_options&quot;: [&quot;hierarchical&quot;, &quot;mesh&quot;, &quot;star&quot;, &quot;hybrid&quot;],
+  &quot;transition_strategy&quot;: &quot;gradual&quot;,
+  &quot;performance_metrics&quot;: {&quot;latency&quot;: 100, &quot;throughput&quot;: 1000, &quot;error_rate&quot;: 0.01}
+}
+</code></pre>
+<h4><code>mcp__ruv-swarm__resource_federation</code></h4>
+<p><strong>기능</strong>: 여러 swarm 인스턴스 간 리소스 연합
+<strong>매개변수</strong>:</p>
+<ul>
+<li><code>federation_policy</code> (string): 정책 - &quot;fair_share&quot;, &quot;priority_based&quot;, &quot;market_based&quot;, &quot;need_based&quot;</li>
+<li><code>resource_types</code> (array): 연합할 리소스 - &quot;compute&quot;, &quot;memory&quot;, &quot;storage&quot;, &quot;bandwidth&quot;</li>
+<li><code>sharing_constraints</code> (object): 리소스 공유 제약</li>
+<li><code>billing_model</code> (string, 선택): 리소스 사용량에 대한 과금 모델</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-json">{
+  &quot;federation_policy&quot;: &quot;priority_based&quot;,
+  &quot;resource_types&quot;: [&quot;compute&quot;, &quot;memory&quot;],
+  &quot;sharing_constraints&quot;: {&quot;max_share_percentage&quot;: 0.7, &quot;reserved_for_local&quot;: 0.3},
+  &quot;billing_model&quot;: &quot;usage_based&quot;
+}
+</code></pre>
+<h4><code>mcp__ruv-swarm__load_prediction</code></h4>
+<p><strong>기능</strong>: 사전 확장을 위한 미래 부하 패턴 예측
+<strong>매개변수</strong>:</p>
+<ul>
+<li><code>prediction_horizon</code> (string): 예측 기간 - &quot;minutes&quot;, &quot;hours&quot;, &quot;days&quot;, &quot;weeks&quot;</li>
+<li><code>prediction_model</code> (string): 모델 타입 - &quot;linear&quot;, &quot;seasonal&quot;, &quot;ml_based&quot;, &quot;hybrid&quot;</li>
+<li><code>historical_data_period</code> (string): 사용할 과거 데이터</li>
+<li><code>confidence_intervals</code> (boolean): 예측 신뢰 구간 포함</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-json">{
+  &quot;prediction_horizon&quot;: &quot;hours&quot;,
+  &quot;prediction_model&quot;: &quot;ml_based&quot;,
+  &quot;historical_data_period&quot;: &quot;30d&quot;,
+  &quot;confidence_intervals&quot;: true
+}
+</code></pre>
+<h4><code>mcp__ruv-swarm__fault_recovery</code></h4>
+<p><strong>기능</strong>: 고급 fault 탐지 및 복구 구현
+<strong>매개변수</strong>:</p>
+<ul>
+<li><code>recovery_strategy</code> (string): 전략 - &quot;restart&quot;, &quot;migrate&quot;, &quot;replicate&quot;, &quot;degrade_gracefully&quot;, &quot;self_heal&quot;</li>
+<li><code>fault_detection_sensitivity</code> (string): 민감도 - &quot;low&quot;, &quot;medium&quot;, &quot;high&quot;, &quot;adaptive&quot;</li>
+<li><code>recovery_timeout</code> (number): 복구 시도의 최대 시간</li>
+<li><code>cascade_prevention</code> (boolean): Cascade 장애 방지</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-json">{
+  &quot;recovery_strategy&quot;: &quot;self_heal&quot;,
+  &quot;fault_detection_sensitivity&quot;: &quot;adaptive&quot;,
+  &quot;recovery_timeout&quot;: 120,
+  &quot;cascade_prevention&quot;: true
+}
+</code></pre>
+<h4><code>mcp__ruv-swarm__communication_optimize</code></h4>
+<p><strong>기능</strong>: 통신 패턴 및 protocol 최적화
+<strong>매개변수</strong>:</p>
+<ul>
+<li><code>optimization_target</code> (string): 대상 - &quot;latency&quot;, &quot;bandwidth&quot;, &quot;reliability&quot;, &quot;energy&quot;</li>
+<li><code>communication_patterns</code> (array): 현재 통신 패턴</li>
+<li><code>protocol_adaptation</code> (boolean): Protocol 적응 활성화</li>
+<li><code>compression_strategies</code> (array): 사용 가능한 압축 방법</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-json">{
+  &quot;optimization_target&quot;: &quot;latency&quot;,
+  &quot;communication_patterns&quot;: [&quot;broadcast&quot;, &quot;peer_to_peer&quot;, &quot;hierarchical&quot;],
+  &quot;protocol_adaptation&quot;: true,
+  &quot;compression_strategies&quot;: [&quot;gzip&quot;, &quot;lz4&quot;, &quot;adaptive&quot;]
+}
+</code></pre>
+<h4><code>mcp__ruv-swarm__knowledge_synthesis</code></h4>
+<p><strong>기능</strong>: 분산 agent에서 지식 합성
+<strong>매개변수</strong>:</p>
+<ul>
+<li><code>synthesis_method</code> (string): 방법 - &quot;weighted_average&quot;, &quot;expert_consensus&quot;, &quot;evidence_based&quot;, &quot;emergent_patterns&quot;</li>
+<li><code>knowledge_domains</code> (array): 지식을 합성할 도메인</li>
+<li><code>conflict_resolution</code> (string): 충돌하는 정보 해결 방법</li>
+<li><code>quality_filtering</code> (object): 지식 소스의 품질 필터</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-json">{
+  &quot;synthesis_method&quot;: &quot;evidence_based&quot;,
+  &quot;knowledge_domains&quot;: [&quot;technical_specifications&quot;, &quot;user_requirements&quot;, &quot;best_practices&quot;],
+  &quot;conflict_resolution&quot;: &quot;weighted_voting&quot;,
+  &quot;quality_filtering&quot;: {&quot;min_confidence&quot;: 0.8, &quot;source_credibility&quot;: &quot;high&quot;}
+}
+</code></pre>
+<h4><code>mcp__ruv-swarm__adaptive_learning</code></h4>
+<p><strong>기능</strong>: Swarm 전반의 적응형 학습 활성화
+<strong>매개변수</strong>:</p>
+<ul>
+<li><code>learning_mode</code> (string): 모드 - &quot;continuous&quot;, &quot;episodic&quot;, &quot;reinforcement&quot;, &quot;meta_learning&quot;</li>
+<li><code>knowledge_sharing</code> (boolean): Agent 간 지식 공유 활성화</li>
+<li><code>learning_objectives</code> (array): 특정 학습 목표</li>
+<li><code>adaptation_rate</code> (string): 적응 속도 - &quot;slow&quot;, &quot;medium&quot;, &quot;fast&quot;, &quot;adaptive&quot;</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-json">{
+  &quot;learning_mode&quot;: &quot;continuous&quot;,
+  &quot;knowledge_sharing&quot;: true,
+  &quot;learning_objectives&quot;: [&quot;task_efficiency&quot;, &quot;collaboration_patterns&quot;, &quot;error_reduction&quot;],
+  &quot;adaptation_rate&quot;: &quot;adaptive&quot;
+}
+</code></pre>
+<h3>Analytics &amp; Intelligence (5개 tool)</h3>
+<h4><code>mcp__ruv-swarm__behavioral_analysis</code></h4>
+<p><strong>기능</strong>: Agent 및 swarm 행동 패턴 분석
+<strong>매개변수</strong>:</p>
+<ul>
+<li><code>analysis_scope</code> (string): 범위 - &quot;individual_agents&quot;, &quot;agent_groups&quot;, &quot;entire_swarm&quot;, &quot;cross_swarm&quot;</li>
+<li><code>behavioral_dimensions</code> (array): 분석할 차원</li>
+<li><code>pattern_detection</code> (boolean): 행동 패턴 탐지</li>
+<li><code>anomaly_detection</code> (boolean): 비정상 행동 탐지</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-json">{
+  &quot;analysis_scope&quot;: &quot;entire_swarm&quot;,
+  &quot;behavioral_dimensions&quot;: [&quot;communication_frequency&quot;, &quot;task_selection&quot;, &quot;collaboration_preferences&quot;],
+  &quot;pattern_detection&quot;: true,
+  &quot;anomaly_detection&quot;: true
+}
+</code></pre>
+<h4><code>mcp__ruv-swarm__performance_prediction</code></h4>
+<p><strong>기능</strong>: 다양한 조건에서 swarm 성능 예측
+<strong>매개변수</strong>:</p>
+<ul>
+<li><code>prediction_scenarios</code> (array): 성능을 예측할 시나리오</li>
+<li><code>performance_metrics</code> (array): 예측할 metrics</li>
+<li><code>model_complexity</code> (string): 예측 모델 복잡도</li>
+<li><code>uncertainty_quantification</code> (boolean): 불확실성 추정 포함</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-json">{
+  &quot;prediction_scenarios&quot;: [
+    {&quot;agent_count&quot;: 10, &quot;task_complexity&quot;: &quot;high&quot;, &quot;load&quot;: &quot;peak&quot;},
+    {&quot;agent_count&quot;: 15, &quot;task_complexity&quot;: &quot;medium&quot;, &quot;load&quot;: &quot;normal&quot;}
+  ],
+  &quot;performance_metrics&quot;: [&quot;throughput&quot;, &quot;latency&quot;, &quot;success_rate&quot;],
+  &quot;model_complexity&quot;: &quot;advanced&quot;,
+  &quot;uncertainty_quantification&quot;: true
+}
+</code></pre>
+<h4><code>mcp__ruv-swarm__sentiment_analysis</code></h4>
+<p><strong>기능</strong>: Swarm 통신 내 감정 및 사기 분석
+<strong>매개변수</strong>:</p>
+<ul>
+<li><code>analysis_timeframe</code> (string): 감정 분석 기간</li>
+<li><code>communication_channels</code> (array): 분석할 채널</li>
+<li><code>sentiment_dimensions</code> (array): 추적할 감정의 차원</li>
+<li><code>trend_analysis</code> (boolean): 감정 추세 분석 포함</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-json">{
+  &quot;analysis_timeframe&quot;: &quot;7d&quot;,
+  &quot;communication_channels&quot;: [&quot;task_coordination&quot;, &quot;peer_feedback&quot;, &quot;status_updates&quot;],
+  &quot;sentiment_dimensions&quot;: [&quot;confidence&quot;, &quot;satisfaction&quot;, &quot;stress&quot;, &quot;collaboration_quality&quot;],
+  &quot;trend_analysis&quot;: true
+}
+</code></pre>
+<h4><code>mcp__ruv-swarm__insight_generation</code></h4>
+<p><strong>기능</strong>: Swarm 데이터 및 상호작용에서 인사이트 생성
+<strong>매개변수</strong>:</p>
+<ul>
+<li><code>insight_categories</code> (array): 생성할 인사이트 범주</li>
+<li><code>data_sources</code> (array): 분석할 데이터 소스</li>
+<li><code>insight_depth</code> (string): 분석 깊이</li>
+<li><code>actionable_recommendations</code> (boolean): 실행 가능한 권장사항 포함</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-json">{
+  &quot;insight_categories&quot;: [&quot;efficiency_improvements&quot;, &quot;collaboration_optimization&quot;, &quot;resource_utilization&quot;],
+  &quot;data_sources&quot;: [&quot;task_logs&quot;, &quot;communication_history&quot;, &quot;performance_metrics&quot;],
+  &quot;insight_depth&quot;: &quot;comprehensive&quot;,
+  &quot;actionable_recommendations&quot;: true
+}
+</code></pre>
+<h4><code>mcp__ruv-swarm__predictive_maintenance</code></h4>
+<p><strong>기능</strong>: Swarm 시스템 문제 예측 및 방지
+<strong>매개변수</strong>:</p>
+<ul>
+<li><code>prediction_horizon</code> (string): 얼마나 앞서 예측할지</li>
+<li><code>maintenance_categories</code> (array): 예측할 유지보수 범주</li>
+<li><code>alert_thresholds</code> (object): 유지보수 alert 임계값</li>
+<li><code>automated_actions</code> (boolean): 자동 예방 조치 활성화</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-json">{
+  &quot;prediction_horizon&quot;: &quot;weeks&quot;,
+  &quot;maintenance_categories&quot;: [&quot;agent_performance_degradation&quot;, &quot;resource_exhaustion&quot;, &quot;communication_bottlenecks&quot;],
+  &quot;alert_thresholds&quot;: {&quot;degradation_rate&quot;: 0.1, &quot;resource_usage&quot;: 0.9},
+  &quot;automated_actions&quot;: true
+}
+</code></pre>
+<h3>Specialized Operations (5개 tool)</h3>
+<h4><code>mcp__ruv-swarm__quantum_simulate</code></h4>
+<p><strong>기능</strong>: 최적화 문제를 위한 quantum computing 알고리즘 시뮬레이션
+<strong>매개변수</strong>:</p>
+<ul>
+<li><code>algorithm_type</code> (string): Quantum 알고리즘 - &quot;vqe&quot;, &quot;qaoa&quot;, &quot;grover&quot;, &quot;shor&quot;, &quot;custom&quot;</li>
+<li><code>problem_encoding</code> (object): Quantum 시뮬레이션을 위한 문제 인코딩</li>
+<li><code>qubit_count</code> (number): 시뮬레이션할 qubit 수</li>
+<li><code>noise_model</code> (string, 선택): 적용할 quantum noise 모델</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-json">{
+  &quot;algorithm_type&quot;: &quot;qaoa&quot;,
+  &quot;problem_encoding&quot;: {&quot;type&quot;: &quot;max_cut&quot;, &quot;graph_nodes&quot;: 10},
+  &quot;qubit_count&quot;: 16,
+  &quot;noise_model&quot;: &quot;depolarizing&quot;
+}
+</code></pre>
+<h4><code>mcp__ruv-swarm__blockchain_consensus</code></h4>
+<p><strong>기능</strong>: 중요한 결정을 위한 blockchain 기반 consensus 구현
+<strong>매개변수</strong>:</p>
+<ul>
+<li><code>consensus_mechanism</code> (string): 메커니즘 - &quot;proof_of_work&quot;, &quot;proof_of_stake&quot;, &quot;delegated_pos&quot;, &quot;practical_byzantine&quot;</li>
+<li><code>block_parameters</code> (object): Blockchain block 매개변수</li>
+<li><code>validator_selection</code> (string): Validator 선택 방법</li>
+<li><code>finality_requirements</code> (object): Transaction finality 요구사항</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-json">{
+  &quot;consensus_mechanism&quot;: &quot;proof_of_stake&quot;,
+  &quot;block_parameters&quot;: {&quot;block_time&quot;: 30, &quot;max_transactions&quot;: 100},
+  &quot;validator_selection&quot;: &quot;stake_weighted&quot;,
+  &quot;finality_requirements&quot;: {&quot;confirmations&quot;: 6, &quot;time_threshold&quot;: 180}
+}
+</code></pre>
+<h4><code>mcp__ruv-swarm__evolutionary_optimize</code></h4>
+<p><strong>기능</strong>: Swarm 최적화를 위한 진화 알고리즘 사용
+<strong>매개변수</strong>:</p>
+<ul>
+<li><code>optimization_target</code> (string): 최적화할 대상</li>
+<li><code>population_size</code> (number): 진화를 위한 population 크기</li>
+<li><code>mutation_rate</code> (number): 유전 알고리즘의 mutation 비율</li>
+<li><code>selection_pressure</code> (string): Selection pressure 수준</li>
+<li><code>termination_criteria</code> (object): 진화를 멈출 시기</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-json">{
+  &quot;optimization_target&quot;: &quot;task_allocation_strategy&quot;,
+  &quot;population_size&quot;: 50,
+  &quot;mutation_rate&quot;: 0.1,
+  &quot;selection_pressure&quot;: &quot;moderate&quot;,
+  &quot;termination_criteria&quot;: {&quot;max_generations&quot;: 100, &quot;convergence_threshold&quot;: 0.01}
+}
+</code></pre>
+<h4><code>mcp__ruv-swarm__swarm_robotics</code></h4>
+<p><strong>기능</strong>: 물리적 또는 가상 로봇 swarm 조정
+<strong>매개변수</strong>:</p>
+<ul>
+<li><code>coordination_mode</code> (string): 모드 - &quot;centralized&quot;, &quot;distributed&quot;, &quot;hybrid&quot;, &quot;emergent&quot;</li>
+<li><code>robot_capabilities</code> (array): 개별 로봇의 기능</li>
+<li><code>formation_control</code> (object): Formation 제어 매개변수</li>
+<li><code>path_planning</code> (string): 경로 계획 알고리즘</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-json">{
+  &quot;coordination_mode&quot;: &quot;distributed&quot;,
+  &quot;robot_capabilities&quot;: [&quot;movement&quot;, &quot;sensing&quot;, &quot;communication&quot;, &quot;manipulation&quot;],
+  &quot;formation_control&quot;: {&quot;formation_type&quot;: &quot;line&quot;, &quot;spacing&quot;: 2.0, &quot;flexibility&quot;: 0.5},
+  &quot;path_planning&quot;: &quot;rrt_star&quot;
+}
+</code></pre>
+<h4><code>mcp__ruv-swarm__bio_inspired_algorithms</code></h4>
+<p><strong>기능</strong>: Swarm 동작을 위한 생체 모방 알고리즘 구현
+<strong>매개변수</strong>:</p>
+<ul>
+<li><code>algorithm_type</code> (string): 알고리즘 - &quot;ant_colony&quot;, &quot;particle_swarm&quot;, &quot;bee_algorithm&quot;, &quot;flocking&quot;, &quot;stigmergy&quot;</li>
+<li><code>bio_parameters</code> (object): 알고리즘의 생물학적 매개변수</li>
+<li><code>adaptation_rules</code> (array): 알고리즘 적응을 위한 규칙</li>
+<li><code>emergence_detection</code> (boolean): 창발적 행동 탐지</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-json">{
+  &quot;algorithm_type&quot;: &quot;ant_colony&quot;,
+  &quot;bio_parameters&quot;: {&quot;pheromone_evaporation&quot;: 0.1, &quot;alpha&quot;: 1.0, &quot;beta&quot;: 2.0},
+  &quot;adaptation_rules&quot;: [
+    {&quot;condition&quot;: &quot;stagnation&quot;, &quot;action&quot;: &quot;increase_exploration&quot;},
+    {&quot;condition&quot;: &quot;convergence&quot;, &quot;action&quot;: &quot;maintain_exploitation&quot;}
+  ],
+  &quot;emergence_detection&quot;: true
+}
+</code></pre>
+<hr>
+<h2>사용 패턴 및 모범 사례</h2>
+<h3>Batch 작업</h3>
+<p>많은 claude-flow tool이 효율성을 위해 batch 작업을 지원합니다:</p>
+<pre><code class="language-json">{
+  &quot;tool&quot;: &quot;mcp__claude-flow__parallel_execute&quot;,
+  &quot;params&quot;: {
+    &quot;operations&quot;: [
+      {&quot;tool&quot;: &quot;memory_usage&quot;, &quot;params&quot;: {&quot;action&quot;: &quot;retrieve&quot;, &quot;key&quot;: &quot;project_status&quot;}},
+      {&quot;tool&quot;: &quot;agent_metrics&quot;, &quot;params&quot;: {&quot;timeframe&quot;: &quot;1h&quot;}},
+      {&quot;tool&quot;: &quot;performance_report&quot;, &quot;params&quot;: {&quot;format&quot;: &quot;summary&quot;}}
+    ],
+    &quot;max_concurrency&quot;: 3
+  }
+}
+</code></pre>
+<h3>오류 처리</h3>
+<p>모든 tool은 구조화된 오류 응답을 제공합니다:</p>
+<pre><code class="language-json">{
+  &quot;success&quot;: false,
+  &quot;error&quot;: {
+    &quot;code&quot;: &quot;RESOURCE_NOT_FOUND&quot;,
+    &quot;message&quot;: &quot;Swarm with ID 'project-alpha' not found&quot;,
+    &quot;details&quot;: {&quot;swarmId&quot;: &quot;project-alpha&quot;, &quot;available_swarms&quot;: [&quot;project-beta&quot;]}
+  }
+}
+</code></pre>
+<h3>Tool Chaining</h3>
+<p>Tool을 복잡한 workflow를 위해 chain할 수 있습니다:</p>
+<pre><code class="language-json">[
+  {&quot;tool&quot;: &quot;mcp__claude-flow__swarm_init&quot;, &quot;params&quot;: {&quot;topology&quot;: &quot;hierarchical&quot;}},
+  {&quot;tool&quot;: &quot;mcp__claude-flow__agent_spawn&quot;, &quot;params&quot;: {&quot;type&quot;: &quot;coordinator&quot;}},
+  {&quot;tool&quot;: &quot;mcp__ruv-swarm__neural_train&quot;, &quot;params&quot;: {&quot;pattern_type&quot;: &quot;coordination&quot;}}
+]
+</code></pre>
+<h3>성능 최적화</h3>
+<ul>
+<li>동시 작업을 위해 <code>mcp__claude-flow__parallel_execute</code> 사용</li>
+<li>자주 접근하는 데이터를 위해 memory tool로 caching 활용</li>
+<li>Analytics tool로 성능 모니터링</li>
+<li>리소스 요구사항을 예측하기 위해 예측 tool 사용</li>
+</ul>
+<h3>보안 고려사항</h3>
+<ul>
+<li>모든 tool은 multi-tenant 환경을 위한 namespace 격리 지원</li>
+<li>민감한 데이터는 메모리 저장소에 자동으로 암호화됨</li>
+<li>접근 제어는 MCP protocol 수준에서 적용됨</li>
+<li>모든 tool 실행에 대한 감사 추적이 유지됨</li>
+</ul>
+<hr>
+<h2>통합 예제</h2>
+<h3>Full-Stack Development Swarm</h3>
+<pre><code class="language-json">{
+  &quot;workflow&quot;: [
+    {
+      &quot;tool&quot;: &quot;mcp__claude-flow__swarm_init&quot;,
+      &quot;params&quot;: {&quot;topology&quot;: &quot;hierarchical&quot;, &quot;maxAgents&quot;: 8}
+    },
+    {
+      &quot;tool&quot;: &quot;mcp__claude-flow__agent_spawn&quot;,
+      &quot;params&quot;: {&quot;type&quot;: &quot;architect&quot;, &quot;specialization&quot;: [&quot;system_design&quot;]}
+    },
+    {
+      &quot;tool&quot;: &quot;mcp__claude-flow__agent_spawn&quot;,
+      &quot;params&quot;: {&quot;type&quot;: &quot;coder&quot;, &quot;specialization&quot;: [&quot;backend&quot;]}
+    },
+    {
+      &quot;tool&quot;: &quot;mcp__claude-flow__agent_spawn&quot;,
+      &quot;params&quot;: {&quot;type&quot;: &quot;coder&quot;, &quot;specialization&quot;: [&quot;frontend&quot;]}
+    },
+    {
+      &quot;tool&quot;: &quot;mcp__claude-flow__task_orchestrate&quot;,
+      &quot;params&quot;: {&quot;task&quot;: &quot;Build e-commerce platform&quot;, &quot;strategy&quot;: &quot;parallel&quot;}
+    }
+  ]
+}
+</code></pre>
+<h3>AI 연구 협업</h3>
+<pre><code class="language-json">{
+  &quot;workflow&quot;: [
+    {
+      &quot;tool&quot;: &quot;mcp__ruv-swarm__collective_intelligence&quot;,
+      &quot;params&quot;: {&quot;intelligence_mode&quot;: &quot;collective_reasoning&quot;, &quot;problem_context&quot;: {&quot;domain&quot;: &quot;machine_learning&quot;}}
+    },
+    {
+      &quot;tool&quot;: &quot;mcp__ruv-swarm__neural_train&quot;,
+      &quot;params&quot;: {&quot;training_mode&quot;: &quot;federated&quot;, &quot;model_architecture&quot;: {&quot;type&quot;: &quot;transformer&quot;}}
+    },
+    {
+      &quot;tool&quot;: &quot;mcp__claude-flow__performance_report&quot;,
+      &quot;params&quot;: {&quot;timeframe&quot;: &quot;24h&quot;, &quot;include_predictions&quot;: true}
+    }
+  ]
+}
+</code></pre>
+<h2>시작하기</h2>
+<ol>
+<li><strong>MCP Tools 설치</strong>: 메인 문서의 설치 가이드 참조</li>
+<li><strong>권한 구성</strong>: Claude 구성에서 적절한 권한 설정</li>
+<li><strong>기본 Tool로 시작</strong>: <code>swarm_status</code> 및 <code>memory_usage</code>와 같은 간단한 tool로 시작</li>
+<li><strong>Workflow 구축</strong>: Tool을 자동화된 workflow로 결합</li>
+<li><strong>모니터링 및 최적화</strong>: Analytics tool을 사용하여 성능 최적화</li>
+</ol>
+<p>자세한 설정 지침은 Integration Guide를 참조하세요.</p>
+<hr>
+<p><em>이 문서는 자동으로 생성 및 업데이트됩니다. 최종 업데이트: 2024-08-13</em></p>
+
+  </div>
+</article>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Hanson Kim. All rights reserved.</p>
+  </footer>
+</body>
+</html>

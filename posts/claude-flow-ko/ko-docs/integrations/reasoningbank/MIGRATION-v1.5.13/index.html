@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MIGRATION V1.5.13</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="/" class="logo">Hanson Kim</a>
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/blog/">Blog</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    
+<article class="post">
+  <header class="post-header">
+    <h1>MIGRATION V1.5.13</h1>
+    <time datetime="2025년 10월 15일">2025년 10월 15일</time>
+    
+    <div class="tags">
+      
+        
+      
+        
+        <span class="tag">Claude-Flow</span>
+        
+      
+        
+        <span class="tag">문서</span>
+        
+      
+        
+        <span class="tag">AI</span>
+        
+      
+    </div>
+    
+  </header>
+
+  <div class="post-content">
+    <h1>ReasoningBank 마이그레이션 가이드: v1.5.12 → v1.5.13</h1>
+<h2>개요</h2>
+<p>Claude-Flow는 ReasoningBank에 대해 이전 WASM 어댑터 방식을 대체하여 <strong>Node.js backend</strong>와 함께 <strong>agentic-flow@1.5.13</strong>을 사용하도록 업데이트되었습니다.</p>
+<h2>주요 변경 사항</h2>
+<h3>백엔드 전환: WASM → Node.js SQLite</h3>
+<p><strong>이전(v1.5.12 - WASM)</strong>:</p>
+<ul>
+<li>휘발성 인메모리 스토리지(Node.js) 또는 IndexedDB(브라우저)</li>
+<li>WASM 모듈을 직접 import</li>
+<li>매우 빠르지만 비지속적</li>
+</ul>
+<p><strong>새 버전(v1.5.13 - Node.js)</strong>:</p>
+<ul>
+<li><code>.swarm/memory.db</code>에 <strong>지속적인 SQLite 데이터베이스</strong></li>
+<li>시맨틱 검색을 위한 전체 임베딩 지원</li>
+<li>메모리 통합 및 trajectory 추적</li>
+<li>Node.js 환경에 권장되는 백엔드</li>
+</ul>
+<h3>API 호환성</h3>
+<p>✅ <strong>외부 API에 변경 사항 없음</strong> - 모든 claude-flow memory 함수는 동일하게 유지됩니다:</p>
+<ul>
+<li><code>storeMemory(key, value, options)</code></li>
+<li><code>queryMemories(searchQuery, options)</code></li>
+<li><code>listMemories(options)</code></li>
+<li><code>getStatus()</code></li>
+<li><code>initializeReasoningBank()</code></li>
+</ul>
+<h3>내부 구현 변경 사항</h3>
+<p><strong>Storage</strong>:</p>
+<pre><code class="language-javascript">// 이전 버전(WASM)
+pattern = { task_description, task_category, strategy, success_score }
+await wasm.storePattern(pattern)
+
+// 새 버전(Node.js)
+memory = { type: 'reasoning_memory', pattern_data: { title, content, domain } }
+ReasoningBank.db.upsertMemory(memory)
+await ReasoningBank.computeEmbedding(content) // 임베딩을 생성합니다
+</code></pre>
+<p><strong>Retrieval</strong>:</p>
+<pre><code class="language-javascript">// 이전 버전(WASM)
+results = await wasm.findSimilar(query, category, limit)
+
+// 새 버전(Node.js)
+results = await ReasoningBank.retrieveMemories(query, {
+  domain, agent, k: limit, minConfidence
+})
+</code></pre>
+<h2>데이터베이스 스키마</h2>
+<p><strong>위치</strong>: <code>.swarm/memory.db</code></p>
+<p><strong>테이블</strong>:</p>
+<ul>
+<li><code>patterns</code> - 신뢰도 점수가 포함된 Reasoning memory</li>
+<li><code>pattern_embeddings</code> - 시맨틱 검색을 위한 벡터 임베딩</li>
+<li><code>pattern_links</code> - 메모리 관계 및 상충 정보</li>
+<li><code>task_trajectories</code> - 작업 실행 이력</li>
+<li><code>matts_runs</code> - MaTTS 알고리즘 실행 기록</li>
+<li><code>consolidation_runs</code> - 메모리 통합 이력</li>
+</ul>
+<h2>마이그레이션 단계</h2>
+<h3>자동 마이그레이션</h3>
+<p>v2.7.0-alpha.7+로 업그레이드하면 ReasoningBank가 자동으로 다음을 수행합니다:</p>
+<ol>
+<li>첫 사용 시 Node.js 백엔드를 초기화합니다</li>
+<li><code>.swarm/memory.db</code>에 SQLite 데이터베이스를 생성합니다</li>
+<li>데이터베이스 마이그레이션(테이블 생성)을 실행합니다</li>
+<li>새로운 메모리에 대해 임베딩을 생성합니다</li>
+</ol>
+<p><strong>수동 마이그레이션이 필요하지 않습니다!</strong> 이전 WASM 데이터는 휘발성이며 저장되지 않았습니다.</p>
+<h3>환경 변수</h3>
+<pre><code class="language-bash"># 선택 사항: 사용자 지정 데이터베이스 경로
+export CLAUDE_FLOW_DB_PATH=&quot;/path/to/memory.db&quot;
+
+# 선택 사항: ReasoningBank 비활성화
+export REASONINGBANK_ENABLED=false
+</code></pre>
+<h2>기능 비교</h2>
+<table>
+<thead>
+<tr>
+<th>기능</th>
+<th>WASM (v1.5.12)</th>
+<th>Node.js (v1.5.13)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>스토리지</strong></td>
+<td>휘발성(인메모리)</td>
+<td>지속형(SQLite)</td>
+</tr>
+<tr>
+<td><strong>시맨틱 검색</strong></td>
+<td>기본 유사도</td>
+<td>임베딩 + MMR ranking</td>
+</tr>
+<tr>
+<td><strong>도메인 필터링</strong></td>
+<td>카테고리 기반</td>
+<td>전체 JSON 쿼리 지원</td>
+</tr>
+<tr>
+<td><strong>메모리 통합</strong></td>
+<td>❌ 제공되지 않음</td>
+<td>✅ 기본 제공</td>
+</tr>
+<tr>
+<td><strong>Trajectory 추적</strong></td>
+<td>❌ 제공되지 않음</td>
+<td>✅ 전체 이력</td>
+</tr>
+<tr>
+<td><strong>세션 간 메모리</strong></td>
+<td>❌ 재시작 시 손실</td>
+<td>✅ 지속됨</td>
+</tr>
+<tr>
+<td><strong>성능</strong></td>
+<td>0.04ms/op (WASM)</td>
+<td>1-2ms/op (SQLite + 임베딩)</td>
+</tr>
+<tr>
+<td><strong>데이터베이스 크기</strong></td>
+<td>~0 MB(메모리)</td>
+<td>데이터 증가에 따라 확장(~41MB/100개 패턴)</td>
+</tr>
+</tbody>
+</table>
+<h2>성능</h2>
+<p><strong>벤치마크</strong>(100개의 memory, 시맨틱 검색):</p>
+<pre><code>Storage:     메모리당 1-2ms (임베딩 생성 포함)
+Query:       시맨틱 검색 쿼리당 1-3ms
+Cached:      캐시된 쿼리는 &lt;1ms
+List:        데이터베이스 쿼리는 &lt;1ms
+</code></pre>
+<p><strong>메모리 사용량</strong>:</p>
+<ul>
+<li>SQLite 데이터베이스: 메모리당 약 400KB(임베딩 포함)</li>
+<li>RAM: 최소 (SQLite가 페이징을 처리합니다)</li>
+</ul>
+<h2>검증</h2>
+<p>ReasoningBank 통합을 검증하려면 다음을 실행하세요:</p>
+<pre><code class="language-bash"># 통합 테스트를 실행합니다
+node tests/test-semantic-search.mjs
+
+# 예상 출력:
+# ✅ 초기화 완료
+# ✅ 테스트용 메모리 5개 저장
+# ✅ 시맨틱 검색이 결과를 반환함
+# ✅ 쿼리 캐싱이 동작함
+</code></pre>
+<h2>문제 해결</h2>
+<h3>문제: &quot;Database not found&quot;</h3>
+<pre><code class="language-bash"># 초기화가 실행되었는지 확인합니다
+npx claude-flow@alpha memory status
+
+# 필요하면 수동으로 초기화합니다
+npx claude-flow@alpha memory init
+</code></pre>
+<h3>문제: &quot;No results from semantic search&quot;</h3>
+<pre><code class="language-bash"># 임베딩이 생성되는지 확인합니다
+# 경고 &quot;[ReasoningBank] Failed to generate embedding&quot;을 확인하세요
+
+# 데이터베이스에 임베딩이 있는지 확인합니다:
+sqlite3 .swarm/memory.db &quot;SELECT COUNT(*) FROM pattern_embeddings;&quot;
+</code></pre>
+<h3>문제: &quot;Embeddings not generating&quot;</h3>
+<pre><code class="language-bash"># (Claude 임베딩을 사용하는 경우) API 키가 설정되어 있는지 확인합니다
+export ANTHROPIC_API_KEY=$YOUR_API_KEY
+
+# 또는 .reasoningbank.json에서 대체 임베딩 공급자를 설정합니다
+</code></pre>
+<h2>Node.js 백엔드의 장점</h2>
+<p>✅ <strong>Persistent Memory</strong> - 프로세스 재시작 이후에도 유지됩니다
+✅ <strong>Semantic Search</strong> - 임베딩 기반 유사도를 제공합니다
+✅ <strong>Memory Consolidation</strong> - 오래된 메모리를 중복 제거하고 정리합니다
+✅ <strong>Trajectory Tracking</strong> - 전체 작업 실행 이력을 제공합니다
+✅ <strong>Production-Ready</strong> - 검증된 SQLite 백엔드입니다</p>
+<h2>롤백(권장하지 않음)</h2>
+<p>임시로 v1.5.12로 롤백해야 하는 경우:</p>
+<pre><code class="language-bash">npm install agentic-flow@1.5.12 --legacy-peer-deps
+</code></pre>
+<p><strong>참고</strong>: 이렇게 하면 Node.js 백엔드 기능이 사라지고 휘발성 스토리지로 되돌아갑니다.</p>
+<h2>지원</h2>
+<ul>
+<li>GitHub Issues: https://github.com/ruvnet/claude-code-flow/issues</li>
+<li>문서: /ko-docs/integrations/reasoningbank/</li>
+<li>테스트 스위트: /tests/test-semantic-search.mjs</li>
+</ul>
+<hr>
+<p><strong>마이그레이션 완료</strong>: Claude-Flow v2.7.0-alpha.7에서 agentic-flow@1.5.13 Node.js backend ✅</p>
+
+  </div>
+</article>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Hanson Kim. All rights reserved.</p>
+  </footer>
+</body>
+</html>

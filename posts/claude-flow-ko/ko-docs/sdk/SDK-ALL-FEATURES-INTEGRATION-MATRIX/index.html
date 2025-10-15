@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SDK ALL FEATURES INTEGRATION MATRIX</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="/" class="logo">Hanson Kim</a>
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/blog/">Blog</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    
+<article class="post">
+  <header class="post-header">
+    <h1>SDK ALL FEATURES INTEGRATION MATRIX</h1>
+    <time datetime="2025년 10월 15일">2025년 10월 15일</time>
+    
+    <div class="tags">
+      
+        
+      
+        
+        <span class="tag">Claude-Flow</span>
+        
+      
+        
+        <span class="tag">문서</span>
+        
+      
+        
+        <span class="tag">AI</span>
+        
+      
+    </div>
+    
+  </header>
+
+  <div class="post-content">
+    <h1>전체 SDK 기능 통합 매트릭스</h1>
+<h2>10가지 모든 고급 기능 → Claude-Flow Swarm 오케스트레이션</h2>
+<p><strong>버전</strong>: 2.5.0-alpha.130
+<strong>상태</strong>: 통합 계획 수립 중
+<strong>우선순위</strong>: 영향도가 큰 기능부터</p>
+<hr>
+<h2>📊 기능 영향 매트릭스</h2>
+<table>
+<thead>
+<tr>
+<th>기능</th>
+<th>성능 향상</th>
+<th>복잡도</th>
+<th>우선순위</th>
+<th>상태</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>인프로세스 MCP 서버</strong></td>
+<td>10-100배</td>
+<td>Medium</td>
+<td>🔴 <strong>CRITICAL</strong></td>
+<td>Phase 6</td>
+</tr>
+<tr>
+<td><strong>세션 포킹</strong></td>
+<td>10-20배</td>
+<td>Low</td>
+<td>🔴 <strong>CRITICAL</strong></td>
+<td>Phase 4</td>
+</tr>
+<tr>
+<td><strong>Compact Boundaries</strong></td>
+<td>즉시 복구</td>
+<td>Low</td>
+<td>🟡 HIGH</td>
+<td>Phase 4</td>
+</tr>
+<tr>
+<td><strong>Hook Matchers</strong></td>
+<td>2-3배</td>
+<td>Low</td>
+<td>🟡 HIGH</td>
+<td>Phase 5</td>
+</tr>
+<tr>
+<td><strong>4레벨 권한</strong></td>
+<td>세밀한 제어</td>
+<td>Medium</td>
+<td>🟡 HIGH</td>
+<td>Phase 5</td>
+</tr>
+<tr>
+<td><strong>네트워크 샌드박싱</strong></td>
+<td>Security++</td>
+<td>Medium</td>
+<td>🟢 MEDIUM</td>
+<td>Phase 7</td>
+</tr>
+<tr>
+<td><strong>WebAssembly 지원</strong></td>
+<td>브라우저 배포</td>
+<td>High</td>
+<td>🟢 MEDIUM</td>
+<td>Future</td>
+</tr>
+<tr>
+<td><strong>React DevTools</strong></td>
+<td>Monitoring++</td>
+<td>Medium</td>
+<td>🟢 MEDIUM</td>
+<td>Phase 7</td>
+</tr>
+<tr>
+<td><strong>MCP 상태 모니터링</strong></td>
+<td>Reliability++</td>
+<td>Low</td>
+<td>🟢 MEDIUM</td>
+<td>Phase 6</td>
+</tr>
+<tr>
+<td><strong>실시간 Query 제어</strong></td>
+<td>동적 제어</td>
+<td>Low</td>
+<td>🟡 HIGH</td>
+<td>Phase 4</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2>1️⃣ 인프로세스 MCP 서버 (10-100배 더 빠름)</h2>
+<h3>🎯 통합 기회</h3>
+<p>stdio 기반 MCP 전송을 인프로세스 SDK 서버로 교체하여 <strong>IPC 오버헤드를 없앱니다</strong>.</p>
+<h3>⚡ 성능 영향</h3>
+<ul>
+<li><strong>툴 호출 지연 시간</strong>: 2-5ms → &lt;0.1ms (<strong>20-50배 더 빠름</strong>)</li>
+<li><strong>에이전트 생성 시간</strong>: 500-1000ms → 10-50ms (<strong>10-20배 더 빠름</strong>)</li>
+<li><strong>메모리 작업</strong>: 5-10ms → &lt;1ms (<strong>5-10배 더 빠름</strong>)</li>
+</ul>
+<h3>🔧 구현</h3>
+<pre><code class="language-typescript">// src/mcp/claude-flow-swarm-server.ts
+import { createSdkMcpServer, tool } from '@anthropic-ai/claude-code/sdk';
+import { z } from 'zod';
+
+export const claudeFlowSwarmServer = createSdkMcpServer({
+  name: 'claude-flow-swarm',
+  version: '2.5.0-alpha.130',
+  tools: [
+    // Swarm 초기화
+    tool('swarm_init', 'Initialize multi-agent swarm', {
+      topology: z.enum(['mesh', 'hierarchical', 'ring', 'star']),
+      maxAgents: z.number().min(1).max(100),
+      strategy: z.enum(['balanced', 'specialized', 'adaptive']).optional()
+    }, async (args) =&gt; {
+      const swarm = await SwarmCoordinator.initialize(args);
+      return {
+        content: [{
+          type: 'text',
+          text: JSON.stringify(swarm.status)
+        }]
+      };
+    }),
+
+    // 에이전트 생성 - IPC 오버헤드 없음
+    tool('agent_spawn', 'Spawn specialized agent', {
+      type: z.enum(['researcher', 'coder', 'analyst', 'optimizer', 'coordinator']),
+      capabilities: z.array(z.string()).optional(),
+      swarmId: z.string().optional()
+    }, async (args) =&gt; {
+      const agent = await SwarmCoordinator.spawnAgent(args);
+      return {
+        content: [{
+          type: 'text',
+          text: JSON.stringify(agent)
+        }]
+      };
+    }),
+
+    // 작업 오케스트레이션 - 인프로세스
+    tool('task_orchestrate', 'Orchestrate task across swarm', {
+      task: z.string(),
+      strategy: z.enum(['parallel', 'sequential', 'adaptive']).optional(),
+      priority: z.enum(['low', 'medium', 'high', 'critical']).optional()
+    }, async (args) =&gt; {
+      const result = await SwarmCoordinator.orchestrateTask(args);
+      return {
+        content: [{
+          type: 'text',
+          text: JSON.stringify(result)
+        }]
+      };
+    }),
+
+    // 메모리 작업 - &lt;1ms 지연
+    tool('memory_store', 'Store data in swarm memory', {
+      key: z.string(),
+      value: z.any(),
+      namespace: z.string().optional(),
+      ttl: z.number().optional()
+    }, async (args) =&gt; {
+      await SwarmMemory.store(args.key, args.value, {
+        namespace: args.namespace,
+        ttl: args.ttl
+      });
+      return {
+        content: [{ type: 'text', text: 'Stored successfully' }]
+      };
+    }),
+
+    // ... IPC 오버헤드가 없는 40개 이상의 추가 툴
+  ]
+});
+
+// Swarm coordinator에서 사용 예시
+export class SwarmCoordinator {
+  async initialize() {
+    const response = await query({
+      prompt: 'Initialize swarm with mesh topology',
+      options: {
+        mcpServers: {
+          'claude-flow-swarm': {
+            type: 'sdk',
+            name: 'claude-flow-swarm',
+            instance: claudeFlowSwarmServer.instance
+          }
+        }
+      }
+    });
+  }
+}
+</code></pre>
+<p><strong>장점</strong>:</p>
+<ul>
+<li>🚀 stdio 전송 대비 10-100배 더 빠름</li>
+<li>🔧 직렬화 오버헤드 없음</li>
+<li>📦 단일 프로세스 배포</li>
+<li>🎯 직접 함수 호출</li>
+</ul>
+<hr>
+<h2>2️⃣ 세션 포킹 (진정한 병렬 실행)</h2>
+<h3>🎯 통합 기회</h3>
+<p>기본 세션을 N번 포크하여 수동 상태 관리 없이 <strong>진정한 동시 에이전트 실행</strong>을 달성합니다.</p>
+<h3>⚡ 성능 영향</h3>
+<ul>
+<li><strong>병렬 에이전트 생성</strong>: 즉시 (생성 대신 포크)</li>
+<li><strong>상태 공유</strong>: 오버헤드 없음 (공유 기본 세션)</li>
+<li><strong>조정</strong>: 자동 (SDK가 포크를 관리)</li>
+</ul>
+<h3>🔧 구현</h3>
+<pre><code class="language-typescript">// src/swarm/parallel-executor.ts
+export class ParallelSwarmExecutor {
+  async spawnParallelAgents(
+    task: Task,
+    agentCount: number
+  ): Promise&lt;Agent[]&gt; {
+    // 작업 컨텍스트가 담긴 기본 세션 생성
+    const baseSession = await this.createBaseSession(task);
+
+    // 병렬 실행을 위해 N개의 세션을 포크
+    const agents = await Promise.all(
+      Array.from({ length: agentCount }, async (_, index) =&gt; {
+        const stream = query({
+          prompt: this.getAgentPrompt(task, index),
+          options: {
+            resume: baseSession.id,
+            forkSession: true,  // 핵심: resume 대신 포크
+            mcpServers: {
+              'claude-flow-swarm': claudeFlowSwarmServer
+            }
+          }
+        });
+
+        return this.monitorAgentStream(stream, index);
+      })
+    );
+
+    return agents;
+  }
+
+  async createBaseSession(task: Task): Promise&lt;SessionInfo&gt; {
+    // 공유 컨텍스트로 세션 초기화
+    const stream = query({
+      prompt: this.getTaskContext(task),
+      options: {
+        mcpServers: {
+          'claude-flow-swarm': claudeFlowSwarmServer
+        }
+      }
+    });
+
+    // 초기화 완료까지 대기
+    for await (const message of stream) {
+      if (message.type === 'system' &amp;&amp; message.subtype === 'init') {
+        return {
+          id: message.session_id,
+          tools: message.tools,
+          model: message.model
+        };
+      }
+    }
+  }
+}
+</code></pre>
+<p><strong>장점</strong>:</p>
+<ul>
+<li>⚡ 에이전트를 즉시 생성 (포크 vs 새로 생성)</li>
+<li>🔄 자동 상태 공유</li>
+<li>📊 조정 오버헤드 없음</li>
+<li>🎯 SDK가 라이프사이클을 관리</li>
+</ul>
+<hr>
+<h2>3️⃣ Compact Boundaries (자연스러운 체크포인트)</h2>
+<h3>🎯 통합 기회</h3>
+<p>SDK의 <code>SDKCompactBoundaryMessage</code>를 활용하여 swarm 조정을 위한 <strong>자연스러운 체크포인트 마커</strong>로 사용합니다.</p>
+<h3>🔧 구현</h3>
+<pre><code class="language-typescript">// src/verification/checkpoint-manager-sdk.ts
+export class CheckpointManagerSDK {
+  async monitorForCheckpoints(swarmId: string): Promise&lt;void&gt; {
+    const stream = query({ prompt: '...', options: { resume: swarmId } });
+
+    for await (const message of stream) {
+      if (message.type === 'system' &amp;&amp; message.subtype === 'compact_boundary') {
+        // 자연스러운 체크포인트를 감지했습니다!
+        await this.createSwarmCheckpoint(swarmId, {
+          trigger: message.compact_metadata.trigger,
+          tokensBeforeCompact: message.compact_metadata.pre_tokens,
+          timestamp: Date.now()
+        });
+      }
+    }
+  }
+
+  async restoreFromCompactBoundary(
+    swarmId: string,
+    checkpointId: string
+  ): Promise&lt;SwarmState&gt; {
+    // compact boundary에서 복원하기 위해 resumeSessionAt 사용
+    const stream = query({
+      prompt: 'Restore swarm state',
+      options: {
+        resume: swarmId,
+        resumeSessionAt: checkpointId  // compact boundary를 가리킴
+      }
+    });
+
+    // 해당 시점으로 swarm 상태가 자동 복원됨
+    return this.extractSwarmState(stream);
+  }
+}
+</code></pre>
+<p><strong>장점</strong>:</p>
+<ul>
+<li>✅ 체크포인트를 자동 감지</li>
+<li>⚡ 즉시 복구</li>
+<li>🎯 SDK가 컨텍스트 압축을 관리</li>
+<li>📊 수동 체크포인트 로직이 필요 없음</li>
+</ul>
+<hr>
+<h2>4️⃣ Hook Matchers (조건부 실행)</h2>
+<h3>🎯 통합 기회</h3>
+<p><strong>패턴 매칭</strong>을 활용하여 특정 에이전트나 작업에 대해서만 훅을 실행합니다.</p>
+<h3>🔧 구현</h3>
+<pre><code class="language-typescript">// src/services/hook-manager-sdk.ts
+const hooks: Partial&lt;Record&lt;HookEvent, HookCallbackMatcher[]&gt;&gt; = {
+  PreToolUse: [
+    {
+      matcher: 'Bash\\(.*\\)',  // Bash 명령만 대상으로 함
+      hooks: [async (input, toolUseID, { signal }) =&gt; {
+        // Bash에 대한 swarm 수준 거버넌스
+        const allowed = await this.validateBashCommand(
+          input.tool_input.command
+        );
+        return {
+          decision: allowed ? 'approve' : 'block',
+          hookSpecificOutput: {
+            hookEventName: 'PreToolUse',
+            permissionDecision: allowed ? 'allow' : 'deny'
+          }
+        };
+      }]
+    },
+    {
+      matcher: 'agent_spawn',  // 에이전트 생성만 대상으로 함
+      hooks: [async (input, toolUseID, { signal }) =&gt; {
+        // swarm 조정을 위해 에이전트 생성 추적
+        await this.recordAgentSpawn(input.tool_input);
+        return { continue: true };
+      }]
+    }
+  ],
+
+  PostToolUse: [
+    {
+      matcher: 'memory_.*',  // 모든 메모리 작업
+      hooks: [async (input, toolUseID, { signal }) =&gt; {
+        // swarm 전체에 메모리 작업을 복제
+        await this.replicateMemoryOperation(input);
+        return { continue: true };
+      }]
+    }
+  ]
+};
+</code></pre>
+<p><strong>장점</strong>:</p>
+<ul>
+<li>🎯 선택적으로 훅 실행</li>
+<li>⚡ 2-3배 더 빠름 (관련 없는 훅은 건너뜀)</li>
+<li>🔧 Regex 패턴 매칭</li>
+<li>📊 오버헤드 감소</li>
+</ul>
+<hr>
+<h2>5️⃣ 4레벨 권한 (세밀한 제어)</h2>
+<h3>🎯 통합 기회</h3>
+<p>swarm 거버넌스를 위해 <strong>계층형 권한 시스템</strong>을 구현합니다.</p>
+<h3>🔧 구현</h3>
+<pre><code class="language-typescript">// src/security/swarm-permission-manager.ts
+export class SwarmPermissionManager {
+  async setPermissions(config: PermissionConfig) {
+    // 사용자 수준: ~/.claude/settings.json
+    await this.updatePermissions({
+      type: 'addRules',
+      rules: config.userRules,
+      behavior: 'allow',
+      destination: 'userSettings'
+    });
+
+    // 프로젝트 수준: .claude/settings.json
+    await this.updatePermissions({
+      type: 'addRules',
+      rules: config.projectRules,
+      behavior: 'ask',
+      destination: 'projectSettings'
+    });
+
+    // 로컬 수준: .claude-local.json (gitignore 대상)
+    await this.updatePermissions({
+      type: 'addRules',
+      rules: config.localRules,
+      behavior: 'allow',
+      destination: 'localSettings'
+    });
+
+    // 세션 수준: 현재 세션에만 적용
+    await this.updatePermissions({
+      type: 'addRules',
+      rules: config.sessionRules,
+      behavior: 'allow',
+      destination: 'session'
+    });
+  }
+
+  async configureSwarmPermissions(swarmId: string) {
+    // swarm 전용 권한 (세션 수준)
+    await this.setPermissions({
+      sessionRules: [
+        { toolName: 'Bash', ruleContent: 'rm -rf *' },  // 위험한 명령 차단
+        { toolName: 'FileWrite', ruleContent: '/etc/*' } // 시스템 파일 차단
+      ]
+    });
+  }
+}
+</code></pre>
+<p><strong>장점</strong>:</p>
+<ul>
+<li>🔐 계층형 거버넌스</li>
+<li>🎯 환경별 정책</li>
+<li>🔧 세션 격리</li>
+<li>📊 모든 수준에서 감사 추적</li>
+</ul>
+<hr>
+<h2>6️⃣ 네트워크 샌드박싱 (호스트/포트 제어)</h2>
+<h3>🎯 통합 기회</h3>
+<p>호스트 및 포트 수준 제어를 통해 에이전트별 네트워크 격리를 적용합니다.</p>
+<p><strong>전체 구현</strong>: <code>/ko-docs/SDK-ADVANCED-FEATURES-INTEGRATION.md</code>를 참고하세요</p>
+<p><strong>장점</strong>:</p>
+<ul>
+<li>🔒 보안: 무단 네트워크 접근 차단</li>
+<li>📊 감사: 모든 네트워크 요청을 기록</li>
+<li>🎯 제어: 에이전트별 네트워크 정책</li>
+<li>🔧 컴플라이언스: 네트워크 활동 추적</li>
+</ul>
+<hr>
+<h2>7️⃣ 실시간 Query 제어 (동적 관리)</h2>
+<h3>🎯 통합 기회</h3>
+<p>재시작 없이 에이전트를 <strong>실행 중에 제어</strong>합니다.</p>
+<h3>🔧 구현</h3>
+<pre><code class="language-typescript">// src/swarm/dynamic-agent-controller.ts
+export class DynamicAgentController {
+  private activeStreams: Map&lt;string, Query&gt; = new Map();
+
+  async startAgent(agentId: string, task: Task): Promise&lt;void&gt; {
+    const stream = query({
+      prompt: task.description,
+      options: { /* ... */ }
+    });
+
+    this.activeStreams.set(agentId, stream);
+    await this.monitorAgent(agentId, stream);
+  }
+
+  async killRunawayAgent(agentId: string): Promise&lt;void&gt; {
+    const stream = this.activeStreams.get(agentId);
+    if (stream) {
+      // 실행을 즉시 중단
+      await stream.interrupt();
+      console.log(`Agent ${agentId} interrupted`);
+    }
+  }
+
+  async switchAgentModel(agentId: string, model: string): Promise&lt;void&gt; {
+    const stream = this.activeStreams.get(agentId);
+    if (stream) {
+      // 실행 중에 모델을 변경
+      await stream.setModel(model);
+      console.log(`Agent ${agentId} now using ${model}`);
+    }
+  }
+
+  async relaxPermissions(agentId: string): Promise&lt;void&gt; {
+    const stream = this.activeStreams.get(agentId);
+    if (stream) {
+      // 자동 승인 모드로 전환
+      await stream.setPermissionMode('acceptEdits');
+      console.log(`Agent ${agentId} permissions relaxed`);
+    }
+  }
+}
+</code></pre>
+<p><strong>장점</strong>:</p>
+<ul>
+<li>⚡ 실시간 제어</li>
+<li>🔧 재시작이 필요 없음</li>
+<li>🎯 동적 최적화</li>
+<li>📊 런타임 적응</li>
+</ul>
+<hr>
+<h2>8️⃣ MCP 상태 모니터링 (Reliability++)</h2>
+<h3>🎯 통합 기회</h3>
+<p>swarm 전반의 <strong>MCP 서버 상태</strong>를 모니터링합니다.</p>
+<h3>🔧 구현</h3>
+<pre><code class="language-typescript">// src/monitoring/mcp-health-monitor.ts
+export class McpHealthMonitor {
+  async monitorSwarmMcpServers(swarmId: string): Promise&lt;void&gt; {
+    const stream = this.activeStreams.get(swarmId);
+    if (!stream) return;
+
+    setInterval(async () =&gt; {
+      const status = await stream.mcpServerStatus();
+
+      for (const server of status) {
+        if (server.status === 'failed') {
+          await this.handleServerFailure(swarmId, server);
+        } else if (server.status === 'needs-auth') {
+          await this.handleAuthRequired(swarmId, server);
+        }
+      }
+    }, 5000);  // 5초마다 확인합니다
+  }
+
+  private async handleServerFailure(
+    swarmId: string,
+    server: McpServerStatus
+  ): Promise&lt;void&gt; {
+    // 복구를 시도
+    await this.restartMcpServer(server.name);
+
+    // swarm coordinator에 알림
+    await SwarmCoordinator.notifyServerFailure(swarmId, server);
+  }
+}
+</code></pre>
+<p><strong>장점</strong>:</p>
+<ul>
+<li>🔍 사전 모니터링</li>
+<li>🔧 자동 복구</li>
+<li>📊 상태 메트릭</li>
+<li>⚡ 실시간 알림</li>
+</ul>
+<hr>
+<h2>9️⃣ WebAssembly 지원 (브라우저 배포)</h2>
+<h3>🎯 통합 기회</h3>
+<p>WebAssembly를 통해 Claude-Flow swarm을 <strong>브라우저에서</strong> 배포합니다.</p>
+<h3>🔧 향후 구현</h3>
+<pre><code class="language-typescript">// Future: 브라우저 기반 swarm 오케스트레이션
+import { query } from '@anthropic-ai/claude-code/wasm';
+
+export class BrowserSwarmOrchestrator {
+  async initializeBrowserSwarm(): Promise&lt;void&gt; {
+    // WASM 모듈을 로드
+    await this.loadWasmRuntime();
+
+    // 브라우저 내에서 swarm 생성
+    const stream = query({
+      prompt: 'Initialize browser-based swarm',
+      options: {
+        executable: 'wasm',  // WASM 런타임 사용
+        mcpServers: {
+          'claude-flow-swarm': claudeFlowSwarmServer
+        }
+      }
+    });
+
+    // 브라우저에서 전체 swarm을 오케스트레이션!
+  }
+}
+</code></pre>
+<p><strong>장점</strong>:</p>
+<ul>
+<li>🌐 브라우저 배포</li>
+<li>📦 서버 필요 없음</li>
+<li>🔧 엣지 컴퓨팅</li>
+<li>⚡ 로컬 실행</li>
+</ul>
+<hr>
+<h2>🔟 React DevTools (완전한 TUI 프로파일링)</h2>
+<h3>🎯 통합 기회</h3>
+<p>실시간 <strong>swarm 시각화</strong> 및 성능 프로파일링을 제공합니다.</p>
+<p><strong>전체 구현</strong>: <code>/ko-docs/SDK-ADVANCED-FEATURES-INTEGRATION.md</code>를 참고하세요</p>
+<p><strong>장점</strong>:</p>
+<ul>
+<li>📊 시각적 모니터링</li>
+<li>🔍 컴포넌트 수준 프로파일링</li>
+<li>⚡ 성능 최적화</li>
+<li>🎯 병목 구간 식별</li>
+</ul>
+<hr>
+<h2>📋 구현 로드맵</h2>
+<h3>Phase 4: 세션 관리 (1주차)</h3>
+<ul>
+<li>✅ 병렬 에이전트를 위한 세션 포킹</li>
+<li>✅ 체크포인트로서의 Compact Boundaries</li>
+<li>✅ 실시간 Query 제어</li>
+</ul>
+<h3>Phase 5: 권한 및 훅 (2주차)</h3>
+<ul>
+<li>✅ 패턴 기반 Hook matchers</li>
+<li>✅ 4레벨 권한 계층</li>
+<li>✅ SDK 네이티브 훅 마이그레이션</li>
+</ul>
+<h3>Phase 6: MCP 및 성능 (3주차)</h3>
+<ul>
+<li>✅ 인프로세스 MCP 서버 (<strong>CRITICAL</strong>)</li>
+<li>✅ MCP 상태 모니터링</li>
+<li>✅ 성능 벤치마크</li>
+</ul>
+<h3>Phase 7: 고급 기능 (4주차)</h3>
+<ul>
+<li>✅ 네트워크 샌드박싱</li>
+<li>✅ React DevTools 통합</li>
+<li>✅ 종합 테스트</li>
+</ul>
+<h3>Phase 8: 향후 개선</h3>
+<ul>
+<li>⏳ WebAssembly 배포</li>
+<li>⏳ 브라우저 기반 swarm</li>
+<li>⏳ 엣지 컴퓨팅 지원</li>
+</ul>
+<hr>
+<h2>🎯 성공 기준</h2>
+<table>
+<thead>
+<tr>
+<th>기능</th>
+<th>성공 지표</th>
+<th>목표</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>인프로세스 MCP</td>
+<td>툴 호출 지연 시간</td>
+<td>&lt;0.1ms</td>
+</tr>
+<tr>
+<td>세션 포킹</td>
+<td>에이전트 생성 시간</td>
+<td>&lt;50ms</td>
+</tr>
+<tr>
+<td>Compact Boundaries</td>
+<td>복구 시간</td>
+<td>즉시</td>
+</tr>
+<tr>
+<td>Hook Matchers</td>
+<td>훅 실행 오버헤드</td>
+<td>-50%</td>
+</tr>
+<tr>
+<td>4레벨 권한</td>
+<td>정책 위반</td>
+<td>0</td>
+</tr>
+<tr>
+<td>네트워크 샌드박싱</td>
+<td>무단 요청</td>
+<td>0</td>
+</tr>
+<tr>
+<td>Query 제어</td>
+<td>명령 응답 시간</td>
+<td>&lt;100ms</td>
+</tr>
+<tr>
+<td>MCP 모니터링</td>
+<td>장애 감지 시간</td>
+<td>&lt;5s</td>
+</tr>
+<tr>
+<td>React DevTools</td>
+<td>대시보드 렌더링 시간</td>
+<td>&lt;16ms</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<p><em>Claude-Flow v2.5.0-alpha.130을 위한 완전한 통합 매트릭스</em></p>
+
+  </div>
+</article>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Hanson Kim. All rights reserved.</p>
+  </footer>
+</body>
+</html>

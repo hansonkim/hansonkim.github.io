@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pair Optimization</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="/" class="logo">Hanson Kim</a>
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/blog/">Blog</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    
+<article class="post">
+  <header class="post-header">
+    <h1>Pair Optimization</h1>
+    <time datetime="2025년 10월 15일">2025년 10월 15일</time>
+    
+    <div class="tags">
+      
+        
+      
+        
+        <span class="tag">Claude-Flow</span>
+        
+      
+        
+        <span class="tag">문서</span>
+        
+      
+        
+        <span class="tag">AI</span>
+        
+      
+    </div>
+    
+  </header>
+
+  <div class="post-content">
+    <h1>Pair Programming 명령어 최적화</h1>
+<h2>해결된 문제</h2>
+<p>Pair programming 명령어가 30초마다 지속적으로 검증 확인을 실행하여 다음과 같은 문제 발생:</p>
+<ul>
+<li>과도한 CPU 사용량</li>
+<li>지속적인 터미널 출력 스팸</li>
+<li>반복되는 실패 메시지로 인한 사용자 경험 저하</li>
+<li>Interactive 세션을 제대로 사용할 수 없음</li>
+</ul>
+<h2>구현된 최적화</h2>
+<h3>1. <strong>자동 Interval 기반 검증 제거</strong></h3>
+<ul>
+<li><strong>이전</strong>: <code>setInterval</code>이 30초마다 자동으로 검증 실행</li>
+<li><strong>이후</strong>: 요청 시에만 또는 명시적 auto-verify flag 사용 시에만 검증 실행</li>
+</ul>
+<h3>2. <strong>검증 Cooldown 추가</strong></h3>
+<ul>
+<li>자동 검증 간 60초 cooldown</li>
+<li>Auto-verify가 활성화되어 있어도 검증 스팸 방지</li>
+<li>수동 <code>/verify</code> 명령어는 cooldown 우회</li>
+</ul>
+<h3>3. <strong>지능형 점수 시스템</strong></h3>
+<pre><code class="language-javascript">// 이전: 이진 pass/fail (0.5 또는 1.0)
+const score = passed ? 1.0 : 0.5;
+
+// 신규: 오류 수 기반 단계별 점수
+if (output.includes('error')) {
+  const errorCount = (output.match(/error/gi) || []).length;
+  score = Math.max(0.2, 1.0 - (errorCount * 0.1));
+} else if (output.includes('warning')) {
+  const warningCount = (output.match(/warning/gi) || []).length;
+  score = Math.max(0.7, 1.0 - (warningCount * 0.05));
+}
+</code></pre>
+<h3>4. <strong>가중치 적용 검증 확인</strong></h3>
+<ul>
+<li>Type Check: 40% 가중치 (가장 중요)</li>
+<li>Linting: 30% 가중치</li>
+<li>Build: 30% 가중치</li>
+</ul>
+<h3>5. <strong>동시 검증 방지</strong></h3>
+<ul>
+<li>여러 동시 검증을 방지하기 위한 <code>isVerifying</code> flag 추가</li>
+<li>검증이 이미 진행 중이면 조기 반환</li>
+</ul>
+<h3>6. <strong>수동 제어 옵션</strong></h3>
+<ul>
+<li><code>/verify</code> - 수동으로 검증 실행</li>
+<li><code>/auto</code> - 자동 검증 on/off 전환</li>
+<li><code>/metrics</code> - 검증 기록 보기</li>
+<li><code>/status</code> - 현재 설정 확인</li>
+</ul>
+<h3>7. <strong>향상된 오류 메시지</strong></h3>
+<ul>
+<li>매우 낮은 점수(&lt;0.5)에 대해서만 상세 제안 표시</li>
+<li>아이콘(✅, ⚠️, ❌)을 사용한 깔끔한 출력</li>
+<li>검증 기록에 타임스탬프 포함</li>
+</ul>
+<h2>사용 패턴</h2>
+<h3>수동 검증 (권장)</h3>
+<pre><code class="language-bash"># 수동 검증만으로 시작
+./claude-flow pair --start --verify
+
+# 필요할 때 검증 실행
+/verify
+</code></pre>
+<h3>자동 검증 (모니터링용)</h3>
+<pre><code class="language-bash"># 60초 cooldown으로 auto-verify 활성화
+./claude-flow pair --start --verify --auto
+
+# 세션 중 전환
+/auto
+</code></pre>
+<h3>Testing 통합</h3>
+<pre><code class="language-bash"># Auto-run 없이 testing 활성화
+./claude-flow pair --start --test
+
+# 수동으로 테스트 실행
+/test
+</code></pre>
+<h2>성능 영향</h2>
+<h3>최적화 전</h3>
+<ul>
+<li>30초마다 검증</li>
+<li>검증당 ~3-5초</li>
+<li>검증만으로 10-17% CPU 사용량</li>
+<li>시간당 120회 검증</li>
+</ul>
+<h3>최적화 후</h3>
+<ul>
+<li>요청 시에만 검증</li>
+<li>Auto 활성화 시 60초 cooldown</li>
+<li>유휴 시 &lt;1% CPU 사용량</li>
+<li>시간당 최대 ~60회 검증</li>
+</ul>
+<h2>명령어 참조</h2>
+<table>
+<thead>
+<tr>
+<th>명령어</th>
+<th>설명</th>
+<th>Auto-Verify 영향</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/verify</code></td>
+<td>지금 검증 실행</td>
+<td>Cooldown 우회</td>
+</tr>
+<tr>
+<td><code>/test</code></td>
+<td>지금 테스트 실행</td>
+<td>독립적</td>
+</tr>
+<tr>
+<td><code>/auto</code></td>
+<td>Auto-verify 전환</td>
+<td>활성화/비활성화</td>
+</tr>
+<tr>
+<td><code>/status</code></td>
+<td>설정 표시</td>
+<td>영향 없음</td>
+</tr>
+<tr>
+<td><code>/metrics</code></td>
+<td>기록 표시</td>
+<td>영향 없음</td>
+</tr>
+<tr>
+<td><code>/commit</code></td>
+<td>Pre-commit 확인</td>
+<td>검증 실행</td>
+</tr>
+</tbody>
+</table>
+<h2>구성 Flag</h2>
+<table>
+<thead>
+<tr>
+<th>Flag</th>
+<th>기본값</th>
+<th>설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--verify</code></td>
+<td>false</td>
+<td>검증 시스템 활성화</td>
+</tr>
+<tr>
+<td><code>--auto</code></td>
+<td>false</td>
+<td>자동 검증 활성화</td>
+</tr>
+<tr>
+<td><code>--test</code></td>
+<td>false</td>
+<td>테스트 시스템 활성화</td>
+</tr>
+<tr>
+<td><code>--threshold</code></td>
+<td>0.95</td>
+<td>검증 통과 임계값</td>
+</tr>
+</tbody>
+</table>
+<h2>모범 사례</h2>
+<ol>
+<li><strong>수동 검증으로 시작</strong> - <code>--auto</code> 없이 <code>--verify</code> 사용</li>
+<li><strong>Commit 전 검증 실행</strong> - <code>/commit</code> 명령어 사용</li>
+<li><strong>정기적으로 metrics 확인</strong> - <code>/metrics</code>를 사용하여 추세 추적</li>
+<li><strong>Auto-verify 신중하게 활성화</strong> - 모니터링이 필요한 긴 세션에만 사용</li>
+<li><strong>가중치 점수 사용</strong> - 지능형 점수 시스템 신뢰</li>
+</ol>
+<h2>세션 데이터 구조</h2>
+<pre><code class="language-json">{
+  &quot;id&quot;: &quot;pair_1755038032183&quot;,
+  &quot;mode&quot;: &quot;switch&quot;,
+  &quot;verify&quot;: true,
+  &quot;autoVerify&quot;: false,
+  &quot;verificationScores&quot;: [
+    {
+      &quot;score&quot;: 0.82,
+      &quot;timestamp&quot;: 1755038045000,
+      &quot;results&quot;: [
+        { &quot;name&quot;: &quot;Type Check&quot;, &quot;score&quot;: 0.8 },
+        { &quot;name&quot;: &quot;Linting&quot;, &quot;score&quot;: 0.85 },
+        { &quot;name&quot;: &quot;Build&quot;, &quot;score&quot;: 0.82 }
+      ]
+    }
+  ]
+}
+</code></pre>
+<h2>향후 개선사항</h2>
+<ul>
+<li>[ ] 스마트 검증을 위한 file watcher 통합</li>
+<li>[ ] Incremental 검증 (변경된 파일만)</li>
+<li>[ ] 검증 결과 캐싱</li>
+<li>[ ] 병렬 검증 확인</li>
+<li>[ ] 사용자 정의 검증 명령어</li>
+<li>[ ] Git hook 통합</li>
+</ul>
+
+  </div>
+</article>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Hanson Kim. All rights reserved.</p>
+  </footer>
+</body>
+</html>

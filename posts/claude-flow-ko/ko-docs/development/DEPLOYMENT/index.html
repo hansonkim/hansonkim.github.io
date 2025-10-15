@@ -1,0 +1,1392 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DEPLOYMENT</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="/" class="logo">Hanson Kim</a>
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/blog/">Blog</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    
+<article class="post">
+  <header class="post-header">
+    <h1>DEPLOYMENT</h1>
+    <time datetime="2025년 10월 15일">2025년 10월 15일</time>
+    
+    <div class="tags">
+      
+        
+      
+        
+        <span class="tag">Claude-Flow</span>
+        
+      
+        
+        <span class="tag">문서</span>
+        
+      
+        
+        <span class="tag">AI</span>
+        
+      
+    </div>
+    
+  </header>
+
+  <div class="post-content">
+    <h1>🚀 Production 배포 가이드</h1>
+<h2>📋 목차</h2>
+<ul>
+<li><a href="#%EC%8B%9C%EC%8A%A4%ED%85%9C-%EC%9A%94%EA%B5%AC%EC%82%AC%ED%95%AD">시스템 요구사항</a></li>
+<li><a href="#%ED%99%98%EA%B2%BD-%EB%B3%80%EC%88%98">환경 변수</a></li>
+<li><a href="#docker-%EB%B0%B0%ED%8F%AC">Docker 배포</a></li>
+<li><a href="#kubernetes-%EB%B0%B0%ED%8F%AC">Kubernetes 배포</a></li>
+<li><a href="#cicd-pipeline">CI/CD Pipeline</a></li>
+<li><a href="#%EB%AA%A8%EB%8B%88%ED%84%B0%EB%A7%81-%EB%B0%8F-%EB%A1%9C%EA%B9%85">모니터링 및 로깅</a></li>
+<li><a href="#%EB%B3%B4%EC%95%88-%EA%B5%AC%EC%84%B1">보안 구성</a></li>
+<li><a href="#%EB%B0%B1%EC%97%85-%EB%B0%8F-%EB%B3%B5%EA%B5%AC">백업 및 복구</a></li>
+<li><a href="#%ED%99%95%EC%9E%A5%EC%84%B1">확장성</a></li>
+<li><a href="#%EB%AC%B8%EC%A0%9C-%ED%95%B4%EA%B2%B0">문제 해결</a></li>
+</ul>
+<hr>
+<h2>시스템 요구사항</h2>
+<h3>하드웨어 요구사항</h3>
+<h4>최소 사양</h4>
+<ul>
+<li><strong>CPU</strong>: 2 코어</li>
+<li><strong>RAM</strong>: 4GB</li>
+<li><strong>디스크</strong>: 20GB SSD</li>
+<li><strong>네트워크</strong>: 100 Mbps</li>
+</ul>
+<h4>권장 사양 (Production)</h4>
+<ul>
+<li><strong>CPU</strong>: 4+ 코어</li>
+<li><strong>RAM</strong>: 16GB+</li>
+<li><strong>디스크</strong>: 100GB+ SSD (NVMe 권장)</li>
+<li><strong>네트워크</strong>: 1 Gbps+</li>
+</ul>
+<h4>대규모 배포</h4>
+<ul>
+<li><strong>CPU</strong>: 8+ 코어</li>
+<li><strong>RAM</strong>: 32GB+</li>
+<li><strong>디스크</strong>: 500GB+ NVMe SSD</li>
+<li><strong>네트워크</strong>: 10 Gbps+</li>
+</ul>
+<h3>소프트웨어 요구사항</h3>
+<ul>
+<li><strong>운영체제</strong>:
+<ul>
+<li>Ubuntu 20.04+ LTS</li>
+<li>Debian 11+</li>
+<li>RHEL 8+</li>
+<li>Amazon Linux 2</li>
+</ul>
+</li>
+<li><strong>Node.js</strong>: 18.x LTS 이상</li>
+<li><strong>npm</strong>: 9.x 이상</li>
+<li><strong>Claude Code</strong>: 최신 버전</li>
+<li><strong>Git</strong>: 2.x 이상</li>
+</ul>
+<h3>네트워크 요구사항</h3>
+<ul>
+<li><strong>인바운드 포트</strong>:
+<ul>
+<li>443 (HTTPS) - API 액세스</li>
+<li>22 (SSH) - 관리 액세스</li>
+</ul>
+</li>
+<li><strong>아웃바운드 포트</strong>:
+<ul>
+<li>443 (HTTPS) - Anthropic API, npm registry</li>
+<li>80 (HTTP) - Package 업데이트</li>
+</ul>
+</li>
+<li><strong>방화벽</strong>: Docker/Kubernetes network policy 필요</li>
+</ul>
+<hr>
+<h2>환경 변수</h2>
+<h3>필수 변수</h3>
+<pre><code class="language-bash"># .env.production
+NODE_ENV=production
+PORT=3000
+
+# Anthropic API
+ANTHROPIC_API_KEY=sk-ant-xxxxx
+CLAUDE_MODEL=claude-3-5-sonnet-20241022
+
+# Database
+DATABASE_URL=postgresql://user:pass@localhost:5432/claude_flow
+REDIS_URL=redis://localhost:6379
+
+# Security
+JWT_SECRET=your-secure-random-string
+ENCRYPTION_KEY=your-32-byte-encryption-key
+SESSION_SECRET=your-session-secret
+
+# Logging
+LOG_LEVEL=info
+LOG_FORMAT=json
+SENTRY_DSN=https://xxxxx@sentry.io/xxxxx
+</code></pre>
+<h3>선택적 변수</h3>
+<pre><code class="language-bash"># Feature Flags
+ENABLE_TELEMETRY=true
+ENABLE_NEURAL_TRAINING=true
+ENABLE_DISTRIBUTED_MEMORY=true
+
+# Performance
+MAX_WORKERS=4
+WORKER_TIMEOUT=300000
+MEMORY_LIMIT=2048
+
+# Integrations
+GITHUB_TOKEN=ghp_xxxxx
+SLACK_WEBHOOK_URL=https://hooks.slack.com/services/xxxxx
+
+# Monitoring
+PROMETHEUS_PORT=9090
+GRAFANA_PORT=3001
+METRICS_INTERVAL=60000
+
+# Storage
+S3_BUCKET=claude-flow-storage
+S3_REGION=us-east-1
+AWS_ACCESS_KEY_ID=xxxxx
+AWS_SECRET_ACCESS_KEY=xxxxx
+</code></pre>
+<h3>환경별 구성</h3>
+<pre><code class="language-bash"># Development
+NODE_ENV=development
+LOG_LEVEL=debug
+ENABLE_HOT_RELOAD=true
+
+# Staging
+NODE_ENV=staging
+LOG_LEVEL=info
+RATE_LIMIT=100
+
+# Production
+NODE_ENV=production
+LOG_LEVEL=warn
+RATE_LIMIT=1000
+ENABLE_CACHING=true
+</code></pre>
+<hr>
+<h2>Docker 배포</h2>
+<h3>Dockerfile</h3>
+<pre><code class="language-dockerfile"># Multi-stage build for optimization
+FROM node:18-alpine AS builder
+
+WORKDIR /app
+
+# Install dependencies
+COPY package*.json ./
+RUN npm ci --only=production &amp;&amp; npm cache clean --force
+
+# Copy source code
+COPY . .
+
+# Build application
+RUN npm run build
+
+# Production image
+FROM node:18-alpine
+
+WORKDIR /app
+
+# Install Claude Code
+RUN npm install -g @anthropic-ai/claude-code
+
+# Copy from builder
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/package*.json ./
+
+# Create non-root user
+RUN addgroup -g 1001 -S nodejs &amp;&amp; \
+    adduser -S nodejs -u 1001 &amp;&amp; \
+    chown -R nodejs:nodejs /app
+
+USER nodejs
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=3s --start-period=40s \
+  CMD node -e &quot;require('http').get('http://localhost:3000/health', (r) =&gt; {process.exit(r.statusCode === 200 ? 0 : 1)})&quot;
+
+EXPOSE 3000
+
+CMD [&quot;node&quot;, &quot;dist/index.js&quot;]
+</code></pre>
+<h3>docker-compose.yml</h3>
+<pre><code class="language-yaml">version: '3.8'
+
+services:
+  claude-flow:
+    build: .
+    container_name: claude-flow
+    restart: unless-stopped
+    ports:
+      - &quot;3000:3000&quot;
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=postgresql://postgres:password@db:5432/claude_flow
+      - REDIS_URL=redis://redis:6379
+    env_file:
+      - .env.production
+    depends_on:
+      - db
+      - redis
+    volumes:
+      - ./logs:/app/logs
+      - ./data:/app/data
+    networks:
+      - claude-flow-network
+    healthcheck:
+      test: [&quot;CMD&quot;, &quot;wget&quot;, &quot;--quiet&quot;, &quot;--tries=1&quot;, &quot;--spider&quot;, &quot;http://localhost:3000/health&quot;]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  db:
+    image: postgres:15-alpine
+    container_name: claude-flow-db
+    restart: unless-stopped
+    environment:
+      - POSTGRES_DB=claude_flow
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - claude-flow-network
+    healthcheck:
+      test: [&quot;CMD-SHELL&quot;, &quot;pg_isready -U postgres&quot;]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: claude-flow-redis
+    restart: unless-stopped
+    command: redis-server --appendonly yes
+    volumes:
+      - redis-data:/data
+    networks:
+      - claude-flow-network
+    healthcheck:
+      test: [&quot;CMD&quot;, &quot;redis-cli&quot;, &quot;ping&quot;]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: claude-flow-prometheus
+    restart: unless-stopped
+    ports:
+      - &quot;9090:9090&quot;
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus-data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+    networks:
+      - claude-flow-network
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: claude-flow-grafana
+    restart: unless-stopped
+    ports:
+      - &quot;3001:3000&quot;
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_INSTALL_PLUGINS=redis-datasource
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./monitoring/grafana/dashboards:/etc/grafana/provisioning/dashboards
+    depends_on:
+      - prometheus
+    networks:
+      - claude-flow-network
+
+networks:
+  claude-flow-network:
+    driver: bridge
+
+volumes:
+  postgres-data:
+  redis-data:
+  prometheus-data:
+  grafana-data:
+</code></pre>
+<h3>배포 명령어</h3>
+<pre><code class="language-bash"># Build and start services
+docker-compose up -d
+
+# View logs
+docker-compose logs -f claude-flow
+
+# Scale service
+docker-compose up -d --scale claude-flow=3
+
+# Stop services
+docker-compose down
+
+# Clean up volumes
+docker-compose down -v
+</code></pre>
+<hr>
+<h2>Kubernetes 배포</h2>
+<h3>Namespace 생성</h3>
+<pre><code class="language-yaml"># namespace.yaml
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: claude-flow
+  labels:
+    name: claude-flow
+    environment: production
+</code></pre>
+<h3>ConfigMap</h3>
+<pre><code class="language-yaml"># configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: claude-flow-config
+  namespace: claude-flow
+data:
+  NODE_ENV: &quot;production&quot;
+  LOG_LEVEL: &quot;info&quot;
+  LOG_FORMAT: &quot;json&quot;
+  ENABLE_TELEMETRY: &quot;true&quot;
+  MAX_WORKERS: &quot;4&quot;
+  PROMETHEUS_PORT: &quot;9090&quot;
+</code></pre>
+<h3>Secret</h3>
+<pre><code class="language-yaml"># secret.yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: claude-flow-secrets
+  namespace: claude-flow
+type: Opaque
+stringData:
+  ANTHROPIC_API_KEY: &quot;sk-ant-xxxxx&quot;
+  DATABASE_URL: &quot;postgresql://user:pass@db:5432/claude_flow&quot;
+  REDIS_URL: &quot;redis://redis:6379&quot;
+  JWT_SECRET: &quot;your-secure-random-string&quot;
+  ENCRYPTION_KEY: &quot;your-32-byte-encryption-key&quot;
+</code></pre>
+<h3>Deployment</h3>
+<pre><code class="language-yaml"># deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: claude-flow
+  namespace: claude-flow
+  labels:
+    app: claude-flow
+    version: v2.7.0
+spec:
+  replicas: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: claude-flow
+  template:
+    metadata:
+      labels:
+        app: claude-flow
+        version: v2.7.0
+    spec:
+      containers:
+      - name: claude-flow
+        image: your-registry/claude-flow:2.7.0
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 3000
+          name: http
+        - containerPort: 9090
+          name: metrics
+        env:
+        - name: PORT
+          value: &quot;3000&quot;
+        envFrom:
+        - configMapRef:
+            name: claude-flow-config
+        - secretRef:
+            name: claude-flow-secrets
+        resources:
+          requests:
+            memory: &quot;2Gi&quot;
+            cpu: &quot;1000m&quot;
+          limits:
+            memory: &quot;4Gi&quot;
+            cpu: &quot;2000m&quot;
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 3000
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: 3000
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 3
+        volumeMounts:
+        - name: data
+          mountPath: /app/data
+        - name: logs
+          mountPath: /app/logs
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: claude-flow-data
+      - name: logs
+        emptyDir: {}
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - claude-flow
+              topologyKey: kubernetes.io/hostname
+</code></pre>
+<h3>Service</h3>
+<pre><code class="language-yaml"># service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: claude-flow
+  namespace: claude-flow
+  labels:
+    app: claude-flow
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: 3000
+    protocol: TCP
+    name: http
+  - port: 9090
+    targetPort: 9090
+    protocol: TCP
+    name: metrics
+  selector:
+    app: claude-flow
+</code></pre>
+<h3>Ingress</h3>
+<pre><code class="language-yaml"># ingress.yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: claude-flow
+  namespace: claude-flow
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    nginx.ingress.kubernetes.io/rate-limit: &quot;100&quot;
+    nginx.ingress.kubernetes.io/ssl-redirect: &quot;true&quot;
+spec:
+  tls:
+  - hosts:
+    - api.claude-flow.com
+    secretName: claude-flow-tls
+  rules:
+  - host: api.claude-flow.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: claude-flow
+            port:
+              number: 80
+</code></pre>
+<h3>HorizontalPodAutoscaler</h3>
+<pre><code class="language-yaml"># hpa.yaml
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: claude-flow
+  namespace: claude-flow
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: claude-flow
+  minReplicas: 3
+  maxReplicas: 10
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 70
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: 80
+  behavior:
+    scaleDown:
+      stabilizationWindowSeconds: 300
+      policies:
+      - type: Percent
+        value: 50
+        periodSeconds: 60
+    scaleUp:
+      stabilizationWindowSeconds: 0
+      policies:
+      - type: Percent
+        value: 100
+        periodSeconds: 30
+      - type: Pods
+        value: 2
+        periodSeconds: 60
+</code></pre>
+<h3>PersistentVolumeClaim</h3>
+<pre><code class="language-yaml"># pvc.yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: claude-flow-data
+  namespace: claude-flow
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: aws-efs
+  resources:
+    requests:
+      storage: 100Gi
+</code></pre>
+<h3>배포 스크립트</h3>
+<pre><code class="language-bash">#!/bin/bash
+# deploy.sh
+
+set -e
+
+NAMESPACE=&quot;claude-flow&quot;
+VERSION=&quot;2.7.0&quot;
+
+echo &quot;🚀 Deploying Claude-Flow v${VERSION} to Kubernetes...&quot;
+
+# Create namespace
+kubectl apply -f k8s/namespace.yaml
+
+# Apply configurations
+kubectl apply -f k8s/configmap.yaml
+kubectl apply -f k8s/secret.yaml
+kubectl apply -f k8s/pvc.yaml
+
+# Deploy application
+kubectl apply -f k8s/deployment.yaml
+kubectl apply -f k8s/service.yaml
+kubectl apply -f k8s/ingress.yaml
+kubectl apply -f k8s/hpa.yaml
+
+# Wait for rollout
+echo &quot;⏳ Waiting for deployment to complete...&quot;
+kubectl rollout status deployment/claude-flow -n ${NAMESPACE} --timeout=5m
+
+# Verify deployment
+echo &quot;✅ Verifying deployment...&quot;
+kubectl get pods -n ${NAMESPACE} -l app=claude-flow
+
+echo &quot;🎉 Deployment complete!&quot;
+echo &quot;📊 Access Grafana: http://grafana.claude-flow.com&quot;
+echo &quot;📈 Access Prometheus: http://prometheus.claude-flow.com&quot;
+</code></pre>
+<hr>
+<h2>CI/CD Pipeline</h2>
+<h3>GitHub Actions</h3>
+<pre><code class="language-yaml"># .github/workflows/deploy-production.yml
+name: 🚀 Deploy to Production
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: $
+  KUBE_CONFIG: $
+
+jobs:
+  build:
+    name: 🏗️ Build Docker Image
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 🔐 Log in to Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: $
+          username: $
+          password: $
+
+      - name: 🏷️ Extract metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: $/$
+          tags: |
+            type=ref,event=branch
+            type=ref,event=pr
+            type=semver,pattern=
+            type=semver,pattern=.
+            type=sha
+
+      - name: 🏗️ Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: $
+          labels: $
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  test:
+    name: 🧪 Run Tests
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 🟢 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: 📦 Install dependencies
+        run: npm ci
+
+      - name: 🧪 Run unit tests
+        run: npm run test:unit
+
+      - name: 🔗 Run integration tests
+        run: npm run test:integration
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/test
+          REDIS_URL: redis://localhost:6379
+
+      - name: 📊 Upload coverage
+        uses: codecov/codecov-action@v3
+        with:
+          files: ./coverage/lcov.info
+          flags: unittests
+          name: codecov-umbrella
+
+  security:
+    name: 🔒 Security Scan
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 🔍 Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: $/$:$
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+
+      - name: 📤 Upload Trivy results to GitHub Security
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: 'trivy-results.sarif'
+
+  deploy:
+    name: 🚀 Deploy to Kubernetes
+    runs-on: ubuntu-latest
+    needs: [build, test, security]
+    environment:
+      name: production
+      url: https://api.claude-flow.com
+
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      - name: ⚙️ Configure kubectl
+        run: |
+          echo &quot;$&quot; | base64 -d &gt; kubeconfig
+          export KUBECONFIG=kubeconfig
+
+      - name: 🔄 Update deployment
+        run: |
+          kubectl set image deployment/claude-flow \
+            claude-flow=$/$:$ \
+            -n claude-flow
+
+      - name: ⏳ Wait for rollout
+        run: |
+          kubectl rollout status deployment/claude-flow \
+            -n claude-flow \
+            --timeout=5m
+
+      - name: ✅ Verify deployment
+        run: |
+          kubectl get pods -n claude-flow -l app=claude-flow
+
+  notify:
+    name: 📢 Notify Team
+    runs-on: ubuntu-latest
+    needs: [deploy]
+    if: always()
+
+    steps:
+      - name: 📬 Send Slack notification
+        uses: 8398a7/action-slack@v3
+        with:
+          status: $
+          text: |
+            🚀 Deployment to Production: $
+            📦 Version: $
+            👤 Author: $
+            🔗 Workflow: $/$/actions/runs/$
+          webhook_url: $
+        if: always()
+</code></pre>
+<hr>
+<h2>모니터링 및 로깅</h2>
+<h3>Prometheus 구성</h3>
+<pre><code class="language-yaml"># monitoring/prometheus.yml
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  external_labels:
+    cluster: 'claude-flow-prod'
+    environment: 'production'
+
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+            - alertmanager:9093
+
+scrape_configs:
+  - job_name: 'claude-flow'
+    kubernetes_sd_configs:
+      - role: pod
+        namespaces:
+          names:
+            - claude-flow
+    relabel_configs:
+      - source_labels: [__meta_kubernetes_pod_label_app]
+        action: keep
+        regex: claude-flow
+      - source_labels: [__meta_kubernetes_pod_name]
+        action: replace
+        target_label: pod
+      - source_labels: [__meta_kubernetes_namespace]
+        action: replace
+        target_label: namespace
+
+  - job_name: 'node-exporter'
+    static_configs:
+      - targets: ['node-exporter:9100']
+
+  - job_name: 'postgres'
+    static_configs:
+      - targets: ['postgres-exporter:9187']
+
+  - job_name: 'redis'
+    static_configs:
+      - targets: ['redis-exporter:9121']
+</code></pre>
+<h3>Grafana Dashboard</h3>
+<pre><code class="language-json">{
+  &quot;dashboard&quot;: {
+    &quot;title&quot;: &quot;Claude-Flow Production Metrics&quot;,
+    &quot;panels&quot;: [
+      {
+        &quot;title&quot;: &quot;Request Rate&quot;,
+        &quot;targets&quot;: [
+          {
+            &quot;expr&quot;: &quot;rate(http_requests_total[5m])&quot;
+          }
+        ]
+      },
+      {
+        &quot;title&quot;: &quot;Response Time (p95)&quot;,
+        &quot;targets&quot;: [
+          {
+            &quot;expr&quot;: &quot;histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m]))&quot;
+          }
+        ]
+      },
+      {
+        &quot;title&quot;: &quot;Error Rate&quot;,
+        &quot;targets&quot;: [
+          {
+            &quot;expr&quot;: &quot;rate(http_requests_total{status=~\&quot;5..\&quot;}[5m])&quot;
+          }
+        ]
+      },
+      {
+        &quot;title&quot;: &quot;Active Swarms&quot;,
+        &quot;targets&quot;: [
+          {
+            &quot;expr&quot;: &quot;claude_flow_active_swarms&quot;
+          }
+        ]
+      }
+    ]
+  }
+}
+</code></pre>
+<h3>Logging 구성</h3>
+<pre><code class="language-javascript">// config/logger.js
+import winston from 'winston';
+import { ElasticsearchTransport } from 'winston-elasticsearch';
+
+const logger = winston.createLogger({
+  level: process.env.LOG_LEVEL || 'info',
+  format: winston.format.combine(
+    winston.format.timestamp(),
+    winston.format.errors({ stack: true }),
+    winston.format.json()
+  ),
+  defaultMeta: {
+    service: 'claude-flow',
+    environment: process.env.NODE_ENV,
+    version: process.env.APP_VERSION
+  },
+  transports: [
+    // Console output
+    new winston.transports.Console({
+      format: winston.format.combine(
+        winston.format.colorize(),
+        winston.format.simple()
+      )
+    }),
+
+    // File output
+    new winston.transports.File({
+      filename: 'logs/error.log',
+      level: 'error',
+      maxsize: 10485760, // 10MB
+      maxFiles: 5
+    }),
+    new winston.transports.File({
+      filename: 'logs/combined.log',
+      maxsize: 10485760,
+      maxFiles: 10
+    }),
+
+    // Elasticsearch (production)
+    ...(process.env.NODE_ENV === 'production' ? [
+      new ElasticsearchTransport({
+        level: 'info',
+        clientOpts: {
+          node: process.env.ELASTICSEARCH_URL,
+          auth: {
+            username: process.env.ELASTICSEARCH_USER,
+            password: process.env.ELASTICSEARCH_PASSWORD
+          }
+        },
+        index: 'claude-flow-logs'
+      })
+    ] : [])
+  ]
+});
+
+export default logger;
+</code></pre>
+<hr>
+<h2>보안 구성</h2>
+<h3>Secrets 관리</h3>
+<pre><code class="language-bash"># Using Kubernetes Secrets
+kubectl create secret generic claude-flow-secrets \
+  --from-literal=anthropic-api-key=$ANTHROPIC_API_KEY \
+  --from-literal=database-url=$DATABASE_URL \
+  --from-literal=jwt-secret=$JWT_SECRET \
+  -n claude-flow
+
+# Using AWS Secrets Manager
+aws secretsmanager create-secret \
+  --name claude-flow/production/api-keys \
+  --secret-string '{
+    &quot;anthropic_api_key&quot;: &quot;sk-ant-xxxxx&quot;,
+    &quot;jwt_secret&quot;: &quot;xxxxx&quot;
+  }'
+
+# Using HashiCorp Vault
+vault kv put secret/claude-flow/production \
+  anthropic_api_key=sk-ant-xxxxx \
+  database_url=postgresql://... \
+  jwt_secret=xxxxx
+</code></pre>
+<h3>Network Policy</h3>
+<pre><code class="language-yaml"># network-policy.yaml
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: claude-flow-network-policy
+  namespace: claude-flow
+spec:
+  podSelector:
+    matchLabels:
+      app: claude-flow
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              name: ingress-nginx
+      ports:
+        - protocol: TCP
+          port: 3000
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              name: monitoring
+      ports:
+        - protocol: TCP
+          port: 9090
+  egress:
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              name: claude-flow
+      ports:
+        - protocol: TCP
+          port: 5432
+        - protocol: TCP
+          port: 6379
+    - to:
+        - podSelector: {}
+      ports:
+        - protocol: TCP
+          port: 53
+        - protocol: UDP
+          port: 53
+</code></pre>
+<h3>WAF 구성</h3>
+<pre><code class="language-yaml"># waf-rules.yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: claude-flow
+  annotations:
+    nginx.ingress.kubernetes.io/enable-modsecurity: &quot;true&quot;
+    nginx.ingress.kubernetes.io/enable-owasp-core-rules: &quot;true&quot;
+    nginx.ingress.kubernetes.io/modsecurity-snippet: |
+      SecRuleEngine On
+      SecRequestBodyLimit 13107200
+      SecRule ARGS &quot;@contains &lt;script&gt;&quot; &quot;id:1,deny,status:403,msg:'XSS Attack'&quot;
+      SecRule ARGS &quot;@contains ..&quot; &quot;id:2,deny,status:403,msg:'Path Traversal'&quot;
+</code></pre>
+<hr>
+<h2>백업 및 복구</h2>
+<h3>Database 백업</h3>
+<pre><code class="language-bash">#!/bin/bash
+# scripts/backup-database.sh
+
+set -e
+
+BACKUP_DIR=&quot;/backups/postgresql&quot;
+TIMESTAMP=$(date +%Y%m%d_%H%M%S)
+BACKUP_FILE=&quot;claude_flow_${TIMESTAMP}.sql.gz&quot;
+
+# Create backup
+pg_dump -h localhost -U postgres claude_flow | gzip &gt; &quot;${BACKUP_DIR}/${BACKUP_FILE}&quot;
+
+# Upload to S3
+aws s3 cp &quot;${BACKUP_DIR}/${BACKUP_FILE}&quot; \
+  s3://claude-flow-backups/postgresql/${BACKUP_FILE}
+
+# Clean up old backups (keep last 30 days)
+find &quot;${BACKUP_DIR}&quot; -name &quot;*.sql.gz&quot; -mtime +30 -delete
+
+echo &quot;✅ Backup completed: ${BACKUP_FILE}&quot;
+</code></pre>
+<h3>Automated 백업 (Kubernetes CronJob)</h3>
+<pre><code class="language-yaml"># cronjob-backup.yaml
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: claude-flow-backup
+  namespace: claude-flow
+spec:
+  schedule: &quot;0 2 * * *&quot;  # Daily at 2 AM
+  successfulJobsHistoryLimit: 7
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: backup
+            image: postgres:15-alpine
+            env:
+            - name: PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: claude-flow-secrets
+                  key: database-password
+            command:
+            - /bin/sh
+            - -c
+            - |
+              TIMESTAMP=$(date +%Y%m%d_%H%M%S)
+              BACKUP_FILE=&quot;claude_flow_${TIMESTAMP}.sql.gz&quot;
+
+              pg_dump -h postgres -U postgres claude_flow | gzip &gt; /tmp/${BACKUP_FILE}
+
+              aws s3 cp /tmp/${BACKUP_FILE} s3://claude-flow-backups/postgresql/${BACKUP_FILE}
+
+              echo &quot;Backup completed: ${BACKUP_FILE}&quot;
+            volumeMounts:
+            - name: backup-storage
+              mountPath: /tmp
+          volumes:
+          - name: backup-storage
+            emptyDir: {}
+          restartPolicy: OnFailure
+</code></pre>
+<h3>복구 절차</h3>
+<pre><code class="language-bash">#!/bin/bash
+# scripts/restore-database.sh
+
+set -e
+
+BACKUP_FILE=$1
+
+if [ -z &quot;$BACKUP_FILE&quot; ]; then
+  echo &quot;Usage: $0 &lt;backup-file&gt;&quot;
+  exit 1
+fi
+
+# Download from S3
+aws s3 cp &quot;s3://claude-flow-backups/postgresql/${BACKUP_FILE}&quot; /tmp/
+
+# Restore database
+gunzip &lt; &quot;/tmp/${BACKUP_FILE}&quot; | psql -h localhost -U postgres claude_flow
+
+echo &quot;✅ Database restored from: ${BACKUP_FILE}&quot;
+</code></pre>
+<hr>
+<h2>확장성</h2>
+<h3>Horizontal Scaling</h3>
+<pre><code class="language-bash"># Scale deployment
+kubectl scale deployment claude-flow --replicas=10 -n claude-flow
+
+# Autoscaling based on metrics
+kubectl autoscale deployment claude-flow \
+  --cpu-percent=70 \
+  --min=3 \
+  --max=10 \
+  -n claude-flow
+</code></pre>
+<h3>Database Connection Pooling</h3>
+<pre><code class="language-javascript">// config/database.js
+import { Pool } from 'pg';
+
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  max: 20,                    // Maximum pool size
+  idleTimeoutMillis: 30000,   // Close idle connections after 30s
+  connectionTimeoutMillis: 2000,
+  ssl: {
+    rejectUnauthorized: false
+  }
+});
+
+// Health check
+pool.on('error', (err) =&gt; {
+  console.error('Unexpected database error', err);
+  process.exit(-1);
+});
+
+export default pool;
+</code></pre>
+<h3>Redis Caching</h3>
+<pre><code class="language-javascript">// config/redis.js
+import Redis from 'ioredis';
+
+const redis = new Redis({
+  host: process.env.REDIS_HOST,
+  port: process.env.REDIS_PORT,
+  password: process.env.REDIS_PASSWORD,
+  retryStrategy(times) {
+    const delay = Math.min(times * 50, 2000);
+    return delay;
+  },
+  maxRetriesPerRequest: 3,
+  enableReadyCheck: true,
+  autoResendUnfulfilledCommands: true
+});
+
+// Cache helper
+export async function cacheGet(key) {
+  const cached = await redis.get(key);
+  return cached ? JSON.parse(cached) : null;
+}
+
+export async function cacheSet(key, value, ttl = 3600) {
+  await redis.setex(key, ttl, JSON.stringify(value));
+}
+
+export default redis;
+</code></pre>
+<hr>
+<h2>문제 해결</h2>
+<h3>일반적인 문제</h3>
+<h4>1. Pod가 시작되지 않음</h4>
+<pre><code class="language-bash"># Check pod status
+kubectl get pods -n claude-flow
+
+# View pod logs
+kubectl logs &lt;pod-name&gt; -n claude-flow
+
+# Describe pod for events
+kubectl describe pod &lt;pod-name&gt; -n claude-flow
+
+# Check resource limits
+kubectl top pods -n claude-flow
+</code></pre>
+<h4>2. Database 연결 실패</h4>
+<pre><code class="language-bash"># Test database connectivity
+kubectl run -it --rm debug \
+  --image=postgres:15-alpine \
+  --restart=Never \
+  -- psql -h postgres -U postgres -d claude_flow
+
+# Check database logs
+kubectl logs -n claude-flow -l app=postgres
+
+# Verify secrets
+kubectl get secret claude-flow-secrets -n claude-flow -o yaml
+</code></pre>
+<h4>3. 높은 메모리 사용량</h4>
+<pre><code class="language-bash"># Check memory usage
+kubectl top pods -n claude-flow
+
+# Analyze heap dump
+node --expose-gc --inspect app.js
+
+# Increase memory limit
+kubectl set resources deployment claude-flow \
+  --limits=memory=8Gi \
+  -n claude-flow
+</code></pre>
+<h4>4. Ingress 문제</h4>
+<pre><code class="language-bash"># Check ingress status
+kubectl get ingress -n claude-flow
+
+# View nginx logs
+kubectl logs -n ingress-nginx -l app=ingress-nginx
+
+# Test endpoint
+curl -v https://api.claude-flow.com/health
+</code></pre>
+<h3>Performance 최적화</h3>
+<pre><code class="language-javascript">// Enable clustering
+import cluster from 'cluster';
+import os from 'os';
+
+if (cluster.isPrimary) {
+  const numCPUs = os.cpus().length;
+
+  for (let i = 0; i &lt; numCPUs; i++) {
+    cluster.fork();
+  }
+
+  cluster.on('exit', (worker) =&gt; {
+    console.log(`Worker ${worker.process.pid} died`);
+    cluster.fork();
+  });
+} else {
+  // Start application
+  import('./app.js');
+}
+</code></pre>
+<h3>모니터링 Alert</h3>
+<pre><code class="language-yaml"># alerting-rules.yaml
+groups:
+  - name: claude-flow-alerts
+    interval: 30s
+    rules:
+      - alert: HighErrorRate
+        expr: rate(http_requests_total{status=~&quot;5..&quot;}[5m]) &gt; 0.05
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: &quot;High error rate detected&quot;
+          description: &quot;Error rate is  requests/sec&quot;
+
+      - alert: HighMemoryUsage
+        expr: container_memory_usage_bytes{pod=~&quot;claude-flow-.*&quot;} &gt; 3.5e9
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: &quot;High memory usage&quot;
+          description: &quot;Memory usage is B&quot;
+
+      - alert: PodCrashLooping
+        expr: rate(kube_pod_container_status_restarts_total[15m]) &gt; 0
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: &quot;Pod is crash looping&quot;
+          description: &quot;Pod  is restarting&quot;
+</code></pre>
+<hr>
+<h2>Cloud 플랫폼별 배포</h2>
+<h3>AWS EKS</h3>
+<pre><code class="language-bash"># Create EKS cluster
+eksctl create cluster \
+  --name claude-flow-prod \
+  --version 1.28 \
+  --region us-east-1 \
+  --nodegroup-name standard-workers \
+  --node-type t3.large \
+  --nodes 3 \
+  --nodes-min 3 \
+  --nodes-max 10 \
+  --managed
+
+# Configure kubectl
+aws eks update-kubeconfig --name claude-flow-prod --region us-east-1
+
+# Deploy application
+kubectl apply -k k8s/overlays/production
+</code></pre>
+<h3>GCP GKE</h3>
+<pre><code class="language-bash"># Create GKE cluster
+gcloud container clusters create claude-flow-prod \
+  --zone us-central1-a \
+  --num-nodes 3 \
+  --machine-type n1-standard-4 \
+  --enable-autoscaling \
+  --min-nodes 3 \
+  --max-nodes 10
+
+# Get credentials
+gcloud container clusters get-credentials claude-flow-prod \
+  --zone us-central1-a
+
+# Deploy application
+kubectl apply -k k8s/overlays/production
+</code></pre>
+<h3>Azure AKS</h3>
+<pre><code class="language-bash"># Create AKS cluster
+az aks create \
+  --resource-group claude-flow-rg \
+  --name claude-flow-prod \
+  --node-count 3 \
+  --node-vm-size Standard_D4s_v3 \
+  --enable-cluster-autoscaler \
+  --min-count 3 \
+  --max-count 10 \
+  --generate-ssh-keys
+
+# Get credentials
+az aks get-credentials \
+  --resource-group claude-flow-rg \
+  --name claude-flow-prod
+
+# Deploy application
+kubectl apply -k k8s/overlays/production
+</code></pre>
+<h3>Heroku</h3>
+<pre><code class="language-bash"># Create Heroku app
+heroku create claude-flow-prod
+
+# Set environment variables
+heroku config:set \
+  NODE_ENV=production \
+  ANTHROPIC_API_KEY=$ANTHROPIC_API_KEY \
+  DATABASE_URL=$DATABASE_URL
+
+# Add buildpacks
+heroku buildpacks:add heroku/nodejs
+
+# Deploy
+git push heroku main
+
+# Scale dynos
+heroku ps:scale web=3:standard-2x
+
+# View logs
+heroku logs --tail
+</code></pre>
+<hr>
+<h2>추가 리소스</h2>
+<ul>
+<li><a href="https://kubernetes.io/docs/">Kubernetes 문서</a></li>
+<li><a href="https://docs.docker.com/">Docker 문서</a></li>
+<li><a href="https://docs.github.com/en/actions">GitHub Actions 문서</a></li>
+<li><a href="https://prometheus.io/docs/">Prometheus 문서</a></li>
+<li><a href="https://grafana.com/docs/">Grafana 문서</a></li>
+</ul>
+<hr>
+<p><strong>문서 버전</strong>: 2.7.0
+<strong>마지막 업데이트</strong>: 2025-01-15</p>
+
+  </div>
+</article>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Hanson Kim. All rights reserved.</p>
+  </footer>
+</body>
+</html>

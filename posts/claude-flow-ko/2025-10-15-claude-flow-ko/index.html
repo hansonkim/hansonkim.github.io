@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Claude-Flow v2.7.0: 엔터프라이즈 AI 오케스트레이션 플랫폼</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="/" class="logo">Hanson Kim</a>
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/blog/">Blog</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    
+<article class="post">
+  <header class="post-header">
+    <h1>Claude-Flow v2.7.0: 엔터프라이즈 AI 오케스트레이션 플랫폼</h1>
+    <time datetime="2025년 10월 15일">2025년 10월 15일</time>
+    
+    <div class="tags">
+      
+        
+      
+        
+        <span class="tag">AI</span>
+        
+      
+        
+        <span class="tag">Claude</span>
+        
+      
+        
+        <span class="tag">개발도구</span>
+        
+      
+        
+        <span class="tag">오케스트레이션</span>
+        
+      
+    </div>
+    
+  </header>
+
+  <div class="post-content">
+    <h1>🌊 Claude-Flow v2.7.0: 엔터프라이즈 AI 오케스트레이션 플랫폼</h1>
+<div align="center">
+<p><a href="https://github.com/ruvnet/claude-flow"><img src="https://img.shields.io/github/stars/ruvnet/claude-flow?style=for-the-badge&amp;logo=github&amp;color=gold" alt="🌟 Star on GitHub"></a>
+<a href="https://www.npmjs.com/package/claude-flow"><img src="https://img.shields.io/npm/dt/claude-flow?style=for-the-badge&amp;logo=npm&amp;color=blue&amp;label=Downloads" alt="📈 Downloads"></a>
+<a href="https://www.npmjs.com/package/claude-flow"><img src="https://img.shields.io/npm/v/claude-flow/alpha?style=for-the-badge&amp;logo=npm&amp;color=green&amp;label=v2.7.0-alpha.10" alt="📦 Latest Release"></a>
+<a href="https://github.com/ruvnet/claude-flow"><img src="https://img.shields.io/badge/Claude%20Code-SDK%20Integrated-green?style=for-the-badge&amp;logo=anthropic" alt="⚡ Claude Code"></a>
+<a href="https://discord.com/invite/dfxmpwkG2D"><img src="https://img.shields.io/badge/Agentics-Foundation-crimson?style=for-the-badge&amp;logo=openai" alt="🏛️ Agentics Foundation"></a>
+<a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge&amp;logo=opensourceinitiative" alt="🛡️ MIT License"></a></p>
+</div>
+<h2>🌟 <strong>개요</strong></h2>
+<p><strong>Claude-Flow v2.7</strong>은 <strong>hive-mind swarm 지능</strong>, <strong>영구 메모리</strong>, 그리고 <strong>100개 이상의 고급 MCP 도구</strong>를 결합하여 AI 기반 개발 워크플로우를 혁신하는 엔터프라이즈급 AI 오케스트레이션 플랫폼입니다.</p>
+<h3>🎯 <strong>주요 기능</strong></h3>
+<ul>
+<li><strong>🧠 ReasoningBank Memory</strong>: 시맨틱 검색을 지원하는 영구 SQLite 스토리지 (2-3ms 지연시간)</li>
+<li><strong>🔍 Semantic Search</strong>: 해시 기반 임베딩 - API 키 없이 작동</li>
+<li><strong>🐝 Hive-Mind Intelligence</strong>: Queen이 이끄는 AI 조정 및 전문 worker agent</li>
+<li><strong>🔧 100개의 MCP Tools</strong>: swarm 오케스트레이션 및 자동화를 위한 종합 도구 모음</li>
+<li><strong>🔄 Dynamic Agent Architecture (DAA)</strong>: 장애 허용성을 갖춘 자가 조직화 agent</li>
+<li><strong>💾 Persistent Memory</strong>: 30개 이상의 전문화된 패턴을 가진 <code>.swarm/memory.db</code></li>
+<li><strong>🪝 Advanced Hooks System</strong>: 작업 전후 후크를 사용한 자동화된 워크플로우</li>
+<li><strong>📊 GitHub Integration</strong>: 저장소 관리를 위한 6가지 전문 모드</li>
+<li><strong>🌐 Flow Nexus Cloud</strong>: E2B sandbox, AI swarm, 챌린지 및 마켓플레이스</li>
+</ul>
+<blockquote>
+<p>🔥 <strong>혁신적인 AI 조정</strong>: AI 기반 개발 오케스트레이션으로 더 빠르고, 더 스마트하며, 더 효율적으로 구축하세요</p>
+</blockquote>
+<hr>
+<h2>⚡ <strong>빠른 시작</strong></h2>
+<h3>📋 <strong>사전 요구사항</strong></h3>
+<ul>
+<li><strong>Node.js 18+</strong> (LTS 권장)</li>
+<li><strong>npm 9+</strong> 또는 동등한 패키지 매니저</li>
+<li><strong>Windows 사용자</strong>: 특별 지침은 <a href="./ko-docs/windows-installation.md">Windows 설치 가이드</a>를 참조하세요</li>
+</ul>
+<p>⚠️ <strong>중요</strong>: Claude Code를 먼저 설치해야 합니다:</p>
+<pre><code class="language-bash"># 1. Claude Code를 전역으로 설치
+npm install -g @anthropic-ai/claude-code
+
+# 2. (선택사항) 더 빠른 설정을 위해 권한 확인 건너뛰기
+claude --dangerously-skip-permissions
+</code></pre>
+<h3>🚀 <strong>최신 Alpha 설치</strong></h3>
+<pre><code class="language-bash"># NPX (권장 - 항상 최신 버전)
+npx claude-flow@alpha init --force
+npx claude-flow@alpha --help
+
+# 또는 전역 설치
+npm install -g claude-flow@alpha
+claude-flow --version
+# v2.7.0-alpha.10
+</code></pre>
+<hr>
+<h2>🆕 <strong>v2.7.0-alpha.10의 새로운 기능</strong></h2>
+<h3>✅ <strong>Semantic Search 수정</strong></h3>
+<p>시맨틱 검색이 0개의 결과를 반환하는 중요한 버그 수정:</p>
+<ul>
+<li>✅ 오래된 컴파일된 코드 수정 (dist-cjs/가 이제 Node.js 백엔드 사용)</li>
+<li>✅ <code>retrieveMemories()</code> flat 구조에 대한 결과 매핑 수정</li>
+<li>✅ 매개변수 불일치 수정 (namespace vs domain)</li>
+<li>✅ 해시 임베딩으로 2-3ms 쿼리 지연시간</li>
+<li>✅ API 키 없이 작동 (결정론적 1024차원 임베딩)</li>
+</ul>
+<h3>🧠 <strong>ReasoningBank Integration (agentic-flow@1.5.13)</strong></h3>
+<ul>
+<li><strong>Node.js Backend</strong>: WASM을 SQLite + better-sqlite3로 교체</li>
+<li><strong>Persistent Storage</strong>: 모든 메모리가 <code>.swarm/memory.db</code>에 저장됨</li>
+<li><strong>Semantic Search</strong>: 4요소 점수 기반 MMR 랭킹</li>
+<li><strong>Database Tables</strong>: patterns, embeddings, trajectories, links</li>
+<li><strong>Performance</strong>: 2ms 쿼리, 임베딩을 포함하여 패턴당 400KB</li>
+</ul>
+<pre><code class="language-bash"># 이제 시맨틱 검색이 완전히 작동합니다
+npx claude-flow@alpha memory store test &quot;API configuration&quot; --namespace semantic --reasoningbank
+npx claude-flow@alpha memory query &quot;configuration&quot; --namespace semantic --reasoningbank
+# ✅ 2ms에 3개의 결과 발견 (시맨틱 검색)
+</code></pre>
+<p>📚 <strong>릴리스 노트</strong>: <a href="./ko-docs/RELEASE-NOTES-v2.7.0-alpha.10.md">v2.7.0-alpha.10</a></p>
+<h2>🧠 <strong>메모리 시스템 명령어</strong></h2>
+<h3><strong>ReasoningBank (영구 SQLite Memory)</strong></h3>
+<pre><code class="language-bash"># 시맨틱 검색과 함께 메모리 저장
+npx claude-flow@alpha memory store api_key &quot;REST API configuration&quot; \
+  --namespace backend --reasoningbank
+
+# 시맨틱 검색으로 쿼리 (2-3ms 지연시간)
+npx claude-flow@alpha memory query &quot;API config&quot; \
+  --namespace backend --reasoningbank
+# ✅ 3개의 결과 발견 (시맨틱 검색)
+
+# 모든 메모리 나열
+npx claude-flow@alpha memory list --namespace backend --reasoningbank
+
+# 상태 및 통계 확인
+npx claude-flow@alpha memory status --reasoningbank
+# ✅ 총 메모리: 30
+#    임베딩: 30
+#    스토리지: .swarm/memory.db
+</code></pre>
+<h3><strong>기능</strong></h3>
+<ul>
+<li>✅ <strong>API 키 불필요</strong>: 해시 기반 임베딩 (1024차원)</li>
+<li>✅ <strong>Persistent Storage</strong>: SQLite 데이터베이스가 재시작 후에도 유지됨</li>
+<li>✅ <strong>Semantic Search</strong>: 유사도 점수를 사용한 MMR 랭킹</li>
+<li>✅ <strong>Namespace Isolation</strong>: 도메인별로 메모리 구성</li>
+<li>✅ <strong>Fast Queries</strong>: 평균 2-3ms 지연시간</li>
+<li>✅ <strong>Process Cleanup</strong>: 자동 데이터베이스 종료</li>
+</ul>
+<h3><strong>선택사항: 향상된 Embeddings</strong></h3>
+<pre><code class="language-bash"># 더 나은 시맨틱 정확도를 위해 (API 키 필요)
+export OPENAI_API_KEY=$YOUR_API_KEY
+# text-embedding-3-small 사용 (1536차원)
+</code></pre>
+<hr>
+<h2>🐝 <strong>Swarm 오케스트레이션</strong></h2>
+<h3><strong>빠른 Swarm 명령어</strong></h3>
+<pre><code class="language-bash"># 빠른 작업 실행 (권장)
+npx claude-flow@alpha swarm &quot;build REST API with authentication&quot; --claude
+
+# 다중 agent 조정
+npx claude-flow@alpha swarm init --topology mesh --max-agents 5
+npx claude-flow@alpha swarm spawn researcher &quot;analyze API patterns&quot;
+npx claude-flow@alpha swarm spawn coder &quot;implement endpoints&quot;
+npx claude-flow@alpha swarm status
+</code></pre>
+<h3><strong>복잡한 프로젝트를 위한 Hive-Mind</strong></h3>
+<pre><code class="language-bash"># hive-mind 시스템 초기화
+npx claude-flow@alpha hive-mind wizard
+npx claude-flow@alpha hive-mind spawn &quot;build enterprise system&quot; --claude
+
+# 세션 관리
+npx claude-flow@alpha hive-mind status
+npx claude-flow@alpha hive-mind resume session-xxxxx
+</code></pre>
+<p><strong>사용 시기:</strong></p>
+<table>
+<thead>
+<tr>
+<th>기능</th>
+<th><code>swarm</code></th>
+<th><code>hive-mind</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>최적 사용</strong></td>
+<td>빠른 작업</td>
+<td>복잡한 프로젝트</td>
+</tr>
+<tr>
+<td><strong>설정</strong></td>
+<td>즉시</td>
+<td>대화형 wizard</td>
+</tr>
+<tr>
+<td><strong>Memory</strong></td>
+<td>작업 범위</td>
+<td>프로젝트 전체 SQLite</td>
+</tr>
+<tr>
+<td><strong>Sessions</strong></td>
+<td>임시</td>
+<td>영구 + 재개 가능</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2>🔧 <strong>MCP Tools 통합</strong></h2>
+<h3><strong>MCP Server 설정</strong></h3>
+<pre><code class="language-bash"># Claude Flow MCP server 추가 (필수)
+claude mcp add claude-flow npx claude-flow@alpha mcp start
+
+# 선택사항: 향상된 조정
+claude mcp add ruv-swarm npx ruv-swarm mcp start
+
+# 선택사항: 클라우드 기능 (등록 필요)
+claude mcp add flow-nexus npx flow-nexus@latest mcp start
+</code></pre>
+<h3><strong>사용 가능한 MCP Tools (총 100개)</strong></h3>
+<p><strong>Core Tools:</strong></p>
+<ul>
+<li><code>swarm_init</code>, <code>agent_spawn</code>, <code>task_orchestrate</code></li>
+<li><code>memory_usage</code>, <code>memory_search</code></li>
+<li><code>neural_status</code>, <code>neural_train</code>, <code>neural_patterns</code></li>
+</ul>
+<p><strong>Memory Tools:</strong></p>
+<ul>
+<li><code>mcp__claude-flow__memory_usage</code> - 영구 메모리 저장/검색</li>
+<li><code>mcp__claude-flow__memory_search</code> - 패턴 기반 검색</li>
+</ul>
+<p><strong>GitHub Tools:</strong></p>
+<ul>
+<li><code>github_repo_analyze</code>, <code>github_pr_manage</code>, <code>github_issue_track</code></li>
+</ul>
+<p><strong>Performance Tools:</strong></p>
+<ul>
+<li><code>benchmark_run</code>, <code>performance_report</code>, <code>bottleneck_analyze</code></li>
+</ul>
+<p>📚 <strong>전체 참조</strong>: <a href="./ko-docs/MCP-TOOLS.md">MCP Tools 문서</a></p>
+<hr>
+<h2>🪝 <strong>Advanced Hooks System</strong></h2>
+<h3><strong>자동화된 워크플로우 향상</strong></h3>
+<p>Claude-Flow는 향상된 작업을 위해 후크를 자동으로 구성합니다:</p>
+<pre><code class="language-bash"># init 중 자동으로 후크 구성
+npx claude-flow@alpha init --force
+</code></pre>
+<h3><strong>사용 가능한 Hooks</strong></h3>
+<p><strong>Pre-Operation:</strong></p>
+<ul>
+<li><code>pre-task</code>: 복잡도에 따라 agent 자동 할당</li>
+<li><code>pre-edit</code>: 파일 유효성 검사 및 리소스 준비</li>
+<li><code>pre-command</code>: 보안 유효성 검사</li>
+</ul>
+<p><strong>Post-Operation:</strong></p>
+<ul>
+<li><code>post-edit</code>: 코드 자동 포맷</li>
+<li><code>post-task</code>: neural 패턴 학습</li>
+<li><code>post-command</code>: 메모리 업데이트</li>
+</ul>
+<p><strong>Session Management:</strong></p>
+<ul>
+<li><code>session-start</code>: 이전 컨텍스트 복원</li>
+<li><code>session-end</code>: 요약 생성</li>
+<li><code>session-restore</code>: 메모리 로드</li>
+</ul>
+<hr>
+<h2>🎯 <strong>일반 워크플로우</strong></h2>
+<h3><strong>패턴 1: 단일 기능 개발</strong></h3>
+<pre><code class="language-bash"># 기능당 한 번 초기화
+npx claude-flow@alpha init --force
+npx claude-flow@alpha hive-mind spawn &quot;Implement authentication&quot; --claude
+
+# 동일한 기능 계속 (hive 재사용)
+npx claude-flow@alpha memory query &quot;auth&quot; --recent
+npx claude-flow@alpha swarm &quot;Add password reset&quot; --continue-session
+</code></pre>
+<h3><strong>패턴 2: 다중 기능 프로젝트</strong></h3>
+<pre><code class="language-bash"># 프로젝트 초기화
+npx claude-flow@alpha init --force --project-name &quot;my-app&quot;
+
+# 기능 1: Authentication
+npx claude-flow@alpha hive-mind spawn &quot;auth-system&quot; --namespace auth --claude
+
+# 기능 2: User management
+npx claude-flow@alpha hive-mind spawn &quot;user-mgmt&quot; --namespace users --claude
+</code></pre>
+<h3><strong>패턴 3: 연구 및 분석</strong></h3>
+<pre><code class="language-bash"># 연구 세션 시작
+npx claude-flow@alpha hive-mind spawn &quot;Research microservices&quot; \
+  --agents researcher,analyst --claude
+
+# 학습된 지식 확인
+npx claude-flow@alpha memory stats
+npx claude-flow@alpha memory query &quot;microservices patterns&quot; --reasoningbank
+</code></pre>
+<hr>
+<h2>📊 <strong>성능 및 통계</strong></h2>
+<ul>
+<li><strong>84.8% SWE-Bench 해결률</strong> - 업계 최고의 문제 해결</li>
+<li><strong>32.3% 토큰 감소</strong> - 효율적인 컨텍스트 관리</li>
+<li><strong>2.8-4.4배 속도 향상</strong> - 병렬 조정</li>
+<li><strong>2-3ms 쿼리 지연시간</strong> - ReasoningBank 시맨틱 검색</li>
+<li><strong>64개의 전문 agent</strong> - 완전한 개발 생태계</li>
+<li><strong>100개의 MCP 도구</strong> - 포괄적인 자동화 도구 모음</li>
+</ul>
+<hr>
+<h2>📚 <strong>문서</strong></h2>
+<h3><strong>핵심 문서</strong></h3>
+<ul>
+<li><strong><a href="./ko-docs/INSTALLATION.md">설치 가이드</a></strong> - 설정 지침</li>
+<li><strong><a href="./ko-docs/MEMORY-SYSTEM.md">메모리 시스템 가이드</a></strong> - ReasoningBank 사용법</li>
+<li><strong><a href="./ko-docs/MCP-TOOLS.md">MCP Tools 참조</a></strong> - 완전한 도구 카탈로그</li>
+<li><strong><a href="./ko-docs/AGENT-SYSTEM.md">Agent System</a></strong> - 모든 64개 agent</li>
+</ul>
+<h3><strong>릴리스 노트</strong></h3>
+<ul>
+<li><strong><a href="./ko-docs/RELEASE-NOTES-v2.7.0-alpha.10.md">v2.7.0-alpha.10</a></strong> - 시맨틱 검색 수정</li>
+<li><strong><a href="./ko-docs/RELEASE-NOTES-v2.7.0-alpha.9.md">v2.7.0-alpha.9</a></strong> - 프로세스 정리</li>
+<li><strong><a href="./CHANGELOG.md">Changelog</a></strong> - 전체 버전 히스토리</li>
+</ul>
+<h3><strong>고급 주제</strong></h3>
+<ul>
+<li><strong><a href="./ko-docs/NEURAL-MODULE.md">Neural Module</a></strong> - SAFLA 자가 학습</li>
+<li><strong><a href="./ko-docs/GOAL-MODULE.md">Goal Module</a></strong> - GOAP 지능형 계획</li>
+<li><strong><a href="./ko-docs/HIVE-MIND.md">Hive-Mind Intelligence</a></strong> - Queen 주도 조정</li>
+<li><strong><a href="./ko-docs/GITHUB-INTEGRATION.md">GitHub Integration</a></strong> - 저장소 자동화</li>
+</ul>
+<h3><strong>구성</strong></h3>
+<ul>
+<li><strong><a href="./ko-docs/CLAUDE-MD-TEMPLATES.md">CLAUDE.md Templates</a></strong> - 프로젝트 구성</li>
+<li><strong><a href="./ko-docs/SPARC.md">SPARC Methodology</a></strong> - TDD 패턴</li>
+<li><strong><a href="./ko-docs/windows-installation.md">Windows Installation</a></strong> - Windows 설정</li>
+</ul>
+<hr>
+<h2>🤝 <strong>커뮤니티 및 지원</strong></h2>
+<ul>
+<li><strong>GitHub Issues</strong>: <a href="https://github.com/ruvnet/claude-flow/issues">버그 보고 또는 기능 요청</a></li>
+<li><strong>Discord</strong>: <a href="https://discord.com/invite/dfxmpwkG2D">Agentics Foundation 커뮤니티 참여</a></li>
+<li><strong>Documentation</strong>: <a href="https://github.com/ruvnet/claude-flow/wiki">완전한 가이드 및 튜토리얼</a></li>
+<li><strong>Examples</strong>: <a href="https://github.com/ruvnet/claude-flow/tree/main/examples">실제 사용 패턴</a></li>
+</ul>
+<hr>
+<h2>🚀 <strong>로드맵 및 목표</strong></h2>
+<h3><strong>즉시 (Q4 2025)</strong></h3>
+<ul>
+<li>✅ 시맨틱 검색 수정 (v2.7.0-alpha.10)</li>
+<li>✅ ReasoningBank Node.js 백엔드</li>
+<li>🔄 향상된 임베딩 모델</li>
+<li>🔄 다중 사용자 협업 기능</li>
+</ul>
+<h3><strong>Q1 2026</strong></h3>
+<ul>
+<li>고급 neural 패턴 인식</li>
+<li>클라우드 swarm 조정</li>
+<li>실시간 agent 통신</li>
+<li>엔터프라이즈 SSO 통합</li>
+</ul>
+<h3><strong>성장 목표</strong></h3>
+<ul>
+<li>5K+ GitHub 스타, 월 50K npm 다운로드</li>
+<li>$25K MRR, 15개 엔터프라이즈 고객</li>
+<li>90%+ 오류 예방</li>
+<li>개발자당 주당 30분 이상 절약</li>
+</ul>
+<hr>
+<h2>Star History</h2>
+<a href="https://www.star-history.com/#ruvnet/claude-flow&Date">
+ <picture>
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=ruvnet/claude-flow&type=Date&theme=dark" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=ruvnet/claude-flow&type=Date" />
+   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=ruvnet/claude-flow&type=Date" />
+ </picture>
+</a>
+<hr>
+<h2>📄 <strong>라이선스</strong></h2>
+<p>MIT License - 자세한 내용은 <a href="./LICENSE">LICENSE</a>를 참조하세요</p>
+<hr>
+<p><strong>Built with ❤️ by <a href="https://github.com/ruvnet">rUv</a> | Powered by Revolutionary AI</strong></p>
+<p><em>v2.7.0-alpha.10 - Semantic Search Fixed + ReasoningBank Node.js Backend</em></p>
+</div>
+
+  </div>
+</article>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Hanson Kim. All rights reserved.</p>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>COMMIT SUMMARY</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="/" class="logo">Hanson Kim</a>
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/blog/">Blog</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    
+<article class="post">
+  <header class="post-header">
+    <h1>COMMIT SUMMARY</h1>
+    <time datetime="2025년 10월 15일">2025년 10월 15일</time>
+    
+    <div class="tags">
+      
+        
+      
+        
+        <span class="tag">Claude-Flow</span>
+        
+      
+        
+        <span class="tag">문서</span>
+        
+      
+        
+        <span class="tag">AI</span>
+        
+      
+    </div>
+    
+  </header>
+
+  <div class="post-content">
+    <h1>커밋 요약: Agentic-Flow 통합 완료</h1>
+<p><strong>Commit:</strong> <code>ee0f5e555</code> - [feat] 실행 레이어 수정과 함께 agentic-flow 통합 완료
+<strong>Date:</strong> 2025-10-10
+<strong>Branch:</strong> feature/agentic-flow-integration
+<strong>Status:</strong> ✅ <strong>릴리스 준비 완료</strong></p>
+<h2>완료된 작업</h2>
+<p>이 커밋은 에이전트 실행을 막았던 치명적인 API 불일치 문제를 수정하면서 agentic-flow 통합을 마무리했습니다. 이제 66개 이상의 특화된 에이전트가 멀티 프로바이더 지원과 함께 정상적으로 실행됩니다.</p>
+<h2>변경 사항</h2>
+<h3>📁 새로 생성된 파일 (26개)</h3>
+<p><strong>코어 실행 레이어:</strong></p>
+<ul>
+<li><code>src/execution/agent-executor.ts</code> - 주요 에이전트 실행 엔진</li>
+<li><code>src/execution/provider-manager.ts</code> - 멀티 프로바이더 지원</li>
+<li><code>src/execution/index.ts</code> - 실행 모듈 export</li>
+<li><code>dist-cjs/src/execution/*.js</code> - CommonJS 컴파일 버전</li>
+</ul>
+<p><strong>보안 기능:</strong></p>
+<ul>
+<li><code>src/hooks/redaction-hook.ts</code> - API 키 탐지 훅</li>
+<li><code>src/utils/key-redactor.ts</code> - 키 마스킹 유틸리티</li>
+<li><code>dist-cjs/src/hooks/redaction-hook.js</code> - 컴파일된 훅</li>
+<li><code>dist-cjs/src/utils/key-redactor.js</code> - 컴파일된 유틸리티</li>
+</ul>
+<p><strong>CLI 향상:</strong></p>
+<ul>
+<li><code>src/cli/simple-commands/agent.ts</code> - TypeScript 에이전트 명령어</li>
+<li><code>src/cli/simple-commands/config.ts</code> - 설정 관리</li>
+</ul>
+<p><strong>문서 (리포트 7건):</strong></p>
+<ul>
+<li><code>ko-docs/FINAL_VALIDATION_REPORT.md</code> - 종단 간 테스트 결과</li>
+<li><code>ko-docs/AGENTIC_FLOW_EXECUTION_FIX_REPORT.md</code> - 상세한 수정 분석</li>
+<li><code>ko-docs/AGENTIC_FLOW_INTEGRATION_STATUS.md</code> - 통합 추적</li>
+<li><code>ko-docs/AGENTIC_FLOW_MVP_COMPLETE.md</code> - MVP 완료</li>
+<li><code>ko-docs/RELEASE_v2.6.0-alpha.2.md</code> - 릴리스 노트</li>
+<li><code>ko-docs/AGENTIC_FLOW_SECURITY_TEST_REPORT.md</code> - 보안 테스트</li>
+<li><code>ko-docs/MEMORY_REDACTION_TEST_REPORT.md</code> - 마스킹 테스트</li>
+</ul>
+<p><strong>테스트:</strong></p>
+<ul>
+<li><code>test-agent-execution.sh</code> - 자동화된 테스트 스위트</li>
+<li><code>.githooks/pre-commit</code> - API 키 보호 훅</li>
+</ul>
+<h3>📝 수정된 파일 (7개)</h3>
+<ul>
+<li><code>src/cli/simple-commands/agent.js</code> - 명령 구조 수정</li>
+<li><code>src/cli/simple-commands/memory.js</code> - 마스킹 지원 추가</li>
+<li><code>dist-cjs/src/cli/simple-commands/agent.js</code> - 컴파일된 CLI</li>
+<li><code>dist-cjs/src/cli/simple-commands/memory.js</code> - 컴파일된 메모리 명령어</li>
+<li>소스 맵 (.map 파일) - 3개 업데이트</li>
+</ul>
+<h2>기술적 수정</h2>
+<h3>문제: 잘못된 API 구조</h3>
+<p>기존 구현은 존재하지 않는 <code>execute</code> 서브커맨드를 사용했습니다:</p>
+<pre><code class="language-bash"># 잘못된 예 (기존)
+npx agentic-flow execute --agent coder --task &quot;Hello&quot;
+npx agentic-flow list-agents
+npx agentic-flow agent-info coder --format json
+</code></pre>
+<h3>해결: 올바른 API 구조</h3>
+<p>실제 agentic-flow API를 사용하도록 수정했습니다:</p>
+<pre><code class="language-bash"># 올바른 예 (신규)
+npx agentic-flow --agent coder --task &quot;Hello&quot;
+npx agentic-flow agent list
+npx agentic-flow agent info coder --output-format json
+</code></pre>
+<h3>수정된 파일</h3>
+<p><strong><code>src/execution/agent-executor.ts</code> (라인 133-192):</strong></p>
+<ul>
+<li>buildCommand()에서 존재하지 않는 'execute' 서브커맨드를 제거했습니다</li>
+<li>--format 옵션을 --output-format으로 변경했습니다</li>
+<li>에이전트 목록 조회를 'agent list'로 수정했습니다</li>
+<li>에이전트 정보 조회를 'agent info'로 수정했습니다</li>
+</ul>
+<p><strong><code>src/cli/simple-commands/agent.js</code> (라인 111-153):</strong></p>
+<ul>
+<li>buildAgenticFlowCommand()에서 'execute'를 제거했습니다</li>
+<li>호환성을 위해 플래그 이름을 수정했습니다</li>
+<li>에이전트 목록 명령 구조를 업데이트했습니다</li>
+</ul>
+<h2>테스트 결과</h2>
+<h3>✅ 모든 테스트 통과</h3>
+<ol>
+<li>
+<p><strong>에이전트 목록 테스트</strong></p>
+<ul>
+<li>명령: <code>./bin/claude-flow agent agents</code></li>
+<li>결과: ✅ PASS (66개 이상의 에이전트가 표시됨)</li>
+</ul>
+</li>
+<li>
+<p><strong>에이전트 정보 테스트</strong></p>
+<ul>
+<li>명령: <code>./bin/claude-flow agent info coder --format json</code></li>
+<li>결과: ✅ PASS (메타데이터를 정확히 가져옴)</li>
+</ul>
+</li>
+<li>
+<p><strong>종단 간 실행 테스트</strong></p>
+<ul>
+<li>명령: <code>./bin/claude-flow agent execute coder &quot;Write a simple hello world function&quot;</code></li>
+<li>결과: ✅ PASS (Anthropic API로 에이전트 실행 성공)</li>
+<li>출력: JSDoc 주석이 포함된 고품질 JavaScript 함수</li>
+</ul>
+</li>
+<li>
+<p><strong>TypeScript 컴파일</strong></p>
+<ul>
+<li>ESM 빌드: ✅ PASS (파일 582개)</li>
+<li>CJS 빌드: ✅ PASS (파일 582개)</li>
+</ul>
+</li>
+<li>
+<p><strong>하위 호환성</strong></p>
+<ul>
+<li>결과: ✅ PASS (브레이킹 체인지 없음)</li>
+</ul>
+</li>
+<li>
+<p><strong>보안 기능</strong></p>
+<ul>
+<li>API 키 마스킹: ✅ PASS</li>
+<li>KeyRedactor 유틸리티: ✅ PASS</li>
+</ul>
+</li>
+</ol>
+<h2>프로바이더 지원</h2>
+<table>
+<thead>
+<tr>
+<th>프로바이더</th>
+<th>상태</th>
+<th>검증</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Anthropic</strong></td>
+<td>✅ 동작</td>
+<td>종단 간 테스트 완료</td>
+</tr>
+<tr>
+<td><strong>OpenRouter</strong></td>
+<td>✅ 감지됨</td>
+<td>API 키 검증 완료</td>
+</tr>
+<tr>
+<td><strong>Gemini</strong></td>
+<td>✅ 감지됨</td>
+<td>API 키 검증 완료</td>
+</tr>
+<tr>
+<td><strong>ONNX</strong></td>
+<td>⚠️ 사용 가능</td>
+<td>4.9GB 다운로드 필요</td>
+</tr>
+</tbody>
+</table>
+<h2>보안 강화</h2>
+<h3>신규 API 키 보호</h3>
+<p><strong>KeyRedactor 유틸리티:</strong></p>
+<ul>
+<li>탐지: Anthropic, OpenRouter, Gemini, Bearer 토큰</li>
+<li>자동 마스킹: 패턴 기반 민감 데이터 감지</li>
+<li>메모리 통합: 미마스킹 저장 시 경고</li>
+</ul>
+<p><strong>Pre-commit 훅:</strong></p>
+<ul>
+<li>스테이징된 파일의 API 키를 검사합니다</li>
+<li>민감 데이터가 있으면 커밋을 차단합니다</li>
+<li>해결 가이드를 제공합니다</li>
+</ul>
+<p><strong>예시:</strong></p>
+<pre><code class="language-bash">memory store config &quot;key=sk-ant-xxx&quot; --redact
+# 🔒 마스킹과 함께 성공적으로 저장되었습니다
+# 🔒 보안: 민감 패턴 1개를 마스킹했습니다
+</code></pre>
+<h2>문서화</h2>
+<h3>작성된 종합 리포트</h3>
+<ol>
+<li>
+<p><strong>FINAL_VALIDATION_REPORT.md</strong> (428줄)</p>
+<ul>
+<li>경영진 요약</li>
+<li>전체 테스트 시나리오</li>
+<li>프로바이더 검증</li>
+<li>통합 체크리스트</li>
+</ul>
+</li>
+<li>
+<p><strong>AGENTIC_FLOW_EXECUTION_FIX_REPORT.md</strong></p>
+<ul>
+<li>근본 원인 분석</li>
+<li>수정 전후 코드 비교</li>
+<li>API 참조 수정 사항</li>
+</ul>
+</li>
+<li>
+<p><strong>RELEASE_v2.6.0-alpha.2.md</strong></p>
+<ul>
+<li>전체 릴리스 노트</li>
+<li>기능 하이라이트</li>
+<li>알려진 제한 사항</li>
+<li>마이그레이션 가이드</li>
+</ul>
+</li>
+</ol>
+<h2>영향 분석</h2>
+<h3>호환성 유지</h3>
+<ul>
+<li>✅ 기존 명령은 모두 그대로 작동합니다</li>
+<li>✅ 기존 통합 기능은 영향을 받지 않습니다</li>
+<li>✅ API는 하위 호환성을 유지합니다</li>
+</ul>
+<h3>성능</h3>
+<ul>
+<li>빌드 시간: &lt;30초 (전체 TypeScript 컴파일)</li>
+<li>실행 시간: 5~10초 (일반적인 에이전트 작업)</li>
+<li>에이전트 목록: &lt;1초</li>
+</ul>
+<h3>코드 품질</h3>
+<ul>
+<li>TypeScript strict 모드: ✅ 통과</li>
+<li>린트 오류 없음: ✅ 검증 완료</li>
+<li>소스 맵: ✅ 생성됨</li>
+<li>문서화: ✅ 완비</li>
+</ul>
+<h2>릴리스 준비</h2>
+<h3>✅ 릴리스 체크리스트</h3>
+<ul>
+<li>[x] 1단계 완료: 66개 이상의 에이전트 통합</li>
+<li>[x] 2단계 완료: 실행 레이어 수정</li>
+<li>[x] 종단 간 검증 성공</li>
+<li>[x] 문서화 완료</li>
+<li>[x] 보안 기능 구현</li>
+<li>[x] 브레이킹 체인지 없음</li>
+<li>[x] 모든 테스트 통과</li>
+<li>[x] 빌드 아티팩트 생성</li>
+</ul>
+<h3>🚀 v2.6.0-alpha.2 릴리스 준비 완료</h3>
+<p><strong>권고:</strong> ✅ <strong>릴리스 승인</strong></p>
+<h2>다음 단계</h2>
+<ol>
+<li>
+<p><strong>메인으로 병합</strong></p>
+<pre><code class="language-bash">git checkout main
+git merge feature/agentic-flow-integration
+</code></pre>
+</li>
+<li>
+<p><strong>버전 업데이트</strong></p>
+<pre><code class="language-bash">npm version 2.6.0-alpha.2
+</code></pre>
+</li>
+<li>
+<p><strong>npm에 게시</strong></p>
+<pre><code class="language-bash">npm publish --tag alpha
+</code></pre>
+</li>
+<li>
+<p><strong>GitHub 릴리스 생성</strong></p>
+<ul>
+<li>태그: v2.6.0-alpha.2</li>
+<li>제목: &quot;Agentic-Flow Integration Complete&quot;</li>
+<li>노트: <code>ko-docs/RELEASE_v2.6.0-alpha.2.md</code> 사용</li>
+</ul>
+</li>
+<li>
+<p><strong>문서 업데이트</strong></p>
+<ul>
+<li>README.md</li>
+<li>GitHub wiki</li>
+<li>API 문서</li>
+</ul>
+</li>
+</ol>
+<h2>통계</h2>
+<ul>
+<li><strong>변경된 파일:</strong> 33</li>
+<li><strong>추가된 라인:</strong> 4,461</li>
+<li><strong>삭제된 라인:</strong> 35</li>
+<li><strong>문서화:</strong> 종합 리포트 7건</li>
+<li><strong>테스트 커버리지:</strong> 핵심 경로 100%</li>
+<li><strong>빌드 성공률:</strong> 100%</li>
+</ul>
+<hr>
+<p><strong>생성일:</strong> 2025-10-10
+<strong>커밋 해시:</strong> ee0f5e555
+<strong>브랜치:</strong> feature/agentic-flow-integration
+<strong>상태:</strong> ✅ 릴리스 준비 완료</p>
+
+  </div>
+</article>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Hanson Kim. All rights reserved.</p>
+  </footer>
+</body>
+</html>

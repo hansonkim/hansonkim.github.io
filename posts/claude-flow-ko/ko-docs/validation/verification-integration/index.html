@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Verification Integration</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="/" class="logo">Hanson Kim</a>
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/blog/">Blog</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    
+<article class="post">
+  <header class="post-header">
+    <h1>Verification Integration</h1>
+    <time datetime="2025년 10월 15일">2025년 10월 15일</time>
+    
+    <div class="tags">
+      
+        
+      
+        
+        <span class="tag">Claude-Flow</span>
+        
+      
+        
+        <span class="tag">문서</span>
+        
+      
+        
+        <span class="tag">AI</span>
+        
+      
+    </div>
+    
+  </header>
+
+  <div class="post-content">
+    <h1>검증 시스템 통합 가이드</h1>
+<h2>개요</h2>
+<p>검증 시스템은 에이전트 작업과 작업 실행을 실시간으로 검증합니다. 이 시스템은 swarm 명령, 비대화형 모드, 학습 시스템과 통합됩니다.</p>
+<h2>실제 동작 방식</h2>
+<h3>1. <strong>작업 전 검증</strong></h3>
+<p>작업을 실행하기 전에 시스템은 다음을 확인합니다:</p>
+<ul>
+<li>Git 저장소 상태(정상/변경됨)</li>
+<li>의존성이 설치되어 있는지</li>
+<li>환경이 준비되어 있는지</li>
+</ul>
+<h3>2. <strong>작업 후 검증</strong></h3>
+<p>작업이 완료된 후 다음을 검증합니다:</p>
+<ul>
+<li>코드가 컴파일되는지(TypeScript/JavaScript)</li>
+<li>테스트가 통과하는지</li>
+<li>Lint가 성공하는지</li>
+<li>문서가 존재하는지(architect 에이전트의 경우)</li>
+</ul>
+<h3>3. <strong>자동 롤백</strong></h3>
+<p>검증이 실패하고 롤백이 활성화된 경우:</p>
+<ul>
+<li>마지막 Git 커밋으로 되돌립니다</li>
+<li>검증 기록을 유지합니다</li>
+<li>실패 데이터를 학습 시스템에 제공합니다</li>
+</ul>
+<h2>명령과의 통합</h2>
+<h3>검증이 포함된 Swarm 명령</h3>
+<pre><code class="language-bash"># swarm 실행에서 검증을 활성화합니다
+export VERIFICATION_MODE=strict
+export VERIFICATION_ROLLBACK=true
+
+# 검증 훅을 포함해 swarm을 실행합니다
+claude-flow swarm &quot;Build REST API&quot; --verify
+
+# swarm은 다음을 수행합니다:
+# 1. 사전 작업 검증을 실행합니다
+# 2. 목표를 수행합니다
+# 3. 사후 작업 검증을 실행합니다
+# 4. 검증이 실패하면 롤백합니다
+</code></pre>
+<h3>비대화형 모드에서의 검증</h3>
+<pre><code class="language-bash"># 검증이 포함된 비대화형 실행
+claude-flow swarm &quot;Build feature&quot; \
+  -p \
+  --output-format stream-json \
+  --verify \
+  --threshold 0.95
+
+# 검증 결과는 JSON 출력에 포함됩니다
+</code></pre>
+<h3>수동 검증</h3>
+<pre><code class="language-bash"># 사전 작업 점검
+node src/cli/simple-commands/verification-hooks.js pre task-123 coder
+
+# 사후 작업 점검
+node src/cli/simple-commands/verification-hooks.js post task-123 coder
+
+# 학습 시스템으로 전달
+node src/cli/simple-commands/verification-hooks.js train task-123 coder
+
+# 상태 확인
+node src/cli/simple-commands/verification-hooks.js status
+</code></pre>
+<h2>학습 시스템과의 통합</h2>
+<p>검증 결과는 자동으로 학습 시스템에 전달됩니다:</p>
+<pre><code class="language-bash"># 학습 데이터를 확인합니다
+cat .claude-flow/training/verification-data.jsonl
+
+# 샘플 출력:
+{&quot;taskId&quot;:&quot;task-123&quot;,&quot;agentType&quot;:&quot;coder&quot;,&quot;preScore&quot;:1,&quot;postScore&quot;:0.75,&quot;success&quot;:false,&quot;timestamp&quot;:&quot;2025-01-12T15:00:00Z&quot;}
+</code></pre>
+<h2>검증 점수</h2>
+<table>
+<thead>
+<tr>
+<th>에이전트 유형</th>
+<th>수행하는 점검</th>
+<th>임계값</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>coder</td>
+<td>typecheck, tests, lint</td>
+<td>0.85</td>
+</tr>
+<tr>
+<td>researcher</td>
+<td>output completeness</td>
+<td>0.85</td>
+</tr>
+<tr>
+<td>tester</td>
+<td>coverage threshold</td>
+<td>0.85</td>
+</tr>
+<tr>
+<td>architect</td>
+<td>documentation exists</td>
+<td>0.85</td>
+</tr>
+</tbody>
+</table>
+<h2>환경 변수</h2>
+<pre><code class="language-bash"># 검증 모드(strict/moderate/development)를 설정합니다
+export VERIFICATION_MODE=strict
+
+# 실패 시 자동 롤백을 활성화합니다
+export VERIFICATION_ROLLBACK=true
+
+# 사용자 정의 임계값(0.0-1.0)
+export VERIFICATION_THRESHOLD=0.95
+</code></pre>
+<h2>실제 예시: coder 에이전트 검증</h2>
+<pre><code class="language-bash"># 1. 검증을 초기화합니다
+./claude-flow verify init strict
+
+# 2. 검증과 함께 coder 작업을 실행합니다
+./claude-flow swarm &quot;Implement user authentication&quot; --verify
+
+# 출력:
+🔍 사전 작업 검증: swarm-123 (coder)
+  ✅ git-status: 1.00
+  ✅ npm-deps: 1.00
+✅ 사전 작업 검증 통과(1.00)
+
+[... 작업 실행 ...]
+
+🔍 사후 작업 검증: swarm-123 (coder)
+  ✅ typecheck: 1.00
+  ❌ tests: 0.40
+  ✅ lint: 0.80
+❌ 사후 작업 검증 실패(0.73 &lt; 0.95)
+🔄 롤백을 시도합니다...
+✅ 롤백 완료
+</code></pre>
+<h2>검증 메모리</h2>
+<p>검증 결과는 <code>.swarm/verification-memory.json</code>에 저장됩니다:</p>
+<pre><code class="language-json">{
+  &quot;history&quot;: [
+    {
+      &quot;taskId&quot;: &quot;swarm-123&quot;,
+      &quot;phase&quot;: &quot;post&quot;,
+      &quot;passed&quot;: false,
+      &quot;score&quot;: 0.73,
+      &quot;checks&quot;: [
+        {&quot;name&quot;: &quot;typecheck&quot;, &quot;passed&quot;: true, &quot;score&quot;: 1.0},
+        {&quot;name&quot;: &quot;tests&quot;, &quot;passed&quot;: false, &quot;score&quot;: 0.4},
+        {&quot;name&quot;: &quot;lint&quot;, &quot;passed&quot;: true, &quot;score&quot;: 0.8}
+      ],
+      &quot;agentType&quot;: &quot;coder&quot;,
+      &quot;timestamp&quot;: &quot;2025-01-12T15:30:00Z&quot;
+    }
+  ],
+  &quot;tasks&quot;: {
+    &quot;swarm-123&quot;: {
+      &quot;pre&quot;: {&quot;passed&quot;: true, &quot;score&quot;: 1.0},
+      &quot;post&quot;: {&quot;passed&quot;: false, &quot;score&quot;: 0.73}
+    }
+  }
+}
+</code></pre>
+<h2>현재 한계</h2>
+<ol>
+<li><strong>아직 완전하게 통합되지 않음</strong>: 검증 훅은 존재하지만 아직 모든 명령에서 자동으로 호출되지는 않습니다</li>
+<li><strong>기본 점검</strong>: 현재는 간단한 npm 스크립트만 실행하며, 심층 코드 분석은 수행하지 않습니다</li>
+<li><strong>수동 설정 필요</strong>: 환경 변수를 수동으로 설정해야 합니다</li>
+<li><strong>제한된 에이전트 유형</strong>: 네 가지 에이전트 유형만 전용 검증 로직을 사용합니다</li>
+</ol>
+<h2>향후 개선 사항</h2>
+<ol>
+<li><strong>깊은 통합</strong>: 모든 에이전트 작업에 대한 자동 검증</li>
+<li><strong>스마트 롤백</strong>: 실패한 변경 사항만 선별적으로 롤백</li>
+<li><strong>학습 시스템 연계</strong>: 검증 기록을 활용해 에이전트 선택을 개선</li>
+<li><strong>맞춤형 점검</strong>: 프로젝트별 검증 규칙을 지원</li>
+<li><strong>실시간 모니터링</strong>: 검증 지표를 보여주는 대시보드</li>
+</ol>
+<h2>지금 검증을 사용하는 방법</h2>
+<p>아직 완전하게 통합되지는 않았지만, 다음과 같은 방식으로 지금 바로 검증을 사용할 수 있습니다:</p>
+<ol>
+<li>작업 전후에 검증 훅을 수동으로 실행합니다</li>
+<li>환경 변수를 설정하여 자동 점검을 활성화합니다</li>
+<li>swarm 명령에서 <code>--verify</code> 플래그를 사용합니다(구현된 경우)</li>
+<li><code>truth</code> 명령으로 검증 기록을 확인합니다</li>
+</ol>
+<p>검증 시스템은 아직 완전히 자동화되지는 않았지만, AI가 생성한 코드의 품질을 보장하기 위한 기반을 제공합니다.</p>
+
+  </div>
+</article>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Hanson Kim. All rights reserved.</p>
+  </footer>
+</body>
+</html>

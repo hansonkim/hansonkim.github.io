@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stream Chain Command</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="/" class="logo">Hanson Kim</a>
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/blog/">Blog</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    
+<article class="post">
+  <header class="post-header">
+    <h1>Stream Chain Command</h1>
+    <time datetime="2025년 10월 15일">2025년 10월 15일</time>
+    
+    <div class="tags">
+      
+        
+      
+        
+        <span class="tag">Claude-Flow</span>
+        
+      
+        
+        <span class="tag">문서</span>
+        
+      
+        
+        <span class="tag">AI</span>
+        
+      
+    </div>
+    
+  </header>
+
+  <div class="post-content">
+    <h1>Stream Chain 명령</h1>
+<h2>개요</h2>
+<p><code>stream-chain</code> 명령은 stream-json 형식을 통해 여러 Claude 인스턴스를 연결하여 문맥을 끊김 없이 유지하는 강력한 다중 에이전트 워크플로우를 구성합니다. 이 명령은 포그라운드와 백그라운드 실행을 모두 지원하므로, 다른 작업을 진행하면서도 복잡한 체인을 실행할 수 있습니다.</p>
+<h2>설치</h2>
+<p>stream-chain 명령은 Claude Flow에 포함되어 있으며 명령 레지스트리에 등록되어 있습니다:</p>
+<pre><code class="language-bash"># stream-chain 명령에 접근합니다
+npx claude-flow stream-chain help
+
+# 로컬 CLI로 실행합니다
+./claude-flow stream-chain help
+</code></pre>
+<h2>명령 구조</h2>
+<p>stream-chain 명령은 다음과 같은 구조를 따릅니다:</p>
+<pre><code class="language-bash">stream-chain &lt;subcommand&gt; [options]
+</code></pre>
+<h2>하위 명령</h2>
+<h3><code>run</code> - 사용자 지정 Stream Chain 실행</h3>
+<p>연결된 Claude 인스턴스를 통해 일련의 프롬프트를 실행합니다:</p>
+<pre><code class="language-bash">stream-chain run &quot;prompt1&quot; &quot;prompt2&quot; &quot;prompt3&quot; [...]
+</code></pre>
+<p><strong>요구 사항:</strong></p>
+<ul>
+<li>최소 두 개의 프롬프트가 필요합니다</li>
+<li>각 프롬프트는 순차적으로 실행됩니다</li>
+<li>각 단계의 출력은 다음 단계의 입력으로 전달됩니다</li>
+</ul>
+<p><strong>예시:</strong></p>
+<pre><code class="language-bash">./claude-flow stream-chain run \
+  &quot;Analyze the user authentication system&quot; \
+  &quot;Identify security vulnerabilities&quot; \
+  &quot;Generate fixes for the vulnerabilities&quot;
+</code></pre>
+<h3><code>demo</code> - 데모 체인 실행</h3>
+<p>미리 구성된 3단계 데모를 실행합니다:</p>
+<pre><code class="language-bash">stream-chain demo [options]
+</code></pre>
+<p>데모 체인은 다음을 수행합니다:</p>
+<ol>
+<li>todo 리스트 애플리케이션 요구 사항 분석</li>
+<li>데이터 모델 및 API 엔드포인트 설계</li>
+<li>핵심 기능 구현</li>
+</ol>
+<p><strong>예시:</strong></p>
+<pre><code class="language-bash"># 포그라운드에서 데모를 실행합니다
+./claude-flow stream-chain demo
+
+# 백그라운드에서 데모를 실행합니다
+./claude-flow stream-chain demo --background
+</code></pre>
+<h3><code>pipeline</code> - 사전 정의된 파이프라인 실행</h3>
+<p>일반적인 개발 작업을 위한 특화 파이프라인을 실행합니다:</p>
+<pre><code class="language-bash">stream-chain pipeline &lt;type&gt; [options]
+</code></pre>
+<p><strong>사용 가능한 파이프라인 유형:</strong></p>
+<table>
+<thead>
+<tr>
+<th>파이프라인</th>
+<th>설명</th>
+<th>단계</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>analysis</code></td>
+<td>코드 분석 파이프라인</td>
+<td>1. 코드베이스를 읽고 분석합니다<br>2. 개선 사항을 식별합니다<br>3. 보고서를 생성합니다</td>
+</tr>
+<tr>
+<td><code>refactor</code></td>
+<td>리팩터링 파이프라인</td>
+<td>1. 리팩터링 기회를 분석합니다<br>2. 리팩터링 계획을 수립합니다<br>3. 변경 사항을 적용합니다</td>
+</tr>
+<tr>
+<td><code>test</code></td>
+<td>테스트 생성 파이프라인</td>
+<td>1. 코드 커버리지를 분석합니다<br>2. 누락된 테스트를 식별합니다<br>3. 테스트를 생성합니다</td>
+</tr>
+<tr>
+<td><code>optimize</code></td>
+<td>성능 최적화</td>
+<td>1. 성능을 프로파일링합니다<br>2. 병목을 식별합니다<br>3. 최적화를 적용합니다</td>
+</tr>
+</tbody>
+</table>
+<p><strong>예시:</strong></p>
+<pre><code class="language-bash"># 분석 파이프라인을 실행합니다
+./claude-flow stream-chain pipeline analysis
+
+# 백그라운드에서 리팩터링 파이프라인을 실행합니다
+./claude-flow stream-chain pipeline refactor --bg
+
+# 자세한 출력과 함께 테스트 생성을 실행합니다
+./claude-flow stream-chain pipeline test --verbose
+</code></pre>
+<h3><code>test</code> - 스트림 연결 테스트</h3>
+<p>스트림 체인이 올바르게 동작하는지 확인합니다:</p>
+<pre><code class="language-bash">stream-chain test [options]
+</code></pre>
+<p>두 가지 테스트를 수행합니다:</p>
+<ol>
+<li>단순 에코 테스트</li>
+<li>스트림 체인 테스트</li>
+</ol>
+<p><strong>예시:</strong></p>
+<pre><code class="language-bash">./claude-flow stream-chain test --verbose
+</code></pre>
+<h3><code>monitor</code> - 백그라운드 체인 모니터링</h3>
+<p>모든 백그라운드 stream chain과 상태를 확인합니다:</p>
+<pre><code class="language-bash">stream-chain monitor
+</code></pre>
+<p><strong>출력 항목:</strong></p>
+<ul>
+<li>프로세스 ID(예: <code>stream_1234567890</code>)</li>
+<li>원본 명령</li>
+<li>시스템 PID</li>
+<li>시작 시간</li>
+<li>현재 상태 (🟢 Running / 🔴 Stopped)</li>
+</ul>
+<p><strong>예시:</strong></p>
+<pre><code class="language-bash">$ ./claude-flow stream-chain monitor
+
+📊 Background Stream Chains
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🔗 stream_1755021020133
+   Command: npx claude-flow stream-chain demo
+   PID: 366567
+   Started: 2025-08-12T17:50:20.135Z
+   Status: 🟢 Running
+</code></pre>
+<h3><code>kill</code> - 백그라운드 체인 종료</h3>
+<p>특정 백그라운드 stream chain을 중지합니다:</p>
+<pre><code class="language-bash">stream-chain kill &lt;process_id&gt;
+</code></pre>
+<p><strong>예시:</strong></p>
+<pre><code class="language-bash">./claude-flow stream-chain kill stream_1755021020133
+</code></pre>
+<h2>옵션</h2>
+<h3>전역 옵션</h3>
+<table>
+<thead>
+<tr>
+<th>옵션</th>
+<th>단축</th>
+<th>설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--background</code></td>
+<td><code>--bg</code></td>
+<td>stream chain을 백그라운드에서 실행합니다</td>
+</tr>
+<tr>
+<td><code>--verbose</code></td>
+<td></td>
+<td>실행 중 상세 출력을 표시합니다</td>
+</tr>
+<tr>
+<td><code>--json</code></td>
+<td></td>
+<td>최종 출력을 JSON 형식으로 유지합니다</td>
+</tr>
+<tr>
+<td><code>--timeout &lt;sec&gt;</code></td>
+<td></td>
+<td>각 단계의 타임아웃(초)을 설정합니다</td>
+</tr>
+</tbody>
+</table>
+<h3>백그라운드 실행</h3>
+<p><code>--background</code> 또는 <code>--bg</code> 플래그를 사용하면 모든 stream chain을 백그라운드에서 실행할 수 있습니다:</p>
+<pre><code class="language-bash"># 모든 명령을 백그라운드에서 실행합니다
+stream-chain run &quot;task1&quot; &quot;task2&quot; --background
+stream-chain demo --bg
+stream-chain pipeline analysis --background
+</code></pre>
+<p><strong>백그라운드 기능:</strong></p>
+<ul>
+<li>프로세스가 터미널과 분리되어 실행됩니다</li>
+<li>고유한 프로세스 ID가 생성됩니다(예: <code>stream_1234567890</code>)</li>
+<li>프로세스 정보가 <code>.claude-flow/stream-chains.json</code>에 저장됩니다</li>
+<li>터미널을 닫은 뒤에도 계속 실행됩니다</li>
+<li><code>stream-chain monitor</code>로 모니터링합니다</li>
+<li><code>stream-chain kill &lt;id&gt;</code>로 종료합니다</li>
+</ul>
+<h2>Stream-JSON 형식</h2>
+<p>stream chain은 통신에 줄 단위 JSON(NDJSON)을 사용합니다:</p>
+<pre><code class="language-json">{&quot;type&quot;:&quot;init&quot;,&quot;session_id&quot;:&quot;abc123&quot;,&quot;timestamp&quot;:&quot;2024-01-01T00:00:00Z&quot;}
+{&quot;type&quot;:&quot;message&quot;,&quot;role&quot;:&quot;assistant&quot;,&quot;content&quot;:[{&quot;type&quot;:&quot;text&quot;,&quot;text&quot;:&quot;Processing...&quot;}]}
+{&quot;type&quot;:&quot;tool_use&quot;,&quot;name&quot;:&quot;Bash&quot;,&quot;input&quot;:{&quot;command&quot;:&quot;ls -la&quot;}}
+{&quot;type&quot;:&quot;tool_result&quot;,&quot;output&quot;:&quot;total 64\ndrwxr-xr-x  10 user  staff   320&quot;}
+{&quot;type&quot;:&quot;result&quot;,&quot;status&quot;:&quot;success&quot;,&quot;duration_ms&quot;:1234}
+</code></pre>
+<p><strong>메시지 유형:</strong></p>
+<ul>
+<li><code>init</code> - 세션 초기화</li>
+<li><code>message</code> - 어시스턴트/사용자 메시지</li>
+<li><code>tool_use</code> - 도구 호출</li>
+<li><code>tool_result</code> - 도구 실행 결과</li>
+<li><code>result</code> - 최종 완료 상태</li>
+</ul>
+<h2>성능 특성</h2>
+<table>
+<thead>
+<tr>
+<th>지표</th>
+<th>값</th>
+<th>설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Latency</strong></td>
+<td>&lt;100ms</td>
+<td>에이전트 간 핸드오프 지연</td>
+</tr>
+<tr>
+<td><strong>Context Preservation</strong></td>
+<td>100%</td>
+<td>전체 대화 기록 유지</td>
+</tr>
+<tr>
+<td><strong>Memory Usage</strong></td>
+<td>O(1)</td>
+<td>스트리밍을 통한 일정 메모리 사용</td>
+</tr>
+<tr>
+<td><strong>Speed Improvement</strong></td>
+<td>40-60%</td>
+<td>파일 기반 접근 방식 대비 향상</td>
+</tr>
+</tbody>
+</table>
+<h2>백그라운드 명령과 통합</h2>
+<p>stream-chain 명령은 Claude Code의 백그라운드 명령 시스템과 완전히 통합됩니다:</p>
+<h3>/bashes 명령과 함께 사용</h3>
+<p>백그라운드 stream chain은 <code>/bashes</code> 대화형 메뉴에 표시됩니다:</p>
+<pre><code class="language-bash"># Claude Code 대화형 모드에서
+/bashes
+
+# stream chain을 포함한 모든 백그라운드 프로세스를 표시합니다
+Background Bash Shells
+Select a shell to view details
+
+1. npm run dev (running)
+2. stream_1234567890: stream-chain demo (running)
+3. docker-compose up (running)
+</code></pre>
+<h3>프로그래밍 방식 제어</h3>
+<p>Claude를 통해 프로그래밍 방식으로 stream chain을 제어할 수 있습니다:</p>
+<pre><code class="language-markdown"># 백그라운드에서 stream chain 분석 파이프라인을 실행해 달라고 요청합니다
+&quot;Run a stream chain analysis pipeline in the background&quot;
+
+# Claude가 실행합니다:
+./claude-flow stream-chain pipeline analysis --background
+
+# 백그라운드 stream chain 상태를 확인해 달라고 요청합니다
+&quot;Check the status of background stream chains&quot;
+
+# Claude가 실행합니다:
+./claude-flow stream-chain monitor
+</code></pre>
+<h2>실전 예시</h2>
+<h3>예시 1: 전체 개발 파이프라인</h3>
+<pre><code class="language-bash"># 완전한 개발 워크플로우를 생성합니다
+./claude-flow stream-chain run \
+  &quot;Analyze the requirements in docs/requirements.md&quot; \
+  &quot;Design the system architecture based on requirements&quot; \
+  &quot;Generate the API specification&quot; \
+  &quot;Create implementation plan&quot; \
+  &quot;Write the initial code structure&quot; \
+  --background
+
+# 진행 상황을 모니터링합니다
+./claude-flow stream-chain monitor
+</code></pre>
+<h3>예시 2: 자동화된 코드 리뷰</h3>
+<pre><code class="language-bash"># 백그라운드에서 코드 리뷰 파이프라인을 실행합니다
+./claude-flow stream-chain run \
+  &quot;Analyze code quality in src/&quot; \
+  &quot;Identify code smells and anti-patterns&quot; \
+  &quot;Suggest refactoring improvements&quot; \
+  &quot;Generate code review report&quot; \
+  --bg --verbose
+
+# 완료되면 확인합니다
+./claude-flow stream-chain monitor
+</code></pre>
+<h3>예시 3: 테스트 주도 개발</h3>
+<pre><code class="language-bash"># TDD 워크플로우
+./claude-flow stream-chain run \
+  &quot;Write test specifications for user authentication&quot; \
+  &quot;Generate unit tests based on specifications&quot; \
+  &quot;Implement code to pass the tests&quot; \
+  &quot;Refactor for code quality&quot; \
+  --timeout 60
+</code></pre>
+<h3>예시 4: 문서 생성</h3>
+<pre><code class="language-bash"># 포괄적인 문서를 생성합니다
+./claude-flow stream-chain pipeline analysis --background
+
+# 분석이 완료된 후 문서를 생성합니다
+./claude-flow stream-chain run \
+  &quot;Based on the codebase analysis, create API documentation&quot; \
+  &quot;Generate user guide based on features&quot; \
+  &quot;Create developer setup guide&quot; \
+  --bg
+</code></pre>
+<h2>파일 및 저장소</h2>
+<h3>프로세스 추적 파일</h3>
+<p>백그라운드 프로세스는 다음 파일에 기록됩니다:</p>
+<pre><code>.claude-flow/stream-chains.json
+</code></pre>
+<p><strong>파일 구조:</strong></p>
+<pre><code class="language-json">{
+  &quot;stream_1234567890&quot;: {
+    &quot;command&quot;: &quot;npx claude-flow stream-chain demo&quot;,
+    &quot;pid&quot;: 12345,
+    &quot;startTime&quot;: &quot;2025-08-12T17:50:20.135Z&quot;,
+    &quot;status&quot;: &quot;running&quot;
+  },
+  &quot;stream_9876543210&quot;: {
+    &quot;command&quot;: &quot;npx claude-flow stream-chain pipeline analysis&quot;,
+    &quot;pid&quot;: 67890,
+    &quot;startTime&quot;: &quot;2025-08-12T18:00:00.000Z&quot;,
+    &quot;status&quot;: &quot;killed&quot;,
+    &quot;endTime&quot;: &quot;2025-08-12T18:05:00.000Z&quot;
+  }
+}
+</code></pre>
+<h2>오류 처리</h2>
+<p>stream-chain 명령은 포괄적인 오류 처리를 제공합니다:</p>
+<h3>일반 오류와 해결책</h3>
+<table>
+<thead>
+<tr>
+<th>오류</th>
+<th>원인</th>
+<th>해결 방법</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>&quot;Stream chain requires at least 2 prompts&quot;</td>
+<td><code>run</code>을 프롬프트 2개 미만으로 실행함</td>
+<td>최소 두 개의 프롬프트를 제공합니다</td>
+</tr>
+<tr>
+<td>&quot;Unknown pipeline: [type]&quot;</td>
+<td>잘못된 파이프라인 유형</td>
+<td>analysis, refactor, test, optimize 중 하나를 사용합니다</td>
+</tr>
+<tr>
+<td>&quot;Process [id] not found&quot;</td>
+<td>존재하지 않는 프로세스를 종료하려 함</td>
+<td><code>monitor</code>로 올바른 ID를 확인합니다</td>
+</tr>
+<tr>
+<td>&quot;Failed to kill process: kill ESRCH&quot;</td>
+<td>프로세스가 이미 중지됨</td>
+<td>추가 조치가 필요 없습니다</td>
+</tr>
+<tr>
+<td>Command timeout</td>
+<td>Claude CLI가 없거나 느림</td>
+<td>Claude CLI를 설치하거나 더 짧은 타임아웃을 사용합니다</td>
+</tr>
+</tbody>
+</table>
+<h2>모범 사례</h2>
+<h3>1. 긴 체인은 백그라운드로 실행</h3>
+<p>3단계 이상이거나 실행 시간이 30초를 넘길 것으로 예상되는 체인에는 다음과 같이 백그라운드를 사용하세요:</p>
+<pre><code class="language-bash">stream-chain run &quot;step1&quot; &quot;step2&quot; &quot;step3&quot; &quot;step4&quot; --background
+</code></pre>
+<h3>2. 중요 체인 모니터링</h3>
+<p>중요한 워크플로우는 적극적으로 모니터링합니다:</p>
+<pre><code class="language-bash"># 중요 체인을 시작합니다
+stream-chain pipeline refactor --bg
+
+# 다른 터미널에서 모니터링합니다
+watch -n 5 './claude-flow stream-chain monitor'
+</code></pre>
+<h3>3. 적절한 타임아웃 설정</h3>
+<p>타임아웃으로 체인이 멈추지 않도록 방지합니다:</p>
+<pre><code class="language-bash"># 단계별 30초 타임아웃
+stream-chain run &quot;analyze&quot; &quot;implement&quot; --timeout 30
+</code></pre>
+<h3>4. 오래된 프로세스 정리</h3>
+<p>정기적으로 중지된 프로세스를 확인하고 정리합니다:</p>
+<pre><code class="language-bash"># 모든 프로세스를 확인합니다
+stream-chain monitor
+
+# 중지된 프로세스를 종료합니다
+stream-chain kill stream_xxx
+</code></pre>
+<h3>5. 디버깅에는 verbose 사용</h3>
+<p>체인이 실패할 때는 verbose 모드로 원인을 파악합니다:</p>
+<pre><code class="language-bash">stream-chain test --verbose
+stream-chain run &quot;task1&quot; &quot;task2&quot; --verbose
+</code></pre>
+<h2>고급 사용법</h2>
+<h3>다른 Claude Flow 기능과 결합</h3>
+<h4>Hive Mind와 함께 사용</h4>
+<pre><code class="language-bash"># hive mind 조정을 시작합니다
+npx claude-flow hive-mind spawn &quot;coordinator&quot;
+
+# hive가 관리하는 stream chain을 실행합니다
+./claude-flow stream-chain run \
+  &quot;Coordinate with hive mind for task distribution&quot; \
+  &quot;Execute distributed tasks&quot; \
+  &quot;Aggregate results&quot; \
+  --background
+</code></pre>
+<h4>Training Pipeline과 함께 사용</h4>
+<pre><code class="language-bash"># 먼저 에이전트를 학습합니다
+./claude-flow train-pipeline run
+
+# 학습한 에이전트를 stream chain에서 사용합니다
+./claude-flow stream-chain run \
+  &quot;Apply conservative strategy from training&quot; \
+  &quot;Apply balanced strategy from training&quot; \
+  &quot;Apply aggressive optimization&quot; \
+  --bg
+</code></pre>
+<h4>MCP 도구와 함께 사용</h4>
+<pre><code class="language-bash"># MCP로 스웜을 초기화합니다
+npx claude-flow swarm init --topology mesh
+
+# 스웜 조정을 사용하여 stream chain을 실행합니다
+./claude-flow stream-chain run \
+  &quot;Initialize swarm agents&quot; \
+  &quot;Distribute tasks across swarm&quot; \
+  &quot;Collect and synthesize results&quot; \
+  --background
+</code></pre>
+<h2>문제 해결</h2>
+<h3>체인이 시작되지 않음</h3>
+<p><strong>증상:</strong> 명령이 멈추거나 바로 타임아웃됩니다</p>
+<p><strong>점검 사항:</strong></p>
+<ol>
+<li>Claude CLI가 설치되어 있는지 확인합니다: <code>which claude</code></li>
+<li>Claude가 인증되었는지 확인합니다: <code>claude --version</code></li>
+<li>더 짧은 타임아웃으로 시도합니다: <code>--timeout 5</code></li>
+<li>테스트 명령을 실행합니다: <code>stream-chain test</code></li>
+</ol>
+<h3>백그라운드 프로세스를 찾을 수 없음</h3>
+<p><strong>증상:</strong> <code>monitor</code>에 예상한 프로세스가 표시되지 않습니다</p>
+<p><strong>점검 사항:</strong></p>
+<ol>
+<li>프로세스 파일이 존재하는지 확인합니다: <code>ls -la .claude-flow/stream-chains.json</code></li>
+<li>프로세스가 시작되었는지 확인합니다: 터미널 출력에서 프로세스 ID를 확인합니다</li>
+<li>시스템 프로세스를 확인합니다: <code>ps aux | grep claude-flow</code></li>
+</ol>
+<h3>체인이 예기치 않게 중지됨</h3>
+<p><strong>증상:</strong> 체인이 조기에 &quot;Stopped&quot;로 표시됩니다</p>
+<p><strong>점검 사항:</strong></p>
+<ol>
+<li>시스템 리소스를 확인합니다: <code>top</code> 또는 <code>htop</code></li>
+<li>타임아웃 설정을 검토합니다</li>
+<li>Claude CLI 로그를 확인합니다</li>
+<li>자세한 정보를 위해 verbose 플래그로 실행합니다</li>
+</ol>
+<h2>성능 최적화</h2>
+<h3>더 빠른 체인을 위한 팁</h3>
+<ol>
+<li><strong>컨텍스트 최소화:</strong> 프롬프트를 간결하게 유지합니다</li>
+<li><strong>구체적인 지시 사용:</strong> 모호한 프롬프트를 피합니다</li>
+<li><strong>가능하면 병렬화:</strong> 독립적인 체인은 동시에 실행합니다</li>
+<li><strong>결과 캐싱:</strong> 중간 결과를 저장해 재사용합니다</li>
+<li><strong>성능 프로파일링:</strong> 느린 단계를 파악하려면 <code>--verbose</code>를 사용합니다</li>
+</ol>
+<h3>리소스 관리</h3>
+<pre><code class="language-bash"># 동시에 실행할 체인 수를 제한합니다
+MAX_CHAINS=3
+CURRENT=$(./claude-flow stream-chain monitor | grep &quot;🟢 Running&quot; | wc -l)
+
+if [ $CURRENT -lt $MAX_CHAINS ]; then
+  ./claude-flow stream-chain demo --background
+else
+  echo &quot;Maximum chains running, waiting...&quot;
+fi
+</code></pre>
+<h2>관련 문서</h2>
+<ul>
+<li><a href="./stream-chaining.md">Stream-JSON 체이닝 가이드</a></li>
+<li><a href="./background-commands.md">백그라운드 명령</a></li>
+<li><a href="./training-pipeline.md">Training Pipeline</a></li>
+<li><a href="./hive-mind.md">Hive Mind 연동</a></li>
+<li><a href="./mcp-tools.md">MCP 도구 레퍼런스</a></li>
+</ul>
+<h2>버전 기록</h2>
+<table>
+<thead>
+<tr>
+<th>버전</th>
+<th>날짜</th>
+<th>변경 사항</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1.0.0</td>
+<td>2025-08-12</td>
+<td>초기 구현</td>
+</tr>
+<tr>
+<td>1.1.0</td>
+<td>2025-08-12</td>
+<td>백그라운드 실행 지원 추가</td>
+</tr>
+<tr>
+<td>1.2.0</td>
+<td>2025-08-12</td>
+<td>monitor 및 kill 명령 추가</td>
+</tr>
+</tbody>
+</table>
+<h2>기여 방법</h2>
+<p>stream-chain 명령에 기여하려면 다음을 수행합니다:</p>
+<ol>
+<li>리포지토리를 포크합니다</li>
+<li>기능 브랜치를 생성합니다: <code>git checkout -b feature/stream-chain-enhancement</code></li>
+<li><code>/src/cli/simple-commands/stream-chain.js</code>를 수정합니다</li>
+<li>테스트와 문서를 업데이트합니다</li>
+<li>Pull Request를 제출합니다</li>
+</ol>
+<h2>지원</h2>
+<p>문제나 질문이 있다면 다음을 참고하세요:</p>
+<ul>
+<li>GitHub Issues: <a href="https://github.com/ruvnet/claude-flow/issues">claude-flow/issues</a></li>
+<li>Documentation: <a href="https://github.com/ruvnet/claude-flow/docs/stream-chaining.md">Stream Chaining Docs</a></li>
+<li>Wiki: <a href="https://github.com/ruvnet/claude-flow/wiki">Claude Flow Wiki</a></li>
+</ul>
+<hr>
+<p><em>마지막 업데이트: 2025년 8월</em>
+<em>Claude Flow 버전: Alpha 89</em></p>
+
+  </div>
+</article>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Hanson Kim. All rights reserved.</p>
+  </footer>
+</body>
+</html>

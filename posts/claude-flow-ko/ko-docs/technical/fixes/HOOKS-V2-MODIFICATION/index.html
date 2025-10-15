@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HOOKS V2 MODIFICATION</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="/" class="logo">Hanson Kim</a>
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/blog/">Blog</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    
+<article class="post">
+  <header class="post-header">
+    <h1>HOOKS V2 MODIFICATION</h1>
+    <time datetime="2025년 10월 15일">2025년 10월 15일</time>
+    
+    <div class="tags">
+      
+        
+      
+        
+        <span class="tag">Claude-Flow</span>
+        
+      
+        
+        <span class="tag">문서</span>
+        
+      
+        
+        <span class="tag">AI</span>
+        
+      
+    </div>
+    
+  </header>
+
+  <div class="post-content">
+    <h1>PreToolUse Modification 훅 (v2.0.10+)</h1>
+<h2>✅ 구현 완료</h2>
+<p>Claude Flow에 Claude Code v2.0.10+의 PreToolUse 입력 수정 기능을 활용하는 세 가지 수정 훅이 추가되었습니다.</p>
+<h2>🎯 신규 훅</h2>
+<h3>1. <code>modify-bash</code> - Bash 명령어 수정</h3>
+<p><strong>특징:</strong></p>
+<ul>
+<li><strong>안전성</strong>: <code>rm</code> 명령어에 <code>-i</code> 플래그를 자동으로 추가하여 대화형 확인을 수행합니다</li>
+<li><strong>Alias 변환</strong>: <code>ll</code> → <code>ls -lah</code>, <code>la</code> → <code>ls -la</code></li>
+<li><strong>경로 보정</strong>: 테스트 파일 출력을 <code>/tmp/</code>로 리다이렉트합니다</li>
+<li><strong>비밀 탐지</strong>: 명령어에서 민감한 키워드를 경고합니다</li>
+</ul>
+<p><strong>예시:</strong></p>
+<pre><code class="language-bash">echo '{&quot;tool_input&quot;:{&quot;command&quot;:&quot;rm test.txt&quot;}}' | npx claude-flow@alpha hooks modify-bash
+# 출력: {&quot;tool_input&quot;:{&quot;command&quot;:&quot;rm -i test.txt&quot;}, &quot;modification_notes&quot;:&quot;[Safety: Added -i flag]&quot;}
+</code></pre>
+<h3>2. <code>modify-file</code> - 파일 경로 수정</h3>
+<p><strong>특징:</strong></p>
+<ul>
+<li><strong>루트 폴더 보호</strong>: 작업 파일을 프로젝트 루트에 저장하지 않습니다</li>
+<li><strong>자동 정리</strong>:
+<ul>
+<li>테스트 파일 → <code>/tests/</code></li>
+<li>소스 파일 → <code>/src/</code></li>
+<li>작업 문서 → <code>/docs/working/</code></li>
+<li>임시 파일 → <code>/tmp/</code></li>
+</ul>
+</li>
+<li><strong>포맷 안내</strong>: 적합한 포매터(Prettier, Black 등)를 제안합니다</li>
+</ul>
+<p><strong>예시:</strong></p>
+<pre><code class="language-bash">echo '{&quot;tool_input&quot;:{&quot;file_path&quot;:&quot;test.js&quot;}}' | npx claude-flow@alpha hooks modify-file
+# 출력: {&quot;tool_input&quot;:{&quot;file_path&quot;:&quot;src/test.js&quot;}, &quot;modification_notes&quot;:&quot;[Organization: Moved to /src/]&quot;}
+</code></pre>
+<h3>3. <code>modify-git-commit</code> - Git 커밋 메시지 포매팅</h3>
+<p><strong>특징:</strong></p>
+<ul>
+<li><strong>Conventional Commits</strong>: 타입 프리픽스(<code>[feat]</code>, <code>[fix]</code>, <code>[docs]</code> 등)를 자동으로 추가합니다</li>
+<li><strong>티켓 추출</strong>: 브랜치 이름에서 JIRA 티켓을 추출합니다(예: <code>feature/PROJ-123</code> → <code>(PROJ-123)</code>)</li>
+<li><strong>Co-Author</strong>: Claude Flow 공동 작성자 푸터를 추가합니다</li>
+</ul>
+<p><strong>예시:</strong></p>
+<pre><code class="language-bash">echo '{&quot;tool_input&quot;:{&quot;command&quot;:&quot;git commit -m \&quot;fix auth bug\&quot;&quot;}}' | npx claude-flow@alpha hooks modify-git-commit
+# 출력: 형식은 &quot;[fix] fix auth bug&quot;이며 공동 작성자를 포함합니다
+</code></pre>
+<h2>📝 구성</h2>
+<p>두 개의 훅 구성 파일이 업데이트되었습니다:</p>
+<h3><code>.claude-plugin/hooks/hooks.json</code></h3>
+<pre><code class="language-json">{
+  &quot;hooks&quot;: {
+    &quot;PreToolUse&quot;: [
+      {
+        &quot;matcher&quot;: &quot;Bash&quot;,
+        &quot;hooks&quot;: [{
+          &quot;type&quot;: &quot;command&quot;,
+          &quot;command&quot;: &quot;cat | npx claude-flow@alpha hooks modify-bash&quot;
+        }]
+      },
+      {
+        &quot;matcher&quot;: &quot;Write|Edit|MultiEdit&quot;,
+        &quot;hooks&quot;: [{
+          &quot;type&quot;: &quot;command&quot;,
+          &quot;command&quot;: &quot;cat | npx claude-flow@alpha hooks modify-file&quot;
+        }]
+      }
+    ]
+  }
+}
+</code></pre>
+<h3><code>.claude/settings.json</code></h3>
+<p>로컬 개발 환경에도 동일한 구성이 적용됩니다.</p>
+<h2>🧪 테스트</h2>
+<p>모든 훅은 컨테이너/원격 환경에서 테스트를 완료했습니다:</p>
+<pre><code class="language-bash"># bash 수정 테스트
+echo '{&quot;tool_input&quot;:{&quot;command&quot;:&quot;rm test.txt&quot;}}' | ./bin/claude-flow hooks modify-bash
+# ✅ 출력: {&quot;tool_input&quot;:{&quot;command&quot;:&quot;rm -i test.txt&quot;},&quot;modification_notes&quot;:&quot;[Safety: Added -i flag]&quot;}
+
+# alias 확장 테스트
+echo '{&quot;tool_input&quot;:{&quot;command&quot;:&quot;ll&quot;}}' | ./bin/claude-flow hooks modify-bash
+# ✅ 출력: {&quot;tool_input&quot;:{&quot;command&quot;:&quot;ls -lah&quot;},&quot;modification_notes&quot;:&quot;[Alias: ll → ls -lah]&quot;}
+
+# 파일 경로 수정 테스트
+echo '{&quot;tool_input&quot;:{&quot;file_path&quot;:&quot;test.js&quot;}}' | ./bin/claude-flow hooks modify-file
+# ✅ 출력: {&quot;tool_input&quot;:{&quot;file_path&quot;:&quot;src/test.js&quot;},&quot;modification_notes&quot;:&quot;[Organization: Moved to /src/]&quot;}
+
+# git 커밋 포매팅 테스트
+echo '{&quot;tool_input&quot;:{&quot;command&quot;:&quot;git commit -m \&quot;fix bug\&quot;&quot;}}' | ./bin/claude-flow hooks modify-git-commit
+# ✅ 출력: [fix] fix bug와 Co-Authored-By: claude-flow &lt;noreply@ruv.io&gt;
+
+# 도움말 표시 테스트(입력 없음)
+./bin/claude-flow hooks modify-bash
+# ✅ 출력: 100ms 타임아웃 후 usage 도움말을 보여줍니다
+</code></pre>
+<p><strong>참고</strong>: 이 훅은 파이프 입력과 대화형 입력을 구분하기 위해 100ms 타임아웃을 사용합니다. 그 결과 <code>process.stdin.isTTY</code>가 정의되지 않을 수 있는 컨테이너 및 원격 개발 환경에서도 정상 동작합니다.</p>
+<h2>🚀 사용법</h2>
+<p>이 훅은 PreToolUse 기능을 사용하는 Claude Code v2.0.10+에서 자동으로 호출됩니다.</p>
+<p>직접 사용하려면:</p>
+<pre><code class="language-bash">npx claude-flow@alpha hooks modify-bash  # bash 명령어용
+npx claude-flow@alpha hooks modify-file  # 파일 작업용
+npx claude-flow@alpha hooks modify-git-commit  # git 커밋용
+</code></pre>
+<h2>📖 도움말</h2>
+<p>모든 훅을 보려면:</p>
+<pre><code class="language-bash">npx claude-flow@alpha hooks --help
+</code></pre>
+<h2>🎉 이점</h2>
+<ol>
+<li><strong>안전성</strong>: 실수로 파괴적 명령어를 실행하는 것을 방지합니다</li>
+<li><strong>구조화</strong>: 올바른 프로젝트 구조를 강제합니다</li>
+<li><strong>일관성</strong>: 커밋 메시지와 파일 구성을 표준화합니다</li>
+<li><strong>개발자 경험</strong>: 유용한 alias와 포맷 안내를 제공합니다</li>
+</ol>
+<h2>📦 버전</h2>
+<ul>
+<li><strong>Claude Flow</strong>: 2.5.0-alpha.140</li>
+<li><strong>필수 조건</strong>: Claude Code &gt;= v2.0.10</li>
+<li><strong>기능</strong>: PreToolUse 입력 수정</li>
+</ul>
+<hr>
+<p><strong>작성자</strong>: claude-flow
+<strong>공동 작성자</strong>: claude-flow <a href="mailto:noreply@ruv.io">noreply@ruv.io</a></p>
+
+  </div>
+</article>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Hanson Kim. All rights reserved.</p>
+  </footer>
+</body>
+</html>

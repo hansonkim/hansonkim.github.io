@@ -1,0 +1,1038 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>USER GUIDE</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="/" class="logo">Hanson Kim</a>
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/blog/">Blog</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    
+<article class="post">
+  <header class="post-header">
+    <h1>USER GUIDE</h1>
+    <time datetime="2025년 10월 15일">2025년 10월 15일</time>
+    
+    <div class="tags">
+      
+        
+      
+        
+        <span class="tag">Claude-Flow</span>
+        
+      
+        
+        <span class="tag">문서</span>
+        
+      
+        
+        <span class="tag">AI</span>
+        
+      
+    </div>
+    
+  </header>
+
+  <div class="post-content">
+    <h1>📖 Claude-Flow 사용자 가이드</h1>
+<h2>Claude-Flow v2.0.0 완전 실용 가이드</h2>
+<p>Claude-Flow 종합 사용자 가이드에 오신 것을 환영합니다! 이 문서는 기본 설치부터 고급 swarm 협업까지, 플랫폼을 시작하고 마스터하는 데 필요한 모든 것을 제공합니다.</p>
+<hr>
+<h2>📋 목차</h2>
+<ol>
+<li><a href="#-%EC%8B%9C%EC%9E%91%ED%95%98%EA%B8%B0">시작하기</a></li>
+<li><a href="#-%EA%B8%B0%EB%B3%B8-%EA%B0%9C%EB%85%90">기본 개념</a></li>
+<li><a href="#-%EC%9D%BC%EB%B0%98%EC%A0%81%EC%9D%B8-%EC%9B%8C%ED%81%AC%ED%94%8C%EB%A1%9C">일반적인 워크플로</a></li>
+<li><a href="#-%EB%8B%A8%EA%B3%84%EB%B3%84-%ED%8A%9C%ED%86%A0%EB%A6%AC%EC%96%BC">단계별 튜토리얼</a></li>
+<li><a href="#-%EA%B5%AC%EC%84%B1-%EA%B0%80%EC%9D%B4%EB%93%9C">구성 가이드</a></li>
+<li><a href="#-%EB%AC%B8%EC%A0%9C-%ED%95%B4%EA%B2%B0">문제 해결</a></li>
+<li><a href="#-%EC%84%B1%EB%8A%A5-%EC%B5%9C%EC%A0%81%ED%99%94">성능 최적화</a></li>
+<li><a href="#-%ED%86%B5%ED%95%A9">통합</a></li>
+<li><a href="#-faq">FAQ</a></li>
+</ol>
+<hr>
+<h2>🚀 시작하기</h2>
+<h3>사전 요구사항</h3>
+<p>Claude-Flow를 시작하기 전에 다음을 준비하세요:</p>
+<ul>
+<li><strong>Node.js</strong> ≥ 20.0.0 (<a href="https://nodejs.org/">다운로드</a>)</li>
+<li><strong>npm</strong> ≥ 9.0.0 (Node.js와 함께 제공됨)</li>
+<li><strong>Claude Code</strong> (<a href="https://claude.ai/code">설정 가이드</a>)</li>
+<li>선호하는 AI provider의 <strong>API 키</strong></li>
+</ul>
+<h3>빠른 설치</h3>
+<pre><code class="language-bash"># 옵션 1: npx 사용 (처음 사용자에게 권장)
+npx claude-flow@alpha --help
+
+# 옵션 2: 전역 설치
+npm install -g claude-flow@alpha
+
+# 옵션 3: 프로젝트별 설치
+npm install claude-flow@alpha
+</code></pre>
+<h3>초기 설정</h3>
+<pre><code class="language-bash"># 프로젝트에서 Claude-Flow 초기화
+npx claude-flow@alpha init --force
+
+# 설치 확인
+npx claude-flow@alpha version
+
+# 상태 확인 실행
+npx claude-flow@alpha health
+</code></pre>
+<h3>첫 번째 명령어</h3>
+<p>첫 번째 Claude-Flow 명령어를 시도해보세요:</p>
+<pre><code class="language-bash"># 간단한 작업 실행
+npx claude-flow@alpha swarm &quot;create a simple Hello World application&quot;
+</code></pre>
+<hr>
+<h2>🧠 기본 개념</h2>
+<h3>핵심 구성요소</h3>
+<h4>1. Agent</h4>
+<p>특정 작업을 수행하는 AI 기반 worker:</p>
+<ul>
+<li><strong>54개 이상의 전문화된 agent</strong> 사용 가능</li>
+<li>각 agent는 고유한 능력을 보유</li>
+<li>독립적으로 또는 협업하여 작업 가능</li>
+</ul>
+<h4>2. Swarm</h4>
+<p>함께 작업하는 agent 그룹:</p>
+<ul>
+<li><strong>다양한 협업 topology</strong></li>
+<li>분산 의사결정</li>
+<li>장애 허용 작업</li>
+</ul>
+<h4>3. 메모리 시스템</h4>
+<p>영구 지식 스토리지:</p>
+<ul>
+<li>agent 간 공유</li>
+<li>다양한 스토리지 backend</li>
+<li>자동 동기화</li>
+</ul>
+<h4>4. MCP 통합</h4>
+<p>Model Context Protocol 도구:</p>
+<ul>
+<li><strong>87개의 사용 가능한 도구</strong></li>
+<li>원활한 Claude Code 통합</li>
+<li>실시간 협업</li>
+</ul>
+<h3>Agent 유형 개요</h3>
+<table>
+<thead>
+<tr>
+<th>카테고리</th>
+<th>예시</th>
+<th>사용 사례</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Development</strong></td>
+<td><code>coder</code>, <code>reviewer</code>, <code>tester</code></td>
+<td>코드 구현, 품질 보증</td>
+</tr>
+<tr>
+<td><strong>Architecture</strong></td>
+<td><code>architect</code>, <code>planner</code></td>
+<td>시스템 설계, 프로젝트 계획</td>
+</tr>
+<tr>
+<td><strong>Specialized</strong></td>
+<td><code>backend-dev</code>, <code>mobile-dev</code>, <code>ml-developer</code></td>
+<td>도메인별 개발</td>
+</tr>
+<tr>
+<td><strong>Coordination</strong></td>
+<td><code>coordinator</code>, <code>monitor</code></td>
+<td>작업 관리, 진행 추적</td>
+</tr>
+<tr>
+<td><strong>Analysis</strong></td>
+<td><code>researcher</code>, <code>analyzer</code></td>
+<td>정보 수집, 코드 분석</td>
+</tr>
+</tbody>
+</table>
+<h3>Swarm Topology</h3>
+<h4>Centralized (Queen 주도)</h4>
+<pre><code>      👑 Queen
+    /   |   \
+   🐝  🐝   🐝
+</code></pre>
+<ul>
+<li>단일 협업 지점</li>
+<li>간단한 통신</li>
+<li>순차 작업에 최적</li>
+</ul>
+<h4>Distributed (Multi-Leader)</h4>
+<pre><code>   👑 --- 👑
+   /\     /\
+  🐝 🐝  🐝 🐝
+</code></pre>
+<ul>
+<li>다중 협업 지점</li>
+<li>부하 분산</li>
+<li>장애 허용</li>
+</ul>
+<h4>Mesh (Peer-to-Peer)</h4>
+<pre><code>   🐝 ─── 🐝
+   │ ╲   ╱ │
+   │   ╳   │
+   │ ╱   ╲ │
+   🐝 ─── 🐝
+</code></pre>
+<ul>
+<li>직접 agent 통신</li>
+<li>창의적 협업</li>
+<li>단일 장애 지점 없음</li>
+</ul>
+<h4>Hierarchical (Tree)</h4>
+<pre><code>       👑
+      /  \
+     🐝   🐝
+    / \   / \
+   🐝 🐝 🐝 🐝
+</code></pre>
+<ul>
+<li>다중 레벨 구조</li>
+<li>확장 가능한 조직</li>
+<li>복잡한 프로젝트 협업</li>
+</ul>
+<hr>
+<h2>💼 일반적인 워크플로</h2>
+<h3>개발 워크플로</h3>
+<h4>1. 간단한 작업 실행</h4>
+<p>단순한 개발 작업을 위해:</p>
+<pre><code class="language-bash"># 코드 생성
+npx claude-flow@alpha swarm &quot;create a REST API for user management&quot;
+
+# 버그 수정
+npx claude-flow@alpha swarm &quot;fix all TypeScript errors in the project&quot;
+
+# 문서화
+npx claude-flow@alpha swarm &quot;generate comprehensive API documentation&quot;
+
+# 테스트
+npx claude-flow@alpha swarm &quot;create unit tests for all service classes&quot;
+</code></pre>
+<h4>2. 프로젝트 기반 개발</h4>
+<p>협업이 필요한 대규모 프로젝트를 위해:</p>
+<pre><code class="language-bash"># 프로젝트 swarm 초기화
+npx claude-flow@alpha hive-mind spawn &quot;e-commerce platform&quot; \
+  --agents architect,backend-dev,frontend-dev,tester \
+  --topology hierarchical
+
+# 동일 세션에서 개발 계속
+npx claude-flow@alpha swarm &quot;implement user authentication&quot; --continue-session
+
+# 새 기능 추가
+npx claude-flow@alpha swarm &quot;add payment processing integration&quot;
+
+# 진행상황 모니터링
+npx claude-flow@alpha swarm status --watch
+</code></pre>
+<h4>3. SPARC 개발 방법론</h4>
+<p>Specification → Pseudocode → Architecture → Refinement → Code를 사용한 구조화된 개발:</p>
+<pre><code class="language-bash"># 전체 SPARC pipeline
+npx claude-flow@alpha sparc pipeline &quot;user management system&quot;
+
+# 개별 SPARC 단계
+npx claude-flow@alpha sparc spec &quot;define requirements for authentication&quot;
+npx claude-flow@alpha sparc architecture &quot;design microservices structure&quot;
+npx claude-flow@alpha sparc code &quot;implement user service&quot;
+
+# 테스트 주도 개발
+npx claude-flow@alpha sparc tdd &quot;payment processing module&quot;
+</code></pre>
+<h3>운영 워크플로</h3>
+<h4>1. 코드 리뷰 및 품질</h4>
+<pre><code class="language-bash"># 종합 코드 리뷰
+npx claude-flow@alpha swarm &quot;perform security audit and code review&quot; \
+  --agents security-analyst,reviewer,code-quality-checker
+
+# 성능 최적화
+npx claude-flow@alpha swarm &quot;analyze and optimize application performance&quot; \
+  --agents performance-analyst,optimizer
+</code></pre>
+<h4>2. DevOps 및 배포</h4>
+<pre><code class="language-bash"># CI/CD 설정
+npx claude-flow@alpha swarm &quot;setup complete CI/CD pipeline&quot; \
+  --agents devops-engineer,cicd-specialist
+
+# 컨테이너 배포
+npx claude-flow@alpha swarm &quot;containerize application with Docker&quot; \
+  --agents docker-specialist,devops-engineer
+
+# Kubernetes 배포
+npx claude-flow@alpha swarm &quot;deploy to Kubernetes cluster&quot; \
+  --agents k8s-specialist,devops-engineer
+</code></pre>
+<h4>3. 문서화 및 유지보수</h4>
+<pre><code class="language-bash"># 문서 생성
+npx claude-flow@alpha swarm &quot;create comprehensive project documentation&quot; \
+  --agents technical-writer,api-docs-generator
+
+# 코드 유지보수
+npx claude-flow@alpha swarm &quot;refactor legacy code and improve maintainability&quot; \
+  --agents refactoring-specialist,code-quality-checker
+</code></pre>
+<hr>
+<h2>📚 단계별 튜토리얼</h2>
+<h3>튜토리얼 1: 첫 번째 API 구축</h3>
+<h4>단계 1: 프로젝트 초기화</h4>
+<pre><code class="language-bash"># 새 디렉토리 생성
+mkdir my-api-project
+cd my-api-project
+
+# Claude-Flow 초기화
+npx claude-flow@alpha init --force
+
+# npm 프로젝트 초기화
+npm init -y
+</code></pre>
+<h4>단계 2: 요구사항 정의</h4>
+<pre><code class="language-bash"># SPARC specification 모드 사용
+npx claude-flow@alpha sparc spec &quot;REST API for task management with CRUD operations, authentication, and data validation&quot;
+</code></pre>
+<h4>단계 3: 아키텍처 생성</h4>
+<pre><code class="language-bash"># 시스템 아키텍처 생성
+npx claude-flow@alpha sparc architecture &quot;Node.js Express API with PostgreSQL database, JWT authentication, and comprehensive error handling&quot;
+</code></pre>
+<h4>단계 4: 코드 구현</h4>
+<pre><code class="language-bash"># 구현 생성
+npx claude-flow@alpha sparc code &quot;implement the complete task management API based on the architecture&quot;
+</code></pre>
+<h4>단계 5: 테스트 추가</h4>
+<pre><code class="language-bash"># 종합 테스트 생성
+npx claude-flow@alpha swarm &quot;create unit tests, integration tests, and API endpoint tests&quot; \
+  --agents tester,test-automation-specialist
+</code></pre>
+<h4>단계 6: DevOps 설정</h4>
+<pre><code class="language-bash"># CI/CD 및 배포 추가
+npx claude-flow@alpha swarm &quot;setup GitHub Actions CI/CD and Docker deployment&quot; \
+  --agents devops-engineer,cicd-specialist
+</code></pre>
+<h3>튜토리얼 2: 다중 Agent를 사용한 복잡한 프로젝트</h3>
+<h4>단계 1: 프로젝트 계획</h4>
+<pre><code class="language-bash"># 대규모 프로젝트 swarm 초기화
+npx claude-flow@alpha hive-mind spawn &quot;full-stack social media application&quot; \
+  --agents architect,planner,backend-dev,frontend-dev,mobile-dev,tester,devops-engineer \
+  --topology hierarchical \
+  --max-agents 12
+</code></pre>
+<h4>단계 2: 아키텍처 설계</h4>
+<pre><code class="language-bash"># 종합 아키텍처 생성
+npx claude-flow@alpha swarm &quot;design microservices architecture with event-driven communication&quot; \
+  --agents system-architect,backend-architect,frontend-architect
+</code></pre>
+<h4>단계 3: Backend 개발</h4>
+<pre><code class="language-bash"># backend 서비스 개발
+npx claude-flow@alpha swarm &quot;implement user service, post service, and notification service&quot; \
+  --agents backend-dev,api-developer,database-specialist
+</code></pre>
+<h4>단계 4: Frontend 개발</h4>
+<pre><code class="language-bash"># frontend 애플리케이션 생성
+npx claude-flow@alpha swarm &quot;build React web app and React Native mobile app&quot; \
+  --agents frontend-dev,mobile-dev,ui-ux-specialist
+</code></pre>
+<h4>단계 5: 테스트 및 품질 보증</h4>
+<pre><code class="language-bash"># 종합 테스트
+npx claude-flow@alpha swarm &quot;create automated test suites and perform security audit&quot; \
+  --agents tester,security-analyst,qa-specialist
+</code></pre>
+<h4>단계 6: 배포 및 모니터링</h4>
+<pre><code class="language-bash"># 배포 및 모니터링
+npx claude-flow@alpha swarm &quot;deploy to cloud and setup monitoring&quot; \
+  --agents devops-engineer,cloud-specialist,monitoring-specialist
+</code></pre>
+<h3>튜토리얼 3: SPARC 테스트 주도 개발</h3>
+<h4>단계 1: 기능 요구사항 정의</h4>
+<pre><code class="language-bash"># TDD 사이클 시작
+npx claude-flow@alpha sparc tdd &quot;user authentication with email verification&quot; \
+  --test-framework jest \
+  --coverage 95
+</code></pre>
+<h4>단계 2: 테스트 먼저 작성</h4>
+<pre><code class="language-bash"># 테스트 사양 생성
+npx claude-flow@alpha swarm &quot;write comprehensive test cases for authentication flow&quot; \
+  --agents test-architect,tdd-specialist
+</code></pre>
+<h4>단계 3: 최소 코드 구현</h4>
+<pre><code class="language-bash"># 테스트를 통과하기 위한 최소 구현
+npx claude-flow@alpha sparc code &quot;implement minimal authentication logic to pass tests&quot;
+</code></pre>
+<h4>단계 4: 리팩토링 및 최적화</h4>
+<pre><code class="language-bash"># 구현 개선
+npx claude-flow@alpha sparc refinement &quot;optimize authentication performance and security&quot;
+</code></pre>
+<h4>단계 5: 통합 테스트 추가</h4>
+<pre><code class="language-bash"># 통합 테스트 생성
+npx claude-flow@alpha swarm &quot;add integration tests for complete authentication flow&quot; \
+  --agents integration-tester,api-tester
+</code></pre>
+<hr>
+<h2>⚙️ 구성 가이드</h2>
+<h3>기본 구성</h3>
+<h4>환경 변수</h4>
+<pre><code class="language-bash"># 핵심 설정
+export CLAUDE_FLOW_DEBUG=true
+export CLAUDE_FLOW_LOG_LEVEL=info
+export CLAUDE_FLOW_DATA_DIR=./data
+export CLAUDE_FLOW_MAX_AGENTS=50
+
+# API 구성
+export CLAUDE_API_KEY=&quot;your_claude_api_key&quot;
+export OPENAI_API_KEY=&quot;your_openai_api_key&quot;
+export ANTHROPIC_API_KEY=&quot;your_anthropic_api_key&quot;
+
+# 성능 튜닝
+export CLAUDE_FLOW_MEMORY_LIMIT=1024
+export CLAUDE_FLOW_TIMEOUT=300000
+export CLAUDE_FLOW_CONCURRENT_TASKS=10
+</code></pre>
+<h4>구성 파일</h4>
+<p>프로젝트 루트에 <code>.claude-flow.json</code> 생성:</p>
+<pre><code class="language-json">{
+  &quot;orchestrator&quot;: {
+    &quot;maxConcurrentAgents&quot;: 100,
+    &quot;taskQueueSize&quot;: 1000,
+    &quot;defaultTopology&quot;: &quot;mesh&quot;,
+    &quot;autoScaling&quot;: true,
+    &quot;timeoutMs&quot;: 300000
+  },
+  &quot;memory&quot;: {
+    &quot;backend&quot;: &quot;sqlite&quot;,
+    &quot;cacheSizeMB&quot;: 512,
+    &quot;compressionEnabled&quot;: true,
+    &quot;retentionDays&quot;: 30,
+    &quot;indexingEnabled&quot;: true
+  },
+  &quot;providers&quot;: {
+    &quot;anthropic&quot;: {
+      &quot;apiKey&quot;: &quot;${CLAUDE_API_KEY}&quot;,
+      &quot;model&quot;: &quot;claude-3-sonnet&quot;,
+      &quot;temperature&quot;: 0.7,
+      &quot;maxTokens&quot;: 4096
+    },
+    &quot;openai&quot;: {
+      &quot;apiKey&quot;: &quot;${OPENAI_API_KEY}&quot;,
+      &quot;model&quot;: &quot;gpt-4&quot;,
+      &quot;temperature&quot;: 0.7,
+      &quot;maxTokens&quot;: 4096
+    }
+  },
+  &quot;agents&quot;: {
+    &quot;defaultAgent&quot;: &quot;coder&quot;,
+    &quot;agentProfiles&quot;: {
+      &quot;development&quot;: [&quot;coder&quot;, &quot;reviewer&quot;, &quot;tester&quot;],
+      &quot;architecture&quot;: [&quot;architect&quot;, &quot;planner&quot;, &quot;system-designer&quot;],
+      &quot;devops&quot;: [&quot;devops-engineer&quot;, &quot;docker-specialist&quot;, &quot;k8s-specialist&quot;]
+    }
+  },
+  &quot;swarm&quot;: {
+    &quot;defaultTopology&quot;: &quot;mesh&quot;,
+    &quot;coordinationStrategy&quot;: &quot;democratic&quot;,
+    &quot;faultTolerance&quot;: true,
+    &quot;loadBalancing&quot;: true
+  },
+  &quot;hooks&quot;: {
+    &quot;enabled&quot;: true,
+    &quot;autoFormat&quot;: true,
+    &quot;notifications&quot;: true,
+    &quot;preTaskHooks&quot;: [&quot;backup&quot;, &quot;validation&quot;],
+    &quot;postTaskHooks&quot;: [&quot;cleanup&quot;, &quot;metrics&quot;]
+  },
+  &quot;security&quot;: {
+    &quot;validateInputs&quot;: true,
+    &quot;sanitizeOutputs&quot;: true,
+    &quot;encryptMemory&quot;: true,
+    &quot;auditLogging&quot;: true
+  },
+  &quot;performance&quot;: {
+    &quot;cacheEnabled&quot;: true,
+    &quot;compressionEnabled&quot;: true,
+    &quot;parallelExecution&quot;: true,
+    &quot;resourceLimits&quot;: {
+      &quot;maxMemoryMB&quot;: 2048,
+      &quot;maxCpuPercent&quot;: 80
+    }
+  }
+}
+</code></pre>
+<h3>고급 구성</h3>
+<h4>Agent 프로필</h4>
+<p>특정 사용 사례를 위한 사용자 정의 agent 조합 정의:</p>
+<pre><code class="language-json">{
+  &quot;agentProfiles&quot;: {
+    &quot;web-development&quot;: {
+      &quot;agents&quot;: [&quot;frontend-dev&quot;, &quot;backend-dev&quot;, &quot;fullstack-dev&quot;],
+      &quot;topology&quot;: &quot;hierarchical&quot;,
+      &quot;coordination&quot;: &quot;leader-follower&quot;
+    },
+    &quot;data-science&quot;: {
+      &quot;agents&quot;: [&quot;ml-developer&quot;, &quot;data-analyst&quot;, &quot;python-specialist&quot;],
+      &quot;topology&quot;: &quot;mesh&quot;,
+      &quot;coordination&quot;: &quot;collaborative&quot;
+    },
+    &quot;enterprise-security&quot;: {
+      &quot;agents&quot;: [&quot;security-analyst&quot;, &quot;penetration-tester&quot;, &quot;compliance-checker&quot;],
+      &quot;topology&quot;: &quot;centralized&quot;,
+      &quot;coordination&quot;: &quot;expert-led&quot;
+    }
+  }
+}
+</code></pre>
+<h4>사용자 정의 메모리 구성</h4>
+<pre><code class="language-json">{
+  &quot;memory&quot;: {
+    &quot;backends&quot;: {
+      &quot;primary&quot;: {
+        &quot;type&quot;: &quot;sqlite&quot;,
+        &quot;path&quot;: &quot;./data/memory.db&quot;,
+        &quot;compression&quot;: true
+      },
+      &quot;cache&quot;: {
+        &quot;type&quot;: &quot;redis&quot;,
+        &quot;host&quot;: &quot;localhost&quot;,
+        &quot;port&quot;: 6379,
+        &quot;ttl&quot;: 3600
+      },
+      &quot;backup&quot;: {
+        &quot;type&quot;: &quot;s3&quot;,
+        &quot;bucket&quot;: &quot;claude-flow-backup&quot;,
+        &quot;region&quot;: &quot;us-east-1&quot;
+      }
+    },
+    &quot;synchronization&quot;: {
+      &quot;strategy&quot;: &quot;eventual-consistency&quot;,
+      &quot;conflictResolution&quot;: &quot;last-write-wins&quot;,
+      &quot;replicationFactor&quot;: 3
+    }
+  }
+}
+</code></pre>
+<h4>성능 최적화 설정</h4>
+<pre><code class="language-json">{
+  &quot;performance&quot;: {
+    &quot;optimization&quot;: {
+      &quot;agentPooling&quot;: true,
+      &quot;connectionReuse&quot;: true,
+      &quot;batchProcessing&quot;: true,
+      &quot;asyncExecution&quot;: true
+    },
+    &quot;monitoring&quot;: {
+      &quot;metricsEnabled&quot;: true,
+      &quot;tracingEnabled&quot;: true,
+      &quot;profilingEnabled&quot;: false,
+      &quot;alerting&quot;: {
+        &quot;cpu&quot;: 90,
+        &quot;memory&quot;: 85,
+        &quot;diskSpace&quot;: 80
+      }
+    },
+    &quot;scaling&quot;: {
+      &quot;autoScale&quot;: true,
+      &quot;minAgents&quot;: 2,
+      &quot;maxAgents&quot;: 50,
+      &quot;scaleUpThreshold&quot;: 80,
+      &quot;scaleDownThreshold&quot;: 30
+    }
+  }
+}
+</code></pre>
+<h3>MCP Server 구성</h3>
+<h4>기본 MCP 설정</h4>
+<pre><code class="language-bash"># MCP server 시작
+npx claude-flow@alpha mcp start --port 3000
+
+# MCP 도구 구성
+npx claude-flow@alpha mcp config --tools all
+
+# 사용자 정의 MCP server 추가
+npx claude-flow@alpha mcp add-server \
+  --name &quot;custom-tools&quot; \
+  --command &quot;node custom-mcp-server.js&quot;
+</code></pre>
+<h4>Claude Code와 MCP 통합</h4>
+<pre><code class="language-bash"># Claude Code에 Claude-Flow MCP server 추가
+claude mcp add claude-flow npx claude-flow@alpha mcp start
+
+# 사용 가능한 MCP 도구 나열
+npx claude-flow@alpha mcp tools --list
+
+# MCP 연결 테스트
+npx claude-flow@alpha mcp test --tool swarm_init
+</code></pre>
+<hr>
+<h2>🔧 문제 해결</h2>
+<h3>일반적인 문제 및 해결방법</h3>
+<h4>설치 문제</h4>
+<p><strong>문제: npm install이 권한 오류로 실패</strong></p>
+<pre><code class="language-bash"># 해결방법 1: 대신 npx 사용
+npx claude-flow@alpha --help
+
+# 해결방법 2: npm 권한 수정
+npm config set prefix ~/.npm-global
+export PATH=~/.npm-global/bin:$PATH
+
+# 해결방법 3: node version manager 사용
+nvm install 20
+nvm use 20
+</code></pre>
+<p><strong>문제: SQLite 컴파일 실패</strong></p>
+<pre><code class="language-bash"># 해결방법 1: 빌드 도구 설치
+# Ubuntu/Debian에서:
+sudo apt-get install build-essential python3
+
+# macOS에서:
+xcode-select --install
+
+# Windows에서:
+npm install --global windows-build-tools
+
+# 해결방법 2: 미리 빌드된 바이너리 사용
+npm install --no-optional
+</code></pre>
+<h4>런타임 문제</h4>
+<p><strong>문제: &quot;Agent not found&quot; 오류</strong></p>
+<pre><code class="language-bash"># 사용 가능한 agent 확인
+npx claude-flow@alpha agents list
+
+# agent 철자 확인
+npx claude-flow@alpha agents info coder
+
+# 불확실한 경우 기본 agent 사용
+npx claude-flow@alpha swarm &quot;your task&quot; --agent coder
+</code></pre>
+<p><strong>문제: 메모리 관련 오류</strong></p>
+<pre><code class="language-bash"># 메모리 사용량 확인
+npx claude-flow@alpha memory stats
+
+# 메모리 캐시 정리
+npx claude-flow@alpha memory clear --cache
+
+# 메모리 설정 최적화
+npx claude-flow@alpha config set memory.cacheSizeMB 256
+</code></pre>
+<p><strong>문제: API rate limiting</strong></p>
+<pre><code class="language-bash"># API 상태 확인
+npx claude-flow@alpha health --api
+
+# rate limiting 구성
+npx claude-flow@alpha config set providers.anthropic.rateLimit 60
+
+# 다중 provider 사용
+npx claude-flow@alpha config set providers.fallback openai
+</code></pre>
+<h4>성능 문제</h4>
+<p><strong>문제: 느린 작업 실행</strong></p>
+<pre><code class="language-bash"># 진단 실행
+npx claude-flow@alpha diagnostics --performance
+
+# 구성 최적화
+npx claude-flow@alpha optimize --auto
+
+# 실시간 성능 모니터링
+npx claude-flow@alpha monitor --interval 5s
+</code></pre>
+<p><strong>문제: 높은 메모리 사용량</strong></p>
+<pre><code class="language-bash"># 메모리 분석
+npx claude-flow@alpha memory analyze
+
+# 압축 활성화
+npx claude-flow@alpha config set memory.compressionEnabled true
+
+# 캐시 크기 축소
+npx claude-flow@alpha config set memory.cacheSizeMB 128
+</code></pre>
+<h3>Debug 모드</h3>
+<p>문제 해결을 위한 상세 로깅 활성화:</p>
+<pre><code class="language-bash"># debug 모드 활성화
+export CLAUDE_FLOW_DEBUG=true
+export CLAUDE_FLOW_LOG_LEVEL=debug
+
+# verbose 출력으로 실행
+npx claude-flow@alpha swarm &quot;your task&quot; --verbose
+
+# 진단 리포트 생성
+npx claude-flow@alpha diagnostics --full --output debug-report.json
+</code></pre>
+<h3>로그 분석</h3>
+<pre><code class="language-bash"># 최근 로그 보기
+npx claude-flow@alpha logs --tail 100
+
+# 레벨별 로그 필터링
+npx claude-flow@alpha logs --level error
+
+# 로그 검색
+npx claude-flow@alpha logs --grep &quot;swarm&quot;
+
+# 로그 내보내기
+npx claude-flow@alpha logs --export logs.json
+</code></pre>
+<h3>상태 확인</h3>
+<pre><code class="language-bash"># 종합 상태 확인
+npx claude-flow@alpha health --comprehensive
+
+# 특정 구성요소 확인
+npx claude-flow@alpha health --component memory
+npx claude-flow@alpha health --component agents
+npx claude-flow@alpha health --component mcp
+
+# 자동 상태 모니터링
+npx claude-flow@alpha health --monitor --interval 60s
+</code></pre>
+<hr>
+<h2>🚀 성능 최적화</h2>
+<h3>시스템 최적화</h3>
+<h4>하드웨어 권장사항</h4>
+<table>
+<thead>
+<tr>
+<th>구성요소</th>
+<th>최소</th>
+<th>권장</th>
+<th>최적</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>CPU</strong></td>
+<td>2 cores</td>
+<td>4 cores</td>
+<td>8+ cores</td>
+</tr>
+<tr>
+<td><strong>RAM</strong></td>
+<td>4 GB</td>
+<td>8 GB</td>
+<td>16+ GB</td>
+</tr>
+<tr>
+<td><strong>Storage</strong></td>
+<td>1 GB 여유</td>
+<td>5 GB 여유</td>
+<td>20+ GB SSD</td>
+</tr>
+<tr>
+<td><strong>Network</strong></td>
+<td>1 Mbps</td>
+<td>10 Mbps</td>
+<td>100+ Mbps</td>
+</tr>
+</tbody>
+</table>
+<h4>메모리 최적화</h4>
+<pre><code class="language-bash"># 메모리 제한 구성
+npx claude-flow@alpha config set memory.cacheSizeMB 512
+npx claude-flow@alpha config set memory.maxMemoryMB 2048
+
+# 압축 활성화
+npx claude-flow@alpha config set memory.compressionEnabled true
+npx claude-flow@alpha config set memory.indexingEnabled true
+
+# 보존 정책 설정
+npx claude-flow@alpha config set memory.retentionDays 30
+npx claude-flow@alpha config set memory.autoCleanup true
+</code></pre>
+<h4>Agent Pool 최적화</h4>
+<pre><code class="language-bash"># agent pool 구성
+npx claude-flow@alpha config set orchestrator.maxConcurrentAgents 50
+npx claude-flow@alpha config set orchestrator.agentPoolSize 20
+
+# auto-scaling 활성화
+npx claude-flow@alpha config set swarm.autoScaling true
+npx claude-flow@alpha config set swarm.minAgents 2
+npx claude-flow@alpha config set swarm.maxAgents 100
+</code></pre>
+<h3>작업 최적화</h3>
+<h4>배치 처리</h4>
+<pre><code class="language-bash"># 다중 작업 병렬 처리
+npx claude-flow@alpha swarm batch \
+  &quot;create user service&quot; \
+  &quot;create product service&quot; \
+  &quot;create order service&quot; \
+  --parallel
+
+# 효율성을 위한 agent 프로필 사용
+npx claude-flow@alpha swarm &quot;build microservices&quot; \
+  --profile backend-development \
+  --optimize-for speed
+</code></pre>
+<h4>캐싱 전략</h4>
+<pre><code class="language-bash"># 적극적인 캐싱 활성화
+npx claude-flow@alpha config set performance.cacheEnabled true
+npx claude-flow@alpha config set performance.cacheStrategy aggressive
+
+# 캐시 사전 준비
+npx claude-flow@alpha cache warm --agents common
+npx claude-flow@alpha cache warm --tools frequent
+</code></pre>
+<h3>네트워크 최적화</h3>
+<pre><code class="language-bash"># 연결 풀링 구성
+npx claude-flow@alpha config set network.connectionPooling true
+npx claude-flow@alpha config set network.maxConnections 100
+
+# 압축 활성화
+npx claude-flow@alpha config set network.compressionEnabled true
+npx claude-flow@alpha config set network.timeout 30000
+</code></pre>
+<h3>모니터링 및 지표</h3>
+<pre><code class="language-bash"># 실시간 성능 모니터링
+npx claude-flow@alpha monitor --dashboard
+
+# 성능 리포트 생성
+npx claude-flow@alpha performance report --period 7d
+
+# 성능 알림 설정
+npx claude-flow@alpha alerts configure \
+  --cpu-threshold 80 \
+  --memory-threshold 85 \
+  --response-time-threshold 5000
+</code></pre>
+<hr>
+<h2>🔗 통합</h2>
+<h3>GitHub 통합</h3>
+<h4>설정</h4>
+<pre><code class="language-bash"># GitHub 통합 초기화
+npx claude-flow@alpha github init --token YOUR_GITHUB_TOKEN
+
+# 저장소 구성
+npx claude-flow@alpha github config \
+  --repo &quot;username/repository&quot; \
+  --default-branch main
+</code></pre>
+<h4>일반적인 GitHub 워크플로</h4>
+<pre><code class="language-bash"># Pull Request 관리
+npx claude-flow@alpha github pr-manager \
+  &quot;review and merge pending PRs&quot; \
+  --auto-merge \
+  --require-reviews 2
+
+# Issue 관리
+npx claude-flow@alpha github issue-tracker \
+  &quot;analyze and categorize open issues&quot; \
+  --auto-label \
+  --assign-to-team
+
+# Release 관리
+npx claude-flow@alpha github release-manager \
+  &quot;prepare v2.1.0 release&quot; \
+  --generate-changelog \
+  --create-release-notes
+</code></pre>
+<h4>고급 GitHub 기능</h4>
+<pre><code class="language-bash"># 자동화된 코드 리뷰
+npx claude-flow@alpha github code-review \
+  --pr-number 123 \
+  --agents security-analyst,code-reviewer \
+  --auto-comment
+
+# 저장소 분석
+npx claude-flow@alpha github analyze-repo \
+  --metrics code-quality,security,performance \
+  --generate-report
+</code></pre>
+<h3>Docker 통합</h3>
+<h4>컨테이너 관리</h4>
+<pre><code class="language-bash"># 애플리케이션 컨테이너화
+npx claude-flow@alpha docker containerize \
+  --app-type node \
+  --multi-stage \
+  --optimize-size
+
+# 이미지 빌드 및 푸시
+npx claude-flow@alpha docker build-push \
+  --registry docker.io \
+  --tags latest,v2.0.0
+
+# 컨테이너 오케스트레이션
+npx claude-flow@alpha docker compose \
+  --services api,database,redis \
+  --environment production
+</code></pre>
+<h3>Kubernetes 통합</h3>
+<h4>클러스터 관리</h4>
+<pre><code class="language-bash"># Kubernetes에 배포
+npx claude-flow@alpha k8s deploy \
+  --cluster production \
+  --namespace default \
+  --replicas 3
+
+# 서비스 관리
+npx claude-flow@alpha k8s services \
+  &quot;setup load balancer and ingress&quot; \
+  --ssl-enabled \
+  --auto-scaling
+
+# 클러스터 모니터링
+npx claude-flow@alpha k8s monitor \
+  --real-time \
+  --alerts \
+  --dashboard
+</code></pre>
+<h3>CI/CD 통합</h3>
+<h4>GitHub Actions</h4>
+<pre><code class="language-bash"># CI/CD pipeline 설정
+npx claude-flow@alpha cicd github-actions \
+  &quot;create complete CI/CD workflow&quot; \
+  --tests \
+  --security-scan \
+  --deploy-staging
+
+# 사용자 정의 워크플로
+npx claude-flow@alpha cicd custom \
+  --provider github-actions \
+  --stages &quot;lint,test,build,deploy&quot; \
+  --environments &quot;staging,production&quot;
+</code></pre>
+<h4>Jenkins 통합</h4>
+<pre><code class="language-bash"># Jenkins pipeline
+npx claude-flow@alpha cicd jenkins \
+  &quot;setup Jenkins pipeline with parallel stages&quot; \
+  --agents 4 \
+  --parallel-tests
+</code></pre>
+<h3>클라우드 플랫폼 통합</h3>
+<h4>AWS 통합</h4>
+<pre><code class="language-bash"># AWS에 배포
+npx claude-flow@alpha aws deploy \
+  --service ecs \
+  --region us-east-1 \
+  --auto-scaling
+
+# Infrastructure as Code
+npx claude-flow@alpha aws infrastructure \
+  &quot;create complete AWS infrastructure&quot; \
+  --terraform \
+  --best-practices
+</code></pre>
+<h4>Azure 통합</h4>
+<pre><code class="language-bash"># Azure 배포
+npx claude-flow@alpha azure deploy \
+  --service app-service \
+  --resource-group production \
+  --scaling-rules
+</code></pre>
+<h4>Google Cloud 통합</h4>
+<pre><code class="language-bash"># GCP 배포
+npx claude-flow@alpha gcp deploy \
+  --service cloud-run \
+  --region us-central1 \
+  --auto-scaling
+</code></pre>
+<hr>
+<h2>❓ FAQ</h2>
+<h3>일반 질문</h3>
+<p><strong>Q: Claude-Flow란 무엇인가요?</strong>
+A: Claude-Flow는 swarm 지능을 통한 분산 AI 개발을 가능하게 하는 엔터프라이즈급 AI agent 오케스트레이션 플랫폼으로, 54개 이상의 전문화된 agent와 87개의 MCP 도구를 제공합니다.</p>
+<p><strong>Q: Claude-Flow는 다른 AI 도구와 어떻게 다른가요?</strong>
+A: Claude-Flow는 swarm 지능을 갖춘 진정한 다중 agent 협업, 영구 메모리 관리, 보안, 모니터링, 확장성과 같은 엔터프라이즈급 기능을 제공합니다.</p>
+<p><strong>Q: Claude-Flow를 사용하려면 Claude Code가 필요한가요?</strong>
+A: Claude-Flow는 독립적으로 작동할 수 있지만, Claude Code 통합은 완전한 MCP protocol 지원과 원활한 agent 협업으로 최상의 경험을 제공합니다.</p>
+<h3>설치 및 설정</h3>
+<p><strong>Q: 어떤 Node.js 버전을 사용해야 하나요?</strong>
+A: Claude-Flow는 Node.js ≥ 20.0.0이 필요합니다. 최상의 성능과 보안을 위해 최신 LTS 버전을 권장합니다.</p>
+<p><strong>Q: 전역 설치 없이 Claude-Flow를 사용할 수 있나요?</strong>
+A: 네! <code>npx claude-flow@alpha</code> 사용이 실제로 권장됩니다. 전역 설치 없이 항상 최신 버전을 사용할 수 있습니다.</p>
+<p><strong>Q: API 키 구성은 어떻게 처리하나요?</strong>
+A: API 키를 환경 변수 또는 <code>.claude-flow.json</code> 구성 파일에 설정하세요. API 키를 버전 관리에 커밋하지 마세요.</p>
+<h3>사용 및 기능</h3>
+<p><strong>Q: 동시에 몇 개의 agent를 실행할 수 있나요?</strong>
+A: 기본적으로 Claude-Flow는 최대 100개의 동시 agent를 처리할 수 있습니다. 시스템 리소스와 API 제한에 따라 구성할 수 있습니다.</p>
+<p><strong>Q: 사용자 정의 agent를 만들 수 있나요?</strong>
+A: 현재 Claude-Flow는 54개 이상의 사전 구축된 agent를 제공합니다. 사용자 정의 agent 생성은 향후 릴리스에서 계획되어 있습니다.</p>
+<p><strong>Q: 메모리 시스템은 어떻게 작동하나요?</strong>
+A: Claude-Flow는 기본적으로 SQLite backend를 사용하는 분산 메모리 시스템을 사용합니다. 메모리는 agent 간에 자동으로 동기화되며 세션 간에 지속됩니다.</p>
+<p><strong>Q: 어떤 swarm topology를 선택해야 하나요?</strong>
+A:</p>
+<ul>
+<li><strong>Mesh</strong>: 창의적 협업과 장애 허용에 최적</li>
+<li><strong>Hierarchical</strong>: 대규모 구조화된 프로젝트에 이상적</li>
+<li><strong>Centralized</strong>: 간단한 순차 작업에 적합</li>
+<li><strong>Distributed</strong>: 부하 분산을 통한 병렬 처리에 완벽</li>
+</ul>
+<h3>성능 및 최적화</h3>
+<p><strong>Q: 작업 실행 속도를 어떻게 향상시킬 수 있나요?</strong>
+A: 병렬 처리 활성화, 적절한 swarm topology 사용, 캐싱 구성, 충분한 시스템 리소스 확보를 통해 향상시킬 수 있습니다.</p>
+<p><strong>Q: API rate limit에 도달하면 어떻게 해야 하나요?</strong>
+A: 다중 provider 구성, rate limiting 설정 조정, 요청 배치 처리 및 큐잉 구현을 통해 해결할 수 있습니다.</p>
+<p><strong>Q: Claude-Flow는 얼마나 많은 디스크 공간을 사용하나요?</strong>
+A: 기본 설치에는 약 100MB가 필요합니다. 메모리 데이터베이스와 캐시는 사용량에 따라 증가하며, 대부분의 프로젝트에서는 일반적으로 10-100MB입니다.</p>
+<h3>통합 및 호환성</h3>
+<p><strong>Q: Claude-Flow가 기존 CI/CD pipeline과 작동할 수 있나요?</strong>
+A: 네, Claude-Flow는 GitHub Actions, Jenkins 및 기타 CI/CD 플랫폼과의 통합을 제공합니다.</p>
+<p><strong>Q: Claude-Flow는 Docker 및 Kubernetes와 호환되나요?</strong>
+A: 물론입니다! Claude-Flow는 Docker 컨테이너화 및 Kubernetes 오케스트레이션을 위한 전문화된 agent를 포함합니다.</p>
+<p><strong>Q: 엔터프라이즈 환경에서 Claude-Flow를 사용할 수 있나요?</strong>
+A: 네, Claude-Flow는 보안 기능, 감사 로깅, 확장 가능한 아키텍처를 갖춘 엔터프라이즈용으로 설계되었습니다.</p>
+<h3>문제 해결</h3>
+<p><strong>Q: agent가 실패하면 어떻게 해야 하나요?</strong>
+A: Claude-Flow는 자동 장애 복구를 포함합니다. <code>npx claude-flow@alpha logs</code>로 로그를 확인하고 실패한 작업을 재시작할 수도 있습니다.</p>
+<p><strong>Q: 성능 문제를 어떻게 디버그하나요?</strong>
+A: 내장 진단을 사용하세요: <code>npx claude-flow@alpha diagnostics --performance</code> 및 실시간 지표를 모니터링하세요.</p>
+<p><strong>Q: 막혔을 때 어디서 도움을 받을 수 있나요?</strong>
+A: 이 가이드를 확인하고, 종합 문서를 검토하고, GitHub issue를 검색하거나, Discord 커뮤니티에 참여하세요.</p>
+<h3>고급 기능</h3>
+<p><strong>Q: SPARC 방법론은 어떻게 작동하나요?</strong>
+A: SPARC (Specification → Pseudocode → Architecture → Refinement → Code)는 철저한 계획과 고품질 구현을 보장하는 구조화된 개발 방법론입니다.</p>
+<p><strong>Q: 머신러닝 프로젝트에 Claude-Flow를 사용할 수 있나요?</strong>
+A: 네! Claude-Flow는 모델 개발, 학습, 배포를 위한 전문화된 ML agent를 포함합니다.</p>
+<p><strong>Q: Claude-Flow는 얼마나 안전한가요?</strong>
+A: Claude-Flow는 입력 검증, 데이터 암호화, 감사 로깅, 역할 기반 액세스 제어를 포함한 엔터프라이즈급 보안 기능을 포함합니다.</p>
+<hr>
+<h2>📞 지원 및 커뮤니티</h2>
+<h3>도움 받기</h3>
+<ul>
+<li><strong>📖 문서</strong>: <a href="https://github.com/ruvnet/claude-flow/docs">완전한 문서</a></li>
+<li><strong>💬 Discord 커뮤니티</strong>: <a href="https://discord.gg/claude-flow">Discord 참여</a></li>
+<li><strong>🐛 Issue Tracker</strong>: <a href="https://github.com/ruvnet/claude-flow/issues">GitHub Issues</a></li>
+<li><strong>📧 이메일 지원</strong>: support@claude-flow.ai</li>
+</ul>
+<h3>기여하기</h3>
+<p>기여를 환영합니다! 다음에 대한 자세한 내용은 <a href="../CONTRIBUTING.md">기여 가이드</a>를 참조하세요:</p>
+<ul>
+<li>🐛 버그 보고 및 수정</li>
+<li>✨ 기능 요청 및 구현</li>
+<li>📚 문서 개선</li>
+<li>🧪 테스트 커버리지 향상</li>
+<li>🎨 UI/UX 개선</li>
+</ul>
+<h3>최신 정보 유지</h3>
+<ul>
+<li>🐦 <strong>Twitter/X</strong>: <a href="https://twitter.com/claudeflow">@claudeflow</a></li>
+<li>📰 <strong>Blog</strong>: <a href="https://blog.claude-flow.ai">blog.claude-flow.ai</a></li>
+<li>📺 <strong>YouTube</strong>: <a href="https://youtube.com/@claudeflow">Claude-Flow Channel</a></li>
+<li>🌟 <strong>GitHub</strong>: <a href="https://github.com/ruvnet/claude-flow">저장소에 Star</a></li>
+</ul>
+<hr>
+<div align="center">
+<h2>🎉 시작할 준비가 되셨나요?</h2>
+<p>이제 Claude-Flow를 마스터하는 데 필요한 모든 것을 갖추셨습니다!</p>
+<p><a href="../README.ko.md#-quick-start">🚀 구축 시작</a> | <a href="../api/API_DOCUMENTATION.md">📖 API 참조</a> | <a href="../architecture/ARCHITECTURE.md">🏗️ 아키텍처 가이드</a></p>
+<hr>
+<p><strong>Claude-Flow 사용자 가이드 v2.0.0</strong></p>
+<p><em>Claude-Flow 커뮤니티가 ❤️로 제작</em></p>
+</div>
+
+  </div>
+</article>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Hanson Kim. All rights reserved.</p>
+  </footer>
+</body>
+</html>

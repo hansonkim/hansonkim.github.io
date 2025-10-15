@@ -1,0 +1,1156 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Background Commands</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="/" class="logo">Hanson Kim</a>
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/blog/">Blog</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    
+<article class="post">
+  <header class="post-header">
+    <h1>Background Commands</h1>
+    <time datetime="2025년 10월 15일">2025년 10월 15일</time>
+    
+    <div class="tags">
+      
+        
+      
+        
+        <span class="tag">Claude-Flow</span>
+        
+      
+        
+        <span class="tag">문서</span>
+        
+      
+        
+        <span class="tag">AI</span>
+        
+      
+    </div>
+    
+  </header>
+
+  <div class="post-content">
+    <h1>Claude Code의 백그라운드 명령어</h1>
+<h2>개요</h2>
+<p>Claude Code는 여러 방법을 통해 셸 명령어를 백그라운드에서 실행하는 것을 지원합니다:</p>
+<ol>
+<li><strong>키보드 단축키</strong>: Claude가 명령어를 제안할 때 <code>Ctrl+B</code>를 눌러 백그라운드에서 실행합니다 (tmux에서는 <code>Ctrl+B Ctrl+B</code>)</li>
+<li><strong>프로그래밍 방식 실행</strong>: Bash 도구에서 <code>run_in_background</code> 파라미터를 사용합니다</li>
+<li><strong>프롬프트 지시</strong>: Claude에게 보내는 프롬프트에서 직접 백그라운드 실행을 요청합니다</li>
+<li><strong>인터랙티브 관리</strong>: <code>/bashes</code> 명령어를 사용하여 모든 백그라운드 셸을 보고 관리합니다</li>
+</ol>
+<p>이 기능을 사용하면 워크플로우를 차단하지 않고 오래 실행되는 프로세스를 실행할 수 있어, 서버, 빌드 또는 기타 프로세스를 모니터링하면서 지속적인 개발이 가능합니다. 백그라운드 작업은 고유 ID를 가진 별도의 셸에서 실행되므로, 출력을 모니터링하고, 상태를 확인하며, 필요에 따라 종료할 수 있습니다.</p>
+<h2>빠른 참조</h2>
+<table>
+<thead>
+<tr>
+<th>작업</th>
+<th>방법</th>
+<th>예시</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>백그라운드 작업 시작</strong></td>
+<td>Ctrl+B 또는 프롬프트</td>
+<td><code>&quot;npm run dev를 백그라운드에서 실행해줘&quot;</code></td>
+</tr>
+<tr>
+<td><strong>모든 작업 목록 보기</strong></td>
+<td>/bashes 명령어</td>
+<td><code>/bashes</code> (인터랙티브 모드)</td>
+</tr>
+<tr>
+<td><strong>특정 작업 확인</strong></td>
+<td>프롬프트</td>
+<td><code>&quot;bash_1의 상태를 확인해줘&quot;</code></td>
+</tr>
+<tr>
+<td><strong>작업 출력 보기</strong></td>
+<td>프롬프트</td>
+<td><code>&quot;bash_1의 출력을 보여줘&quot;</code></td>
+</tr>
+<tr>
+<td><strong>특정 작업 종료</strong></td>
+<td>프롬프트 또는 /bashes</td>
+<td><code>&quot;bash_1을 종료해줘&quot;</code> 또는 /bashes에서 'k' 누르기</td>
+</tr>
+<tr>
+<td><strong>모든 작업 종료</strong></td>
+<td>프롬프트</td>
+<td><code>&quot;모든 백그라운드 작업을 종료해줘&quot;</code></td>
+</tr>
+</tbody>
+</table>
+<h3>일반적인 셸 ID</h3>
+<ul>
+<li>백그라운드 작업에는 <code>bash_1</code>, <code>bash_2</code>, <code>bash_3</code> 등과 같은 ID가 할당됩니다.</li>
+<li>ID는 세션별로 순차적이며 고유합니다.</li>
+<li>ID는 셸이 종료되거나 완료될 때까지 유지됩니다.</li>
+</ul>
+<h3>빠른 시작</h3>
+<p><strong>인터랙티브 (키보드)</strong>:
+Claude가 명령어를 제시할 때, 기본 포그라운드 실행 대신 <code>Ctrl+B</code>를 눌러 백그라운드에서 실행합니다.</p>
+<p><strong>프로그래밍 방식 (도구 파라미터)</strong>:</p>
+<pre><code class="language-javascript">{
+  &quot;tool&quot;: &quot;Bash&quot;,
+  &quot;command&quot;: &quot;npm run dev&quot;,
+  &quot;run_in_background&quot;: true  // 이 파라미터가 백그라운드 실행을 트리거합니다
+}
+</code></pre>
+<p><strong>프롬프트를 통해</strong>:
+Claude에게 간단히 &quot;개발 서버를 백그라운드에서 시작해줘&quot;라고 말하면 Claude가 자동으로 <code>run_in_background</code> 파라미터를 사용합니다.</p>
+<h2>주요 구성 요소</h2>
+<h3>1. <strong>백그라운드 지원이 포함된 Bash 도구</strong></h3>
+<p>표준 Bash 도구는 별도의 백그라운드 셸에서 명령어를 생성하는 <code>run_in_background</code> 파라미터를 허용합니다.</p>
+<h4>도구 파라미터</h4>
+<pre><code class="language-javascript">{
+  &quot;tool&quot;: &quot;Bash&quot;,
+  &quot;command&quot;: &quot;npm run dev&quot;,           // 필수: 실행할 명령어
+  &quot;run_in_background&quot;: true,          // 선택: 백그라운드에서 실행
+  &quot;description&quot;: &quot;개발 서버 시작&quot;,  // 선택: 설명
+  &quot;timeout&quot;: 60000                    // 선택: 타임아웃(ms) (최대 600000)
+}
+</code></pre>
+<h4>Claude에서의 사용 예시</h4>
+<p>Claude와 상호작용할 때, 다음과 같이 백그라운드 실행을 요청할 수 있습니다:</p>
+<pre><code>사용자: &quot;개발 서버를 시작해줘&quot;
+Claude: 개발 서버를 백그라운드에서 시작하여 계속 작업할 수 있도록 하겠습니다.
+
+[Claude가 run_in_background: true로 Bash 도구를 사용함]
+명령어: npm run dev
+결과: ID: bash_1로 백그라운드에서 명령어가 실행 중입니다
+</code></pre>
+<h3>2. <strong>BashOutput 도구</strong></h3>
+<p>실행 중이거나 완료된 백그라운드 셸에서 출력을 가져옵니다. 각 호출은 마지막 확인 이후의 <strong>새로운</strong> 출력만 반환합니다.</p>
+<h4>도구 파라미터</h4>
+<pre><code class="language-javascript">{
+  &quot;tool&quot;: &quot;BashOutput&quot;,
+  &quot;bash_id&quot;: &quot;bash_1&quot;,               // 필수: 백그라운드 작업의 ID
+  &quot;filter&quot;: &quot;error|warning&quot;          // 선택: 출력을 필터링할 정규식
+}
+</code></pre>
+<h4>응답 형식</h4>
+<pre><code class="language-xml">&lt;status&gt;running|completed|killed&lt;/status&gt;
+&lt;exit_code&gt;0&lt;/exit_code&gt;  &lt;!-- 완료된 경우에만 표시 --&gt;
+&lt;stdout&gt;
+  [마지막 확인 이후의 새로운 출력]
+&lt;/stdout&gt;
+&lt;stderr&gt;
+  [오류 출력]
+&lt;/stderr&gt;
+&lt;timestamp&gt;2025-08-11T22:05:20.964Z&lt;/timestamp&gt;
+</code></pre>
+<h4>사용 예시</h4>
+<pre><code>사용자: &quot;서버가 성공적으로 시작되었는지 확인해줘&quot;
+Claude: 개발 서버의 출력을 확인해 보겠습니다.
+
+[Claude가 BashOutput 도구를 사용함]
+bash_id: bash_1
+결과:
+&lt;status&gt;running&lt;/status&gt;
+&lt;stdout&gt;
+  &gt; my-app@1.0.0 dev
+  &gt; vite
+
+  VITE v5.0.0  ready in 532 ms
+  ➜  Local:   http://localhost:5173/
+&lt;/stdout&gt;
+
+서버가 http://localhost:5173/에서 성공적으로 실행 중입니다.
+</code></pre>
+<h3>3. <strong>KillBash 도구</strong></h3>
+<p>ID로 백그라운드 셸을 종료합니다. 먼저 정상적인 종료를 시도합니다.</p>
+<h4>도구 파라미터</h4>
+<pre><code class="language-javascript">{
+  &quot;tool&quot;: &quot;KillBash&quot;,
+  &quot;shell_id&quot;: &quot;bash_1&quot;               // 필수: 종료할 백그라운드 작업의 ID
+}
+</code></pre>
+<h4>응답 형식</h4>
+<pre><code class="language-json">{
+  &quot;success&quot;: true,
+  &quot;message&quot;: &quot;셸을 성공적으로 종료했습니다: bash_1 (npm run dev)&quot;,
+  &quot;shell_id&quot;: &quot;bash_1&quot;
+}
+</code></pre>
+<h4>사용 예시</h4>
+<pre><code>사용자: &quot;개발 서버를 중지해줘&quot;
+Claude: 백그라운드에서 실행 중인 개발 서버를 중지하겠습니다.
+
+[Claude가 KillBash 도구를 사용함]
+shell_id: bash_1
+결과: 셸을 성공적으로 종료했습니다: bash_1
+
+개발 서버가 중지되었습니다.
+</code></pre>
+<h2>인터랙티브 명령어 및 단축키</h2>
+<h3>/bashes 명령어</h3>
+<p>Claude Code에는 백그라운드 셸을 인터랙티브하게 관리하기 위한 내장 명령어가 포함되어 있습니다:</p>
+<pre><code class="language-bash">/bashes
+</code></pre>
+<p>이 명령어는 다음을 표시하는 인터랙티브 메뉴를 엽니다:</p>
+<ul>
+<li><strong>모든 백그라운드 셸</strong> (실행 중 및 완료됨)</li>
+<li>참조용 <strong>셸 ID</strong> (예: bash_1, bash_2)</li>
+<li>실행된 <strong>명령어</strong></li>
+<li><strong>상태</strong> (running, completed, killed)</li>
+<li><strong>실행 시간</strong> 및 종료 코드</li>
+</ul>
+<p><strong>사용 예시:</strong></p>
+<pre><code>&gt; /bashes
+
+백그라운드 Bash 셸
+세부 정보를 보려면 셸을 선택하세요
+
+1. npm run dev (running)
+2. docker-compose up (running)  
+3. npm test (completed)
+
+↑/↓로 선택 · Enter로 보기 · k로 종료 · Esc로 닫기
+</code></pre>
+<p>셸을 선택하고 Enter를 누르면 다음을 볼 수 있습니다:</p>
+<ul>
+<li>STDOUT의 마지막 10줄</li>
+<li>모든 STDERR 출력</li>
+<li>실행 시간 정보</li>
+<li>종료 코드 (완료된 경우)</li>
+</ul>
+<h3>Ctrl+B를 사용한 백그라운드 실행</h3>
+<p>Claude가 실행할 명령어를 제시할 때 두 가지 옵션이 있습니다:</p>
+<ul>
+<li><strong>Enter/Return</strong>: 포그라운드에서 실행 (기본값)</li>
+<li><strong>Ctrl+B</strong>: 백그라운드에서 실행</li>
+</ul>
+<h4>작동 방식</h4>
+<ol>
+<li>Claude가 <code>npm run dev</code> 명령어를 제안합니다.</li>
+<li>&quot;실행하려면 Enter, 백그라운드에서 실행하려면 Ctrl+B를 누르세요&quot;라는 프롬프트가 표시됩니다.</li>
+<li><code>Ctrl+B</code>를 눌러 백그라운드에서 실행합니다.</li>
+<li>명령어가 고유 ID(예: <code>bash_1</code>)로 시작됩니다.</li>
+<li>실행되는 동안 계속 작업할 수 있습니다.</li>
+</ol>
+<h3>백그라운드 모드의 프로그래밍 방식 호출</h3>
+<p>Ctrl+B 기능은 다음과 같은 방법으로 프로그래밍 방식으로 트리거할 수 있습니다:</p>
+<h4>1. 직접 도구 파라미터</h4>
+<pre><code class="language-javascript">// Ctrl+B를 누르면 이렇게 됩니다
+{
+  &quot;tool&quot;: &quot;Bash&quot;,
+  &quot;command&quot;: &quot;npm run dev&quot;,
+  &quot;run_in_background&quot;: true  // Ctrl+B는 이 값을 true로 설정합니다
+}
+</code></pre>
+<h4>2. Claude-Flow 자동화</h4>
+<pre><code class="language-javascript">// 자동화된 백그라운드 감지
+function handleCommand(command) {
+  const shouldBackground = detectLongRunning(command);
+  
+  return {
+    tool: &quot;Bash&quot;,
+    command: command,
+    run_in_background: shouldBackground  // Ctrl+B를 시뮬레이션합니다
+  };
+}
+</code></pre>
+<h4>3. Hook 시스템 통합</h4>
+<pre><code class="language-bash"># 특정 명령어에 대해 Ctrl+B를 시뮬레이션하는 pre-command hook
+npx claude-flow hooks pre-command \
+  --auto-background &quot;npm run dev&quot; \
+  --auto-background &quot;docker-compose up&quot;
+</code></pre>
+<h3>터미널 호환성</h3>
+<ul>
+<li><strong>표준 터미널</strong>: <code>Ctrl+B</code>는 백그라운드 실행을 트리거합니다.</li>
+<li><strong>Tmux 세션</strong>: <code>Ctrl+B Ctrl+B</code> (두 번 탭). Ctrl+B가 tmux 접두사이기 때문입니다.</li>
+<li><strong>VS Code 터미널</strong>: <code>Ctrl+B</code>가 정상적으로 작동합니다.</li>
+<li><strong>SSH 세션</strong>: <code>Ctrl+B</code>가 Claude Code로 전달됩니다.</li>
+</ul>
+<h2>Claude Code 도구를 사용한 실제 예시</h2>
+<h3>실제 예시: 개발 서버 시작하기</h3>
+<p>다음은 백그라운드 서버를 시작하고 확인하는 실제 예시입니다:</p>
+<pre><code class="language-bash"># 백그라운드에서 Python HTTP 서버 시작
+사용자: &quot;백그라운드에서 개발 서버를 시작해줘&quot;
+
+Claude: [run_in_background: true로 Bash 도구를 사용함]
+명령어: python3 -m http.server 8080
+결과: ID: bash_3로 백그라운드에서 명령어가 실행 중입니다
+
+# 실행 중인지 확인
+Claude: [BashOutput 도구를 사용함]
+bash_id: bash_3
+결과:
+&lt;status&gt;running&lt;/status&gt;
+&lt;stderr&gt;
+127.0.0.1 - - [11/Aug/2025 22:18:58] &quot;HEAD / HTTP/1.1&quot; 200 -
+127.0.0.1 - - [11/Aug/2025 22:19:37] &quot;GET / HTTP/1.1&quot; 200 -
+&lt;/stderr&gt;
+
+# 서버 테스트
+Claude: [Bash 도구를 사용함]
+명령어: curl http://localhost:8080
+결과: &lt;!DOCTYPE HTML&gt;&lt;html&gt;... (서버가 응답함)
+</code></pre>
+<h3>전체 개발 워크플로우 예시</h3>
+<h4>1단계: 여러 백그라운드 서비스 시작하기</h4>
+<pre><code>사용자: &quot;프론트엔드, 백엔드, 데이터베이스로 전체 개발 환경을 설정해줘&quot;
+
+Claude: 모든 개발 서비스를 백그라운드에서 시작하겠습니다.
+
+[Bash 도구 호출 1]
+command: docker-compose up postgres redis
+run_in_background: true
+→ 결과: ID: bash_1로 백그라운드에서 명령어가 실행 중입니다
+
+[Bash 도구 호출 2] 
+command: npm run api
+run_in_background: true
+→ 결과: ID: bash_2로 백그라운드에서 명령어가 실행 중입니다
+
+[Bash 도구 호출 3]
+command: npm run dev
+run_in_background: true  
+→ 결과: ID: bash_3로 백그라운드에서 명령어가 실행 중입니다
+
+모든 서비스가 백그라운드에서 시작 중입니다. 상태를 확인해 보겠습니다.
+</code></pre>
+<h4>2단계: 서비스 상태 모니터링</h4>
+<pre><code>[bash_1에 대한 BashOutput 도구 호출]
+bash_id: bash_1
+→ 결과:
+&lt;status&gt;running&lt;/status&gt;
+&lt;stdout&gt;
+  postgres_1  | database system is ready to accept connections
+  redis_1     | Ready to accept connections
+&lt;/stdout&gt;
+
+[bash_2에 대한 BashOutput 도구 호출]
+bash_id: bash_2
+→ 결과:
+&lt;status&gt;running&lt;/status&gt;
+&lt;stdout&gt;
+  API server listening on port 4000
+  Connected to database
+&lt;/stdout&gt;
+
+[bash_3에 대한 BashOutput 도구 호출]
+bash_id: bash_3
+→ 결과:
+&lt;status&gt;running&lt;/status&gt;
+&lt;stdout&gt;
+  VITE v5.0.0  ready in 532 ms
+  ➜  Local:   http://localhost:5173/
+&lt;/stdout&gt;
+
+모든 서비스가 성공적으로 실행 중입니다:
+- 데이터베이스 및 Redis: 준비 완료
+- API 서버: http://localhost:4000
+- 프론트엔드: http://localhost:5173
+</code></pre>
+<h4>3단계: 개발 중 지속적인 모니터링</h4>
+<pre><code>사용자: &quot;로그인 버튼을 클릭하면 오류가 발생합니다&quot;
+
+Claude: 문제를 재현하는 동안 API 서버 로그를 모니터링하겠습니다.
+
+[필터가 있는 BashOutput 도구 호출]
+bash_id: bash_2
+filter: &quot;error|Error|ERROR|failed&quot;
+→ 결과:
+&lt;status&gt;running&lt;/status&gt;
+&lt;stdout&gt;
+  ERROR: Authentication failed - Invalid token format
+  Error at AuthMiddleware.verify (src/middleware/auth.js:45)
+&lt;/stdout&gt;
+
+오류를 찾았습니다! 인증 미들웨어의 45번째 줄에서 잘못된 토큰 형식으로 인해 인증이 실패하고 있습니다.
+</code></pre>
+<h4>4단계: 정리</h4>
+<pre><code>사용자: &quot;오늘 작업은 끝났으니 모든 서비스를 중지해주세요&quot;
+
+Claude: 실행 중인 모든 서비스를 중지하겠습니다.
+
+[KillBash 도구 호출 1]
+shell_id: bash_3
+→ 결과: 셸을 성공적으로 종료했습니다: bash_3 (npm run dev)
+
+[KillBash 도구 호출 2]
+shell_id: bash_2
+→ 결과: 셸을 성공적으로 종료했습니다: bash_2 (npm run api)
+
+[KillBash 도구 호출 3]
+shell_id: bash_1
+→ 결과: 셸을 성공적으로 종료했습니다: bash_1 (docker-compose up -d postgres redis)
+
+모든 서비스가 성공적으로 중지되었습니다.
+</code></pre>
+<h3>실시간 로그 모니터링 예시</h3>
+<pre><code>사용자: &quot;결제 흐름을 테스트하는 동안 애플리케이션 로그에서 오류가 있는지 모니터링해줘&quot;
+
+Claude: 백그라운드에서 애플리케이션 로그를 모니터링하고 오류를 필터링하겠습니다.
+
+[Bash 도구 호출]
+command: tail -f /var/log/app.log
+run_in_background: true
+→ 결과: ID: bash_4로 백그라운드에서 명령어가 실행 중입니다
+
+이제 테스트하는 동안 오류를 모니터링하겠습니다. 시작할 때 알려주세요.
+
+사용자: &quot;지금 결제 테스트를 시작합니다&quot;
+
+[BashOutput 도구 호출 - 첫 번째 확인]
+bash_id: bash_4
+filter: &quot;error|exception|failed|Error|Exception&quot;
+→ 결과:
+&lt;status&gt;running&lt;/status&gt;
+&lt;stdout&gt;
+  [2025-08-11 22:10:15] ERROR: Payment validation failed: Card expired
+  [2025-08-11 22:10:15] Exception: PaymentException at checkout.js:234
+&lt;/stdout&gt;
+
+결제 오류를 감지했습니다 - 카드가 만료된 것 같습니다. 예외는 checkout.js 234번째 줄에서 발생했습니다.
+
+[BashOutput 도구 호출 - 두 번째 확인]
+bash_id: bash_4
+filter: &quot;error|exception|failed|Error|Exception&quot;
+→ 결과:
+&lt;status&gt;running&lt;/status&gt;
+&lt;stdout&gt;
+  [2025-08-11 22:10:45] ERROR: Inventory check failed for SKU-12345
+  [2025-08-11 22:10:45] Error: Insufficient stock (requested: 5, available: 2)
+&lt;/stdout&gt;
+
+또 다른 오류: SKU-12345의 재고가 부족합니다. 5개를 요청했지만 2개만 사용 가능합니다.
+</code></pre>
+<h3>빌드 프로세스 관리 예시</h3>
+<pre><code>사용자: &quot;프로덕션 빌드를 실행하되 문서 작업은 계속하고 싶어&quot;
+
+Claude: 계속 작업하실 수 있도록 프로덕션 빌드를 백그라운드에서 실행하겠습니다.
+
+[Bash 도구 호출]
+command: npm run build:production
+run_in_background: true
+→ 결과: ID: bash_5로 백그라운드에서 명령어가 실행 중입니다
+
+프로덕션 빌드가 백그라운드에서 실행 중입니다. 문서 작업을 계속하셔도 됩니다.
+
+[5분 후...]
+
+빌드 진행 상황을 확인해 보겠습니다:
+
+[BashOutput 도구 호출]
+bash_id: bash_5
+→ 결과:
+&lt;status&gt;completed&lt;/status&gt;
+&lt;exit_code&gt;0&lt;/exit_code&gt;
+&lt;stdout&gt;
+  &gt; build:production
+  &gt; webpack --mode production
+  
+  assets by status 1.2 MiB [cached] 12 assets
+  ./src/index.js 523 KiB [built]
+  webpack compiled successfully in 4523 ms
+  Build completed successfully!
+&lt;/stdout&gt;
+
+좋은 소식입니다! 프로덕션 빌드가 성공적으로 완료되었습니다. 번들된 에셋이 준비되었습니다.
+</code></pre>
+<h3>백그라운드 프로세스를 사용한 디버깅</h3>
+<pre><code>사용자: &quot;앱이 느리게 실행되는데, 조사해줄 수 있나요?&quot;
+
+Claude: 백그라운드에서 시스템 리소스와 애플리케이션 성능을 모니터링 시작하겠습니다.
+
+[Bash 도구 호출 1 - 시스템 모니터링]
+command: top -b -d 2 | head -20
+run_in_background: true
+→ 결과: ID: bash_6로 백그라운드에서 명령어가 실행 중입니다
+
+[Bash 도구 호출 2 - 애플리케이션 메트릭]
+command: npm run metrics:watch
+run_in_background: true
+→ 결과: ID: bash_7로 백그라운드에서 명령어가 실행 중입니다
+
+[잠시 후, 둘 다 확인]
+
+[bash_6에 대한 BashOutput 도구 호출]
+bash_id: bash_6
+→ 결과:
+&lt;status&gt;running&lt;/status&gt;
+&lt;stdout&gt;
+  CPU: 87% - node (PID 12345)
+  Memory: 2.3GB / 4GB
+  Load average: 3.45, 2.89, 2.10
+&lt;/stdout&gt;
+
+[bash_7에 대한 BashOutput 도구 호출]
+bash_id: bash_7
+filter: &quot;slow|timeout|bottleneck&quot;
+→ 결과:
+&lt;status&gt;running&lt;/status&gt;
+&lt;stdout&gt;
+  SLOW QUERY: SELECT * FROM orders (2.3s)
+  BOTTLENECK: Database connection pool exhausted
+  TIMEOUT: Redis connection timeout after 5000ms
+&lt;/stdout&gt;
+
+문제를 찾았습니다:
+1. Node 프로세스의 높은 CPU 사용량 (87%)
+2. 2.3초가 걸리는 느린 데이터베이스 쿼리
+3. 데이터베이스 커넥션 풀 고갈
+4. Redis 연결 시간 초과
+
+주요 병목 현상은 데이터베이스 관련인 것으로 보입니다.
+</code></pre>
+<h2>일반적인 사용 사례 및 명령어</h2>
+<h3>개발 서버</h3>
+<h4>Node.js/NPM</h4>
+<pre><code class="language-bash"># Vite/React/Vue 개발 서버
+npm run dev              # run_in_background: true
+npm run serve           # run_in_background: true
+yarn dev                # run_in_background: true
+pnpm dev                # run_in_background: true
+
+# Watch 모드
+npm run watch           # run_in_background: true
+npm run build:watch     # run_in_background: true
+</code></pre>
+<h4>Python</h4>
+<pre><code class="language-bash"># Django 개발 서버
+python manage.py runserver              # run_in_background: true
+python manage.py runserver 0.0.0.0:8000 # run_in_background: true
+
+# Flask 개발 서버
+flask run                               # run_in_background: true
+flask run --host=0.0.0.0 --port=5000   # run_in_background: true
+
+# uvicorn을 사용한 FastAPI
+uvicorn main:app --reload              # run_in_background: true
+uvicorn main:app --host 0.0.0.0 --port 8000 --reload  # run_in_background: true
+
+# 간단한 HTTP 서버
+python3 -m http.server 8080            # run_in_background: true
+python -m SimpleHTTPServer 8000        # run_in_background: true (Python 2)
+</code></pre>
+<h4>Docker 서비스</h4>
+<pre><code class="language-bash"># Docker compose
+docker-compose up                      # run_in_background: true
+docker-compose up postgres redis       # run_in_background: true
+docker-compose up -d                   # 이미 데몬화되었지만, 여전히 백그라운드 사용 가능
+
+# 개별 컨테이너
+docker run -p 5432:5432 postgres      # run_in_background: true
+docker run -p 6379:6379 redis         # run_in_background: true
+</code></pre>
+<h4>기타 언어</h4>
+<pre><code class="language-bash"># Ruby on Rails
+rails server                           # run_in_background: true
+bundle exec rails s                    # run_in_background: true
+
+# PHP 내장 서버
+php -S localhost:8000                  # run_in_background: true
+php artisan serve                      # run_in_background: true (Laravel)
+
+# Go
+go run main.go                         # run_in_background: true
+air                                    # run_in_background: true (hot reload)
+
+# Rust
+cargo run                              # run_in_background: true
+cargo watch -x run                     # run_in_background: true
+</code></pre>
+<h3>Watch 프로세스</h3>
+<pre><code class="language-bash"># Webpack watch 모드
+webpack --watch  # run_in_background: true
+
+# TypeScript 컴파일러 watch
+tsc --watch  # run_in_background: true
+
+# 자동 재시작을 위한 Nodemon
+nodemon server.js  # run_in_background: true
+</code></pre>
+<h3>로그 모니터링</h3>
+<pre><code class="language-bash"># 애플리케이션 로그 tail
+tail -f /var/log/app.log  # run_in_background: true
+
+# Journal 로그
+journalctl -f -u myservice  # run_in_background: true
+</code></pre>
+<h3>빌드 프로세스</h3>
+<pre><code class="language-bash"># 오래 실행되는 빌드
+npm run build:production  # run_in_background: true
+
+# Docker 이미지 빌드
+docker build -t myapp .  # run_in_background: true
+</code></pre>
+<h2>Claude-Flow와의 통합</h2>
+<h3>자동 백그라운드 감지</h3>
+<p>Claude-Flow는 특정 명령어를 자동으로 감지하고 백그라운드에서 실행하도록 향상될 수 있습니다:</p>
+<h4>패턴 기반 감지</h4>
+<p>이러한 패턴과 일치하는 명령어는 자동으로 백그라운드 실행을 사용할 수 있습니다:</p>
+<ul>
+<li><code>npm run dev</code>, <code>yarn start</code>, <code>pnpm dev</code></li>
+<li><code>python manage.py runserver</code>, <code>flask run</code>, <code>uvicorn</code></li>
+<li><code>docker-compose up</code>, <code>docker run</code></li>
+<li><code>webpack --watch</code>, <code>parcel watch</code></li>
+<li><code>--watch</code> 또는 <code>-w</code> 플래그가 있는 모든 명령어</li>
+</ul>
+<h4>설정</h4>
+<p><code>.claude/settings.json</code>에 추가:</p>
+<pre><code class="language-json">{
+  &quot;autoBackground&quot;: {
+    &quot;enabled&quot;: true,
+    &quot;patterns&quot;: [
+      &quot;npm run dev&quot;,
+      &quot;yarn start&quot;,
+      &quot;docker-compose up&quot;,
+      &quot;*--watch*&quot;,
+      &quot;tail -f *&quot;
+    ],
+    &quot;excludePatterns&quot;: [
+      &quot;npm test&quot;,
+      &quot;npm run build&quot;
+    ]
+  }
+}
+</code></pre>
+<h2>프롬프트에서의 자동 백그라운드 실행</h2>
+<h3>직접적인 프롬프트 지시</h3>
+<p>프롬프트에서 Claude에게 직접 백그라운드 실행을 지시할 수 있습니다:</p>
+<h4>예시 프롬프트</h4>
+<pre><code class="language-markdown"># 명시적인 백그라운드 지시
+&quot;run_in_background 파라미터를 사용하여 백그라운드에서 개발 서버를 시작해줘&quot;
+
+# 암시적인 백그라운드 요청
+&quot;개발 서버를 실행하고 API 엔드포인트 작업을 계속해줘&quot;
+(Claude가 백그라운드 실행의 필요성을 인식할 것입니다)
+
+# 여러 백그라운드 작업
+&quot;전체 개발 환경을 설정해줘:
+- 프론트엔드 개발 서버를 백그라운드에서 시작
+- API 서버를 백그라운드에서 실행
+- 데이터베이스 컨테이너를 백그라운드에서 실행
+그런 다음 사용자 인증 구현을 시작해줘&quot;
+</code></pre>
+<h3>에이전트를 위한 시스템 프롬프트</h3>
+<p>에이전트가 자동으로 백그라운드 실행을 사용하도록 설정합니다:</p>
+<pre><code class="language-markdown">## 에이전트 시스템 프롬프트 예시
+당신은 개발 보조원입니다. 명령어를 실행할 때:
+1. 항상 run_in_background: true로 개발 서버를 실행하세요.
+2. 항상 watch 프로세스를 백그라운드에서 실행하세요.
+3. 'dev', 'watch', 'serve', 또는 'monitor'를 포함하는 모든 명령어에 대해 백그라운드 실행을 사용하세요.
+4. 백그라운드 작업을 모니터링하고 문제를 보고하세요.
+5. 컨텍스트를 전환할 때 백그라운드 작업을 정리하세요.
+
+특별 처리:
+- npm run dev → 항상 백그라운드
+- docker-compose up → 항상 백그라운드
+- 빌드 명령어 → 30초를 초과하지 않으면 포그라운드
+- 테스트 명령어 → 즉각적인 피드백을 위해 항상 포그라운드
+</code></pre>
+<h3>CLAUDE.md 설정</h3>
+<p>프로젝트의 <code>CLAUDE.md</code> 파일에 추가하여 자동 백그라운드 실행을 보장합니다:</p>
+<pre><code class="language-markdown"># 프로젝트 개발 가이드라인
+
+## 명령어 실행 규칙
+
+### 항상 백그라운드에서 실행:
+- `npm run dev` - 프론트엔드 개발 서버
+- `npm run api` - API 개발 서버
+- `docker-compose up` - 로컬 서비스
+- `npm run watch` - 파일 감시자
+- --watch 플래그가 있는 모든 명령어
+
+### 백그라운드 모니터링:
+백그라운드 작업을 시작한 후, BashOutput을 사용하여 주기적으로 상태를 확인하세요.
+백그라운드 작업이 실패하거나 예기치 않게 중지되면 알림을 보내세요.
+
+### 예시 워크플로우:
+1. 백그라운드에서 개발 서버 시작: npm run dev (run_in_background: true 사용)
+2. 출력 모니터링: 30초마다 BashOutput으로 확인
+3. 서버가 실행되는 동안 다른 작업 계속
+4. 정리: 완료되면 KillBash 사용
+</code></pre>
+<h3>프롬프트 템플릿</h3>
+<h4>개발 설정 템플릿</h4>
+<pre><code class="language-markdown">개발 환경을 설정합니다:
+1. 'npm install' 실행 (포그라운드)
+2. run_in_background: true로 'npm run dev' 시작
+3. run_in_background: true로 'npm run api' 시작
+4. 두 백그라운드 작업의 성공적인 시작을 모니터링
+5. 실행이 확인되면 [주요 작업]을 진행
+</code></pre>
+<h4>디버깅 템플릿</h4>
+<pre><code class="language-markdown">애플리케이션 문제를 디버깅합니다:
+1. 상세 로깅으로 백그라운드에서 앱 시작:
+   DEBUG=* npm run dev (run_in_background: true 사용)
+2. &quot;error|warning&quot; 필터로 BashOutput을 사용하여 출력 모니터링
+3. 로그를 모니터링하면서 문제 재현
+4. 필터링된 출력에서 문제 분석
+</code></pre>
+<h3>에이전트별 백그라운드 전략</h3>
+<h4>DevOps 에이전트</h4>
+<pre><code class="language-javascript">// 에이전트 설정
+{
+  &quot;name&quot;: &quot;DevOps Agent&quot;,
+  &quot;autoBackground&quot;: {
+    &quot;rules&quot;: [
+      { &quot;pattern&quot;: &quot;docker*&quot;, &quot;background&quot;: true },
+      { &quot;pattern&quot;: &quot;*compose*&quot;, &quot;background&quot;: true },
+      { &quot;pattern&quot;: &quot;kubectl logs -f&quot;, &quot;background&quot;: true },
+      { &quot;pattern&quot;: &quot;terraform apply&quot;, &quot;background&quot;: false },
+      { &quot;pattern&quot;: &quot;*--watch*&quot;, &quot;background&quot;: true }
+    ]
+  }
+}
+</code></pre>
+<h4>QA 테스팅 에이전트</h4>
+<pre><code class="language-javascript">{
+  &quot;name&quot;: &quot;QA Agent&quot;,
+  &quot;autoBackground&quot;: {
+    &quot;rules&quot;: [
+      { &quot;pattern&quot;: &quot;cypress open&quot;, &quot;background&quot;: true },
+      { &quot;pattern&quot;: &quot;jest --watch&quot;, &quot;background&quot;: true },
+      { &quot;pattern&quot;: &quot;npm test&quot;, &quot;background&quot;: false },
+      { &quot;pattern&quot;: &quot;playwright test&quot;, &quot;background&quot;: false }
+    ]
+  }
+}
+</code></pre>
+<h3>Swarm 조정</h3>
+<p>Claude-Flow의 hive-mind 시스템을 사용할 때:</p>
+<pre><code class="language-bash"># 전문 백그라운드 모니터 에이전트 생성
+npx claude-flow hive-mind spawn &quot;background-monitor&quot; \
+  --role &quot;모든 백그라운드 프로세스 모니터링 및 관리&quot; \
+  --instructions &quot;
+    1. 모든 백그라운드 작업 추적
+    2. 실패 시 알림
+    3. 충돌한 서비스 재시작
+    4. 리소스 사용량 보고
+    5. 모든 모니터링 명령어에 run_in_background 사용
+  &quot;
+
+# 백그라운드 인식이 있는 주요 개발 에이전트
+npx claude-flow hive-mind spawn &quot;full-stack-dev&quot; \
+  --role &quot;서비스가 백그라운드에서 실행되는 동안 기능 개발&quot; \
+  --instructions &quot;
+    모든 개발 서버를 백그라운드에서 시작:
+    - 프론트엔드: npm run dev (백그라운드)
+    - 백엔드: npm run api (백그라운드)
+    - 데이터베이스: docker-compose up db (백그라운드)
+    그런 다음 기능 구현에 집중
+  &quot;
+</code></pre>
+<h3>워크플로우 자동화</h3>
+<p>백그라운드 실행을 활용하는 자동화된 워크플로우를 생성합니다:</p>
+<pre><code class="language-yaml"># .claude/workflows/dev-setup.yaml
+name: 개발 설정
+steps:
+  - name: 의존성 설치
+    command: npm install
+    background: false
+    
+  - name: 프론트엔드 시작
+    command: npm run dev
+    background: true
+    monitor: true
+    
+  - name: 백엔드 시작
+    command: npm run api  
+    background: true
+    monitor: true
+    
+  - name: 데이터베이스 시작
+    command: docker-compose up db
+    background: true
+    monitor: true
+    
+  - name: 서비스 대기
+    command: npx wait-on http://localhost:3000 http://localhost:4000
+    background: false
+    
+  - name: 마이그레이션 실행
+    command: npm run migrate
+    background: false
+    depends_on: [데이터베이스 시작]
+</code></pre>
+<h3>스마트 명령어 래퍼</h3>
+<p>백그라운드 실행을 자동으로 결정하는 명령어 래퍼를 생성합니다:</p>
+<pre><code class="language-javascript">// .claude/scripts/smart-exec.js
+const BACKGROUND_PATTERNS = [
+  /^npm run (dev|watch|serve)/,
+  /^yarn (dev|watch|start)/,
+  /^pnpm (dev|watch|serve)/,
+  /docker-compose up/,
+  /--watch/,
+  /webpack.*watch/,
+  /nodemon/,
+  /^ng serve/,
+  /^vue-cli-service serve/,
+  /^next dev/,
+  /^nuxt dev/,
+  /python.*runserver/,
+  /flask run/,
+  /uvicorn.*--reload/,
+  /tail -f/,
+  /journalctl.*-f/
+];
+
+function shouldRunInBackground(command) {
+  return BACKGROUND_PATTERNS.some(pattern =&gt; pattern.test(command));
+}
+
+// Claude-Flow 통합을 위해 내보내기
+module.exports = { shouldRunInBackground };
+</code></pre>
+<h3>컨텍스트 인식 백그라운드 결정</h3>
+<p>Claude가 지능적인 백그라운드 결정을 내리도록 학습시킵니다:</p>
+<pre><code class="language-markdown">## 지능형 백그라운드 실행 규칙
+
+### 명령어 의도 분석:
+1. **개발/Watch 명령어** → 항상 백그라운드
+   - 포함: dev, watch, serve, monitor
+   - 목적: 장기 실행 관찰
+
+2. **빌드 명령어** → 조건부
+   - 예상 시간이 30초 이상이면 → 백그라운드
+   - 30초 미만이면 → 포그라운드
+
+3. **테스트 명령어** → 보통 포그라운드
+   - 예외: --watch 모드 → 백그라운드
+   - CI/CD 테스트 → 즉각적인 결과를 위해 포그라운드
+
+4. **데이터 처리** → 범위 분석
+   - 대용량 데이터셋 → 백그라운드
+   - 빠른 쿼리 → 포그라운드
+
+### 다단계 워크플로우:
+여러 관련 명령어를 실행할 때:
+1. 준비 단계 (설치, 빌드) → 포그라운드
+2. 서비스 (서버, 데이터베이스) → 백그라운드
+3. 모니터링 (로그, 메트릭) → 백그라운드
+4. 작업 (마이그레이션, 시드) → 포그라운드
+5. 정리 → 포그라운드
+
+### 예시 결정 트리:
+</code></pre>
+<p>서버/서비스인가? → 예 → 백그라운드
+파일을 감시하고 있는가? → 예 → 백그라운드
+추가 작업을 차단하는가? → 예 → 백그라운드
+즉각적인 출력이 필요한가? → 아니오 → 백그라운드
+일회성 명령어인가? → 예 → 포그라운드
+기본값 → 포그라운드</p>
+<pre><code></code></pre>
+<h3>Hook 시스템 통합</h3>
+<h4>Pre-Command Hook</h4>
+<pre><code class="language-bash">npx claude-flow hooks pre-command \
+  --analyze-for-background \
+  --auto-background-threshold 30
+</code></pre>
+<h4>백그라운드 모니터 Hook</h4>
+<pre><code class="language-bash">npx claude-flow hooks background-monitor \
+  --check-interval 10 \
+  --alert-on-failure
+</code></pre>
+<h3>MCP 도구 확장</h3>
+<p>Claude-Flow를 위한 잠재적인 새로운 MCP 도구:</p>
+<ol>
+<li>
+<p><strong>background_spawn</strong></p>
+<ul>
+<li>지능적으로 백그라운드에서 명령어 생성</li>
+<li>리소스 할당 관리</li>
+<li>프로세스 라이프사이클 추적</li>
+</ul>
+</li>
+<li>
+<p><strong>background_monitor</strong></p>
+<ul>
+<li>실시간 모니터링 대시보드</li>
+<li>리소스 사용량 추적</li>
+<li>실패 시 자동 재시작</li>
+</ul>
+</li>
+<li>
+<p><strong>background_orchestrate</strong></p>
+<ul>
+<li>여러 백그라운드 프로세스 관리</li>
+<li>프로세스 간의 종속성</li>
+<li>정상적인 종료 시퀀스</li>
+</ul>
+</li>
+</ol>
+<h2>백그라운드 작업 관리</h2>
+<h3>작업 상태 확인</h3>
+<h4>/bashes 명령어 사용</h4>
+<pre><code class="language-bash"># 인터랙티브 모드 - 모든 백그라운드 셸 보기
+/bashes
+
+# 출력 내용:
+# - 셸 ID (bash_1, bash_2 등)
+# - 실행된 명령어
+# - 상태 (running/completed/killed)
+# - 실행 시간 및 종료 코드
+</code></pre>
+<h4>프로그래밍 방식 상태 확인</h4>
+<pre><code class="language-bash"># Claude에게 특정 셸 확인 요청
+&quot;bash_3의 상태를 확인해줘&quot;
+
+# 모든 백그라운드 작업 요청
+&quot;실행 중인 모든 백그라운드 작업을 보여줘&quot;
+
+# 특정 셸의 상세 출력 받기
+&quot;bash_3의 출력을 보여줘&quot;
+</code></pre>
+<h3>출력 모니터링</h3>
+<h4>실시간 모니터링 패턴</h4>
+<pre><code class="language-bash"># 작업 시작
+&quot;백그라운드에서 npm run dev 실행해줘&quot;
+→ 반환: bash_1
+
+# 주기적으로 출력 확인
+&quot;bash_1 출력 확인해줘&quot;
+→ 마지막 확인 이후의 새로운 출력 표시
+
+# 오류 필터링
+&quot;bash_1에서 오류가 있는지 확인해줘&quot;
+→ Claude가 BashOutput에서 필터 파라미터 사용
+</code></pre>
+<h4>출력 관리</h4>
+<pre><code class="language-bash"># BashOutput은 마지막 확인 이후의 새로운 출력만 반환합니다
+# 이는 오래 실행되는 작업의 과도한 출력을 방지합니다
+
+# 예시 워크플로우:
+1. 서버 시작 → bash_1
+2. 첫 번째 확인 → 시작 로그 표시
+3. 두 번째 확인 → 새로운 요청만 표시
+4. 세 번째 확인 → 가장 최신 활동만 표시
+</code></pre>
+<h3>백그라운드 작업 종료</h3>
+<h4>작업 종료 방법</h4>
+<pre><code class="language-bash"># 방법 1: /bashes 인터랙티브 메뉴 사용
+/bashes
+→ 화살표 키로 셸 선택
+→ 'k'를 눌러 종료
+
+# 방법 2: Claude에게 직접 요청
+&quot;bash_3을 종료해줘&quot;
+&quot;npm dev 서버를 중지해줘&quot;
+&quot;모든 백그라운드 작업을 종료해줘&quot;
+
+# 방법 3: 특정 패턴 매칭
+&quot;포트 8080에서 실행 중인 작업을 종료해줘&quot;
+&quot;백그라운드에서 실행 중인 모든 도커 컨테이너를 중지해줘&quot;
+</code></pre>
+<h2>모범 사례</h2>
+<h3>1. <strong>셸 ID 관리</strong></h3>
+<pre><code class="language-bash"># 백그라운드 작업을 시작할 때 항상 셸 ID를 캡처하세요
+&quot;백그라운드에서 서버를 시작하고 셸 ID를 알려줘&quot;
+→ &quot;ID: bash_1로 백그라운드에서 명령어가 실행 중입니다&quot;
+
+# 각 ID가 무엇을 실행하는지 추적하세요
+bash_1: npm run dev (프론트엔드)
+bash_2: npm run api (백엔드)
+bash_3: docker-compose up (데이터베이스)
+</code></pre>
+<h3>2. <strong>리소스 관리</strong></h3>
+<ul>
+<li>백그라운드 작업의 CPU 및 메모리 사용량 모니터링</li>
+<li>오래 실행되는 프로세스에 대한 타임아웃 설정</li>
+<li>동시 백그라운드 작업 수 제한</li>
+<li>유휴 상태이거나 멈춘 프로세스 종료</li>
+</ul>
+<h3>3. <strong>오류 처리</strong></h3>
+<pre><code class="language-bash"># 정기적인 상태 확인
+&quot;bash_1이 아직 실행 중인지 확인해줘&quot;
+
+# 오류 모니터링
+&quot;bash_1 출력에서 오류나 경고가 있는지 확인해줘&quot;
+
+# 자동 재시작 패턴
+&quot;bash_1이 중지되었으면, 백그라운드에서 npm run dev를 다시 시작해줘&quot;
+</code></pre>
+<h3>4. <strong>세션 정리</strong></h3>
+<pre><code class="language-bash"># 세션을 종료하기 전
+&quot;모든 백그라운드 작업을 종료해줘&quot;
+
+# 또는 선택적으로
+&quot;bash_1과 bash_2는 종료하고 bash_3은 계속 실행해줘&quot;
+
+# 정리 확인
+/bashes  # 실행 중인 작업이 없어야 함
+</code></pre>
+<h3>5. <strong>출력 관리</strong></h3>
+<ul>
+<li>필터를 사용하여 특정 패턴 찾기</li>
+<li>지속적이 아닌 주기적으로 출력 확인</li>
+<li>/bashes 뷰에서 완료된 작업 지우기</li>
+<li>가능하면 구조화된 로깅 사용</li>
+</ul>
+<h2>고급 기능</h2>
+<h3>세션 지속성</h3>
+<p>백그라운드 작업은 Claude Code 세션 간에 <strong>자동으로 지속</strong>됩니다. 특별한 명령어가 필요 없습니다!</p>
+<pre><code class="language-bash"># 한 세션에서 작업 시작
+claude
+&gt; 백그라운드에서 npm run dev 실행  # → bash_1
+&gt; 백그라운드에서 docker-compose up 실행  # → bash_2
+&gt; 종료
+
+# 나중에 다시 시작 - 작업은 여전히 실행 중!
+claude --continue
+&gt; bash_1 출력 확인  # 개발 서버 여전히 실행 중
+&gt; bash_2 상태 확인  # Docker 여전히 실행 중
+</code></pre>
+<p><strong>주요 특징:</strong></p>
+<ul>
+<li>Claude를 종료한 후에도 백그라운드 프로세스는 계속 실행됩니다.</li>
+<li>셸 ID(bash_1, bash_2 등)는 보존됩니다.</li>
+<li>증분 읽기를 위해 출력 위치가 추적됩니다.</li>
+<li>재연결하려면 <code>--continue</code> 또는 <code>--resume</code>을 사용하세요.</li>
+</ul>
+<p>자세한 내용은 <a href="./session-persistence.md">세션 지속성 가이드</a>를 참조하세요.</p>
+<h3>작업 오케스트레이션</h3>
+<p>여러 백그라운드 작업을 조정합니다:</p>
+<pre><code class="language-bash"># 개발 환경 설정
+npx claude-flow orchestrate dev-env \
+  --background &quot;npm run dev&quot; \
+  --background &quot;npm run api&quot; \
+  --background &quot;docker-compose up db&quot; \
+  --wait-healthy
+</code></pre>
+<h3>지능형 모니터링</h3>
+<pre><code class="language-bash"># 알림 기능이 있는 스마트 모니터링
+npx claude-flow monitor \
+  --background-tasks \
+  --alert-on &quot;error|failed|exception&quot; \
+  --restart-on-failure
+</code></pre>
+<h2>문제 해결</h2>
+<h3>일반적인 문제</h3>
+<ol>
+<li>
+<p><strong>작업이 백그라운드에서 시작되지 않음</strong></p>
+<ul>
+<li><code>run_in_background: true</code>가 설정되었는지 확인</li>
+<li>셸 호환성 확인</li>
+<li>명령어가 인터랙티브 입력을 요구하지 않는지 확인</li>
+</ul>
+</li>
+<li>
+<p><strong>출력을 가져올 수 없음</strong></p>
+<ul>
+<li>올바른 bash_id인지 확인</li>
+<li>작업이 아직 실행 중인지 확인</li>
+<li>버퍼링 문제 확인 (버퍼링 없는 출력 사용)</li>
+</ul>
+</li>
+<li>
+<p><strong>작업이 종료되지 않음</strong></p>
+<ul>
+<li>정상적인 종료가 실패하면 강제 종료 사용</li>
+<li>자식 프로세스 확인</li>
+<li>애플리케이션의 신호 처리 확인</li>
+</ul>
+</li>
+</ol>
+<h3>디버그 명령어</h3>
+<h4>인터랙티브 셸 관리</h4>
+<p><strong>/bashes 명령어</strong>는 백그라운드 셸을 관리하기 위한 인터랙티브 인터페이스를 제공합니다:</p>
+<pre><code class="language-bash"># Claude Code 인터랙티브 모드에서 다음을 입력:
+/bashes
+
+# 다음을 보여주는 인터랙티브 메뉴가 열립니다:
+# - 실행 중 및 완료된 모든 백그라운드 셸
+# - 셸 ID, 명령어 및 상태
+# - 실행 시간 정보 및 종료 코드
+</code></pre>
+<p><strong>인터랙티브 컨트롤:</strong></p>
+<ul>
+<li><strong>↑/↓</strong>: 셸 간 이동</li>
+<li><strong>Enter</strong>: 선택한 셸의 상세 출력 보기</li>
+<li><strong>k</strong>: 선택한 실행 중인 셸 종료</li>
+<li><strong>Esc</strong>: 메뉴 종료</li>
+</ul>
+<h4>프로그래밍 방식 관리</h4>
+<p>프로그래밍 방식 제어를 위해 Claude Code의 도구 시스템을 사용하세요:</p>
+<pre><code class="language-bash"># 특정 백그라운드 작업의 출력 확인
+# bash_id와 함께 BashOutput 도구 사용
+
+# 특정 백그라운드 작업 종료
+# shell_id와 함께 KillBash 도구 사용
+
+# 백그라운드 작업 모니터링
+# 주기적으로 BashOutput 도구를 사용하여 상태 확인
+</code></pre>
+<p><strong>참고:</strong> <code>/bashes</code> 명령어는 인터랙티브 모드에서만 사용할 수 있습니다. 스크립트 및 자동화의 경우 Claude의 도구 시스템을 통해 BashOutput 및 KillBash 도구를 사용하세요.</p>
+<h2>성능 고려 사항</h2>
+<h3>메모리 사용량</h3>
+<ul>
+<li>백그라운드 작업은 독립적으로 메모리를 소비합니다.</li>
+<li>총 시스템 메모리 사용량을 모니터링하세요.</li>
+<li>작업별 메모리 제한을 구현하세요.</li>
+</ul>
+<h3>CPU 사용량</h3>
+<ul>
+<li>백그라운드 작업은 동시에 실행됩니다.</li>
+<li>주 Claude Code 성능에 영향을 줄 수 있습니다.</li>
+<li>우선순위가 낮은 작업에 대해 nice 레벨을 고려하세요.</li>
+</ul>
+<h3>I/O 고려 사항</h3>
+<ul>
+<li>백그라운드 작업은 디스크 I/O를 공유합니다.</li>
+<li>네트워크 대역폭이 영향을 받을 수 있습니다.</li>
+<li>리소스 집약적인 작업에 대해 속도 제한을 고려하세요.</li>
+</ul>
+<h2>향후 개선 사항</h2>
+<h3>계획된 기능</h3>
+<ol>
+<li><strong>오래 실행되는 명령어 자동 감지</strong></li>
+<li><strong>스마트 리소스 할당</strong></li>
+<li><strong>백그라운드 작업 템플릿</strong></li>
+<li><strong>세션 간 작업 마이그레이션</strong></li>
+<li><strong>분산 백그라운드 실행</strong></li>
+</ol>
+<h3>커뮤니티 요청</h3>
+<ul>
+<li>시각적 작업 관리자 UI</li>
+<li>작업 종속성 그래프</li>
+<li>자동 재시작 정책</li>
+<li>컨테이너 오케스트레이션과의 통합</li>
+<li>백그라운드 작업 마켓플레이스</li>
+</ul>
+<h2>관련 문서</h2>
+<ul>
+<li><a href="./bash-tool.md">Claude Code Bash 도구 문서</a></li>
+<li><a href="./hooks-system.md">Claude-Flow Hooks 시스템</a></li>
+<li><a href="./mcp-tools.md">MCP 도구 참조</a></li>
+<li><a href="./session-management.md">세션 관리</a></li>
+</ul>
+<h2>예시 저장소</h2>
+<p>더 많은 예시는 다음에서 찾을 수 있습니다: <a href="https://github.com/ruvnet/claude-flow-examples/tree/main/background-tasks">claude-flow-examples/background-tasks</a></p>
+<hr>
+<p><em>마지막 업데이트: 2025년 8월</em>
+<em>Claude-Flow 버전: 2.0.0-alpha</em></p>
+
+  </div>
+</article>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Hanson Kim. All rights reserved.</p>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>API DOCUMENTATION</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="/" class="logo">Hanson Kim</a>
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/blog/">Blog</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    
+<article class="post">
+  <header class="post-header">
+    <h1>API DOCUMENTATION</h1>
+    <time datetime="2025년 10월 15일">2025년 10월 15일</time>
+    
+    <div class="tags">
+      
+        
+      
+        
+        <span class="tag">Claude-Flow</span>
+        
+      
+        
+        <span class="tag">문서</span>
+        
+      
+        
+        <span class="tag">AI</span>
+        
+      
+    </div>
+    
+  </header>
+
+  <div class="post-content">
+    <h1>🔗 Claude-Flow v2.0.0 API 문서</h1>
+<h2>목차</h2>
+<ul>
+<li><a href="#%EA%B0%9C%EC%9A%94">개요</a></li>
+<li><a href="#%EC%9D%B8%EC%A6%9D">인증</a></li>
+<li><a href="#command-%EA%B5%AC%EB%AC%B8">Command 구문</a></li>
+<li><a href="#mcp-tools-%EC%B0%B8%EC%A1%B0">MCP Tools 참조</a>
+<ul>
+<li><a href="#claude-flow-tools">Claude-Flow Tools (87개)</a></li>
+<li><a href="#ruv-swarm-tools">Ruv-Swarm Tools (25개)</a></li>
+</ul>
+</li>
+<li><a href="#agent-%ED%83%80%EC%9E%85">Agent 타입</a></li>
+<li><a href="#websocket-%ED%86%B5%ED%95%A9">WebSocket 통합</a></li>
+<li><a href="#command-%EC%98%88%EC%A0%9C">Command 예제</a></li>
+<li><a href="#%EC%97%90%EB%9F%AC-%EC%B2%98%EB%A6%AC">에러 처리</a></li>
+<li><a href="#%EB%AA%A8%EB%B2%94-%EC%82%AC%EB%A1%80">모범 사례</a></li>
+</ul>
+<hr>
+<h2>개요</h2>
+<p>Claude-Flow v2.0.0은 112개의 MCP tool, 54개 이상의 전문 agent 타입, 고급 swarm intelligence 기능을 제공하여 포괄적인 AI agent orchestration을 지원합니다. 이 문서는 모든 기능에 대한 프로그래밍 방식 접근을 위한 완전한 API 표면을 다룹니다.</p>
+<h3>주요 기능</h3>
+<ul>
+<li><strong>112 MCP Tools</strong> - 87개 Claude-Flow + 25개 Ruv-Swarm 통합 tool</li>
+<li><strong>54+ Agent 타입</strong> - 모든 개발 요구에 대한 전문 agent</li>
+<li><strong>Swarm Intelligence</strong> - 다중 topology 조정 (hierarchical, mesh, ring, star)</li>
+<li><strong>Neural Network</strong> - WASM 가속 AI pattern 및 학습</li>
+<li><strong>Memory System</strong> - 압축 기능을 갖춘 영구 분산 memory</li>
+<li><strong>실시간 조정</strong> - WebSocket 기반 agent 통신</li>
+<li><strong>GitHub 통합</strong> - 네이티브 CI/CD 및 repository 관리</li>
+<li><strong>Auto-scaling</strong> - 동적 agent provisioning 및 resource 관리</li>
+</ul>
+<h2>인증</h2>
+<h3>CLI 인증</h3>
+<pre><code class="language-bash"># GitHub 인증으로 초기화 (권장)
+npx claude-flow@alpha github init
+
+# 또는 API key 사용
+export CLAUDE_FLOW_API_KEY=&quot;your-api-key&quot;
+npx claude-flow@alpha config set --api-key $CLAUDE_FLOW_API_KEY
+</code></pre>
+<h3>MCP 통합</h3>
+<pre><code class="language-javascript">// Claude-Flow를 MCP server로 추가
+claude mcp add claude-flow npx claude-flow@alpha mcp start
+
+// 사용 가능한 MCP server:
+// - claude-flow: 87개 네이티브 tool
+// - ruv-swarm: 25개 고급 조정 tool
+</code></pre>
+<h3>Token 기반 접근</h3>
+<pre><code class="language-bash"># Session token 생성
+npx claude-flow@alpha auth login
+
+# API 호출에 token 사용
+curl -H &quot;Authorization: Bearer $(npx claude-flow@alpha auth token)&quot; \
+  https://api.claude-flow.ai/v2/agents
+</code></pre>
+<h2>Command 구문</h2>
+<h3>올바른 Command 형식</h3>
+<p><strong>중요</strong>: 항상 <code>npx claude-flow@alpha</code> 사용 (<code>npx claude-flow</code> 아님)</p>
+<pre><code class="language-bash"># ✅ 올바름 - 업데이트된 구문
+npx claude-flow@alpha [command] [options]
+
+# ❌ 구식 - 사용하지 마세요
+npx claude-flow [command] [options]
+</code></pre>
+<h3>핵심 Command</h3>
+<pre><code class="language-bash"># Swarm 작업
+npx claude-flow@alpha coordination swarm-init --topology hierarchical
+npx claude-flow@alpha coordination agent-spawn --type coder
+npx claude-flow@alpha coordination task-orchestrate --task &quot;Build API&quot;
+
+# Memory 작업
+npx claude-flow@alpha memory usage --action store --key project/context
+npx claude-flow@alpha memory search --pattern &quot;authentication&quot;
+
+# Performance 분석
+npx claude-flow@alpha performance report --timeframe 24h
+npx claude-flow@alpha bottleneck analyze --component swarm
+
+# GitHub 통합
+npx claude-flow@alpha github repo-analyze --repo owner/repo
+npx claude-flow@alpha github pr-manage --action create
+</code></pre>
+<h2>MCP Tools 참조</h2>
+<h3>Claude-Flow Tools (총 87개)</h3>
+<h4>🐝 Swarm Coordination (12개 tool)</h4>
+<ul>
+<li><code>mcp__claude-flow__swarm_init</code> - topology로 swarm 초기화</li>
+<li><code>mcp__claude-flow__agent_spawn</code> - 전문 agent 생성</li>
+<li><code>mcp__claude-flow__task_orchestrate</code> - task 실행 조정</li>
+<li><code>mcp__claude-flow__swarm_status</code> - swarm health 모니터링</li>
+<li><code>mcp__claude-flow__agent_list</code> - 활성 agent 목록</li>
+<li><code>mcp__claude-flow__agent_metrics</code> - agent 성능 데이터</li>
+<li><code>mcp__claude-flow__swarm_monitor</code> - 실시간 모니터링</li>
+<li><code>mcp__claude-flow__topology_optimize</code> - 조정 최적화</li>
+<li><code>mcp__claude-flow__load_balance</code> - agent 워크로드 균형</li>
+<li><code>mcp__claude-flow__coordination_sync</code> - agent 동기화</li>
+<li><code>mcp__claude-flow__swarm_scale</code> - agent 수 확장</li>
+<li><code>mcp__claude-flow__swarm_destroy</code> - swarm 종료</li>
+</ul>
+<h4>🧠 Neural Network (15개 tool)</h4>
+<ul>
+<li><code>mcp__claude-flow__neural_status</code> - neural 시스템 상태</li>
+<li><code>mcp__claude-flow__neural_train</code> - AI pattern 학습</li>
+<li><code>mcp__claude-flow__neural_predict</code> - AI 예측 생성</li>
+<li><code>mcp__claude-flow__neural_patterns</code> - cognitive pattern</li>
+<li><code>mcp__claude-flow__model_load</code> - AI model 로드</li>
+<li><code>mcp__claude-flow__model_save</code> - 학습된 model 저장</li>
+<li><code>mcp__claude-flow__wasm_optimize</code> - WASM 성능</li>
+<li><code>mcp__claude-flow__inference_run</code> - AI inference 실행</li>
+<li><code>mcp__claude-flow__pattern_recognize</code> - pattern 감지</li>
+<li><code>mcp__claude-flow__cognitive_analyze</code> - cognitive 분석</li>
+<li><code>mcp__claude-flow__learning_adapt</code> - 적응형 학습</li>
+<li><code>mcp__claude-flow__neural_compress</code> - model 압축</li>
+<li><code>mcp__claude-flow__ensemble_create</code> - ensemble model</li>
+<li><code>mcp__claude-flow__transfer_learn</code> - transfer learning</li>
+<li><code>mcp__claude-flow__neural_explain</code> - AI 설명 가능성</li>
+</ul>
+<h4>💾 Memory &amp; Persistence (12개 tool)</h4>
+<ul>
+<li><code>mcp__claude-flow__memory_usage</code> - 데이터 저장/검색</li>
+<li><code>mcp__claude-flow__memory_search</code> - memory entry 검색</li>
+<li><code>mcp__claude-flow__memory_persist</code> - 영구 storage</li>
+<li><code>mcp__claude-flow__memory_namespace</code> - namespace 관리</li>
+<li><code>mcp__claude-flow__memory_backup</code> - memory 데이터 백업</li>
+<li><code>mcp__claude-flow__memory_restore</code> - 백업에서 복원</li>
+<li><code>mcp__claude-flow__memory_compress</code> - 데이터 압축</li>
+<li><code>mcp__claude-flow__memory_sync</code> - memory 동기화</li>
+<li><code>mcp__claude-flow__cache_manage</code> - cache 작업</li>
+<li><code>mcp__claude-flow__state_snapshot</code> - 상태 snapshot</li>
+<li><code>mcp__claude-flow__context_restore</code> - context 복원</li>
+<li><code>mcp__claude-flow__memory_analytics</code> - memory 분석</li>
+</ul>
+<h4>📊 Analysis &amp; Monitoring (13개 tool)</h4>
+<ul>
+<li><code>mcp__claude-flow__performance_report</code> - 성능 보고서</li>
+<li><code>mcp__claude-flow__bottleneck_analyze</code> - 병목 현상 감지</li>
+<li><code>mcp__claude-flow__task_status</code> - task 모니터링</li>
+<li><code>mcp__claude-flow__task_results</code> - task 결과</li>
+<li><code>mcp__claude-flow__benchmark_run</code> - benchmark 실행</li>
+<li><code>mcp__claude-flow__metrics_collect</code> - metric 수집</li>
+<li><code>mcp__claude-flow__trend_analysis</code> - 추세 분석</li>
+<li><code>mcp__claude-flow__cost_analysis</code> - 비용 추적</li>
+<li><code>mcp__claude-flow__quality_assess</code> - 품질 평가</li>
+<li><code>mcp__claude-flow__error_analysis</code> - 에러 분석</li>
+<li><code>mcp__claude-flow__usage_stats</code> - 사용량 통계</li>
+<li><code>mcp__claude-flow__health_check</code> - 시스템 health</li>
+<li><code>mcp__claude-flow__token_usage</code> - token 추적</li>
+</ul>
+<h4>🔄 Workflow &amp; Automation (11개 tool)</h4>
+<ul>
+<li><code>mcp__claude-flow__workflow_create</code> - workflow 생성</li>
+<li><code>mcp__claude-flow__workflow_execute</code> - workflow 실행</li>
+<li><code>mcp__claude-flow__workflow_export</code> - workflow 내보내기</li>
+<li><code>mcp__claude-flow__automation_setup</code> - automation 설정</li>
+<li><code>mcp__claude-flow__pipeline_create</code> - pipeline 생성</li>
+<li><code>mcp__claude-flow__scheduler_manage</code> - schedule 관리</li>
+<li><code>mcp__claude-flow__trigger_setup</code> - trigger 설정</li>
+<li><code>mcp__claude-flow__workflow_template</code> - workflow template</li>
+<li><code>mcp__claude-flow__batch_process</code> - batch 처리</li>
+<li><code>mcp__claude-flow__parallel_execute</code> - 병렬 실행</li>
+<li><code>mcp__claude-flow__sparc_mode</code> - SPARC workflow</li>
+</ul>
+<h4>🐙 GitHub Integration (8개 tool)</h4>
+<ul>
+<li><code>mcp__claude-flow__github_repo_analyze</code> - repository 분석</li>
+<li><code>mcp__claude-flow__github_pr_manage</code> - pull request 관리</li>
+<li><code>mcp__claude-flow__github_issue_track</code> - issue 추적</li>
+<li><code>mcp__claude-flow__github_release_coord</code> - release 조정</li>
+<li><code>mcp__claude-flow__github_workflow_auto</code> - workflow 자동화</li>
+<li><code>mcp__claude-flow__github_code_review</code> - code 리뷰</li>
+<li><code>mcp__claude-flow__github_sync_coord</code> - 동기화 조정</li>
+<li><code>mcp__claude-flow__github_metrics</code> - GitHub metric</li>
+</ul>
+<h4>🤖 DAA (Dynamic Agent Architecture) (8개 tool)</h4>
+<ul>
+<li><code>mcp__claude-flow__daa_agent_create</code> - 동적 agent 생성</li>
+<li><code>mcp__claude-flow__daa_capability_match</code> - capability 매칭</li>
+<li><code>mcp__claude-flow__daa_resource_alloc</code> - resource 할당</li>
+<li><code>mcp__claude-flow__daa_lifecycle_manage</code> - 라이프사이클 관리</li>
+<li><code>mcp__claude-flow__daa_communication</code> - agent 통신</li>
+<li><code>mcp__claude-flow__daa_consensus</code> - consensus 알고리즘</li>
+<li><code>mcp__claude-flow__daa_fault_tolerance</code> - 장애 허용성</li>
+<li><code>mcp__claude-flow__daa_optimization</code> - agent 최적화</li>
+</ul>
+<h4>🛠️ System &amp; Utilities (8개 tool)</h4>
+<ul>
+<li><code>mcp__claude-flow__terminal_execute</code> - terminal 실행</li>
+<li><code>mcp__claude-flow__config_manage</code> - 구성 관리</li>
+<li><code>mcp__claude-flow__features_detect</code> - feature 감지</li>
+<li><code>mcp__claude-flow__security_scan</code> - 보안 스캔</li>
+<li><code>mcp__claude-flow__backup_create</code> - 백업 생성</li>
+<li><code>mcp__claude-flow__restore_system</code> - 시스템 복원</li>
+<li><code>mcp__claude-flow__log_analysis</code> - log 분석</li>
+<li><code>mcp__claude-flow__diagnostic_run</code> - 진단 실행</li>
+</ul>
+<h3>Ruv-Swarm Tools (총 25개)</h3>
+<h4>🌊 Advanced Swarm Operations</h4>
+<ul>
+<li><code>mcp__ruv-swarm__swarm_init</code> - 고급 swarm 초기화</li>
+<li><code>mcp__ruv-swarm__swarm_status</code> - 상세 swarm 상태</li>
+<li><code>mcp__ruv-swarm__swarm_monitor</code> - 실시간 모니터링</li>
+<li><code>mcp__ruv-swarm__agent_spawn</code> - ruv-swarm agent 생성</li>
+<li><code>mcp__ruv-swarm__agent_list</code> - ruv-swarm agent 목록</li>
+<li><code>mcp__ruv-swarm__agent_metrics</code> - agent 성능 metric</li>
+</ul>
+<h4>🎯 Task Coordination</h4>
+<ul>
+<li><code>mcp__ruv-swarm__task_orchestrate</code> - 고급 task orchestration</li>
+<li><code>mcp__ruv-swarm__task_status</code> - task 상태 모니터링</li>
+<li><code>mcp__ruv-swarm__task_results</code> - task 결과 검색</li>
+</ul>
+<h4>🧠 Neural Intelligence</h4>
+<ul>
+<li><code>mcp__ruv-swarm__neural_status</code> - neural 시스템 상태</li>
+<li><code>mcp__ruv-swarm__neural_train</code> - neural model 학습</li>
+<li><code>mcp__ruv-swarm__neural_patterns</code> - cognitive pattern</li>
+</ul>
+<h4>💾 Memory Management</h4>
+<ul>
+<li><code>mcp__ruv-swarm__memory_usage</code> - memory 작업</li>
+</ul>
+<h4>⚡ Performance</h4>
+<ul>
+<li><code>mcp__ruv-swarm__benchmark_run</code> - 성능 benchmark</li>
+<li><code>mcp__ruv-swarm__features_detect</code> - feature 감지</li>
+</ul>
+<h4>🤖 Dynamic Agent Architecture (DAA)</h4>
+<ul>
+<li><code>mcp__ruv-swarm__daa_init</code> - DAA 초기화</li>
+<li><code>mcp__ruv-swarm__daa_agent_create</code> - DAA agent 생성</li>
+<li><code>mcp__ruv-swarm__daa_agent_adapt</code> - agent 행동 적응</li>
+<li><code>mcp__ruv-swarm__daa_workflow_create</code> - DAA workflow 생성</li>
+<li><code>mcp__ruv-swarm__daa_workflow_execute</code> - DAA workflow 실행</li>
+<li><code>mcp__ruv-swarm__daa_knowledge_share</code> - 지식 공유</li>
+<li><code>mcp__ruv-swarm__daa_learning_status</code> - 학습 상태</li>
+<li><code>mcp__ruv-swarm__daa_cognitive_pattern</code> - cognitive pattern</li>
+<li><code>mcp__ruv-swarm__daa_meta_learning</code> - meta-learning</li>
+<li><code>mcp__ruv-swarm__daa_performance_metrics</code> - 성능 metric</li>
+</ul>
+<h2>Agent 타입</h2>
+<h3>핵심 개발 Agent</h3>
+<table>
+<thead>
+<tr>
+<th>Agent</th>
+<th>타입</th>
+<th>기능</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>coder</strong></td>
+<td>구현</td>
+<td>code 생성, 리팩토링, 디버깅</td>
+</tr>
+<tr>
+<td><strong>reviewer</strong></td>
+<td>품질 보증</td>
+<td>code 리뷰, 모범 사례, 표준</td>
+</tr>
+<tr>
+<td><strong>tester</strong></td>
+<td>테스팅</td>
+<td>unit test, integration test, TDD</td>
+</tr>
+<tr>
+<td><strong>researcher</strong></td>
+<td>조사</td>
+<td>연구, 분석, 문서화</td>
+</tr>
+<tr>
+<td><strong>planner</strong></td>
+<td>계획</td>
+<td>프로젝트 계획, 작업 분해</td>
+</tr>
+</tbody>
+</table>
+<h3>전문 Agent</h3>
+<table>
+<thead>
+<tr>
+<th>Agent</th>
+<th>타입</th>
+<th>기능</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>code-analyzer</strong></td>
+<td>분석</td>
+<td>code 품질, 성능, 보안</td>
+</tr>
+<tr>
+<td><strong>system-architect</strong></td>
+<td>Architecture</td>
+<td>시스템 설계, pattern, 확장성</td>
+</tr>
+<tr>
+<td><strong>backend-dev</strong></td>
+<td>개발</td>
+<td>API 개발, database, service</td>
+</tr>
+<tr>
+<td><strong>mobile-dev</strong></td>
+<td>개발</td>
+<td>React Native, mobile platform</td>
+</tr>
+<tr>
+<td><strong>ml-developer</strong></td>
+<td>ML/AI</td>
+<td>machine learning, data science</td>
+</tr>
+<tr>
+<td><strong>api-docs</strong></td>
+<td>문서화</td>
+<td>API 문서, OpenAPI spec</td>
+</tr>
+<tr>
+<td><strong>cicd-engineer</strong></td>
+<td>DevOps</td>
+<td>CI/CD pipeline, automation</td>
+</tr>
+<tr>
+<td><strong>performance-benchmarker</strong></td>
+<td>Performance</td>
+<td>load testing, 최적화</td>
+</tr>
+<tr>
+<td><strong>production-validator</strong></td>
+<td>검증</td>
+<td>production 준비, 배포</td>
+</tr>
+<tr>
+<td><strong>task-orchestrator</strong></td>
+<td>조정</td>
+<td>task 관리, workflow 조정</td>
+</tr>
+</tbody>
+</table>
+<h3>Swarm Coordination Agent</h3>
+<table>
+<thead>
+<tr>
+<th>Agent</th>
+<th>타입</th>
+<th>기능</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>hierarchical-coordinator</strong></td>
+<td>Coordination</td>
+<td>Queen 주도 hierarchical swarm</td>
+</tr>
+<tr>
+<td><strong>mesh-coordinator</strong></td>
+<td>Coordination</td>
+<td>peer-to-peer mesh network</td>
+</tr>
+<tr>
+<td><strong>adaptive-coordinator</strong></td>
+<td>Coordination</td>
+<td>동적 topology 전환</td>
+</tr>
+<tr>
+<td><strong>collective-intelligence-coordinator</strong></td>
+<td>Coordination</td>
+<td>hive-mind intelligence</td>
+</tr>
+<tr>
+<td><strong>swarm-memory-manager</strong></td>
+<td>Memory</td>
+<td>분산 memory 조정</td>
+</tr>
+<tr>
+<td><strong>consensus-builder</strong></td>
+<td>Consensus</td>
+<td>분산 의사결정</td>
+</tr>
+</tbody>
+</table>
+<h3>GitHub Integration Agent</h3>
+<table>
+<thead>
+<tr>
+<th>Agent</th>
+<th>타입</th>
+<th>기능</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>github-modes</strong></td>
+<td>통합</td>
+<td>종합 GitHub 작업</td>
+</tr>
+<tr>
+<td><strong>pr-manager</strong></td>
+<td>Pull Request</td>
+<td>PR 생성, 리뷰, 관리</td>
+</tr>
+<tr>
+<td><strong>issue-tracker</strong></td>
+<td>Issue</td>
+<td>issue 관리, 추적</td>
+</tr>
+<tr>
+<td><strong>release-manager</strong></td>
+<td>Release</td>
+<td>release 조정, automation</td>
+</tr>
+<tr>
+<td><strong>code-review-swarm</strong></td>
+<td>Code Review</td>
+<td>다중 agent code 리뷰</td>
+</tr>
+<tr>
+<td><strong>repo-architect</strong></td>
+<td>Repository</td>
+<td>repository 구조, 조직화</td>
+</tr>
+<tr>
+<td><strong>workflow-automation</strong></td>
+<td>Automation</td>
+<td>GitHub Actions, CI/CD</td>
+</tr>
+<tr>
+<td><strong>sync-coordinator</strong></td>
+<td>Synchronization</td>
+<td>다중 repo 조정</td>
+</tr>
+</tbody>
+</table>
+<h3>Performance &amp; Consensus Agent</h3>
+<table>
+<thead>
+<tr>
+<th>Agent</th>
+<th>타입</th>
+<th>기능</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>perf-analyzer</strong></td>
+<td>Performance</td>
+<td>병목 현상 식별, 최적화</td>
+</tr>
+<tr>
+<td><strong>byzantine-coordinator</strong></td>
+<td>Consensus</td>
+<td>Byzantine fault tolerance</td>
+</tr>
+<tr>
+<td><strong>raft-manager</strong></td>
+<td>Consensus</td>
+<td>Raft consensus 알고리즘</td>
+</tr>
+<tr>
+<td><strong>gossip-coordinator</strong></td>
+<td>Communication</td>
+<td>Gossip protocol 조정</td>
+</tr>
+<tr>
+<td><strong>quorum-manager</strong></td>
+<td>Consensus</td>
+<td>quorum 기반 결정</td>
+</tr>
+<tr>
+<td><strong>crdt-synchronizer</strong></td>
+<td>Synchronization</td>
+<td>CRDT 기반 데이터 동기화</td>
+</tr>
+<tr>
+<td><strong>security-manager</strong></td>
+<td>Security</td>
+<td>보안 검증, 감사</td>
+</tr>
+</tbody>
+</table>
+<h3>SPARC Agent</h3>
+<table>
+<thead>
+<tr>
+<th>Agent</th>
+<th>타입</th>
+<th>기능</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>sparc-coder</strong></td>
+<td>SPARC 구현</td>
+<td>TDD 주도 개발</td>
+</tr>
+<tr>
+<td><strong>sparc-coordinator</strong></td>
+<td>SPARC 조정</td>
+<td>SPARC workflow 관리</td>
+</tr>
+</tbody>
+</table>
+<h2>WebSocket 통합</h2>
+<h3>연결 설정</h3>
+<pre><code class="language-javascript">const ws = new WebSocket('wss://api.claude-flow.ai/v2/ws');
+
+// 인증
+ws.on('open', () =&gt; {
+  ws.send(JSON.stringify({
+    type: 'auth',
+    token: 'your-session-token'
+  }));
+});
+
+// Agent 이벤트 구독
+ws.send(JSON.stringify({
+  type: 'subscribe',
+  channels: ['agents', 'swarms', 'tasks', 'memory']
+}));
+</code></pre>
+<h3>이벤트 타입</h3>
+<h4>Agent 이벤트</h4>
+<pre><code class="language-javascript">// Agent 생성됨
+{
+  &quot;type&quot;: &quot;agent.spawned&quot;,
+  &quot;data&quot;: {
+    &quot;agentId&quot;: &quot;agent_123&quot;,
+    &quot;type&quot;: &quot;coder&quot;,
+    &quot;name&quot;: &quot;Backend Developer&quot;,
+    &quot;status&quot;: &quot;active&quot;
+  }
+}
+
+// Agent 상태 변경
+{
+  &quot;type&quot;: &quot;agent.status&quot;,
+  &quot;data&quot;: {
+    &quot;agentId&quot;: &quot;agent_123&quot;,
+    &quot;status&quot;: &quot;busy&quot;,
+    &quot;currentTask&quot;: &quot;implement-auth&quot;,
+    &quot;progress&quot;: 0.65
+  }
+}
+</code></pre>
+<h4>Swarm 이벤트</h4>
+<pre><code class="language-javascript">// Swarm 조정 이벤트
+{
+  &quot;type&quot;: &quot;swarm.coordination&quot;,
+  &quot;data&quot;: {
+    &quot;swarmId&quot;: &quot;swarm_456&quot;,
+    &quot;topology&quot;: &quot;hierarchical&quot;,
+    &quot;agentCount&quot;: 8,
+    &quot;efficiency&quot;: 0.94
+  }
+}
+
+// Task orchestration
+{
+  &quot;type&quot;: &quot;swarm.task&quot;,
+  &quot;data&quot;: {
+    &quot;taskId&quot;: &quot;task_789&quot;,
+    &quot;assignedAgents&quot;: [&quot;agent_123&quot;, &quot;agent_456&quot;],
+    &quot;strategy&quot;: &quot;parallel&quot;,
+    &quot;progress&quot;: 0.45
+  }
+}
+</code></pre>
+<h4>Memory 이벤트</h4>
+<pre><code class="language-javascript">// Memory 동기화
+{
+  &quot;type&quot;: &quot;memory.sync&quot;,
+  &quot;data&quot;: {
+    &quot;namespace&quot;: &quot;project-alpha&quot;,
+    &quot;entriesSync&quot;: 1247,
+    &quot;compressionRatio&quot;: 0.65,
+    &quot;latency&quot;: &quot;12ms&quot;
+  }
+}
+</code></pre>
+<h2>Command 예제</h2>
+<h3>완전한 개발 Workflow</h3>
+<pre><code class="language-bash"># 1. GitHub 통합으로 프로젝트 초기화
+npx claude-flow@alpha github init
+
+# 2. 개발용 swarm 설정
+npx claude-flow@alpha coordination swarm-init \
+  --topology hierarchical \
+  --max-agents 8 \
+  --strategy adaptive
+
+# 3. 개발 팀 생성 (동시 실행)
+npx claude-flow@alpha coordination agent-spawn --type system-architect --name &quot;Lead Architect&quot;
+npx claude-flow@alpha coordination agent-spawn --type backend-dev --name &quot;API Developer&quot;
+npx claude-flow@alpha coordination agent-spawn --type coder --name &quot;Frontend Dev&quot;
+npx claude-flow@alpha coordination agent-spawn --type tester --name &quot;QA Engineer&quot;
+npx claude-flow@alpha coordination agent-spawn --type code-analyzer --name &quot;Code Reviewer&quot;
+
+# 4. 프로젝트 context를 memory에 저장
+npx claude-flow@alpha memory usage \
+  --action store \
+  --key &quot;project/architecture&quot; \
+  --value &quot;Microservices with event sourcing and CQRS&quot; \
+  --namespace &quot;development&quot; \
+  --ttl 86400
+
+# 5. 개발 task orchestration
+npx claude-flow@alpha coordination task-orchestrate \
+  --task &quot;Build complete REST API with authentication and testing&quot; \
+  --strategy parallel \
+  --priority high
+
+# 6. Swarm 성능 모니터링
+npx claude-flow@alpha coordination swarm-status
+npx claude-flow@alpha performance report --timeframe 24h --format detailed
+
+# 7. GitHub repository 분석
+npx claude-flow@alpha github repo-analyze \
+  --repo &quot;myorg/my-project&quot; \
+  --analysis-type code_quality
+
+# 8. Automation용 workflow 생성
+npx claude-flow@alpha workflow create \
+  --name &quot;full-stack-pipeline&quot; \
+  --steps '[
+    {&quot;type&quot;: &quot;swarm_init&quot;, &quot;topology&quot;: &quot;hierarchical&quot;},
+    {&quot;type&quot;: &quot;agent_spawn&quot;, &quot;agents&quot;: [&quot;architect&quot;, &quot;coder&quot;, &quot;tester&quot;]},
+    {&quot;type&quot;: &quot;task_orchestrate&quot;, &quot;strategy&quot;: &quot;parallel&quot;},
+    {&quot;type&quot;: &quot;github_integration&quot;, &quot;automate&quot;: true}
+  ]'
+</code></pre>
+<h3>Neural Network Training</h3>
+<pre><code class="language-bash"># 1. Neural 시스템 상태 확인
+npx claude-flow@alpha neural status
+
+# 2. Coordination pattern 학습
+npx claude-flow@alpha neural train \
+  --pattern-type coordination \
+  --training-data &quot;./data/coordination-patterns.json&quot; \
+  --epochs 100
+
+# 3. AI 예측 생성
+npx claude-flow@alpha neural predict \
+  --model-id coordination_model_v1.2 \
+  --input &quot;complex microservices architecture with event sourcing&quot;
+
+# 4. Cognitive pattern 분석
+npx claude-flow@alpha neural patterns \
+  --pattern convergent \
+  --analysis detailed
+</code></pre>
+<h3>Memory 및 State 관리</h3>
+<pre><code class="language-bash"># 1. 복잡한 프로젝트 데이터 저장
+npx claude-flow@alpha memory usage \
+  --action store \
+  --key &quot;decisions/architecture&quot; \
+  --value '{
+    &quot;pattern&quot;: &quot;microservices&quot;,
+    &quot;database&quot;: &quot;postgres&quot;,
+    &quot;auth&quot;: &quot;jwt&quot;,
+    &quot;caching&quot;: &quot;redis&quot;
+  }' \
+  --namespace &quot;project-alpha&quot; \
+  --ttl 604800
+
+# 2. 관련 정보 검색
+npx claude-flow@alpha memory search \
+  --pattern &quot;microservices|architecture&quot; \
+  --namespace &quot;project-alpha&quot; \
+  --limit 10
+
+# 3. Memory 백업 생성
+npx claude-flow@alpha memory backup \
+  --namespace &quot;project-alpha&quot; \
+  --format compressed
+
+# 4. Memory 사용량 분석
+npx claude-flow@alpha memory analytics \
+  --timeframe 7d \
+  --include-compression-stats
+</code></pre>
+<h3>Performance 모니터링</h3>
+<pre><code class="language-bash"># 1. 종합 성능 보고서 실행
+npx claude-flow@alpha performance report \
+  --timeframe 24h \
+  --format detailed \
+  --include-recommendations
+
+# 2. 병목 현상 식별
+npx claude-flow@alpha bottleneck analyze \
+  --component swarm_coordination \
+  --metrics &quot;response_time,throughput,error_rate&quot; \
+  --severity all
+
+# 3. Swarm topology 최적화
+npx claude-flow@alpha topology optimize \
+  --swarm-id &quot;swarm_123&quot; \
+  --target-efficiency 0.95
+
+# 4. 모든 시스템 health 체크
+npx claude-flow@alpha health-check \
+  --components '[&quot;swarm&quot;, &quot;neural&quot;, &quot;memory&quot;, &quot;mcp&quot;]' \
+  --detailed true
+</code></pre>
+<h2>에러 처리</h2>
+<h3>일반적인 에러 코드</h3>
+<pre><code class="language-bash"># Agent 생성 실패
+{
+  &quot;error&quot;: &quot;AGENT_SPAWN_FAILED&quot;,
+  &quot;message&quot;: &quot;Maximum agent limit reached&quot;,
+  &quot;details&quot;: {
+    &quot;currentAgents&quot;: 8,
+    &quot;maxAgents&quot;: 8,
+    &quot;swarmId&quot;: &quot;swarm_123&quot;
+  }
+}
+
+# Memory 작업 실패
+{
+  &quot;error&quot;: &quot;MEMORY_STORAGE_FULL&quot;,
+  &quot;message&quot;: &quot;Memory storage limit exceeded&quot;,
+  &quot;details&quot;: {
+    &quot;usedMemory&quot;: &quot;512MB&quot;,
+    &quot;maxMemory&quot;: &quot;512MB&quot;,
+    &quot;namespace&quot;: &quot;project-alpha&quot;
+  }
+}
+
+# Neural training 실패
+{
+  &quot;error&quot;: &quot;NEURAL_TRAINING_FAILED&quot;,
+  &quot;message&quot;: &quot;Insufficient training data&quot;,
+  &quot;details&quot;: {
+    &quot;requiredSamples&quot;: 100,
+    &quot;providedSamples&quot;: 45,
+    &quot;patternType&quot;: &quot;coordination&quot;
+  }
+}
+</code></pre>
+<h3>에러 복구</h3>
+<pre><code class="language-bash"># Backoff를 사용한 재시도
+npx claude-flow@alpha coordination agent-spawn \
+  --type coder \
+  --retry-attempts 3 \
+  --retry-delay 1000
+
+# Graceful degradation
+npx claude-flow@alpha coordination swarm-init \
+  --topology hierarchical \
+  --fallback-topology mesh \
+  --max-agents 8 \
+  --min-agents 3
+
+# 에러 알림
+npx claude-flow@alpha hooks post-edit \
+  --file &quot;error.log&quot; \
+  --memory-key &quot;errors/$(date +%s)&quot; \
+  --notify-on-failure true
+</code></pre>
+<h2>모범 사례</h2>
+<h3>1. 효율적인 Agent 관리</h3>
+<pre><code class="language-bash"># 항상 agent 작업을 일괄 처리
+# ✅ 좋음 - 여러 spawn이 포함된 단일 메시지
+npx claude-flow@alpha coordination agent-spawn --type architect &amp;
+npx claude-flow@alpha coordination agent-spawn --type coder &amp;
+npx claude-flow@alpha coordination agent-spawn --type tester &amp;
+wait
+
+# ❌ 나쁨 - 순차적 spawning
+npx claude-flow@alpha coordination agent-spawn --type architect
+npx claude-flow@alpha coordination agent-spawn --type coder
+npx claude-flow@alpha coordination agent-spawn --type tester
+</code></pre>
+<h3>2. Memory 관리</h3>
+<pre><code class="language-bash"># Namespace를 효과적으로 사용
+npx claude-flow@alpha memory usage \
+  --action store \
+  --key &quot;config/database&quot; \
+  --namespace &quot;project-$(date +%Y%m%d)&quot; \
+  --ttl 86400
+
+# 정기적인 정리
+npx claude-flow@alpha memory compress \
+  --namespace &quot;temporary&quot; \
+  --threshold 0.8
+</code></pre>
+<h3>3. Performance 최적화</h3>
+<pre><code class="language-bash"># 확장 전 모니터링
+npx claude-flow@alpha performance report --format summary
+npx claude-flow@alpha coordination swarm-scale --target-size 12
+
+# 적절한 topology 사용
+# 복잡한 작업 -&gt; hierarchical
+# 협업 작업 -&gt; mesh
+# 순차 처리 -&gt; ring
+# 중앙집중 제어 -&gt; star
+</code></pre>
+<h3>4. 통합 Pattern</h3>
+<pre><code class="language-bash"># Automation을 위한 hook 통합
+npx claude-flow@alpha hooks pre-task \
+  --description &quot;Auto-spawn agents based on task complexity&quot;
+
+npx claude-flow@alpha hooks post-edit \
+  --file &quot;src/**/*.js&quot; \
+  --memory-key &quot;code-changes/$(date +%s)&quot;
+
+# 재사용성을 위한 workflow template
+npx claude-flow@alpha workflow template \
+  --name &quot;api-development&quot; \
+  --export &quot;./templates/api-dev-workflow.json&quot;
+</code></pre>
+<h3>5. 보안 및 접근 제어</h3>
+<pre><code class="language-bash"># 안전한 인증
+npx claude-flow@alpha github init --secure-mode
+npx claude-flow@alpha config set --api-key-encryption enabled
+
+# Resource 제한
+npx claude-flow@alpha coordination swarm-init \
+  --max-agents 10 \
+  --memory-limit &quot;1GB&quot; \
+  --cpu-limit &quot;4 cores&quot;
+
+# 감사 로깅
+npx claude-flow@alpha log-analysis \
+  --include-security-events \
+  --format audit
+</code></pre>
+<hr>
+<h2>지원 &amp; 리소스</h2>
+<h3>문서 링크</h3>
+<ul>
+<li><a href="https://github.com/ruvnet/claude-flow">GitHub Repository</a></li>
+<li><a href="../reference/AGENTS.md">Agent System Documentation</a></li>
+<li><a href="../reference/MCP_TOOLS.md">MCP Tools Reference</a></li>
+</ul>
+<h3>CLI 도움말</h3>
+<pre><code class="language-bash"># 모든 command에 대한 도움말
+npx claude-flow@alpha --help
+npx claude-flow@alpha coordination --help
+npx claude-flow@alpha github --help
+
+# 버전 정보
+npx claude-flow@alpha --version
+</code></pre>
+<h3>커뮤니티</h3>
+<ul>
+<li><strong>Discord</strong>: <a href="https://discord.gg/claude-flow">커뮤니티 참여</a></li>
+<li><strong>GitHub Issues</strong>: <a href="https://github.com/ruvnet/claude-flow/issues">버그 보고</a></li>
+<li><strong>Discussions</strong>: <a href="https://github.com/ruvnet/claude-flow/discussions">기능 요청</a></li>
+</ul>
+<hr>
+<div align="center">
+<p><strong>Claude-Flow v2.0.0-alpha.59</strong></p>
+<p><em>지능형 AI Agent Orchestration</em></p>
+<p><a href="../README.ko.md">🚀 시작하기</a> | <a href="../development/DEPLOYMENT.md">🔧 구성</a> | <a href="../CONTRIBUTING.md">🤝 기여</a></p>
+</div>
+
+  </div>
+</article>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Hanson Kim. All rights reserved.</p>
+  </footer>
+</body>
+</html>

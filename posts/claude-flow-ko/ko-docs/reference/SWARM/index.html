@@ -1,0 +1,1796 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SWARM</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="/" class="logo">Hanson Kim</a>
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/blog/">Blog</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    
+<article class="post">
+  <header class="post-header">
+    <h1>SWARM</h1>
+    <time datetime="2025년 10월 15일">2025년 10월 15일</time>
+    
+    <div class="tags">
+      
+        
+      
+        
+        <span class="tag">Claude-Flow</span>
+        
+      
+        
+        <span class="tag">문서</span>
+        
+      
+        
+        <span class="tag">AI</span>
+        
+      
+    </div>
+    
+  </header>
+
+  <div class="post-content">
+    <h1>Claude Flow Swarm Intelligence 문서</h1>
+<h2>목차</h2>
+<ul>
+<li><a href="#%EA%B0%9C%EC%9A%94">개요</a></li>
+<li><a href="#%ED%95%B5%EC%8B%AC-%EA%B0%9C%EB%85%90">핵심 개념</a></li>
+<li><a href="#topology-%ED%83%80%EC%9E%85">Topology 타입</a></li>
+<li><a href="#consensus-%EB%A9%94%EC%BB%A4%EB%8B%88%EC%A6%98">Consensus 메커니즘</a></li>
+<li><a href="#byzantine-fault-tolerance">Byzantine Fault Tolerance</a></li>
+<li><a href="#%EB%B6%84%EC%82%B0-%EB%A9%94%EB%AA%A8%EB%A6%AC-%EA%B4%80%EB%A6%AC">분산 메모리 관리</a></li>
+<li><a href="#%EC%84%B1%EB%8A%A5-metrics">성능 Metrics</a></li>
+<li><a href="#%EB%AA%85%EB%A0%B9%EC%96%B4-%EC%B0%B8%EC%A1%B0">명령어 참조</a></li>
+<li><a href="#%EA%B5%AC%EC%84%B1-%EC%98%88%EC%A0%9C">구성 예제</a></li>
+<li><a href="#%EC%8B%A4%EC%A0%9C-%EC%82%AC%EC%9A%A9-%EC%82%AC%EB%A1%80">실제 사용 사례</a></li>
+<li><a href="#%EB%AA%A8%EB%B2%94-%EC%82%AC%EB%A1%80">모범 사례</a></li>
+<li><a href="#%EB%AC%B8%EC%A0%9C-%ED%95%B4%EA%B2%B0">문제 해결</a></li>
+</ul>
+<h2>개요</h2>
+<p>Claude Flow Swarm Intelligence 시스템은 복잡한 작업을 해결하기 위해 협업하는 특화된 AI agent의 자기 조정 네트워크를 가능하게 합니다. 이 시스템은 분산 조정 패턴, consensus 메커니즘 및 fault-tolerant architecture를 구현하여 강력하고 확장 가능한 AI agent 네트워크를 생성합니다.</p>
+<h3>주요 기능</h3>
+<ul>
+<li><strong>다중 Topology 지원</strong>: 중앙 집중식, 분산, mesh, 계층적 및 하이브리드 구성</li>
+<li><strong>Byzantine Fault Tolerance</strong>: Agent 장애 및 악의적인 행동에 대한 복원력</li>
+<li><strong>Consensus 메커니즘</strong>: 민주적 의사 결정 및 집단 지능</li>
+<li><strong>분산 메모리</strong>: 공유 지식 및 조정 상태</li>
+<li><strong>성능 모니터링</strong>: 실시간 metrics 및 최적화</li>
+<li><strong>동적 확장</strong>: 자동 agent 생성 및 부하 분산</li>
+</ul>
+<h2>핵심 개념</h2>
+<h3>Swarm Architecture</h3>
+<p>Swarm은 다음으로 구성됩니다:</p>
+<ol>
+<li><strong>Master Orchestrator</strong>: 전체 swarm 작업 조정</li>
+<li><strong>특화된 Agent</strong>: 특정 기능을 가진 개별 AI 인스턴스</li>
+<li><strong>통신 Layer</strong>: Agent 간 통신을 위한 메시지 버스</li>
+<li><strong>공유 메모리</strong>: 분산 지식 및 상태 관리</li>
+<li><strong>Consensus Engine</strong>: 민주적 의사 결정 시스템</li>
+<li><strong>리소스 관리자</strong>: 컴퓨팅 및 메모리 할당</li>
+</ol>
+<h3>Agent 타입</h3>
+<pre><code class="language-typescript">export type AgentType =
+  | 'coordinator'      // 다른 agent 오케스트레이션 및 관리
+  | 'researcher'       // 연구 및 데이터 수집 수행
+  | 'coder'           // 코드 작성 및 유지보수
+  | 'analyst'         // 데이터 분석 및 인사이트 생성
+  | 'architect'       // 시스템 architecture 설계
+  | 'tester'          // 기능 테스트 및 검증
+  | 'reviewer'        // 작업 리뷰 및 검증
+  | 'optimizer'       // 성능 최적화
+  | 'documenter'      // 문서 작성
+  | 'monitor'         // 시스템 상태 모니터링
+  | 'specialist'      // 도메인별 전문성
+</code></pre>
+<h3>Agent 기능</h3>
+<p>각 agent는 작업 할당을 결정하는 정의된 기능을 가집니다:</p>
+<pre><code class="language-typescript">interface AgentCapabilities {
+  // 핵심 기능
+  codeGeneration: boolean;
+  codeReview: boolean;
+  testing: boolean;
+  documentation: boolean;
+  research: boolean;
+  analysis: boolean;
+
+  // 통신
+  webSearch: boolean;
+  apiIntegration: boolean;
+  fileSystem: boolean;
+  terminalAccess: boolean;
+
+  // 특화
+  languages: string[];     // 프로그래밍 언어
+  frameworks: string[];    // Framework 및 라이브러리
+  domains: string[];       // 도메인 전문성
+  tools: string[];         // 사용 가능한 tool
+
+  // 성능 제한
+  maxConcurrentTasks: number;
+  reliability: number;     // 0-1 신뢰도 점수
+  speed: number;           // 상대 속도 등급
+  quality: number;         // 품질 등급
+}
+</code></pre>
+<h2>Topology 타입</h2>
+<h3>1. 중앙 집중식 Topology</h3>
+<p><strong>구조</strong>: 단일 coordinator가 모든 agent 관리
+<strong>적합 대상</strong>: 간단한 작업, 명확한 계층 구조, 강력한 조정 필요</p>
+<pre><code class="language-typescript">interface CentralizedConfig {
+  topology: 'centralized';
+  coordinator: {
+    type: 'master-coordinator';
+    capabilities: ['task_management', 'resource_allocation'];
+  };
+  agents: AgentConfig[];
+  communication: 'hub-and-spoke';
+}
+</code></pre>
+<p><strong>장점</strong>:</p>
+<ul>
+<li>간단한 조정</li>
+<li>명확한 권한 구조</li>
+<li>쉬운 디버깅 및 모니터링</li>
+<li>일관된 의사 결정</li>
+</ul>
+<p><strong>단점</strong>:</p>
+<ul>
+<li>단일 장애 지점</li>
+<li>Coordinator에서 병목 현상</li>
+<li>제한된 확장성</li>
+<li>감소된 fault tolerance</li>
+</ul>
+<h3>2. 분산 Topology</h3>
+<p><strong>구조</strong>: 여러 coordinator가 관리 책임 공유
+<strong>적합 대상</strong>: 대규모 작업, fault tolerance, 지리적 분산</p>
+<pre><code class="language-typescript">interface DistributedConfig {
+  topology: 'distributed';
+  coordinators: CoordinatorConfig[];
+  loadBalancing: 'round-robin' | 'capability-based' | 'workload-balanced';
+  consensusRequired: boolean;
+  partitioning: 'task-based' | 'agent-based' | 'geographic';
+}
+</code></pre>
+<p><strong>장점</strong>:</p>
+<ul>
+<li>높은 fault tolerance</li>
+<li>뛰어난 확장성</li>
+<li>부하 분산</li>
+<li>지리적 복원력</li>
+</ul>
+<p><strong>단점</strong>:</p>
+<ul>
+<li>복잡한 조정</li>
+<li>Consistency 문제</li>
+<li>네트워크 오버헤드</li>
+<li>더 어려운 디버깅</li>
+</ul>
+<h3>3. Mesh Topology</h3>
+<p><strong>구조</strong>: 직접 통신을 통한 peer-to-peer agent 네트워크
+<strong>적합 대상</strong>: 협업 작업, consensus 기반 결정, 연구 프로젝트</p>
+<pre><code class="language-typescript">interface MeshConfig {
+  topology: 'mesh';
+  connectionStrategy: 'full-mesh' | 'partial-mesh' | 'ring-mesh';
+  consensusAlgorithm: 'raft' | 'pbft' | 'pos';
+  communicationProtocol: 'gossip' | 'broadcast' | 'multicast';
+  redundancyLevel: number; // 1-5
+}
+</code></pre>
+<p><strong>장점</strong>:</p>
+<ul>
+<li>민주적 의사 결정</li>
+<li>높은 중복성</li>
+<li>자기 조직화</li>
+<li>장애에 대한 복원력</li>
+</ul>
+<p><strong>단점</strong>:</p>
+<ul>
+<li>높은 통신 오버헤드</li>
+<li>대규모 네트워크에서의 복잡성</li>
+<li>Consensus가 느릴 수 있음</li>
+<li>리소스 집약적</li>
+</ul>
+<h3>4. 계층적 Topology</h3>
+<p><strong>구조</strong>: 여러 조정 수준을 가진 트리 구조
+<strong>적합 대상</strong>: 복잡한 프로젝트, 명확한 작업 분해, 엔터프라이즈 시나리오</p>
+<pre><code class="language-typescript">interface HierarchicalConfig {
+  topology: 'hierarchical';
+  levels: {
+    executives: CoordinatorConfig[];    // 최상위 전략
+    managers: CoordinatorConfig[];      // 중간 수준 조정
+    workers: AgentConfig[];             // 작업 실행
+  };
+  spanOfControl: number;                // 최대 직접 보고
+  escalationRules: EscalationRule[];
+}
+</code></pre>
+<p><strong>장점</strong>:</p>
+<ul>
+<li>명확한 책임 체인</li>
+<li>복잡한 작업에 효율적</li>
+<li>우수한 확장성</li>
+<li>자연스러운 작업 위임</li>
+</ul>
+<p><strong>단점</strong>:</p>
+<ul>
+<li>경직된 구조</li>
+<li>수준별 잠재적 병목 현상</li>
+<li>느린 적응</li>
+<li>통신 지연</li>
+</ul>
+<h3>5. 하이브리드 Topology</h3>
+<p><strong>구조</strong>: 최적의 성능을 위해 여러 topology 결합
+<strong>적합 대상</strong>: 다양한 요구사항을 가진 복잡한 다단계 프로젝트</p>
+<pre><code class="language-typescript">interface HybridConfig {
+  topology: 'hybrid';
+  phases: {
+    planning: 'centralized';     // 중앙 집중식 계획
+    execution: 'distributed';    // 분산 실행
+    integration: 'hierarchical'; // 계층적 통합
+    review: 'mesh';              // Mesh 기반 peer 리뷰
+  };
+  dynamicReconfiguration: boolean;
+  adaptationTriggers: string[];
+}
+</code></pre>
+<p><strong>장점</strong>:</p>
+<ul>
+<li>각 단계에 최적</li>
+<li>최대 유연성</li>
+<li>최상의 성능 특성</li>
+<li>변화하는 요구사항에 적응</li>
+</ul>
+<p><strong>단점</strong>:</p>
+<ul>
+<li>구현이 가장 복잡함</li>
+<li>정교한 조정 필요</li>
+<li>더 높은 리소스 요구사항</li>
+<li>행동 예측이 더 어려움</li>
+</ul>
+<h2>Consensus 메커니즘</h2>
+<h3>1. Voting 시스템</h3>
+<h4>단순 다수 Voting</h4>
+<pre><code class="language-typescript">interface MajorityVoting {
+  type: 'majority';
+  threshold: 0.5;           // 50% + 1
+  eligibleVoters: AgentId[];
+  votingPeriod: number;     // 밀리초
+  tieBreaking: 'random' | 'coordinator' | 'expertise-weighted';
+}
+</code></pre>
+<h4>가중 Voting</h4>
+<pre><code class="language-typescript">interface WeightedVoting {
+  type: 'weighted';
+  weights: Map&lt;AgentId, number&gt;;  // Agent 전문성 가중치
+  threshold: number;               // 가중 임계값
+  weightingFactors: {
+    expertise: number;
+    reliability: number;
+    performance: number;
+  };
+}
+</code></pre>
+<h4>Supermajority Voting</h4>
+<pre><code class="language-typescript">interface SupermajorityVoting {
+  type: 'supermajority';
+  threshold: 0.67;          // 2/3 다수
+  criticalDecisions: boolean;
+  fallbackToMajority: boolean;
+}
+</code></pre>
+<h3>2. Consensus 알고리즘</h3>
+<h4>Raft Consensus</h4>
+<pre><code class="language-typescript">interface RaftConfig {
+  algorithm: 'raft';
+  electionTimeout: number;
+  heartbeatInterval: number;
+  logReplication: boolean;
+  leaderElection: {
+    enabled: boolean;
+    termDuration: number;
+    candidateTimeout: number;
+  };
+}
+</code></pre>
+<p>사용법:</p>
+<pre><code class="language-bash">claude-flow swarm &quot;Complex decision task&quot; \
+  --topology mesh \
+  --consensus raft \
+  --election-timeout 5000
+</code></pre>
+<h4>Practical Byzantine Fault Tolerance (PBFT)</h4>
+<pre><code class="language-typescript">interface PBFTConfig {
+  algorithm: 'pbft';
+  byzantineTolerance: number;  // f = (n-1)/3 Byzantine 노드
+  viewChangeTimeout: number;
+  prepareThreshold: number;
+  commitThreshold: number;
+  checkpointInterval: number;
+}
+</code></pre>
+<h4>Proof of Stake (PoS)</h4>
+<pre><code class="language-typescript">interface PoSConfig {
+  algorithm: 'pos';
+  stakingMechanism: 'performance' | 'reliability' | 'expertise';
+  minimumStake: number;
+  slashingConditions: string[];
+  rewardDistribution: 'proportional' | 'equal';
+}
+</code></pre>
+<h3>3. Consensus 프로세스 흐름</h3>
+<pre><code class="language-mermaid">graph TD
+    A[제안 시작] --&gt; B[Agent 의견 수집]
+    B --&gt; C[Voting 단계]
+    C --&gt; D{Consensus 도달?}
+    D --&gt;|예| E[결정 실행]
+    D --&gt;|아니오| F[충돌 해결]
+    F --&gt; G{재시도?}
+    G --&gt;|예| B
+    G --&gt;|아니오| H[Coordinator에 Escalate]
+    E --&gt; I[공유 메모리에 기록]
+    H --&gt; J[수동 해결]
+</code></pre>
+<h2>Byzantine Fault Tolerance</h2>
+<h3>Byzantine 장애 이해</h3>
+<p>Byzantine 장애는 다음과 같은 경우에 발생합니다:</p>
+<ul>
+<li>잘못되거나 악의적인 응답 제공</li>
+<li>예측할 수 없거나 일관성 없게 행동</li>
+<li>Swarm 목표를 훼손하려고 시도</li>
+<li>상태를 손상시키는 부분 장애 경험</li>
+</ul>
+<h3>Byzantine Fault Tolerance 메커니즘</h3>
+<h4>1. Agent 인증 및 신뢰</h4>
+<pre><code class="language-typescript">interface TrustManagement {
+  authentication: {
+    method: 'signature' | 'certificate' | 'token';
+    rotationInterval: number;
+    revocationList: AgentId[];
+  };
+  trustScores: Map&lt;AgentId, TrustScore&gt;;
+  suspiciousActivityDetection: boolean;
+  quarantinePolicy: {
+    threshold: number;
+    duration: number;
+    reviewProcess: boolean;
+  };
+}
+
+interface TrustScore {
+  reliability: number;      // 0-1 과거 성능 기반
+  consistency: number;      // 0-1 행동 일관성
+  expertise: number;        // 0-1 도메인 전문성
+  timeDecay: number;        // 시간 경과에 따른 신뢰 저하
+}
+</code></pre>
+<h4>2. 응답 검증</h4>
+<pre><code class="language-typescript">interface ResponseValidation {
+  crossValidation: {
+    enabled: boolean;
+    minimumValidators: number;
+    agreementThreshold: number;
+  };
+
+  outputVerification: {
+    codeExecution: boolean;
+    logicValidation: boolean;
+    formatChecking: boolean;
+  };
+
+  consistencyChecks: {
+    previousResponses: boolean;
+    expertiseAlignment: boolean;
+    timeConstraints: boolean;
+  };
+}
+</code></pre>
+<h4>3. 중복성 및 백업 시스템</h4>
+<pre><code class="language-typescript">interface RedundancyConfig {
+  taskReplication: {
+    factor: number;           // 같은 작업을 수행하는 agent 수
+    diversityRequirement: boolean; // 다른 agent 타입 요구
+    independentExecution: boolean;
+  };
+
+  resultAggregation: {
+    method: 'voting' | 'averaging' | 'best-of-n';
+    outlierDetection: boolean;
+    qualityWeighting: boolean;
+  };
+
+  fallbackMechanisms: {
+    degradedMode: boolean;    // 감소된 기능으로 계속
+    humanIntervention: boolean;
+    alternativeApproaches: string[];
+  };
+}
+</code></pre>
+<h4>4. 모니터링 및 탐지</h4>
+<pre><code class="language-typescript">interface ByzantineDetection {
+  anomalyDetection: {
+    responseTime: { min: number; max: number };
+    qualityMetrics: { threshold: number };
+    behaviorPatterns: string[];
+  };
+
+  votingPatternAnalysis: {
+    enabled: boolean;
+    suspiciousPatterns: string[];
+    collisionDetection: boolean;
+  };
+
+  alerting: {
+    realTime: boolean;
+    thresholds: Map&lt;string, number&gt;;
+    escalationProcedure: string[];
+  };
+}
+</code></pre>
+<h3>구현 예제</h3>
+<pre><code class="language-bash"># Byzantine fault-tolerant swarm 시작
+claude-flow swarm &quot;Critical system analysis&quot; \
+  --topology mesh \
+  --byzantine-tolerance 3 \
+  --consensus pbft \
+  --trust-management enabled \
+  --redundancy-factor 5 \
+  --cross-validation 3
+</code></pre>
+<p>구성:</p>
+<pre><code class="language-json">{
+  &quot;swarmConfig&quot;: {
+    &quot;topology&quot;: &quot;mesh&quot;,
+    &quot;byzantineTolerance&quot;: {
+      &quot;enabled&quot;: true,
+      &quot;maxByzantineNodes&quot;: 3,
+      &quot;detectionThreshold&quot;: 0.7,
+      &quot;quarantineEnabled&quot;: true
+    },
+    &quot;consensus&quot;: {
+      &quot;algorithm&quot;: &quot;pbft&quot;,
+      &quot;threshold&quot;: 0.67,
+      &quot;validationRounds&quot;: 2
+    },
+    &quot;redundancy&quot;: {
+      &quot;taskReplication&quot;: 5,
+      &quot;resultAggregation&quot;: &quot;weighted-voting&quot;,
+      &quot;fallbackEnabled&quot;: true
+    }
+  }
+}
+</code></pre>
+<h2>분산 메모리 관리</h2>
+<h3>Architecture 개요</h3>
+<p>분산 메모리 시스템은 모든 swarm agent에게 공유 지식 및 조정 상태를 제공합니다.</p>
+<pre><code class="language-typescript">interface DistributedMemoryConfig {
+  backend: 'sqlite' | 'mongodb' | 'redis' | 'hybrid';
+  replication: {
+    enabled: boolean;
+    factor: number;           // Replica 수
+    strategy: 'master-slave' | 'multi-master' | 'raft';
+    consistencyLevel: 'eventual' | 'strong' | 'bounded';
+  };
+
+  partitioning: {
+    enabled: boolean;
+    strategy: 'key-hash' | 'range' | 'directory';
+    shardCount: number;
+  };
+
+  caching: {
+    enabled: boolean;
+    levels: ('l1' | 'l2' | 'l3')[];
+    evictionPolicy: 'lru' | 'lfu' | 'ttl';
+    sizeLimitMB: number;
+  };
+}
+</code></pre>
+<h3>메모리 타입</h3>
+<h4>1. 공유 지식 베이스</h4>
+<p>집단 지능 및 학습된 패턴 저장:</p>
+<pre><code class="language-typescript">interface KnowledgeEntry {
+  id: string;
+  type: 'fact' | 'pattern' | 'solution' | 'heuristic';
+  domain: string;
+  content: any;
+  confidence: number;       // 0-1 신뢰도 점수
+  sources: AgentId[];       // 기여한 agent
+  validations: number;      // 검증 수
+  timestamp: Date;
+  expirationDate?: Date;
+  tags: string[];
+}
+</code></pre>
+<h4>2. 작업 조정 상태</h4>
+<p>분산 작업 실행 관리:</p>
+<pre><code class="language-typescript">interface TaskState {
+  taskId: string;
+  status: 'pending' | 'assigned' | 'in-progress' | 'completed' | 'failed';
+  assignedAgents: AgentId[];
+  dependencies: string[];
+  progress: number;         // 0-100 완료 백분율
+  checkpoints: Checkpoint[];
+  results: TaskResult[];
+  locks: ResourceLock[];
+}
+</code></pre>
+<h4>3. Agent 통신 기록</h4>
+<p>메시지 로그 및 상호작용 패턴 유지:</p>
+<pre><code class="language-typescript">interface CommunicationLog {
+  messageId: string;
+  sender: AgentId;
+  recipients: AgentId[];
+  type: 'request' | 'response' | 'broadcast' | 'notification';
+  content: any;
+  timestamp: Date;
+  acknowledged: AgentId[];
+  priority: 'low' | 'normal' | 'high' | 'critical';
+}
+</code></pre>
+<h3>동기화 전략</h3>
+<h4>1. Eventually Consistent (CAP 정리에서 AP)</h4>
+<pre><code class="language-typescript">interface EventualConsistency {
+  strategy: 'eventual';
+  propagationDelay: number;     // 업데이트의 최대 지연
+  conflictResolution: 'last-write-wins' | 'vector-clocks' | 'operational-transform';
+  antiEntropyInterval: number;  // 백그라운드 동기화 빈도
+}
+</code></pre>
+<h4>2. Strong Consistency (CAP 정리에서 CP)</h4>
+<pre><code class="language-typescript">interface StrongConsistency {
+  strategy: 'strong';
+  consensusRequired: boolean;
+  quorumSize: number;          // 작업을 위한 최소 노드
+  timeoutMs: number;           // 작업 timeout
+  rollbackOnFailure: boolean;
+}
+</code></pre>
+<h4>3. Bounded Staleness</h4>
+<pre><code class="language-typescript">interface BoundedStaleness {
+  strategy: 'bounded';
+  maxStalenessMs: number;      // 허용되는 최대 staleness
+  consistencyCheckInterval: number;
+  repairMechanism: 'read-repair' | 'write-repair' | 'periodic';
+}
+</code></pre>
+<h3>메모리 작업</h3>
+<h4>기본 작업</h4>
+<pre><code class="language-typescript">// 데이터 저장
+await memory.store({
+  key: 'task:analysis:results',
+  value: analysisResults,
+  namespace: 'swarm-123',
+  ttl: 3600000,  // 1시간
+  replicate: true
+});
+
+// 데이터 검색
+const results = await memory.retrieve({
+  key: 'task:analysis:results',
+  namespace: 'swarm-123',
+  consistency: 'strong'
+});
+
+// 충돌 해결로 업데이트
+await memory.update({
+  key: 'agent:coordinator:state',
+  updateFn: (currentValue) =&gt; ({
+    ...currentValue,
+    lastActivity: new Date(),
+    taskCount: currentValue.taskCount + 1
+  }),
+  conflictResolution: 'merge'
+});
+</code></pre>
+<h4>고급 작업</h4>
+<pre><code class="language-typescript">// 분산 lock
+const lock = await memory.acquireLock({
+  resource: 'task:critical-section',
+  timeout: 30000,
+  owner: agentId
+});
+
+try {
+  // Critical section 작업
+  await performCriticalWork();
+} finally {
+  await memory.releaseLock(lock);
+}
+
+// Publish-subscribe 메시징
+await memory.subscribe({
+  channel: 'task:updates',
+  handler: (message) =&gt; {
+    console.log('Task update received:', message);
+  }
+});
+
+await memory.publish({
+  channel: 'task:updates',
+  message: { type: 'completed', taskId: 'task-123' }
+});
+</code></pre>
+<h3>구성 예제</h3>
+<h4>고성능 구성</h4>
+<pre><code class="language-json">{
+  &quot;distributedMemory&quot;: {
+    &quot;backend&quot;: &quot;redis&quot;,
+    &quot;replication&quot;: {
+      &quot;enabled&quot;: true,
+      &quot;factor&quot;: 3,
+      &quot;strategy&quot;: &quot;multi-master&quot;,
+      &quot;consistencyLevel&quot;: &quot;eventual&quot;
+    },
+    &quot;caching&quot;: {
+      &quot;enabled&quot;: true,
+      &quot;levels&quot;: [&quot;l1&quot;, &quot;l2&quot;],
+      &quot;sizeLimitMB&quot;: 512
+    },
+    &quot;partitioning&quot;: {
+      &quot;enabled&quot;: true,
+      &quot;strategy&quot;: &quot;key-hash&quot;,
+      &quot;shardCount&quot;: 16
+    }
+  }
+}
+</code></pre>
+<h4>높은 일관성 구성</h4>
+<pre><code class="language-json">{
+  &quot;distributedMemory&quot;: {
+    &quot;backend&quot;: &quot;mongodb&quot;,
+    &quot;replication&quot;: {
+      &quot;enabled&quot;: true,
+      &quot;factor&quot;: 5,
+      &quot;strategy&quot;: &quot;raft&quot;,
+      &quot;consistencyLevel&quot;: &quot;strong&quot;
+    },
+    &quot;operations&quot;: {
+      &quot;quorumSize&quot;: 3,
+      &quot;timeoutMs&quot;: 5000,
+      &quot;rollbackOnFailure&quot;: true
+    }
+  }
+}
+</code></pre>
+<h2>성능 Metrics</h2>
+<h3>시스템 수준 Metrics</h3>
+<h4>1. 처리량 Metrics</h4>
+<pre><code class="language-typescript">interface ThroughputMetrics {
+  tasksPerSecond: number;
+  tasksPerHour: number;
+  peakThroughput: number;
+  averageThroughput: number;
+
+  // 작업 타입별 분류
+  throughputByType: Map&lt;string, number&gt;;
+
+  // 시계열 데이터
+  throughputHistory: TimeSeriesPoint[];
+}
+</code></pre>
+<h4>2. 지연 시간 Metrics</h4>
+<pre><code class="language-typescript">interface LatencyMetrics {
+  averageLatency: number;
+  p50Latency: number;       // 50번째 백분위수
+  p95Latency: number;       // 95번째 백분위수
+  p99Latency: number;       // 99번째 백분위수
+  maxLatency: number;
+
+  // 구성 요소 분류
+  coordinationLatency: number;
+  executionLatency: number;
+  communicationLatency: number;
+  memoryLatency: number;
+}
+</code></pre>
+<h4>3. 리소스 활용</h4>
+<pre><code class="language-typescript">interface ResourceMetrics {
+  cpu: {
+    usage: number;          // 0-100 백분율
+    cores: number;
+    frequency: number;
+  };
+
+  memory: {
+    used: number;           // 바이트
+    available: number;
+    percentage: number;
+    swapUsed: number;
+  };
+
+  network: {
+    bytesIn: number;
+    bytesOut: number;
+    packetsIn: number;
+    packetsOut: number;
+    bandwidth: number;
+  };
+
+  storage: {
+    readIops: number;
+    writeIops: number;
+    readThroughput: number;
+    writeThroughput: number;
+    diskUsage: number;
+  };
+}
+</code></pre>
+<h3>Agent 수준 Metrics</h3>
+<h4>1. 성능 Metrics</h4>
+<pre><code class="language-typescript">interface AgentPerformanceMetrics {
+  agentId: AgentId;
+
+  // 작업 실행
+  tasksCompleted: number;
+  tasksFailed: number;
+  successRate: number;
+  averageExecutionTime: number;
+
+  // 품질 metrics
+  codeQuality: number;      // 0-1 점수
+  testCoverage: number;     // 0-100 백분율
+  bugRate: number;          // 1000 LOC당 버그
+  reviewScore: number;      // Peer 리뷰 점수
+
+  // 효율성 metrics
+  resourceEfficiency: number; // 리소스 단위당 작업
+  timeEfficiency: number;     // 실제 vs 예상 시간
+  costEfficiency: number;     // 비용당 전달 가치
+}
+</code></pre>
+<h4>2. 신뢰성 Metrics</h4>
+<pre><code class="language-typescript">interface AgentReliabilityMetrics {
+  uptime: number;           // 백분율
+  mttr: number;             // Mean time to recovery (ms)
+  mtbf: number;             // Mean time between failures (ms)
+
+  errorRate: number;        // 시간당 오류
+  timeoutRate: number;      // Timeout 백분율
+  crashCount: number;       // 충돌 수
+
+  healthScore: number;      // 0-1 전체 상태
+  lastHealthCheck: Date;
+  healthTrend: 'improving' | 'stable' | 'degrading';
+}
+</code></pre>
+<h3>Swarm 수준 Metrics</h3>
+<h4>1. 조정 효율성</h4>
+<pre><code class="language-typescript">interface CoordinationMetrics {
+  consensusSuccessRate: number;
+  consensusTime: number;            // Consensus 도달의 평균 시간
+  communicationEfficiency: number;  // 유용한 메시지 / 총 메시지
+
+  taskDistribution: {
+    loadBalance: number;            // 0-1 얼마나 균등하게 분산되었는지
+    utilizationRate: number;        // 활성 agent / 총 agent
+    queueLength: number;            // 대기 중인 작업
+  };
+
+  conflictResolution: {
+    conflictRate: number;           // 시간당 충돌
+    resolutionTime: number;         // 평균 해결 시간
+    escalationRate: number;         // Escalate된 충돌 백분율
+  };
+}
+</code></pre>
+<h4>2. 창발적 지능</h4>
+<pre><code class="language-typescript">interface IntelligenceMetrics {
+  knowledgeGrowthRate: number;      // 일일 새 지식
+  patternRecognitionSuccess: number; // 성공한 패턴 매칭
+  adaptabilityScore: number;        // 변화하는 조건에 대한 반응
+
+  collectiveProblemSolving: {
+    solutionQuality: number;        // 0-1 품질 점수
+    innovationRate: number;         // 문제당 새로운 솔루션
+    learningVelocity: number;       // 지식 획득 속도
+  };
+
+  emergentBehaviors: {
+    selfOrganizationLevel: number;  // 0-1 자기 조직화 점수
+    synergisticEffects: number;     // 부분의 합을 넘어서는 성능
+    adaptiveCapacity: number;       // 새 작업에 적응하는 능력
+  };
+}
+</code></pre>
+<h3>모니터링 및 Alerting</h3>
+<h4>실시간 대시보드</h4>
+<pre><code class="language-typescript">interface DashboardConfig {
+  refreshInterval: number;          // 밀리초
+
+  panels: {
+    systemOverview: boolean;
+    agentStatus: boolean;
+    taskProgress: boolean;
+    resourceUtilization: boolean;
+    performanceMetrics: boolean;
+    alertSummary: boolean;
+  };
+
+  timeRanges: ('1h' | '6h' | '24h' | '7d' | '30d')[];
+  aggregationLevels: ('second' | 'minute' | 'hour' | 'day')[];
+}
+</code></pre>
+<h4>Alert 구성</h4>
+<pre><code class="language-typescript">interface AlertConfig {
+  rules: AlertRule[];
+  channels: AlertChannel[];
+  suppressionRules: SuppressionRule[];
+}
+
+interface AlertRule {
+  name: string;
+  metric: string;
+  operator: '&gt;' | '&lt;' | '&gt;=' | '&lt;=' | '==' | '!=';
+  threshold: number;
+  duration: number;             // 조건이 지속되어야 하는 시간
+  severity: 'info' | 'warning' | 'critical' | 'emergency';
+  description: string;
+}
+
+interface AlertChannel {
+  type: 'email' | 'slack' | 'webhook' | 'console';
+  config: Record&lt;string, any&gt;;
+  severityFilter: string[];
+}
+</code></pre>
+<h2>명령어 참조</h2>
+<h3>핵심 명령어</h3>
+<h4>Swarm 초기화</h4>
+<pre><code class="language-bash"># 기본 초기화
+claude-flow swarm init --topology mesh --max-agents 10
+
+# 고급 초기화
+claude-flow swarm init \
+  --topology hierarchical \
+  --max-agents 20 \
+  --consensus pbft \
+  --byzantine-tolerance 3 \
+  --memory-backend redis \
+  --monitoring enabled
+</code></pre>
+<h4>작업 실행</h4>
+<pre><code class="language-bash"># 간단한 작업 실행
+claude-flow swarm execute &quot;Build a web application with authentication&quot;
+
+# 전체 구성으로 복잡한 작업
+claude-flow swarm execute &quot;Analyze large dataset and provide insights&quot; \
+  --strategy research \
+  --topology distributed \
+  --max-agents 15 \
+  --timeout 3600 \
+  --parallel \
+  --consensus weighted-voting \
+  --redundancy-factor 3
+</code></pre>
+<h4>Swarm 모니터링</h4>
+<pre><code class="language-bash"># 실시간 모니터링
+claude-flow swarm monitor --swarm-id swarm-123 --real-time
+
+# 과거 분석
+claude-flow swarm analyze --swarm-id swarm-123 --time-range 24h
+</code></pre>
+<h3>구성 명령어</h3>
+<h4>Topology 관리</h4>
+<pre><code class="language-bash"># 사용 가능한 topology 목록
+claude-flow swarm topologies list
+
+# 현재 작업에 맞게 topology 최적화
+claude-flow swarm topology optimize --swarm-id swarm-123
+
+# Topology를 동적으로 전환
+claude-flow swarm topology switch --swarm-id swarm-123 --new-topology mesh
+</code></pre>
+<h4>Agent 관리</h4>
+<pre><code class="language-bash"># Agent 목록
+claude-flow swarm agents list --swarm-id swarm-123
+
+# Swarm에 agent 추가
+claude-flow swarm agents add \
+  --type coder \
+  --capabilities &quot;javascript,react,nodejs&quot; \
+  --swarm-id swarm-123
+
+# Swarm에서 agent 제거
+claude-flow swarm agents remove --agent-id agent-456 --swarm-id swarm-123
+
+# Swarm 확장
+claude-flow swarm scale --target-agents 20 --swarm-id swarm-123
+</code></pre>
+<h4>메모리 관리</h4>
+<pre><code class="language-bash"># 메모리 상태
+claude-flow memory status --namespace swarm-123
+
+# 메모리 상태 백업
+claude-flow memory backup --namespace swarm-123 --output backup.json
+
+# 메모리 상태 복원
+claude-flow memory restore --namespace swarm-123 --input backup.json
+
+# 만료된 항목 정리
+claude-flow memory cleanup --namespace swarm-123 --older-than 7d
+</code></pre>
+<h3>고급 명령어</h3>
+<h4>Consensus 작업</h4>
+<pre><code class="language-bash"># 제안 생성
+claude-flow consensus propose \
+  --swarm-id swarm-123 \
+  --type &quot;architecture-change&quot; \
+  --description &quot;Switch to microservices architecture&quot; \
+  --voting-period 1800
+
+# 제안에 투표
+claude-flow consensus vote \
+  --proposal-id prop-456 \
+  --vote approve \
+  --reason &quot;Better scalability&quot;
+
+# Consensus 상태 확인
+claude-flow consensus status --proposal-id prop-456
+</code></pre>
+<h4>성능 분석</h4>
+<pre><code class="language-bash"># 성능 보고서 생성
+claude-flow perf report \
+  --swarm-id swarm-123 \
+  --time-range 24h \
+  --format html \
+  --output performance-report.html
+
+# Swarm 성능 benchmark
+claude-flow perf benchmark \
+  --task-type coding \
+  --agents 10 \
+  --iterations 100
+
+# Topology 비교
+claude-flow perf compare-topologies \
+  --task &quot;web development&quot; \
+  --topologies mesh,hierarchical,distributed
+</code></pre>
+<h4>디버깅 및 문제 해결</h4>
+<pre><code class="language-bash"># Swarm 문제 디버그
+claude-flow debug swarm --swarm-id swarm-123 --verbose
+
+# Agent 통신 추적
+claude-flow debug trace-communication \
+  --swarm-id swarm-123 \
+  --agent-id agent-456 \
+  --duration 300
+
+# 실패 분석
+claude-flow debug analyze-failures \
+  --swarm-id swarm-123 \
+  --time-range 1h
+</code></pre>
+<h2>구성 예제</h2>
+<h3>기본 웹 개발 Swarm</h3>
+<pre><code class="language-yaml"># swarm-web-dev.yaml
+swarm:
+  name: &quot;web-development-team&quot;
+  topology: &quot;hierarchical&quot;
+  max_agents: 8
+
+agents:
+  - type: &quot;architect&quot;
+    capabilities: [&quot;system_design&quot;, &quot;api_design&quot;]
+    count: 1
+
+  - type: &quot;coder&quot;
+    capabilities: [&quot;react&quot;, &quot;nodejs&quot;, &quot;typescript&quot;]
+    count: 3
+
+  - type: &quot;tester&quot;
+    capabilities: [&quot;unit_testing&quot;, &quot;integration_testing&quot;]
+    count: 2
+
+  - type: &quot;reviewer&quot;
+    capabilities: [&quot;code_review&quot;, &quot;security_review&quot;]
+    count: 1
+
+  - type: &quot;documenter&quot;
+    capabilities: [&quot;api_docs&quot;, &quot;user_guides&quot;]
+    count: 1
+
+coordination:
+  strategy: &quot;hierarchical&quot;
+  consensus: &quot;majority-voting&quot;
+  task_distribution: &quot;capability-based&quot;
+
+memory:
+  backend: &quot;sqlite&quot;
+  namespace: &quot;web-dev-team&quot;
+  ttl_hours: 168  # 1주
+
+monitoring:
+  enabled: true
+  dashboard: true
+  alerts:
+    - metric: &quot;task_failure_rate&quot;
+      threshold: 0.1
+      severity: &quot;warning&quot;
+</code></pre>
+<p>사용법:</p>
+<pre><code class="language-bash">claude-flow swarm start --config swarm-web-dev.yaml &quot;Build e-commerce platform&quot;
+</code></pre>
+<h3>연구 및 분석 Swarm</h3>
+<pre><code class="language-yaml"># swarm-research.yaml
+swarm:
+  name: &quot;research-team&quot;
+  topology: &quot;mesh&quot;
+  max_agents: 12
+
+agents:
+  - type: &quot;researcher&quot;
+    capabilities: [&quot;web_search&quot;, &quot;data_gathering&quot;]
+    count: 4
+
+  - type: &quot;analyst&quot;
+    capabilities: [&quot;data_analysis&quot;, &quot;pattern_recognition&quot;]
+    count: 3
+
+  - type: &quot;coordinator&quot;
+    capabilities: [&quot;task_coordination&quot;, &quot;consensus_building&quot;]
+    count: 2
+
+  - type: &quot;specialist&quot;
+    capabilities: [&quot;domain_expertise&quot;]
+    domains: [&quot;ai&quot;, &quot;blockchain&quot;, &quot;fintech&quot;]
+    count: 3
+
+coordination:
+  strategy: &quot;consensus-driven&quot;
+  consensus: &quot;weighted-voting&quot;
+  byzantine_tolerance: 2
+
+memory:
+  backend: &quot;redis&quot;
+  distributed: true
+  replication_factor: 3
+  consistency: &quot;eventual&quot;
+
+performance:
+  parallel_execution: true
+  redundancy_factor: 2
+  cross_validation: true
+</code></pre>
+<h3>고성능 컴퓨팅 Swarm</h3>
+<pre><code class="language-yaml"># swarm-hpc.yaml
+swarm:
+  name: &quot;hpc-cluster&quot;
+  topology: &quot;distributed&quot;
+  max_agents: 50
+
+agents:
+  - type: &quot;coordinator&quot;
+    capabilities: [&quot;load_balancing&quot;, &quot;resource_management&quot;]
+    count: 3
+
+  - type: &quot;coder&quot;
+    capabilities: [&quot;parallel_computing&quot;, &quot;optimization&quot;]
+    languages: [&quot;python&quot;, &quot;c++&quot;, &quot;cuda&quot;]
+    count: 20
+
+  - type: &quot;optimizer&quot;
+    capabilities: [&quot;performance_tuning&quot;, &quot;algorithm_optimization&quot;]
+    count: 5
+
+  - type: &quot;monitor&quot;
+    capabilities: [&quot;system_monitoring&quot;, &quot;performance_analysis&quot;]
+    count: 2
+
+coordination:
+  strategy: &quot;distributed&quot;
+  load_balancing: &quot;workload-based&quot;
+  fault_tolerance: &quot;byzantine&quot;
+  max_byzantine_nodes: 8
+
+memory:
+  backend: &quot;mongodb&quot;
+  partitioning: &quot;range-based&quot;
+  shards: 10
+  consistency: &quot;strong&quot;
+
+resources:
+  cpu_limit: &quot;unlimited&quot;
+  memory_limit: &quot;1TB&quot;
+  gpu_support: true
+  network_optimization: true
+</code></pre>
+<h3>Fault-Tolerant 미션 크리티컬 Swarm</h3>
+<pre><code class="language-yaml"># swarm-mission-critical.yaml
+swarm:
+  name: &quot;mission-critical-system&quot;
+  topology: &quot;hybrid&quot;
+  max_agents: 25
+
+phases:
+  planning:
+    topology: &quot;centralized&quot;
+    agents: [&quot;architect&quot;, &quot;analyst&quot;]
+
+  execution:
+    topology: &quot;distributed&quot;
+    agents: [&quot;coder&quot;, &quot;tester&quot;]
+
+  validation:
+    topology: &quot;mesh&quot;
+    agents: [&quot;reviewer&quot;, &quot;validator&quot;]
+
+fault_tolerance:
+  byzantine_tolerance: 5
+  redundancy_factor: 5
+  consensus_algorithm: &quot;pbft&quot;
+  health_monitoring: &quot;continuous&quot;
+
+backup:
+  real_time: true
+  geographic_distribution: true
+  recovery_time_objective: 60  # 초
+
+security:
+  authentication: &quot;certificate&quot;
+  encryption: &quot;end-to-end&quot;
+  audit_logging: true
+  access_control: &quot;rbac&quot;
+</code></pre>
+<h2>실제 사용 사례</h2>
+<h3>1. 소프트웨어 개발 팀</h3>
+<h4>시나리오: Full-Stack Application 개발</h4>
+<p><strong>도전 과제</strong>: Frontend, backend, database 및 배포 pipeline을 포함한 완전한 웹 application 구축.</p>
+<p><strong>Swarm 구성</strong>:</p>
+<pre><code class="language-yaml">swarm:
+  topology: &quot;hierarchical&quot;
+  max_agents: 12
+
+agents:
+  # 리더십 계층
+  - type: &quot;architect&quot;
+    count: 1
+    responsibilities: [&quot;system_design&quot;, &quot;technology_decisions&quot;]
+
+  - type: &quot;coordinator&quot;
+    count: 1
+    responsibilities: [&quot;project_management&quot;, &quot;integration&quot;]
+
+  # 개발 계층
+  - type: &quot;coder&quot;
+    specializations: [&quot;frontend&quot;, &quot;backend&quot;, &quot;devops&quot;]
+    count: 6
+
+  # 품질 계층
+  - type: &quot;tester&quot;
+    count: 2
+    capabilities: [&quot;unit_testing&quot;, &quot;e2e_testing&quot;]
+
+  - type: &quot;reviewer&quot;
+    count: 2
+    capabilities: [&quot;code_review&quot;, &quot;security_audit&quot;]
+</code></pre>
+<p><strong>예상 결과</strong>:</p>
+<ul>
+<li>전통적인 접근 방식 대비 60% 빠른 개발</li>
+<li>자동화된 peer 리뷰를 통한 더 높은 코드 품질</li>
+<li>집단 지능을 통한 더 나은 architecture 결정</li>
+<li>지속적인 리팩토링을 통한 기술 부채 감소</li>
+</ul>
+<h3>2. 연구 및 데이터 분석</h3>
+<h4>시나리오: 신제품 출시를 위한 시장 조사</h4>
+<p><strong>도전 과제</strong>: 신제품을 위한 시장 동향, 경쟁사 분석, 고객 감정 및 재무 예측 분석.</p>
+<p><strong>Swarm 구성</strong>:</p>
+<pre><code class="language-yaml">swarm:
+  topology: &quot;mesh&quot;
+  max_agents: 15
+  consensus: &quot;weighted-voting&quot;
+
+agents:
+  - type: &quot;researcher&quot;
+    count: 6
+    specializations: [&quot;market_research&quot;, &quot;competitive_analysis&quot;, &quot;trend_analysis&quot;]
+
+  - type: &quot;analyst&quot;
+    count: 4
+    specializations: [&quot;financial_modeling&quot;, &quot;sentiment_analysis&quot;, &quot;statistical_analysis&quot;]
+
+  - type: &quot;specialist&quot;
+    count: 3
+    domains: [&quot;fintech&quot;, &quot;consumer_behavior&quot;, &quot;regulatory_compliance&quot;]
+
+  - type: &quot;coordinator&quot;
+    count: 2
+    capabilities: [&quot;consensus_building&quot;, &quot;report_generation&quot;]
+</code></pre>
+<p><strong>달성된 결과</strong>:</p>
+<ul>
+<li>2주 대신 2일 만에 완료된 종합 시장 분석</li>
+<li>발견 사항의 교차 검증을 통한 더 높은 정확성</li>
+<li>명백하지 않은 시장 기회 발견</li>
+<li>다양한 관점 분석을 통한 위험 완화</li>
+</ul>
+<h3>3. DevOps 및 Infrastructure 관리</h3>
+<h4>시나리오: Cloud Migration 및 최적화</h4>
+<p><strong>도전 과제</strong>: 성능 및 비용을 최적화하면서 legacy application을 cloud infrastructure로 마이그레이션.</p>
+<p><strong>Swarm 구성</strong>:</p>
+<pre><code class="language-yaml">swarm:
+  topology: &quot;distributed&quot;
+  max_agents: 20
+  fault_tolerance: &quot;byzantine&quot;
+
+agents:
+  - type: &quot;architect&quot;
+    count: 2
+    specializations: [&quot;cloud_architecture&quot;, &quot;migration_strategy&quot;]
+
+  - type: &quot;coder&quot;
+    count: 8
+    capabilities: [&quot;containerization&quot;, &quot;infrastructure_as_code&quot;, &quot;automation&quot;]
+
+  - type: &quot;optimizer&quot;
+    count: 4
+    focus: [&quot;performance&quot;, &quot;cost&quot;, &quot;security&quot;]
+
+  - type: &quot;monitor&quot;
+    count: 3
+    capabilities: [&quot;system_monitoring&quot;, &quot;alerting&quot;, &quot;capacity_planning&quot;]
+
+  - type: &quot;reviewer&quot;
+    count: 3
+    specializations: [&quot;security_review&quot;, &quot;compliance_audit&quot;]
+</code></pre>
+<p><strong>비즈니스 영향</strong>:</p>
+<ul>
+<li>Infrastructure 비용 40% 감소</li>
+<li>99.9% uptime 달성</li>
+<li>더 빠른 배포 주기 (일 대신 시간)</li>
+<li>자동화된 확장 및 자가 치유 시스템</li>
+</ul>
+<h3>4. 학술 연구 프로젝트</h3>
+<h4>시나리오: 다학제 기후 변화 연구</h4>
+<p><strong>도전 과제</strong>: 여러 출처의 기후 데이터 분석, 예측 모델 생성 및 정책 권장사항 생성.</p>
+<p><strong>Swarm 구성</strong>:</p>
+<pre><code class="language-yaml">swarm:
+  topology: &quot;hybrid&quot;
+  max_agents: 25
+
+phases:
+  data_collection:
+    topology: &quot;distributed&quot;
+    agents: [&quot;researcher&quot;, &quot;data_engineer&quot;]
+
+  analysis:
+    topology: &quot;mesh&quot;
+    agents: [&quot;analyst&quot;, &quot;ml_specialist&quot;]
+
+  validation:
+    topology: &quot;hierarchical&quot;
+    agents: [&quot;reviewer&quot;, &quot;domain_expert&quot;]
+
+agents:
+  - type: &quot;researcher&quot;
+    count: 8
+    domains: [&quot;climate_science&quot;, &quot;oceanography&quot;, &quot;meteorology&quot;]
+
+  - type: &quot;analyst&quot;
+    count: 6
+    capabilities: [&quot;statistical_modeling&quot;, &quot;machine_learning&quot;, &quot;data_visualization&quot;]
+
+  - type: &quot;specialist&quot;
+    count: 4
+    expertise: [&quot;policy_analysis&quot;, &quot;economic_modeling&quot;, &quot;environmental_law&quot;]
+
+  - type: &quot;coordinator&quot;
+    count: 3
+    responsibilities: [&quot;interdisciplinary_coordination&quot;, &quot;publication_management&quot;]
+</code></pre>
+<p><strong>연구 성과</strong>:</p>
+<ul>
+<li>학제 간 협업을 통한 새로운 인사이트</li>
+<li>Peer 리뷰를 통한 더 높은 출판 품질</li>
+<li>더 빠른 가설 테스팅 및 검증</li>
+<li>더 종합적인 정책 권장사항</li>
+</ul>
+<h3>5. 크리에이티브 콘텐츠 생성</h3>
+<h4>시나리오: 멀티미디어 마케팅 캠페인 작성</h4>
+<p><strong>도전 과제</strong>: 카피, 비주얼, 비디오 콘텐츠 및 배포 전략을 포함한 조정된 마케팅 캠페인 작성.</p>
+<p><strong>Swarm 구성</strong>:</p>
+<pre><code class="language-yaml">swarm:
+  topology: &quot;mesh&quot;
+  max_agents: 18
+  consensus: &quot;creative-consensus&quot;  # 크리에이티브 결정을 위한 사용자 정의 consensus
+
+agents:
+  - type: &quot;creative_director&quot;
+    count: 2
+    responsibilities: [&quot;creative_vision&quot;, &quot;brand_consistency&quot;]
+
+  - type: &quot;copywriter&quot;
+    count: 4
+    specializations: [&quot;advertising_copy&quot;, &quot;social_media&quot;, &quot;email_marketing&quot;]
+
+  - type: &quot;designer&quot;
+    count: 4
+    capabilities: [&quot;graphic_design&quot;, &quot;ui_ux&quot;, &quot;motion_graphics&quot;]
+
+  - type: &quot;strategist&quot;
+    count: 3
+    focus: [&quot;market_positioning&quot;, &quot;audience_analysis&quot;, &quot;channel_optimization&quot;]
+
+  - type: &quot;analyst&quot;
+    count: 3
+    capabilities: [&quot;performance_tracking&quot;, &quot;a_b_testing&quot;, &quot;roi_analysis&quot;]
+
+  - type: &quot;reviewer&quot;
+    count: 2
+    responsibilities: [&quot;quality_assurance&quot;, &quot;brand_compliance&quot;]
+</code></pre>
+<p><strong>캠페인 결과</strong>:</p>
+<ul>
+<li>300% 높은 참여율</li>
+<li>모든 채널에서 일관된 브랜드 메시징</li>
+<li>더 빠른 캠페인 반복 및 최적화</li>
+<li>협업적 아이디어 생성을 통한 크리에이티브 솔루션</li>
+</ul>
+<h2>모범 사례</h2>
+<h3>1. Topology 선택 가이드라인</h3>
+<h4>중앙 집중식 - 다음과 같은 경우 사용:</h4>
+<ul>
+<li><strong>작업 복잡도</strong>: 간단하거나 보통</li>
+<li><strong>팀 크기</strong>: 소규모 (3-8 agent)</li>
+<li><strong>조정 필요</strong>: 높은 조정 필요</li>
+<li><strong>결정 속도</strong>: 빠른 결정 필요</li>
+<li><strong>예제</strong>: 버그 수정, 문서 업데이트, 간단한 기능 개발</li>
+</ul>
+<h4>분산 - 다음과 같은 경우 사용:</h4>
+<ul>
+<li><strong>작업 복잡도</strong>: 독립적인 하위 작업이 있는 높은 복잡도</li>
+<li><strong>팀 크기</strong>: 대규모 (15+ agent)</li>
+<li><strong>Fault Tolerance</strong>: 높은 가용성 필요</li>
+<li><strong>확장성</strong>: 동적 확장 필요</li>
+<li><strong>예제</strong>: 대규모 application 개발, 데이터 처리 pipeline</li>
+</ul>
+<h4>Mesh - 다음과 같은 경우 사용:</h4>
+<ul>
+<li><strong>의사 결정</strong>: Consensus 및 협업이 중요</li>
+<li><strong>혁신</strong>: 창의적 문제 해결 필요</li>
+<li><strong>지식 작업</strong>: 연구, 분석, 설계</li>
+<li><strong>품질</strong>: Peer 리뷰 및 검증이 중요</li>
+<li><strong>예제</strong>: 연구 프로젝트, architecture 결정</li>
+</ul>
+<h4>계층적 - 다음과 같은 경우 사용:</h4>
+<ul>
+<li><strong>구조</strong>: 명확한 조직 계층 구조 필요</li>
+<li><strong>복잡도</strong>: 다단계 작업 분해 필요</li>
+<li><strong>거버넌스</strong>: 승인 프로세스 및 감독 필요</li>
+<li><strong>확장성</strong>: 구조화된 성장 필요</li>
+<li><strong>예제</strong>: 엔터프라이즈 소프트웨어 개발, 규정 준수 프로젝트</li>
+</ul>
+<h4>하이브리드 - 다음과 같은 경우 사용:</h4>
+<ul>
+<li><strong>단계</strong>: 다른 단계에 다른 접근 방식 필요</li>
+<li><strong>최적화</strong>: 모든 topology의 최선 원함</li>
+<li><strong>적응성</strong>: 시간 경과에 따라 요구사항 변경</li>
+<li><strong>성능</strong>: 최대 효율성 필요</li>
+<li><strong>예제</strong>: 대규모 시스템 구현, 연구 및 개발</li>
+</ul>
+<h3>2. Agent 구성 모범 사례</h3>
+<h4>기능 매칭</h4>
+<pre><code class="language-typescript">// 좋음: 특정 기능 매칭
+const webDevAgent = {
+  type: 'coder',
+  capabilities: ['react', 'nodejs', 'typescript', 'testing'],
+  expertise: {
+    'frontend': 0.9,
+    'backend': 0.7,
+    'testing': 0.8
+  }
+};
+
+// 나쁨: 일반적인 기능
+const genericAgent = {
+  type: 'coder',
+  capabilities: ['programming'],
+  expertise: {
+    'general': 0.5
+  }
+};
+</code></pre>
+<h4>작업량 균형</h4>
+<pre><code class="language-yaml"># 좋음: 균형 잡힌 팀 구성
+agents:
+  - type: &quot;architect&quot;     # Worker 8-10명당 리더 1명
+    count: 1
+  - type: &quot;coder&quot;         # 주요 인력
+    count: 6
+  - type: &quot;reviewer&quot;      # Coder 3-4명당 reviewer 1명
+    count: 2
+  - type: &quot;tester&quot;        # Coder 2-3명당 tester 1명
+    count: 2
+
+# 나쁨: 불균형 구성
+agents:
+  - type: &quot;architect&quot;
+    count: 5             # Architect가 너무 많음
+  - type: &quot;coder&quot;
+    count: 2             # Worker가 너무 적음
+</code></pre>
+<h3>3. 성능 최적화</h3>
+<h4>메모리 관리</h4>
+<pre><code class="language-typescript">// 다양한 데이터 타입에 적절한 TTL 구성
+const memoryConfig = {
+  // 단기 조정 데이터
+  coordination: { ttl: '1h' },
+
+  // 중기 작업 데이터
+  tasks: { ttl: '24h' },
+
+  // 장기 지식 베이스
+  knowledge: { ttl: '7d' },
+
+  // 영구 구성
+  config: { ttl: 'never' }
+};
+</code></pre>
+<h4>통신 최적화</h4>
+<pre><code class="language-yaml"># 메시지 라우팅 최적화
+communication:
+  # 메시지 볼륨 감소
+  batch_messages: true
+  compress_payloads: true
+
+  # 라우팅 최적화
+  direct_routing: true      # 가능한 경우 coordinator 건너뛰기
+  multicast_support: true   # 여러 agent에 브로드캐스트
+
+  # 우선순위 지정
+  priority_queues: true
+  high_priority: [&quot;consensus&quot;, &quot;errors&quot;, &quot;coordination&quot;]
+  low_priority: [&quot;logs&quot;, &quot;metrics&quot;, &quot;heartbeats&quot;]
+</code></pre>
+<h4>리소스 할당</h4>
+<pre><code class="language-yaml">resources:
+  # CPU 할당
+  cpu:
+    coordinator: &quot;2 cores&quot;
+    agents: &quot;1 core each&quot;
+    monitoring: &quot;0.5 cores&quot;
+
+  # 메모리 할당
+  memory:
+    shared_memory: &quot;2GB&quot;     # 조정용
+    agent_memory: &quot;512MB&quot;    # Agent당
+    cache_memory: &quot;1GB&quot;      # 캐싱용
+
+  # 네트워크 대역폭
+  network:
+    inter_agent: &quot;100Mbps&quot;
+    external_apis: &quot;50Mbps&quot;
+    monitoring: &quot;10Mbps&quot;
+</code></pre>
+<h3>4. 보안 및 신뢰성</h3>
+<h4>인증 및 권한 부여</h4>
+<pre><code class="language-yaml">security:
+  authentication:
+    method: &quot;certificate&quot;
+    rotation_interval: &quot;24h&quot;
+    certificate_authority: &quot;internal&quot;
+
+  authorization:
+    model: &quot;rbac&quot;           # Role 기반 접근 제어
+    permissions:
+      coordinators: [&quot;read&quot;, &quot;write&quot;, &quot;execute&quot;, &quot;admin&quot;]
+      agents: [&quot;read&quot;, &quot;write&quot;, &quot;execute&quot;]
+      monitors: [&quot;read&quot;]
+
+  encryption:
+    in_transit: &quot;tls_1.3&quot;
+    at_rest: &quot;aes_256&quot;
+    key_rotation: &quot;weekly&quot;
+</code></pre>
+<h4>오류 처리 및 복구</h4>
+<pre><code class="language-yaml">reliability:
+  error_handling:
+    retry_policy:
+      max_attempts: 3
+      backoff: &quot;exponential&quot;
+      base_delay: &quot;1s&quot;
+
+    circuit_breaker:
+      failure_threshold: 5
+      timeout: &quot;30s&quot;
+      recovery_time: &quot;60s&quot;
+
+  health_monitoring:
+    heartbeat_interval: &quot;10s&quot;
+    health_check_timeout: &quot;5s&quot;
+    unhealthy_threshold: 3
+
+  backup_and_recovery:
+    backup_interval: &quot;1h&quot;
+    backup_retention: &quot;7d&quot;
+    recovery_time_objective: &quot;5m&quot;
+</code></pre>
+<h3>5. 모니터링 및 Observability</h3>
+<h4>추적할 주요 Metrics</h4>
+<pre><code class="language-typescript">const criticalMetrics = {
+  // 성능 metrics
+  taskThroughput: 'tasks/second',
+  responseTime: 'percentiles(50,95,99)',
+  errorRate: 'errors/total_requests',
+
+  // 리소스 metrics
+  cpuUtilization: 'percentage',
+  memoryUsage: 'bytes',
+  networkTraffic: 'bytes/second',
+
+  // 비즈니스 metrics
+  taskSuccessRate: 'percentage',
+  agentUtilization: 'active_agents/total_agents',
+  consensusTime: 'seconds',
+
+  // 품질 metrics
+  codeQuality: 'score(0-1)',
+  testCoverage: 'percentage',
+  bugRate: 'bugs/kloc'
+};
+</code></pre>
+<h4>Alerting 전략</h4>
+<pre><code class="language-yaml">alerts:
+  # Critical - 즉각적인 주의 필요
+  critical:
+    - metric: &quot;error_rate&quot;
+      threshold: &quot;&gt; 5%&quot;
+      action: &quot;page_oncall&quot;
+
+    - metric: &quot;consensus_failure_rate&quot;
+      threshold: &quot;&gt; 10%&quot;
+      action: &quot;escalate&quot;
+
+  # Warning - 면밀하게 모니터링
+  warning:
+    - metric: &quot;response_time_p95&quot;
+      threshold: &quot;&gt; 5s&quot;
+      action: &quot;slack_notification&quot;
+
+    - metric: &quot;agent_failure_rate&quot;
+      threshold: &quot;&gt; 2%&quot;
+      action: &quot;email_team&quot;
+
+  # Info - 인식만
+  info:
+    - metric: &quot;task_completion_rate&quot;
+      threshold: &quot;&lt; 90%&quot;
+      action: &quot;log_only&quot;
+</code></pre>
+<h2>문제 해결</h2>
+<h3>일반적인 문제 및 솔루션</h3>
+<h4>1. Agent 통신 실패</h4>
+<p><strong>증상</strong>:</p>
+<ul>
+<li>Agent가 조정 메시지에 응답하지 않음</li>
+<li>높은 메시지 timeout 비율</li>
+<li>일관성 없는 작업 할당</li>
+</ul>
+<p><strong>진단</strong>:</p>
+<pre><code class="language-bash"># Agent 연결 확인
+claude-flow debug connectivity --swarm-id swarm-123
+
+# 메시지 라우팅 추적
+claude-flow debug trace-messages --swarm-id swarm-123 --duration 60s
+
+# 네트워크 지연 시간 분석
+claude-flow debug network-latency --swarm-id swarm-123
+</code></pre>
+<p><strong>솔루션</strong>:</p>
+<pre><code class="language-yaml"># Timeout 값 증가
+communication:
+  message_timeout: &quot;30s&quot;    # 기본 10초에서 증가
+  heartbeat_interval: &quot;5s&quot;  # 더 빈번한 heartbeat
+  retry_attempts: 5         # 더 많은 재시도 시도
+
+# 중복 통신 경로 추가
+redundancy:
+  backup_channels: 2
+  failover_timeout: &quot;10s&quot;
+</code></pre>
+<h4>2. Consensus 교착 상태</h4>
+<p><strong>증상</strong>:</p>
+<ul>
+<li>완료되지 않는 voting 프로세스</li>
+<li>&quot;Consensus 대기 중&quot; 상태에 stuck된 agent</li>
+<li>높은 consensus timeout 비율</li>
+</ul>
+<p><strong>진단</strong>:</p>
+<pre><code class="language-bash"># Consensus 상태 확인
+claude-flow consensus status --swarm-id swarm-123
+
+# Voting 패턴 분석
+claude-flow debug voting-patterns --swarm-id swarm-123
+
+# Byzantine agent 확인
+claude-flow debug byzantine-detection --swarm-id swarm-123
+</code></pre>
+<p><strong>솔루션</strong>:</p>
+<pre><code class="language-yaml"># Timeout 및 fallback 구현
+consensus:
+  voting_timeout: &quot;300s&quot;    # 5분 timeout
+  fallback_to_majority: true
+  tie_breaking: &quot;coordinator&quot;
+
+# 교착 상태 탐지 추가
+deadlock_detection:
+  enabled: true
+  check_interval: &quot;60s&quot;
+  resolution: &quot;restart_voting&quot;
+</code></pre>
+<h4>3. 메모리 동기화 문제</h4>
+<p><strong>증상</strong>:</p>
+<ul>
+<li>Agent가 오래된 정보로 작업</li>
+<li>충돌하는 작업 할당</li>
+<li>일관성 없는 공유 상태</li>
+</ul>
+<p><strong>진단</strong>:</p>
+<pre><code class="language-bash"># 메모리 일관성 확인
+claude-flow memory consistency-check --namespace swarm-123
+
+# 동기화 충돌 분석
+claude-flow debug memory-conflicts --namespace swarm-123
+
+# 동기화 성능 모니터링
+claude-flow memory sync-performance --namespace swarm-123
+</code></pre>
+<p><strong>솔루션</strong>:</p>
+<pre><code class="language-yaml"># 일관성 보장 강화
+memory:
+  consistency_level: &quot;strong&quot;
+  sync_timeout: &quot;10s&quot;
+  conflict_resolution: &quot;latest_timestamp&quot;
+
+# 검증 확인 추가
+validation:
+  consistency_checks: true
+  repair_inconsistencies: true
+  sync_verification: true
+</code></pre>
+<h4>4. 성능 저하</h4>
+<p><strong>증상</strong>:</p>
+<ul>
+<li>작업 완료 시간 증가</li>
+<li>높은 리소스 활용</li>
+<li>감소된 처리량</li>
+</ul>
+<p><strong>진단</strong>:</p>
+<pre><code class="language-bash"># 성능 프로필 생성
+claude-flow perf profile --swarm-id swarm-123 --duration 300s
+
+# 병목 현상 식별
+claude-flow debug bottlenecks --swarm-id swarm-123
+
+# 리소스 사용량 분석
+claude-flow debug resource-usage --swarm-id swarm-123
+</code></pre>
+<p><strong>솔루션</strong>:</p>
+<pre><code class="language-yaml"># 리소스 할당 최적화
+resources:
+  # 리소스 확장
+  cpu_limit: &quot;16 cores&quot;
+  memory_limit: &quot;32GB&quot;
+
+  # 더 많은 agent 추가
+  auto_scaling:
+    enabled: true
+    min_agents: 5
+    max_agents: 20
+    scale_trigger: &quot;cpu_usage &gt; 80%&quot;
+
+# 알고리즘 최적화
+optimization:
+  task_scheduling: &quot;priority_based&quot;
+  load_balancing: &quot;least_loaded&quot;
+  caching: &quot;aggressive&quot;
+</code></pre>
+<h3>디버깅 도구 및 기법</h3>
+<h4>1. 로그 분석</h4>
+<pre><code class="language-bash"># 모든 agent에서 로그 집계
+claude-flow logs aggregate --swarm-id swarm-123 --level ERROR
+
+# 특정 패턴 검색
+claude-flow logs search --pattern &quot;consensus.*timeout&quot; --swarm-id swarm-123
+
+# 로그 요약 생성
+claude-flow logs summary --swarm-id swarm-123 --time-range 1h
+</code></pre>
+<h4>2. 성능 프로파일링</h4>
+<pre><code class="language-bash"># CPU 프로파일링
+claude-flow debug cpu-profile --swarm-id swarm-123 --duration 60s
+
+# 메모리 프로파일링
+claude-flow debug memory-profile --swarm-id swarm-123
+
+# 네트워크 프로파일링
+claude-flow debug network-profile --swarm-id swarm-123
+</code></pre>
+<h4>3. 상태 검사</h4>
+<pre><code class="language-bash"># Swarm 상태 내보내기
+claude-flow debug export-state --swarm-id swarm-123 --output state.json
+
+# 시간 경과에 따른 상태 비교
+claude-flow debug compare-states --before state1.json --after state2.json
+
+# 상태 일관성 검증
+claude-flow debug validate-state --swarm-id swarm-123
+</code></pre>
+<h3>복구 절차</h3>
+<h4>1. 우아한 재시작</h4>
+<pre><code class="language-bash"># 재시작 전 작업 drain
+claude-flow swarm drain --swarm-id swarm-123 --timeout 300s
+
+# Swarm 재시작
+claude-flow swarm restart --swarm-id swarm-123 --preserve-state
+
+# 재시작 성공 검증
+claude-flow swarm health-check --swarm-id swarm-123
+</code></pre>
+<h4>2. 비상 복구</h4>
+<pre><code class="language-bash"># 비상 중지
+claude-flow swarm emergency-stop --swarm-id swarm-123 --reason &quot;critical-issue&quot;
+
+# 백업에서 복원
+claude-flow swarm restore --backup-file swarm-backup.json
+
+# 부분 복구 (특정 agent)
+claude-flow agents restart --agent-ids agent-1,agent-2,agent-3
+</code></pre>
+<h4>3. 데이터 복구</h4>
+<pre><code class="language-bash"># 메모리 손상에서 복구
+claude-flow memory recover --namespace swarm-123 --backup-timestamp &quot;2024-01-15T10:00:00Z&quot;
+
+# Index 재구축
+claude-flow memory rebuild-indices --namespace swarm-123
+
+# 불일치 복구
+claude-flow memory repair --namespace swarm-123 --dry-run false
+</code></pre>
+<hr>
+<h2>결론</h2>
+<p>Claude Flow Swarm Intelligence 시스템은 분산 AI 협업에 대한 정교한 접근 방식을 나타냅니다. 여러 topology 타입, consensus 메커니즘 및 fault-tolerant architecture를 활용하여 복잡한 실제 문제를 해결할 수 있는 복원력 있고 확장 가능한 AI agent 네트워크 생성을 가능하게 합니다.</p>
+<p>Swarm 시스템의 성공은 다음을 신중하게 고려해야 합니다:</p>
+<ul>
+<li>사용 사례에 적합한 topology 선택</li>
+<li>적절한 agent 기능 매칭 및 작업량 균형</li>
+<li>강력한 오류 처리 및 복구 메커니즘</li>
+<li>종합 모니터링 및 observability</li>
+<li>보안 및 신뢰성 모범 사례</li>
+</ul>
+<p>더 간단한 topology로 시작하여 swarm 패턴 및 행동에 대한 경험을 쌓으면서 점차 복잡성을 증가시키세요. 잘 조정된 swarm에서 나타나는 창발적 지능은 종종 개별 agent 기능의 합을 초과하여 강력한 문제 해결 네트워크를 생성할 수 있습니다.</p>
+<p>추가 지원, 예제 및 커뮤니티 리소스는 다음을 방문하세요:</p>
+<ul>
+<li>문서: https://github.com/ruvnet/claude-flow/docs</li>
+<li>Issue: https://github.com/ruvnet/claude-flow/issues</li>
+<li>커뮤니티: https://github.com/ruvnet/claude-flow/discussions</li>
+</ul>
+<p>기억하세요: 효과적인 swarm intelligence는 개별 agent 지능만으로 나타나는 것이 아니라 agent 간 조정, 통신 및 협업 패턴의 품질에서 나타납니다.</p>
+
+  </div>
+</article>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Hanson Kim. All rights reserved.</p>
+  </footer>
+</body>
+</html>

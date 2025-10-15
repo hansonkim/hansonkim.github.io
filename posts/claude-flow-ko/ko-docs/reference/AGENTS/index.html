@@ -1,0 +1,1106 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AGENTS</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="/" class="logo">Hanson Kim</a>
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/blog/">Blog</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    
+<article class="post">
+  <header class="post-header">
+    <h1>AGENTS</h1>
+    <time datetime="2025년 10월 15일">2025년 10월 15일</time>
+    
+    <div class="tags">
+      
+        
+      
+        
+        <span class="tag">Claude-Flow</span>
+        
+      
+        
+        <span class="tag">문서</span>
+        
+      
+        
+        <span class="tag">AI</span>
+        
+      
+    </div>
+    
+  </header>
+
+  <div class="post-content">
+    <h1>🤖 Claude-Flow Agent 참조</h1>
+<h2>65개 이상의 특화된 AI Agent에 대한 완벽한 가이드</h2>
+<p>Claude-Flow는 엔터프라이즈급 소프트웨어 개발, 조정 및 자동화를 위해 설계된 특화된 AI agent의 포괄적인 생태계를 제공합니다. 각 agent는 특정 작업과 도메인에 최적화되어 지능형 swarm 조정 및 자율 workflow 실행을 가능하게 합니다.</p>
+<hr>
+<h2>📊 Agent 개요</h2>
+<table>
+<thead>
+<tr>
+<th><strong>카테고리</strong></th>
+<th><strong>수량</strong></th>
+<th><strong>설명</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Core Development</td>
+<td>5</td>
+<td>필수 개발 agent (coder, planner, researcher, reviewer, tester)</td>
+</tr>
+<tr>
+<td>Swarm Coordination</td>
+<td>5</td>
+<td>Swarm topology 및 조정 관리</td>
+</tr>
+<tr>
+<td>Consensus &amp; Fault Tolerance</td>
+<td>7</td>
+<td>분산 consensus 및 Byzantine fault tolerance</td>
+</tr>
+<tr>
+<td>GitHub Integration</td>
+<td>12</td>
+<td>완벽한 GitHub workflow 자동화</td>
+</tr>
+<tr>
+<td>Specialized Domain</td>
+<td>8</td>
+<td>도메인별 개발 (mobile, ML, backend)</td>
+</tr>
+<tr>
+<td>Analysis &amp; Code Quality</td>
+<td>6</td>
+<td>코드 분석, 리뷰 및 품질 보증</td>
+</tr>
+<tr>
+<td>Testing &amp; Validation</td>
+<td>4</td>
+<td>종합 테스팅 및 검증</td>
+</tr>
+<tr>
+<td>Infrastructure &amp; DevOps</td>
+<td>5</td>
+<td>CI/CD, 배포 및 인프라</td>
+</tr>
+<tr>
+<td>SPARC Methodology</td>
+<td>4</td>
+<td>Specification, Pseudocode, Architecture, Refinement, Code</td>
+</tr>
+<tr>
+<td>Template &amp; Automation</td>
+<td>9+</td>
+<td>Template 생성 및 자동화 agent</td>
+</tr>
+</tbody>
+</table>
+<p><strong>총 Agent 수</strong>: 65+</p>
+<hr>
+<h2>🏗️ 1. Core Development Agent</h2>
+<h3><code>coder</code></h3>
+<p><strong>타입</strong>: Implementation Specialist
+<strong>목적</strong>: 코드 생성, 리팩토링 및 구현
+<strong>주요 기능</strong>:</p>
+<ul>
+<li>TypeScript/JavaScript 코드 생성</li>
+<li>API 구현 및 통합</li>
+<li>Database schema 설계 및 구현</li>
+<li>코드 리팩토링 및 최적화</li>
+<li>버그 수정 및 기능 구현</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-bash">npx claude-flow@alpha agent spawn coder --name &quot;API-Builder&quot;
+npx claude-flow@alpha task assign coder &quot;implement REST API endpoints&quot;
+</code></pre>
+<h3><code>planner</code></h3>
+<p><strong>타입</strong>: Strategic Planning
+<strong>목적</strong>: 프로젝트 계획, 작업 분해 및 로드맵 작성
+<strong>주요 기능</strong>:</p>
+<ul>
+<li>전략적 프로젝트 계획</li>
+<li>작업 분해 및 우선순위 지정</li>
+<li>타임라인 추정 및 마일스톤 계획</li>
+<li>리소스 할당 계획</li>
+<li>위험 평가 및 완화 계획</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-bash">npx claude-flow@alpha agent spawn planner --name &quot;Project-Strategist&quot;
+npx claude-flow@alpha sparc run planner &quot;create microservices architecture plan&quot;
+</code></pre>
+<h3><code>researcher</code></h3>
+<p><strong>타입</strong>: Information Gathering
+<strong>목적</strong>: 연구, 분석 및 지식 발견
+<strong>주요 기능</strong>:</p>
+<ul>
+<li>기술 연구 및 평가</li>
+<li>모범 사례 발견</li>
+<li>시장 및 경쟁사 분석</li>
+<li>문서 연구</li>
+<li>문제 공간 탐색</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-bash">npx claude-flow@alpha agent spawn researcher --name &quot;Tech-Scout&quot;
+npx claude-flow@alpha task assign researcher &quot;research GraphQL best practices&quot;
+</code></pre>
+<h3><code>reviewer</code></h3>
+<p><strong>타입</strong>: Quality Assurance
+<strong>목적</strong>: 코드 리뷰, 모범 사례 적용
+<strong>주요 기능</strong>:</p>
+<ul>
+<li>코드 품질 평가</li>
+<li>보안 취약점 탐지</li>
+<li>모범 사례 적용</li>
+<li>Architecture 리뷰</li>
+<li>성능 최적화 권장사항</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-bash">npx claude-flow@alpha agent spawn reviewer --name &quot;Quality-Guardian&quot;
+npx claude-flow@alpha task assign reviewer &quot;review authentication implementation&quot;
+</code></pre>
+<h3><code>tester</code></h3>
+<p><strong>타입</strong>: Test Creation
+<strong>목적</strong>: Unit test, integration test 및 검증
+<strong>주요 기능</strong>:</p>
+<ul>
+<li>Unit test 생성 (Jest, Mocha)</li>
+<li>Integration test 구현</li>
+<li>E2E test 자동화</li>
+<li>Test coverage 분석</li>
+<li>성능 테스팅</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-bash">npx claude-flow@alpha agent spawn tester --name &quot;Test-Master&quot;
+npx claude-flow@alpha sparc tdd &quot;user authentication system&quot;
+</code></pre>
+<hr>
+<h2>🐝 2. Swarm Coordination Agent</h2>
+<h3><code>hierarchical-coordinator</code></h3>
+<p><strong>타입</strong>: Queen-Led Coordination
+<strong>목적</strong>: 중앙 집중식 지휘 및 통제 구조
+<strong>주요 기능</strong>:</p>
+<ul>
+<li>중앙 집중식 의사 결정</li>
+<li>작업 위임 및 감독</li>
+<li>리소스 할당 관리</li>
+<li>품질 관리 및 검증</li>
+<li>전략적 방향 설정</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-bash">npx claude-flow@alpha swarm init --topology hierarchical --coordinator queen-coordinator
+npx claude-flow@alpha agent spawn hierarchical-coordinator --name &quot;Queen-Genesis&quot;
+</code></pre>
+<h3><code>mesh-coordinator</code></h3>
+<p><strong>타입</strong>: Peer-to-Peer Coordination
+<strong>목적</strong>: 중앙 권한 없는 분산 조정
+<strong>주요 기능</strong>:</p>
+<ul>
+<li>Peer-to-peer 작업 조정</li>
+<li>분산 의사 결정</li>
+<li>Agent 간 부하 분산</li>
+<li>중복성을 통한 fault tolerance</li>
+<li>적응형 작업 재분배</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-bash">npx claude-flow@alpha swarm init --topology mesh --max-agents 8
+npx claude-flow@alpha agent spawn mesh-coordinator --name &quot;Mesh-Alpha&quot;
+</code></pre>
+<h3><code>adaptive-coordinator</code></h3>
+<p><strong>타입</strong>: Dynamic Topology Management
+<strong>목적</strong>: 작업량 및 조건에 따른 적응형 조정
+<strong>주요 기능</strong>:</p>
+<ul>
+<li>동적 topology 조정</li>
+<li>실시간 부하 분산</li>
+<li>성능 기반 agent 선택</li>
+<li>자동 확장 결정</li>
+<li>컨텍스트 인식 조정</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-bash">npx claude-flow@alpha swarm init --topology adaptive --auto-scale
+npx claude-flow@alpha agent spawn adaptive-coordinator --name &quot;Adaptive-Prime&quot;
+</code></pre>
+<h3><code>collective-intelligence-coordinator</code></h3>
+<p><strong>타입</strong>: Hive-Mind Coordination
+<strong>목적</strong>: 집단 지능 및 공유 지식
+<strong>주요 기능</strong>:</p>
+<ul>
+<li>공유 지식 베이스 관리</li>
+<li>집단 의사 결정</li>
+<li>분산 학습 및 적응</li>
+<li>Consensus 기반 계획</li>
+<li>창발적 지능 조정</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-bash">npx claude-flow@alpha hive-mind spawn --collective-intelligence
+npx claude-flow@alpha agent spawn collective-intelligence-coordinator --name &quot;Hive-Mind&quot;
+</code></pre>
+<h3><code>swarm-memory-manager</code></h3>
+<p><strong>타입</strong>: Distributed Memory Coordination
+<strong>목적</strong>: 영구 메모리 및 지식 관리
+<strong>주요 기능</strong>:</p>
+<ul>
+<li>분산 메모리 조정</li>
+<li>지식 지속성 및 검색</li>
+<li>Agent 간 정보 공유</li>
+<li>메모리 일관성 관리</li>
+<li>과거 데이터 관리</li>
+</ul>
+<p><strong>사용 예제</strong>:</p>
+<pre><code class="language-bash">npx claude-flow@alpha agent spawn swarm-memory-manager --name &quot;Memory-Keeper&quot;
+npx claude-flow@alpha memory distributed init --coordinator swarm-memory-manager
+</code></pre>
+<hr>
+<h2>⚖️ 3. Consensus &amp; Fault Tolerance Agent</h2>
+<h3><code>byzantine-coordinator</code></h3>
+<p><strong>타입</strong>: Byzantine Fault Tolerance
+<strong>목적</strong>: 적대적 조건에서의 fault tolerance
+<strong>주요 기능</strong>:</p>
+<ul>
+<li>Byzantine fault tolerance 구현</li>
+<li>악의적인 agent 탐지</li>
+<li>보안 consensus protocol</li>
+<li>네트워크 파티션 처리</li>
+<li>보안 위협 완화</li>
+</ul>
+<h3><code>raft-manager</code></h3>
+<p><strong>타입</strong>: Leader Election
+<strong>목적</strong>: Raft consensus 알고리즘 구현
+<strong>주요 기능</strong>:</p>
+<ul>
+<li>Leader election 관리</li>
+<li>Log replication 조정</li>
+<li>Consensus 상태 관리</li>
+<li>장애 탐지 및 복구</li>
+<li>Cluster membership 관리</li>
+</ul>
+<h3><code>consensus-builder</code></h3>
+<p><strong>타입</strong>: Decision-Making Coordination
+<strong>목적</strong>: 다중 agent consensus 및 의사 결정
+<strong>주요 기능</strong>:</p>
+<ul>
+<li>Voting protocol 조정</li>
+<li>Quorum 관리</li>
+<li>충돌 해결</li>
+<li>의사 결정 집계</li>
+<li>Consensus 임계값 관리</li>
+</ul>
+<h3><code>quorum-manager</code></h3>
+<p><strong>타입</strong>: Quorum Management
+<strong>목적</strong>: Quorum 기반 의사 결정
+<strong>주요 기능</strong>:</p>
+<ul>
+<li>Quorum 크기 결정</li>
+<li>Voting 조정</li>
+<li>다수 결정 적용</li>
+<li>구성원 가용성 추적</li>
+<li>Quorum 복구 관리</li>
+</ul>
+<h3><code>gossip-coordinator</code></h3>
+<p><strong>타입</strong>: Gossip Protocol Management
+<strong>목적</strong>: 정보 전파 및 조정
+<strong>주요 기능</strong>:</p>
+<ul>
+<li>Gossip protocol 구현</li>
+<li>정보 확산 조정</li>
+<li>네트워크 topology 유지</li>
+<li>소문 추적 및 검증</li>
+<li>전염병 스타일 통신</li>
+</ul>
+<h3><code>crdt-synchronizer</code></h3>
+<p><strong>타입</strong>: Conflict-Free Replicated Data Types
+<strong>목적</strong>: 분산 데이터 동기화
+<strong>주요 기능</strong>:</p>
+<ul>
+<li>CRDT 구현 및 관리</li>
+<li>충돌 없는 데이터 동기화</li>
+<li>Eventual consistency 조정</li>
+<li>병합 작업 관리</li>
+<li>분산 상태 조정</li>
+</ul>
+<h3><code>security-manager</code></h3>
+<p><strong>타입</strong>: Security Coordination
+<strong>목적</strong>: 보안 및 접근 제어 관리
+<strong>주요 기능</strong>:</p>
+<ul>
+<li>접근 제어 적용</li>
+<li>보안 정책 관리</li>
+<li>위협 탐지 및 대응</li>
+<li>암호화 키 관리</li>
+<li>감사 추적 유지</li>
+</ul>
+<hr>
+<h2>🐙 4. GitHub Integration Agent</h2>
+<h3><code>github-modes</code></h3>
+<p><strong>타입</strong>: Comprehensive GitHub Integration
+<strong>목적</strong>: 완벽한 GitHub workflow 오케스트레이션
+<strong>주요 기능</strong>:</p>
+<ul>
+<li>GitHub workflow 오케스트레이션</li>
+<li>다중 repository 조정</li>
+<li>Branch 관리 및 전략</li>
+<li>Webhook 처리 및 자동화</li>
+<li>GitHub API 통합</li>
+</ul>
+<h3><code>pr-manager</code></h3>
+<p><strong>타입</strong>: Pull Request Management
+<strong>목적</strong>: 자동화된 PR 관리 및 리뷰
+<strong>주요 기능</strong>:</p>
+<ul>
+<li>자동화된 PR 생성 및 업데이트</li>
+<li>다중 reviewer 조정</li>
+<li>충돌 해결 지원</li>
+<li>리뷰 할당 최적화</li>
+<li>병합 전략 적용</li>
+</ul>
+<h3><code>code-review-swarm</code></h3>
+<p><strong>타입</strong>: Multi-Agent Code Review
+<strong>목적</strong>: 분산 코드 리뷰 조정
+<strong>주요 기능</strong>:</p>
+<ul>
+<li>다중 agent 리뷰 조정</li>
+<li>특화된 리뷰 할당</li>
+<li>코드 품질 평가</li>
+<li>보안 취약점 스캔</li>
+<li>리뷰 consensus 구축</li>
+</ul>
+<h3><code>issue-tracker</code></h3>
+<p><strong>타입</strong>: Issue Management
+<strong>목적</strong>: 지능형 이슈 추적 및 관리
+<strong>주요 기능</strong>:</p>
+<ul>
+<li>이슈 분류 및 우선순위 지정</li>
+<li>자동화된 이슈 할당</li>
+<li>진행 상황 추적 및 보고</li>
+<li>이슈 관계 매핑</li>
+<li>해결 조정</li>
+</ul>
+<h3><code>release-manager</code></h3>
+<p><strong>타입</strong>: Release Coordination
+<strong>목적</strong>: 릴리스 계획 및 배포 조정
+<strong>주요 기능</strong>:</p>
+<ul>
+<li>릴리스 계획 및 일정 수립</li>
+<li>Changelog 생성</li>
+<li>배포 조정</li>
+<li>Rollback 관리</li>
+<li>버전 관리</li>
+</ul>
+<h3><code>repo-architect</code></h3>
+<p><strong>타입</strong>: Repository Architecture
+<strong>목적</strong>: Repository 구조 및 조직
+<strong>주요 기능</strong>:</p>
+<ul>
+<li>Repository 구조 설계</li>
+<li>Branching 전략 최적화</li>
+<li>Workflow template 작성</li>
+<li>CI/CD pipeline 설계</li>
+<li>Repository 거버넌스</li>
+</ul>
+<h3><code>project-board-sync</code></h3>
+<p><strong>타입</strong>: Project Board Management
+<strong>목적</strong>: GitHub project board 동기화
+<strong>주요 기능</strong>:</p>
+<ul>
+<li>Project board 자동화</li>
+<li>카드 이동 조정</li>
+<li>진행 상황 시각화</li>
+<li>Milestone 추적</li>
+<li>팀 조정</li>
+</ul>
+<h3><code>workflow-automation</code></h3>
+<p><strong>타입</strong>: GitHub Actions Automation
+<strong>목적</strong>: GitHub Actions workflow 관리
+<strong>주요 기능</strong>:</p>
+<ul>
+<li>Workflow 설계 및 최적화</li>
+<li>Action marketplace 통합</li>
+<li>CI/CD pipeline 관리</li>
+<li>Secret 관리</li>
+<li>Workflow 디버깅</li>
+</ul>
+<h3><code>sync-coordinator</code></h3>
+<p><strong>타입</strong>: Multi-Repository Synchronization
+<strong>목적</strong>: Repository 간 조정
+<strong>주요 기능</strong>:</p>
+<ul>
+<li>Multi-repo 동기화</li>
+<li>Dependency 추적</li>
+<li>Repository 간 이슈 연결</li>
+<li>통합 릴리스 조정</li>
+<li>Repository 관계 관리</li>
+</ul>
+<h3><code>swarm-issue</code></h3>
+<p><strong>타입</strong>: Swarm-Based Issue Resolution
+<strong>목적</strong>: 다중 agent 이슈 해결
+<strong>주요 기능</strong>:</p>
+<ul>
+<li>Swarm 기반 문제 해결</li>
+<li>이슈 분해</li>
+<li>병렬 해결 전략</li>
+<li>리소스 조정</li>
+<li>솔루션 통합</li>
+</ul>
+<h3><code>swarm-pr</code></h3>
+<p><strong>타입</strong>: Swarm-Based PR Management
+<strong>목적</strong>: 다중 agent PR 처리
+<strong>주요 기능</strong>:</p>
+<ul>
+<li>분산 PR 리뷰</li>
+<li>병렬 개발 조정</li>
+<li>병합 충돌 해결</li>
+<li>품질 보증 조정</li>
+<li>Integration 테스팅</li>
+</ul>
+<h3><code>multi-repo-swarm</code></h3>
+<p><strong>타입</strong>: Multi-Repository Swarm Coordination
+<strong>목적</strong>: 대규모 repository 관리
+<strong>주요 기능</strong>:</p>
+<ul>
+<li>Multi-repository 조정</li>
+<li>분산 개발 관리</li>
+<li>Repository 간 dependency 추적</li>
+<li>통합 빌드 조정</li>
+<li>릴리스 동기화</li>
+</ul>
+<hr>
+<h2>💻 5. Specialized Domain Agent</h2>
+<h3><code>backend-dev</code></h3>
+<p><strong>타입</strong>: Server Development
+<strong>목적</strong>: API 개발, database 및 서버 측 서비스
+<strong>주요 기능</strong>:</p>
+<ul>
+<li>REST/GraphQL API 개발</li>
+<li>Database 설계 및 최적화</li>
+<li>Microservices architecture</li>
+<li>인증 및 권한 부여</li>
+<li>서버 측 최적화</li>
+</ul>
+<h3><code>mobile-dev</code></h3>
+<p><strong>타입</strong>: Mobile Application Development
+<strong>목적</strong>: React Native, iOS 및 Android 개발
+<strong>주요 기능</strong>:</p>
+<ul>
+<li>React Native 개발</li>
+<li>Native iOS/Android 통합</li>
+<li>Mobile UI/UX 최적화</li>
+<li>성능 최적화</li>
+<li>App store 배포</li>
+</ul>
+<h3><code>ml-developer</code></h3>
+<p><strong>타입</strong>: Machine Learning
+<strong>목적</strong>: 모델 훈련, 배포 및 ML pipeline
+<strong>주요 기능</strong>:</p>
+<ul>
+<li>Machine learning 모델 개발</li>
+<li>Data pipeline 작성</li>
+<li>모델 훈련 및 최적화</li>
+<li>ML 배포 전략</li>
+<li>성능 모니터링</li>
+</ul>
+<h3><code>system-architect</code></h3>
+<p><strong>타입</strong>: High-Level System Design
+<strong>목적</strong>: Architecture 설계 및 시스템 계획
+<strong>주요 기능</strong>:</p>
+<ul>
+<li>시스템 architecture 설계</li>
+<li>확장성 계획</li>
+<li>기술 스택 선택</li>
+<li>Integration pattern 설계</li>
+<li>성능 architecture</li>
+</ul>
+<h3><code>sparc-coder</code></h3>
+<p><strong>타입</strong>: SPARC TDD Implementation
+<strong>목적</strong>: SPARC 방법론을 사용한 test-driven development
+<strong>주요 기능</strong>:</p>
+<ul>
+<li>SPARC 방법론 구현</li>
+<li>Test-driven development</li>
+<li>Specification 기반 코딩</li>
+<li>반복적 개선</li>
+<li>품질 중심 개발</li>
+</ul>
+<h3><code>production-validator</code></h3>
+<p><strong>타입</strong>: Production Validation
+<strong>목적</strong>: 실제 환경 검증 및 테스팅
+<strong>주요 기능</strong>:</p>
+<ul>
+<li>Production 환경 검증</li>
+<li>실제 테스팅 시나리오</li>
+<li>성능 검증</li>
+<li>보안 평가</li>
+<li>배포 확인</li>
+</ul>
+<h3><code>api-docs</code></h3>
+<p><strong>타입</strong>: API Documentation
+<strong>목적</strong>: OpenAPI 및 API 문서 생성
+<strong>주요 기능</strong>:</p>
+<ul>
+<li>OpenAPI specification 생성</li>
+<li>API 문서 작성</li>
+<li>Interactive 문서</li>
+<li>코드 예제 생성</li>
+<li>문서 유지보수</li>
+</ul>
+<h3><code>cicd-engineer</code></h3>
+<p><strong>타입</strong>: CI/CD Pipeline Management
+<strong>목적</strong>: 지속적 통합 및 배포
+<strong>주요 기능</strong>:</p>
+<ul>
+<li>CI/CD pipeline 설계</li>
+<li>빌드 자동화</li>
+<li>배포 전략</li>
+<li>Pipeline 최적화</li>
+<li>Quality gate 구현</li>
+</ul>
+<hr>
+<h2>🔍 6. Analysis &amp; Code Quality Agent</h2>
+<h3><code>code-analyzer</code></h3>
+<p><strong>타입</strong>: Code Analysis
+<strong>목적</strong>: 정적 코드 분석 및 품질 평가
+<strong>주요 기능</strong>:</p>
+<ul>
+<li>정적 코드 분석</li>
+<li>코드 복잡도 평가</li>
+<li>Technical debt 식별</li>
+<li>리팩토링 권장사항</li>
+<li>코드 패턴 인식</li>
+</ul>
+<h3><code>perf-analyzer</code></h3>
+<p><strong>타입</strong>: Performance Analysis
+<strong>목적</strong>: 병목 현상 식별 및 최적화
+<strong>주요 기능</strong>:</p>
+<ul>
+<li>성능 병목 현상 식별</li>
+<li>리소스 사용량 분석</li>
+<li>최적화 권장사항</li>
+<li>Load testing 조정</li>
+<li>성능 모니터링</li>
+</ul>
+<h3><code>performance-benchmarker</code></h3>
+<p><strong>타입</strong>: Performance Testing
+<strong>목적</strong>: 종합 성능 벤치마킹
+<strong>주요 기능</strong>:</p>
+<ul>
+<li>성능 benchmark 작성</li>
+<li>Load testing 실행</li>
+<li>Stress testing 조정</li>
+<li>성능 회귀 탐지</li>
+<li>Benchmark 보고</li>
+</ul>
+<h3><code>analyze-code-quality</code></h3>
+<p><strong>타입</strong>: Code Quality Assessment
+<strong>목적</strong>: 종합 코드 품질 분석
+<strong>주요 기능</strong>:</p>
+<ul>
+<li>코드 품질 metrics</li>
+<li>유지보수성 평가</li>
+<li>디자인 패턴 분석</li>
+<li>Code smell 탐지</li>
+<li>품질 개선 권장사항</li>
+</ul>
+<h3><code>refactoring-specialist</code></h3>
+<p><strong>타입</strong>: Code Refactoring
+<strong>목적</strong>: 코드 리팩토링 및 개선
+<strong>주요 기능</strong>:</p>
+<ul>
+<li>코드 리팩토링 전략</li>
+<li>디자인 패턴 구현</li>
+<li>Legacy 코드 현대화</li>
+<li>성능 최적화</li>
+<li>Architecture 개선</li>
+</ul>
+<h3><code>security-analyzer</code></h3>
+<p><strong>타입</strong>: Security Analysis
+<strong>목적</strong>: 보안 취약점 평가
+<strong>주요 기능</strong>:</p>
+<ul>
+<li>보안 취약점 스캔</li>
+<li>위협 모델링</li>
+<li>보안 모범 사례 적용</li>
+<li>규정 준수 평가</li>
+<li>보안 remediation</li>
+</ul>
+<hr>
+<h2>🧪 7. Testing &amp; Validation Agent</h2>
+<h3><code>tdd-london-swarm</code></h3>
+<p><strong>타입</strong>: London-Style TDD
+<strong>목적</strong>: London school test-driven development
+<strong>주요 기능</strong>:</p>
+<ul>
+<li>Outside-in TDD 접근</li>
+<li>Mock 기반 테스팅</li>
+<li>행동 specification</li>
+<li>Test isolation</li>
+<li>설계 창발</li>
+</ul>
+<h3><code>unit-test-specialist</code></h3>
+<p><strong>타입</strong>: Unit Testing
+<strong>목적</strong>: 종합 unit test 작성
+<strong>주요 기능</strong>:</p>
+<ul>
+<li>Unit test 생성</li>
+<li>Test coverage 최적화</li>
+<li>Test 유지보수성</li>
+<li>Assertion 전략</li>
+<li>Test 성능</li>
+</ul>
+<h3><code>integration-tester</code></h3>
+<p><strong>타입</strong>: Integration Testing
+<strong>목적</strong>: 시스템 integration 검증
+<strong>주요 기능</strong>:</p>
+<ul>
+<li>Integration test 설계</li>
+<li>API 테스팅</li>
+<li>Database integration 테스팅</li>
+<li>Service integration 검증</li>
+<li>End-to-end 테스팅</li>
+</ul>
+<h3><code>e2e-automation</code></h3>
+<p><strong>타입</strong>: End-to-End Testing
+<strong>목적</strong>: 전체 시스템 검증
+<strong>주요 기능</strong>:</p>
+<ul>
+<li>E2E test 자동화</li>
+<li>User journey 테스팅</li>
+<li>Cross-browser 테스팅</li>
+<li>Mobile 테스팅</li>
+<li>Visual regression 테스팅</li>
+</ul>
+<hr>
+<h2>🏗️ 8. Infrastructure &amp; DevOps Agent</h2>
+<h3><code>ops-cicd-github</code></h3>
+<p><strong>타입</strong>: GitHub CI/CD Operations
+<strong>목적</strong>: GitHub Actions 및 CI/CD 관리
+<strong>주요 기능</strong>:</p>
+<ul>
+<li>GitHub Actions workflow 작성</li>
+<li>CI/CD pipeline 최적화</li>
+<li>배포 자동화</li>
+<li>Environment 관리</li>
+<li>Release 자동화</li>
+</ul>
+<h3><code>infrastructure-specialist</code></h3>
+<p><strong>타입</strong>: Infrastructure Management
+<strong>목적</strong>: Cloud infrastructure 및 배포
+<strong>주요 기능</strong>:</p>
+<ul>
+<li>Infrastructure as Code</li>
+<li>Cloud 리소스 관리</li>
+<li>Container 오케스트레이션</li>
+<li>Networking 구성</li>
+<li>Monitoring 설정</li>
+</ul>
+<h3><code>deployment-coordinator</code></h3>
+<p><strong>타입</strong>: Deployment Management
+<strong>목적</strong>: Application 배포 조정
+<strong>주요 기능</strong>:</p>
+<ul>
+<li>배포 전략 구현</li>
+<li>Blue-green 배포</li>
+<li>Canary 릴리스</li>
+<li>Rollback 관리</li>
+<li>Environment promotion</li>
+</ul>
+<h3><code>monitoring-specialist</code></h3>
+<p><strong>타입</strong>: System Monitoring
+<strong>목적</strong>: Application 및 infrastructure 모니터링
+<strong>주요 기능</strong>:</p>
+<ul>
+<li>Monitoring 설정 및 구성</li>
+<li>Alert 관리</li>
+<li>성능 추적</li>
+<li>Log 집계</li>
+<li>Dashboard 작성</li>
+</ul>
+<h3><code>cloud-architect</code></h3>
+<p><strong>타입</strong>: Cloud Architecture
+<strong>목적</strong>: Cloud-native architecture 설계
+<strong>주요 기능</strong>:</p>
+<ul>
+<li>Cloud architecture 설계</li>
+<li>Multi-cloud 전략</li>
+<li>비용 최적화</li>
+<li>보안 architecture</li>
+<li>재해 복구 계획</li>
+</ul>
+<hr>
+<h2>📋 9. SPARC Methodology Agent</h2>
+<h3><code>specification</code></h3>
+<p><strong>타입</strong>: SPARC Specification Phase
+<strong>목적</strong>: 요구사항 specification 및 분석
+<strong>주요 기능</strong>:</p>
+<ul>
+<li>요구사항 수집 및 분석</li>
+<li>User story 작성</li>
+<li>Acceptance criteria 정의</li>
+<li>Specification 문서화</li>
+<li>Stakeholder 커뮤니케이션</li>
+</ul>
+<h3><code>pseudocode</code></h3>
+<p><strong>타입</strong>: SPARC Pseudocode Phase
+<strong>목적</strong>: 알고리즘 설계 및 pseudocode 작성
+<strong>주요 기능</strong>:</p>
+<ul>
+<li>알고리즘 설계</li>
+<li>Pseudocode 생성</li>
+<li>Logic flow 문서화</li>
+<li>복잡도 분석</li>
+<li>구현 계획</li>
+</ul>
+<h3><code>architecture</code></h3>
+<p><strong>타입</strong>: SPARC Architecture Phase
+<strong>목적</strong>: 시스템 architecture 및 설계
+<strong>주요 기능</strong>:</p>
+<ul>
+<li>시스템 architecture 설계</li>
+<li>구성 요소 상호 작용 설계</li>
+<li>Interface 정의</li>
+<li>기술 선택</li>
+<li>Architecture 문서화</li>
+</ul>
+<h3><code>refinement</code></h3>
+<p><strong>타입</strong>: SPARC Refinement Phase
+<strong>목적</strong>: 설계 개선 및 최적화
+<strong>주요 기능</strong>:</p>
+<ul>
+<li>설계 개선</li>
+<li>성능 최적화</li>
+<li>보안 강화</li>
+<li>확장성 개선</li>
+<li>품질 검증</li>
+</ul>
+<hr>
+<h2>🔧 10. Template &amp; Automation Agent</h2>
+<h3><code>base-template-generator</code></h3>
+<p><strong>타입</strong>: Template Generation
+<strong>목적</strong>: Base template 및 scaffold 작성
+<strong>주요 기능</strong>:</p>
+<ul>
+<li>프로젝트 template 생성</li>
+<li>Scaffold 작성</li>
+<li>Boilerplate 코드 생성</li>
+<li>구성 template 작성</li>
+<li>문서 template</li>
+</ul>
+<h3><code>automation-smart-agent</code></h3>
+<p><strong>타입</strong>: Smart Automation
+<strong>목적</strong>: 지능형 자동화 및 workflow 작성
+<strong>주요 기능</strong>:</p>
+<ul>
+<li>Workflow 자동화</li>
+<li>작업 자동화</li>
+<li>프로세스 최적화</li>
+<li>Rule 기반 자동화</li>
+<li>지능형 스케줄링</li>
+</ul>
+<h3><code>coordinator-swarm-init</code></h3>
+<p><strong>타입</strong>: Swarm Initialization
+<strong>목적</strong>: Swarm 설정 및 초기화
+<strong>주요 기능</strong>:</p>
+<ul>
+<li>Swarm topology 설정</li>
+<li>Agent 구성</li>
+<li>통신 채널 설정</li>
+<li>리소스 할당</li>
+<li>초기 작업 배분</li>
+</ul>
+<h3><code>implementer-sparc-coder</code></h3>
+<p><strong>타입</strong>: SPARC Implementation
+<strong>목적</strong>: SPARC 기반 코드 구현
+<strong>주요 기능</strong>:</p>
+<ul>
+<li>SPARC 방법론 구현</li>
+<li>Specification에서 코드 생성</li>
+<li>반복 개발</li>
+<li>품질 보증</li>
+<li>문서 생성</li>
+</ul>
+<h3><code>memory-coordinator</code></h3>
+<p><strong>타입</strong>: Memory Management
+<strong>목적</strong>: 분산 메모리 조정
+<strong>주요 기능</strong>:</p>
+<ul>
+<li>메모리 풀 관리</li>
+<li>데이터 일관성 조정</li>
+<li>Cache 관리</li>
+<li>지속성 전략</li>
+<li>메모리 최적화</li>
+</ul>
+<h3><code>orchestrator-task</code></h3>
+<p><strong>타입</strong>: Task Orchestration
+<strong>목적</strong>: 복잡한 작업 조정 및 관리
+<strong>주요 기능</strong>:</p>
+<ul>
+<li>작업 분해</li>
+<li>Dependency 관리</li>
+<li>리소스 스케줄링</li>
+<li>진행 상황 추적</li>
+<li>결과 집계</li>
+</ul>
+<h3><code>performance-analyzer</code></h3>
+<p><strong>타입</strong>: Performance Analysis
+<strong>목적</strong>: 시스템 및 application 성능 분석
+<strong>주요 기능</strong>:</p>
+<ul>
+<li>성능 프로파일링</li>
+<li>병목 현상 식별</li>
+<li>리소스 사용률 분석</li>
+<li>최적화 권장사항</li>
+<li>성능 보고</li>
+</ul>
+<h3><code>sparc-coordinator</code></h3>
+<p><strong>타입</strong>: SPARC Coordination
+<strong>목적</strong>: SPARC 방법론 조정
+<strong>주요 기능</strong>:</p>
+<ul>
+<li>SPARC 단계 조정</li>
+<li>프로세스 오케스트레이션</li>
+<li>Quality gate 관리</li>
+<li>Milestone 추적</li>
+<li>Deliverable 조정</li>
+</ul>
+<h3><code>migration-plan</code></h3>
+<p><strong>타입</strong>: Migration Planning
+<strong>목적</strong>: 시스템 및 데이터 migration 계획
+<strong>주요 기능</strong>:</p>
+<ul>
+<li>Migration 전략 개발</li>
+<li>위험 평가</li>
+<li>타임라인 계획</li>
+<li>리소스 할당</li>
+<li>Rollback 계획</li>
+</ul>
+<hr>
+<h2>🚀 사용 패턴</h2>
+<h3>단일 Agent 사용</h3>
+<pre><code class="language-bash"># 개별 agent 생성
+npx claude-flow@alpha agent spawn coder --name &quot;API-Builder&quot;
+npx claude-flow@alpha agent spawn reviewer --name &quot;Code-Guardian&quot;
+
+# 특정 agent에 작업 할당
+npx claude-flow@alpha task assign coder &quot;implement user authentication&quot;
+npx claude-flow@alpha task assign tester &quot;create unit tests for auth module&quot;
+</code></pre>
+<h3>Swarm Coordination</h3>
+<pre><code class="language-bash"># 다양한 swarm topology 초기화
+npx claude-flow@alpha swarm init --topology hierarchical --max-agents 8
+npx claude-flow@alpha swarm init --topology mesh --agents researcher,coder,tester
+npx claude-flow@alpha swarm init --topology adaptive --auto-scale
+
+# 복잡한 프로젝트를 위한 batch agent 생성
+npx claude-flow@alpha swarm spawn \
+  --agents system-architect,backend-dev,frontend-dev,tester,reviewer \
+  --task &quot;build e-commerce platform&quot;
+</code></pre>
+<h3>SPARC Development Workflow</h3>
+<pre><code class="language-bash"># 전체 SPARC 방법론 실행
+npx claude-flow@alpha sparc pipeline &quot;user authentication system&quot;
+npx claude-flow@alpha sparc run specification &quot;define user management requirements&quot;
+npx claude-flow@alpha sparc run architecture &quot;design auth system architecture&quot;
+npx claude-flow@alpha sparc run code &quot;implement authentication module&quot;
+</code></pre>
+<h3>GitHub Integration</h3>
+<pre><code class="language-bash"># GitHub workflow 자동화
+npx claude-flow@alpha github pr-manager &quot;review and merge feature branch&quot;
+npx claude-flow@alpha github issue-tracker &quot;manage project issues&quot;
+npx claude-flow@alpha github release-manager &quot;prepare v2.0.0 release&quot;
+</code></pre>
+<hr>
+<h2>🔗 Agent Coordination Pattern</h2>
+<h3>Hierarchical Pattern (Queen-Led)</h3>
+<pre><code>Queen (hierarchical-coordinator)
+├── Architect (system-architect)
+├── Workers (coder, backend-dev, mobile-dev)
+├── Quality (reviewer, tester)
+└── Guardian (security-analyzer)
+</code></pre>
+<h3>Mesh Pattern (Peer-to-Peer)</h3>
+<pre><code>모든 agent가 직접 조정:
+coder ↔ reviewer ↔ tester ↔ planner
+  ↕       ↕       ↕       ↕
+researcher ↔ backend-dev ↔ mobile-dev
+</code></pre>
+<h3>Adaptive Pattern (Dynamic)</h3>
+<pre><code>Coordinator (adaptive-coordinator)
+├── Dynamic Agent Pool
+├── Load Balancer (load-balancer)
+├── Performance Monitor (performance-benchmarker)
+└── Auto-scaling Logic
+</code></pre>
+<hr>
+<h2>📊 Agent 선택 가이드라인</h2>
+<h3>프로젝트 타입 → 권장 Agent</h3>
+<p><strong>Web Application</strong>:</p>
+<ul>
+<li>Core: <code>planner</code>, <code>system-architect</code>, <code>backend-dev</code>, <code>coder</code>, <code>tester</code></li>
+<li>Quality: <code>reviewer</code>, <code>security-analyzer</code></li>
+<li>DevOps: <code>cicd-engineer</code>, <code>deployment-coordinator</code></li>
+</ul>
+<p><strong>Mobile Application</strong>:</p>
+<ul>
+<li>Core: <code>planner</code>, <code>mobile-dev</code>, <code>backend-dev</code>, <code>api-docs</code></li>
+<li>Quality: <code>tester</code>, <code>performance-benchmarker</code></li>
+<li>DevOps: <code>release-manager</code></li>
+</ul>
+<p><strong>Machine Learning Project</strong>:</p>
+<ul>
+<li>Core: <code>researcher</code>, <code>ml-developer</code>, <code>data-analyst</code></li>
+<li>Quality: <code>performance-benchmarker</code>, <code>production-validator</code></li>
+<li>Infrastructure: <code>cloud-architect</code>, <code>monitoring-specialist</code></li>
+</ul>
+<p><strong>Enterprise System</strong>:</p>
+<ul>
+<li>Coordination: <code>hierarchical-coordinator</code>, <code>consensus-builder</code></li>
+<li>Core: <code>system-architect</code>, <code>backend-dev</code>, <code>security-analyzer</code></li>
+<li>Quality: <code>code-review-swarm</code>, <code>integration-tester</code></li>
+<li>DevOps: <code>infrastructure-specialist</code>, <code>monitoring-specialist</code></li>
+</ul>
+<hr>
+<h2>🛠️ 고급 구성</h2>
+<h3>Agent Capabilities Matrix</h3>
+<pre><code class="language-yaml">agent_capabilities:
+  coder:
+    languages: [typescript, javascript, python]
+    frameworks: [react, node.js, express]
+    tools: [git, npm, docker]
+    max_concurrent_tasks: 3
+
+  reviewer:
+    analysis_types: [security, performance, quality]
+    languages: [typescript, javascript]
+    max_review_size: 500_lines
+
+  tester:
+    test_types: [unit, integration, e2e]
+    frameworks: [jest, cypress, playwright]
+    coverage_threshold: 80
+</code></pre>
+<h3>사용자 정의 Agent 생성</h3>
+<pre><code class="language-yaml"># .claude/agents/custom/my-specialist.md
+---
+name: my-specialist
+description: 특정 도메인을 위한 사용자 정의 특화 agent
+capabilities:
+  - domain-specific-capability
+  - custom-tool-integration
+tools: [custom-tool, domain-api]
+priority: high
+---
+
+# Custom Agent Implementation
+[Agent prompt 및 행동 정의]
+</code></pre>
+<hr>
+<h2>🔍 Monitoring &amp; Analytics</h2>
+<h3>Agent 성능 Metrics</h3>
+<pre><code class="language-bash"># Agent 성능 보기
+npx claude-flow@alpha metrics agents --detailed
+npx claude-flow@alpha performance analyze --agent-type coder
+npx claude-flow@alpha swarm status --topology hierarchical
+</code></pre>
+<h3>실시간 Monitoring</h3>
+<pre><code class="language-bash"># Swarm coordination 모니터링
+npx claude-flow@alpha monitor swarm --real-time
+npx claude-flow@alpha dashboard --agents --performance
+</code></pre>
+<hr>
+<h2>📚 모범 사례</h2>
+<h3>1. Agent 선택</h3>
+<ul>
+<li>작업 요구사항에 맞는 agent 기능 매칭</li>
+<li>Agent 부하 및 가용성 고려</li>
+<li>도메인별 작업에 특화된 agent 사용</li>
+<li>복잡한 프로젝트에 swarm coordination 활용</li>
+</ul>
+<h3>2. Swarm Coordination</h3>
+<ul>
+<li>대규모 구조화된 프로젝트에 hierarchical topology 사용</li>
+<li>협업적 peer-level 작업에 mesh topology 사용</li>
+<li>동적이고 변화하는 요구사항에 adaptive topology 사용</li>
+<li>성능 기반 topology 모니터링 및 조정</li>
+</ul>
+<h3>3. 성능 최적화</h3>
+<ul>
+<li>Context switching 감소를 위해 유사한 작업 batch 처리</li>
+<li>지식 공유를 위해 memory coordination 사용</li>
+<li>Agent 리소스 사용량 모니터링 및 할당 최적화</li>
+<li>적절한 오류 처리 및 복구 구현</li>
+</ul>
+<h3>4. 품질 보증</h3>
+<ul>
+<li>Production workflow에 항상 reviewer agent 포함</li>
+<li>종합 커버리지를 위해 여러 특화 agent 사용</li>
+<li>중요한 결정에 consensus 메커니즘 구현</li>
+<li>규정 준수 및 디버깅을 위한 감사 추적 유지</li>
+</ul>
+<hr>
+<h2>🚀 향후 로드맵</h2>
+<h3>계획된 Agent 타입</h3>
+<ul>
+<li><strong>Quantum Computing Specialist</strong>: Quantum 알고리즘 개발</li>
+<li><strong>IoT Coordinator</strong>: Internet of Things 장치 관리</li>
+<li><strong>Blockchain Developer</strong>: Smart contract 및 DApp 개발</li>
+<li><strong>AI Ethics Auditor</strong>: AI bias 및 윤리 평가</li>
+<li><strong>Sustainability Analyzer</strong>: 탄소 발자국 및 지속 가능성 평가</li>
+</ul>
+<h3>향상된 기능</h3>
+<ul>
+<li>Multi-modal agent 통신</li>
+<li>고급 학습 및 적응</li>
+<li>예측적 작업 할당</li>
+<li>자율 agent 생성</li>
+<li>Cross-platform 통합</li>
+</ul>
+<hr>
+<h2>📮 지원 및 리소스</h2>
+<h3>문서</h3>
+<ul>
+<li><a href="/ko-docs/api/API_DOCUMENTATION.md">Agent API Reference</a></li>
+<li><a href="/ko-docs/reference/SWARM.md">Swarm Coordination Guide</a></li>
+<li><a href="/ko-docs/architecture/ARCHITECTURE.md">Architecture Overview</a></li>
+</ul>
+<h3>커뮤니티</h3>
+<ul>
+<li><a href="https://github.com/ruvnet/claude-flow">GitHub Repository</a></li>
+<li><a href="https://discord.gg/claude-flow">Discord Community</a></li>
+<li><a href="https://github.com/ruvnet/claude-flow/issues">Issue Tracker</a></li>
+</ul>
+<h3>연락처</h3>
+<ul>
+<li><strong>Email</strong>: support@claude-flow.ai</li>
+<li><strong>Documentation</strong>: https://claude-flow.ai/docs</li>
+<li><strong>Blog</strong>: https://blog.claude-flow.ai</li>
+</ul>
+<hr>
+<div align="center">
+<p><strong>🤖 65개 이상의 특화된 Agent • 🐝 지능형 Swarm Coordination • 🚀 엔터프라이즈 준비 완료</strong></p>
+<p><a href="#-claude-flow-agent-%EC%B0%B8%EC%A1%B0">⬆ 맨 위로</a></p>
+</div>
+
+  </div>
+</article>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Hanson Kim. All rights reserved.</p>
+  </footer>
+</body>
+</html>

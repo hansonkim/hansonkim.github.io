@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SDK INTEGRATION PHASES V2.5</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="/" class="logo">Hanson Kim</a>
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/blog/">Blog</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    
+<article class="post">
+  <header class="post-header">
+    <h1>SDK INTEGRATION PHASES V2.5</h1>
+    <time datetime="2025년 10월 15일">2025년 10월 15일</time>
+    
+    <div class="tags">
+      
+        
+      
+        
+        <span class="tag">Claude-Flow</span>
+        
+      
+        
+        <span class="tag">문서</span>
+        
+      
+        
+        <span class="tag">AI</span>
+        
+      
+    </div>
+    
+  </header>
+
+  <div class="post-content">
+    <h1>Claude-Flow v2.5.0-alpha.130 - SDK 통합 단계</h1>
+<h2>핵심 및 높은 우선순위 기능을 포함한 업데이트된 구현 계획</h2>
+<p><strong>상태</strong>: 1-2단계 완료, 3-8단계 계획됨
+<strong>마지막 업데이트일</strong>: 2025-09-30</p>
+<hr>
+<h2>🎯 단계 개요</h2>
+<table>
+<thead>
+<tr>
+<th>단계</th>
+<th>우선순위</th>
+<th>기능</th>
+<th>성능 향상</th>
+<th>상태</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>기반</td>
+<td>SDK 설정</td>
+<td>-</td>
+<td>✅ <strong>완료</strong></td>
+</tr>
+<tr>
+<td>2</td>
+<td>기반</td>
+<td>재시도 마이그레이션</td>
+<td>30%</td>
+<td>✅ <strong>완료</strong></td>
+</tr>
+<tr>
+<td>3</td>
+<td>🟡 HIGH</td>
+<td>메모리 → 세션</td>
+<td>데이터 관리</td>
+<td>⏳ 진행 중</td>
+</tr>
+<tr>
+<td>4</td>
+<td>🔴 CRITICAL</td>
+<td>세션 포크 + 실시간 제어</td>
+<td><strong>10-20x</strong></td>
+<td>📋 준비 완료</td>
+</tr>
+<tr>
+<td>5</td>
+<td>🟡 HIGH</td>
+<td>훅 매처 + 권한</td>
+<td><strong>2-3x</strong></td>
+<td>📋 준비 완료</td>
+</tr>
+<tr>
+<td>6</td>
+<td>🔴 CRITICAL</td>
+<td>인프로세스 MCP</td>
+<td><strong>10-100x</strong></td>
+<td>📋 준비 완료</td>
+</tr>
+<tr>
+<td>7</td>
+<td>🟢 MEDIUM</td>
+<td>네트워크 + DevTools</td>
+<td>보안</td>
+<td>📋 계획됨</td>
+</tr>
+<tr>
+<td>8</td>
+<td>📚 DOC</td>
+<td>마이그레이션 + 문서</td>
+<td>-</td>
+<td>📋 계획됨</td>
+</tr>
+</tbody>
+</table>
+<p><strong>예상 총 성능 향상</strong>: <strong>스웜 작업 최대 100-600배 속도 향상</strong></p>
+<hr>
+<h2>Phase 1: 기반 설정 ✅ 완료</h2>
+<h3>상태</h3>
+<ul>
+<li>✅ <strong>완료</strong>: 모든 작업 종료</li>
+<li><strong>기간</strong>: 1주</li>
+<li><strong>코드 감소량</strong>: 56% (429라인 제거)</li>
+</ul>
+<h3>완료한 작업</h3>
+<ol>
+<li>✅ Claude Agent SDK 설치 (@anthropic-ai/sdk@0.65.0)</li>
+<li>✅ SDK 구성 어댑터 생성 (<code>src/sdk/sdk-config.ts</code> - 120라인)</li>
+<li>✅ 호환성 레이어 구축 (<code>src/sdk/compatibility-layer.ts</code> - 180라인)</li>
+<li>✅ SDK 래퍼 클래스 설정</li>
+</ol>
+<h3>결과</h3>
+<ul>
+<li><strong>검증 테스트</strong>: 10/10 통과 (100%)</li>
+<li><strong>하위 호환성</strong>: 100%</li>
+<li><strong>회귀</strong>: 0건</li>
+<li><strong>빌드</strong>: v2.5.0-alpha.130으로 성공적으로 재빌드</li>
+</ul>
+<hr>
+<h2>Phase 2: 재시도 메커니즘 마이그레이션 ✅ 완료</h2>
+<h3>상태</h3>
+<ul>
+<li>✅ <strong>완료</strong>: 모든 작업 종료</li>
+<li><strong>기간</strong>: 1주</li>
+<li><strong>성능</strong>: 재시도 작업 30% 향상</li>
+</ul>
+<h3>완료한 작업</h3>
+<ol>
+<li>✅ Claude client v2.5 리팩터링 (<code>src/api/claude-client-v2.5.ts</code> - 328라인)</li>
+<li>✅ 커스텀 재시도 로직 200라인 이상 제거</li>
+<li>✅ SDK 기반 작업 실행기 생성 (<code>src/swarm/executor-sdk.ts</code> - 200라인)</li>
+<li>✅ SDK 오류 처리 구현</li>
+</ol>
+<h3>결과</h3>
+<ul>
+<li><strong>기존 클라이언트</strong>: 757라인</li>
+<li><strong>신규 클라이언트</strong>: 328라인 (<strong>56% 감소</strong>)</li>
+<li><strong>재시도 로직</strong>: SDK에 위임(자동 지수 백오프)</li>
+<li><strong>성능</strong>: 재시도 작업 30% 가속</li>
+</ul>
+<hr>
+<h2>Phase 3: 메모리 시스템 → 세션 영속성 ⏳ 진행 중</h2>
+<h3>우선순위</h3>
+<p>🟡 <strong>HIGH</strong> - 상태 관리를 위해 필수</p>
+<h3>기간</h3>
+<p>1-2주</p>
+<h3>개요</h3>
+<p>커스텀 메모리 관리자를 <code>SDKMessage[]</code> 이력을 사용하는 SDK 세션 영속성으로 교체하고 <code>resumeSessionAt</code>으로 복구합니다.</p>
+<h3>작업</h3>
+<ul>
+<li>[ ] 세션 기반 메모리 아키텍처 설계</li>
+<li>[ ] <code>MemoryManagerSDK</code> 클래스 구현</li>
+<li>[ ] 스웜 상태를 <code>SDKMessage</code> 형식으로 저장</li>
+<li>[ ] 체크포인트 복구에 <code>resumeSessionAt</code> 사용</li>
+<li>[ ] 기존 메모리 데이터 마이그레이션</li>
+<li>[ ] 마이그레이션 테스트 생성</li>
+</ul>
+<h3>구현</h3>
+<pre><code class="language-typescript">// src/swarm/memory-manager-sdk.ts
+export class MemoryManagerSDK {
+  private sessions: Map&lt;string, SDKMessage[]&gt; = new Map();
+
+  async saveSwarmState(swarmId: string, state: SwarmState): Promise&lt;void&gt; {
+    // 스웜 상태를 SDKMessage 형식으로 변환합니다
+    const messages: SDKMessage[] = [
+      {
+        type: 'system',
+        subtype: 'init',
+        uuid: randomUUID(),
+        session_id: swarmId,
+        tools: state.activeTools,
+        model: state.model,
+        // ... 스웜 메타데이터
+      },
+      ...this.convertStateToMessages(state)
+    ];
+
+    // 세션 기록으로 저장합니다
+    this.sessions.set(swarmId, messages);
+  }
+
+  async restoreSwarmState(
+    swarmId: string,
+    messageId?: string
+  ): Promise&lt;SwarmState&gt; {
+    // SDK의 resumeSessionAt을 사용해 시점 복구를 수행합니다
+    const stream = query({
+      prompt: 'Restore swarm state from session history',
+      options: {
+        resume: swarmId,
+        resumeSessionAt: messageId  // 선택 사항: 특정 메시지
+      }
+    });
+
+    // 복구된 세션에서 스웜 상태를 추출합니다
+    return this.extractSwarmState(stream);
+  }
+
+  private convertStateToMessages(state: SwarmState): SDKMessage[] {
+    // 에이전트, 작업, 결과를 SDKMessage 형식으로 변환합니다
+    return state.agents.map(agent =&gt; ({
+      type: 'assistant',
+      uuid: randomUUID(),
+      session_id: state.swarmId,
+      message: {
+        id: agent.id,
+        role: 'assistant',
+        content: JSON.stringify(agent.state)
+      },
+      parent_tool_use_id: null
+    }));
+  }
+}
+</code></pre>
+<h3>성공 기준</h3>
+<ul>
+<li>✅ 모든 스웜 상태를 <code>SDKMessage[]</code>로 저장</li>
+<li>✅ 시점 복구 동작</li>
+<li>✅ 이전 메모리 형식에서 마이그레이션 완료</li>
+<li>✅ 마이그레이션 중 데이터 손실 없음</li>
+<li>✅ 성능 향상이 측정됨</li>
+</ul>
+<hr>
+<h2>Phase 4: 세션 포크 &amp; 실시간 제어 🔴 CRITICAL</h2>
+<h3>우선순위</h3>
+<p>🔴 <strong>CRITICAL</strong> - <strong>10-20x 성능 향상</strong></p>
+<h3>기간</h3>
+<p>2-3주</p>
+<h3>개요</h3>
+<p>세션 포크로 병렬 에이전트 실행을 가능하게 하고 실시간 에이전트 제어 기능을 추가합니다.</p>
+<h3>기능</h3>
+<h4>1️⃣ 세션 포크(에이전트 스폰 10-20배 가속)</h4>
+<pre><code class="language-typescript">// src/swarm/parallel-executor-sdk.ts
+export class ParallelSwarmExecutor {
+  async spawnParallelAgents(task: Task, count: number): Promise&lt;Agent[]&gt; {
+    // 공유 컨텍스트로 기본 세션을 생성합니다
+    const baseSession = await this.createBaseSession(task);
+
+    // 병렬 실행을 위해 N개의 세션을 포크합니다
+    const agents = await Promise.all(
+      Array.from({ length: count }, async (_, index) =&gt; {
+        const stream = query({
+          prompt: this.getAgentPrompt(task, index),
+          options: {
+            resume: baseSession.id,
+            forkSession: true,  // 핵심: 즉시 포크!
+            mcpServers: {
+              'claude-flow-swarm': claudeFlowSwarmServer
+            }
+          }
+        });
+
+        return this.monitorAgentStream(stream, index);
+      })
+    );
+
+    return agents;
+  }
+}
+</code></pre>
+<p><strong>성능</strong>: 에이전트 스폰 500-1000ms → 10-50ms (<strong>10-20배 가속</strong>)</p>
+<h4>2️⃣ Compact Boundary(자연스러운 체크포인트)</h4>
+<pre><code class="language-typescript">// src/verification/checkpoint-manager-sdk.ts
+export class CheckpointManagerSDK {
+  async monitorForCheckpoints(swarmId: string): Promise&lt;void&gt; {
+    const stream = this.getSwarmStream(swarmId);
+
+    for await (const message of stream) {
+      if (message.type === 'system' &amp;&amp; message.subtype === 'compact_boundary') {
+        // SDK가 컨텍스트를 자동 압축하므로 체크포인트로 활용합니다!
+        await this.createSwarmCheckpoint(swarmId, {
+          trigger: message.compact_metadata.trigger,  // 'auto' | 'manual'
+          tokensBeforeCompact: message.compact_metadata.pre_tokens,
+          messageId: message.uuid,
+          timestamp: Date.now()
+        });
+      }
+    }
+  }
+
+  async restoreFromCompactBoundary(
+    swarmId: string,
+    checkpointId: string
+  ): Promise&lt;SwarmState&gt; {
+    // resumeSessionAt으로 압축 경계 지점에서 복구합니다
+    const stream = query({
+      prompt: 'Restore swarm state',
+      options: {
+        resume: swarmId,
+        resumeSessionAt: checkpointId  // 압축 경계 메시지를 가리킵니다
+      }
+    });
+
+    // 해당 시점으로 스웜 상태가 자동 복원됩니다!
+    return this.extractSwarmState(stream);
+  }
+}
+</code></pre>
+<p><strong>성능</strong>: 체크포인트 복구 = 즉시(SDK가 처리)</p>
+<h4>3️⃣ 실시간 쿼리 제어</h4>
+<pre><code class="language-typescript">// src/swarm/dynamic-agent-controller.ts
+export class DynamicAgentController {
+  private activeStreams: Map&lt;string, Query&gt; = new Map();
+
+  async killRunawayAgent(agentId: string): Promise&lt;void&gt; {
+    const stream = this.activeStreams.get(agentId);
+    if (stream) {
+      // 즉시 실행을 중단합니다
+      await stream.interrupt();
+      console.log(`⚠️  Agent ${agentId} interrupted`);
+    }
+  }
+
+  async switchAgentModel(agentId: string, model: string): Promise&lt;void&gt; {
+    const stream = this.activeStreams.get(agentId);
+    if (stream) {
+      // 실행 중에 모델을 전환합니다(재시작 없음!)
+      await stream.setModel(model);
+      console.log(`🔄 Agent ${agentId} now using ${model}`);
+    }
+  }
+
+  async relaxPermissions(agentId: string): Promise&lt;void&gt; {
+    const stream = this.activeStreams.get(agentId);
+    if (stream) {
+      // 자동 승인 모드로 전환합니다
+      await stream.setPermissionMode('acceptEdits');
+      console.log(`🔓 Agent ${agentId} permissions relaxed`);
+    }
+  }
+
+  async tightenPermissions(agentId: string): Promise&lt;void&gt; {
+    const stream = this.activeStreams.get(agentId);
+    if (stream) {
+      // 수동 승인 모드로 전환합니다
+      await stream.setPermissionMode('default');
+      console.log(`🔒 Agent ${agentId} permissions tightened`);
+    }
+  }
+}
+</code></pre>
+<p><strong>기능</strong>: 재시작 없이 실시간 제어</p>
+<h3>작업</h3>
+<ul>
+<li>[ ] 병렬 에이전트를 위한 세션 포크 구현</li>
+<li>[ ] Compact Boundary 모니터링 추가</li>
+<li>[ ] 실시간 쿼리 제어 매니저 생성</li>
+<li>[ ] 병렬 vs 순차 실행을 벤치마크</li>
+<li>[ ] 에이전트 중단 시 내고장성 테스트</li>
+<li>[ ] 신규 API 문서화</li>
+</ul>
+<h3>성공 기준</h3>
+<ul>
+<li>✅ 에이전트 스폰 시간: &lt;50ms (기존 500-1000ms)</li>
+<li>✅ 체크포인트 복구: 즉시(수동 처리 대비)</li>
+<li>✅ 실시간 제어: 응답 시간 &lt;100ms</li>
+<li>✅ <strong>10-20배 성능 향상 검증</strong></li>
+<li>✅ 기존 기능 회귀 없음</li>
+</ul>
+<hr>
+<h2>Phase 5: 훅 매처 &amp; 4단계 권한 🟡 HIGH</h2>
+<h3>우선순위</h3>
+<p>🟡 <strong>HIGH</strong> - <strong>2-3x 성능 향상</strong></p>
+<h3>기간</h3>
+<p>2주</p>
+<h3>개요</h3>
+<p>커스텀 훅을 SDK 네이티브 훅으로 교체하고 패턴 매칭과 4단계 권한 계층을 도입합니다.</p>
+<h3>기능</h3>
+<h4>1️⃣ 훅 매처(2-3배 가속)</h4>
+<pre><code class="language-typescript">// src/services/hook-manager-sdk.ts
+const hooks: Partial&lt;Record&lt;HookEvent, HookCallbackMatcher[]&gt;&gt; = {
+  PreToolUse: [
+    {
+      matcher: 'Bash\\(.*\\)',  // 정규식: Bash 명령만 허용합니다
+      hooks: [async (input, toolUseID, { signal }) =&gt; {
+        // Bash에 대한 스웜 수준 거버넌스를 수행합니다
+        const allowed = await this.validateBashCommand(
+          input.tool_input.command
+        );
+
+        return {
+          decision: allowed ? 'approve' : 'block',
+          hookSpecificOutput: {
+            hookEventName: 'PreToolUse',
+            permissionDecision: allowed ? 'allow' : 'deny',
+            permissionDecisionReason: allowed
+              ? 'Command approved by swarm policy'
+              : 'Dangerous command blocked'
+          }
+        };
+      }]
+    },
+    {
+      matcher: 'agent_spawn',  // 에이전트 스폰만 대상으로 합니다
+      hooks: [async (input, toolUseID, { signal }) =&gt; {
+        // 스웜 조정을 위해 에이전트 스폰을 추적합니다
+        await this.recordAgentSpawn(input.tool_input);
+        return { continue: true };
+      }]
+    },
+    {
+      matcher: 'FileWrite\\(.*\\.env.*\\)',  // .env 파일 쓰기를 차단합니다
+      hooks: [async (input) =&gt; {
+        return {
+          decision: 'block',
+          reason: 'Writing to .env files is not allowed'
+        };
+      }]
+    }
+  ],
+
+  PostToolUse: [
+    {
+      matcher: 'memory_.*',  // 모든 메모리 작업을 대상으로 합니다
+      hooks: [async (input, toolUseID, { signal }) =&gt; {
+        // 스웜 전체에 메모리 작업을 복제합니다
+        await this.replicateMemoryOperation(input);
+        return { continue: true };
+      }]
+    },
+    {
+      matcher: '.*',  // 모든 작업(감사 로깅)
+      hooks: [async (input) =&gt; {
+        await this.logToolExecution(input);
+        return { continue: true };
+      }]
+    }
+  ],
+
+  SessionEnd: [
+    {
+      hooks: [async (input, toolUseID, { signal }) =&gt; {
+        // 세션 종료 시 스웜 메트릭을 집계합니다
+        await this.aggregateSwarmMetrics(input.session_id);
+        return { continue: true };
+      }]
+    }
+  ]
+};
+</code></pre>
+<p><strong>성능</strong>: 불필요한 훅을 건너뛰어 실행 속도가 2-3배 빨라집니다</p>
+<h4>2️⃣ 4단계 권한 계층</h4>
+<pre><code class="language-typescript">// src/security/swarm-permission-manager.ts
+export class SwarmPermissionManager {
+  async configurePermissionHierarchy() {
+    // 1단계: 사용자 수준(~/.claude/settings.json)
+    // 가장 제한적인 규칙으로 모든 프로젝트에 적용됩니다
+    await this.updatePermissions({
+      type: 'addRules',
+      rules: [
+        { toolName: 'Bash', ruleContent: 'rm -rf *' },
+        { toolName: 'Bash', ruleContent: 'sudo *' },
+        { toolName: 'FileWrite', ruleContent: '/etc/*' }
+      ],
+      behavior: 'deny',
+      destination: 'userSettings'
+    });
+
+    // 2단계: 프로젝트 수준(.claude/settings.json)
+    // 프로젝트별 정책(git에 커밋)
+    await this.updatePermissions({
+      type: 'addRules',
+      rules: [
+        { toolName: 'FileWrite', ruleContent: './src/*' },
+        { toolName: 'FileRead', ruleContent: './src/*' },
+        { toolName: 'Bash', ruleContent: 'npm *' }
+      ],
+      behavior: 'allow',
+      destination: 'projectSettings'
+    });
+
+    // 3단계: 로컬 수준(.claude-local.json)
+    // 개발자 전용 재정의(gitignore 처리)
+    await this.updatePermissions({
+      type: 'addRules',
+      rules: [
+        { toolName: 'Bash', ruleContent: 'npm install *' },
+        { toolName: 'FileWrite', ruleContent: './.env.local' }
+      ],
+      behavior: 'allow',
+      destination: 'localSettings'
+    });
+
+    // 4단계: 세션 수준
+    // 현재 세션에만 적용(스웜에 가장 관대한 설정)
+    await this.updatePermissions({
+      type: 'addRules',
+      rules: [
+        { toolName: 'agent_spawn' },
+        { toolName: 'swarm_init' },
+        { toolName: 'task_orchestrate' }
+      ],
+      behavior: 'allow',
+      destination: 'session'
+    });
+  }
+
+  async getEffectivePermission(toolName: string, input: any): Promise&lt;PermissionBehavior&gt; {
+    // 계층을 순서대로 검사합니다: 사용자 → 프로젝트 → 로컬 → 세션
+    // 첫 번째 'deny'가 우선하며, deny가 없으면 마지막 'allow'가 적용됩니다
+
+    const userPerm = await this.checkLevel('userSettings', toolName, input);
+    if (userPerm === 'deny') return 'deny';
+
+    const projectPerm = await this.checkLevel('projectSettings', toolName, input);
+    if (projectPerm === 'deny') return 'deny';
+
+    const localPerm = await this.checkLevel('localSettings', toolName, input);
+    if (localPerm === 'deny') return 'deny';
+
+    const sessionPerm = await this.checkLevel('session', toolName, input);
+    if (sessionPerm === 'allow') return 'allow';
+
+    // 기본값은 'ask'입니다
+    return 'ask';
+  }
+}
+</code></pre>
+<p><strong>기능</strong>: 4단계에서 세밀한 거버넌스를 제공합니다</p>
+<h3>작업</h3>
+<ul>
+<li>[ ] 모든 커스텀 훅을 SDK 네이티브 훅으로 교체</li>
+<li>[ ] 훅 매처 패턴 구현</li>
+<li>[ ] 4단계 권한 계층 구성</li>
+<li>[ ] 기존 훅 로직 마이그레이션</li>
+<li>[ ] 권한 감사 로그 추가</li>
+<li>[ ] 훅 패턴 라이브러리 생성</li>
+</ul>
+<h3>성공 기준</h3>
+<ul>
+<li>✅ 훅 실행 오버헤드: -50%</li>
+<li>✅ 권한 검사: &lt;0.1ms (기존 1-2ms)</li>
+<li>✅ <strong>2-3배 성능 향상 검증</strong></li>
+<li>✅ 무단 도구 실행 0건</li>
+<li>✅ 모든 계층에서 감사 추적 완비</li>
+</ul>
+<hr>
+<h2>Phase 6: 인프로세스 MCP 서버 🔴 <strong>GAME CHANGER</strong></h2>
+<h3>우선순위</h3>
+<p>🔴 <strong>CRITICAL</strong> - <strong>10-100x 성능 향상</strong></p>
+<h3>기간</h3>
+<p>2-3주</p>
+<h3>개요</h3>
+<p>stdio 기반 MCP 전송을 인프로세스 SDK 서버로 교체해 <strong>IPC 오버헤드를 제거합니다</strong>.</p>
+<h3>구현</h3>
+<pre><code class="language-typescript">// src/mcp/claude-flow-swarm-server.ts
+import { createSdkMcpServer, tool } from '@anthropic-ai/claude-code/sdk';
+import { z } from 'zod';
+import { SwarmCoordinator } from '../swarm/coordinator';
+import { SwarmMemory } from '../swarm/memory';
+
+export const claudeFlowSwarmServer = createSdkMcpServer({
+  name: 'claude-flow-swarm',
+  version: '2.5.0-alpha.130',
+  tools: [
+    // 스웜 초기화
+    tool('swarm_init', 'Initialize multi-agent swarm', {
+      topology: z.enum(['mesh', 'hierarchical', 'ring', 'star']),
+      maxAgents: z.number().min(1).max(100),
+      strategy: z.enum(['balanced', 'specialized', 'adaptive']).optional()
+    }, async (args) =&gt; {
+      // 직접 함수 호출 - IPC 오버헤드 없음!
+      const swarm = await SwarmCoordinator.initialize(args);
+      return {
+        content: [{
+          type: 'text',
+          text: JSON.stringify(swarm.status)
+        }]
+      };
+    }),
+
+    // 에이전트 스폰 - &lt;0.1ms 지연
+    tool('agent_spawn', 'Spawn specialized agent', {
+      type: z.enum(['researcher', 'coder', 'analyst', 'optimizer', 'coordinator']),
+      capabilities: z.array(z.string()).optional(),
+      swarmId: z.string().optional()
+    }, async (args) =&gt; {
+      // stdio 대비 &lt;0.1ms!
+      const agent = await SwarmCoordinator.spawnAgent(args);
+      return {
+        content: [{
+          type: 'text',
+          text: JSON.stringify(agent)
+        }]
+      };
+    }),
+
+    // 작업 오케스트레이션 - 인프로세스
+    tool('task_orchestrate', 'Orchestrate task across swarm', {
+      task: z.string(),
+      strategy: z.enum(['parallel', 'sequential', 'adaptive']).optional(),
+      priority: z.enum(['low', 'medium', 'high', 'critical']).optional()
+    }, async (args) =&gt; {
+      const result = await SwarmCoordinator.orchestrateTask(args);
+      return {
+        content: [{
+          type: 'text',
+          text: JSON.stringify(result)
+        }]
+      };
+    }),
+
+    // 메모리 작업 - &lt;1ms 지연
+    tool('memory_store', 'Store data in swarm memory', {
+      key: z.string(),
+      value: z.any(),
+      namespace: z.string().optional(),
+      ttl: z.number().optional()
+    }, async (args) =&gt; {
+      await SwarmMemory.store(args.key, args.value, {
+        namespace: args.namespace,
+        ttl: args.ttl
+      });
+      return {
+        content: [{ type: 'text', text: 'Stored successfully' }]
+      };
+    }),
+
+    tool('memory_retrieve', 'Retrieve data from swarm memory', {
+      key: z.string(),
+      namespace: z.string().optional()
+    }, async (args) =&gt; {
+      const value = await SwarmMemory.retrieve(args.key, args.namespace);
+      return {
+        content: [{
+          type: 'text',
+          text: JSON.stringify(value)
+        }]
+      };
+    }),
+
+    // ... IPC 오버헤드가 없는 40개 이상의 추가 도구
+  ]
+});
+
+// 스웜 코디네이터에서 사용하는 예
+export class SwarmCoordinator {
+  async initialize() {
+    const response = await query({
+      prompt: 'Initialize swarm with mesh topology and 5 agents',
+      options: {
+        mcpServers: {
+          'claude-flow-swarm': {
+            type: 'sdk',  // 인프로세스!
+            name: 'claude-flow-swarm',
+            instance: claudeFlowSwarmServer.instance
+          }
+        }
+      }
+    });
+
+    // 응답을 파싱해 스웜을 구성합니다
+    return this.parseSwarmInitResponse(response);
+  }
+}
+</code></pre>
+<h3>MCP 상태 모니터링</h3>
+<pre><code class="language-typescript">// src/monitoring/mcp-health-monitor.ts
+export class McpHealthMonitor {
+  async monitorSwarmServers(swarmId: string): Promise&lt;void&gt; {
+    const stream = this.activeStreams.get(swarmId);
+    if (!stream) return;
+
+    setInterval(async () =&gt; {
+      const status = await stream.mcpServerStatus();
+
+      for (const server of status) {
+        if (server.status === 'failed') {
+          console.error(`❌ MCP server ${server.name} failed`);
+          await this.handleServerFailure(swarmId, server);
+        } else if (server.status === 'needs-auth') {
+          console.warn(`⚠️  MCP server ${server.name} needs auth`);
+          await this.handleAuthRequired(swarmId, server);
+        } else if (server.status === 'connected') {
+          console.log(`✅ MCP server ${server.name} healthy`);
+        }
+      }
+    }, 5000);  // 5초마다 확인합니다
+  }
+
+  private async handleServerFailure(
+    swarmId: string,
+    server: McpServerStatus
+  ): Promise&lt;void&gt; {
+    // 복구를 시도합니다
+    console.log(`🔄 Attempting to restart ${server.name}...`);
+    await this.restartMcpServer(server.name);
+
+    // 스웜 코디네이터에 알립니다
+    await SwarmCoordinator.notifyServerFailure(swarmId, server);
+  }
+}
+</code></pre>
+<h3>작업</h3>
+<ul>
+<li>[ ] 인프로세스 <code>claude-flow-swarm</code> MCP 서버 생성</li>
+<li>[ ] 40개 이상의 스웜 조정 도구 구현</li>
+<li>[ ] MCP 상태 모니터링 추가</li>
+<li>[ ] stdio 대비 인프로세스 성능 벤치마크</li>
+<li>[ ] stdio → SDK 전송 마이그레이션 가이드 작성</li>
+<li>[ ] 모든 통합 테스트 업데이트</li>
+</ul>
+<h3>성공 기준</h3>
+<ul>
+<li>✅ 도구 호출 지연: &lt;0.1ms (기존 2-5ms)</li>
+<li>✅ 메모리 작업: &lt;1ms (기존 5-10ms)</li>
+<li>✅ MCP 기반 에이전트 스폰: &lt;10ms (기존 50-100ms)</li>
+<li>✅ <strong>10-100배 성능 향상 검증</strong></li>
+<li>✅ MCP 관련 실패 0건</li>
+<li>✅ 사전 장애 감지(&lt;5s)</li>
+</ul>
+<hr>
+<h2>Phase 7: 고급 기능 &amp; 테스트 🟢 MEDIUM</h2>
+<h3>우선순위</h3>
+<p>🟢 <strong>MEDIUM</strong> - 보안, 모니터링, 테스트</p>
+<h3>기간</h3>
+<p>2-3주</p>
+<h3>기능</h3>
+<ol>
+<li><strong>네트워크 샌드박싱</strong> - 에이전트별 네트워크 격리</li>
+<li><strong>React DevTools</strong> - 실시간 스웜 시각화</li>
+<li><strong>종합 테스트</strong> - 회귀 및 성능 테스트</li>
+</ol>
+<h3>참고</h3>
+<ul>
+<li><code>/ko-docs/SDK-ADVANCED-FEATURES-INTEGRATION.md</code> 전체 구현 문서</li>
+</ul>
+<h3>작업</h3>
+<ul>
+<li>[ ] 네트워크 정책 매니저 구현</li>
+<li>[ ] React DevTools 대시보드 생성</li>
+<li>[ ] 종합 테스트 스위트 구축(커버리지 98% 이상)</li>
+<li>[ ] 성능 벤치마크 스위트</li>
+<li>[ ] 보안 감사</li>
+<li>[ ] 부하 테스트</li>
+</ul>
+<hr>
+<h2>Phase 8: 마이그레이션 &amp; 문서화 📚</h2>
+<h3>기간</h3>
+<p>1주</p>
+<h3>산출물</h3>
+<ul>
+<li>마이그레이션 스크립트: <code>scripts/migrate-to-v2.5.js</code></li>
+<li>변경점 정리: <code>BREAKING_CHANGES.md</code></li>
+<li>마이그레이션 가이드: <code>MIGRATION_GUIDE.md</code></li>
+<li>API 문서 업데이트</li>
+<li>성능 벤치마크 보고서</li>
+<li>비디오 튜토리얼</li>
+</ul>
+<hr>
+<h2>🎯 성공 지표 요약</h2>
+<table>
+<thead>
+<tr>
+<th>지표</th>
+<th>단계</th>
+<th>목표</th>
+<th>예상</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>코드 감소율</td>
+<td>1-2</td>
+<td>50%</td>
+<td>✅ <strong>56%</strong></td>
+</tr>
+<tr>
+<td>검증 테스트</td>
+<td>1-2</td>
+<td>100%</td>
+<td>✅ <strong>100%</strong></td>
+</tr>
+<tr>
+<td>에이전트 스폰 시간</td>
+<td>4</td>
+<td>&lt;50ms</td>
+<td>⏳ <strong>10-50ms</strong></td>
+</tr>
+<tr>
+<td>도구 호출 지연</td>
+<td>6</td>
+<td>&lt;0.1ms</td>
+<td>⏳ <strong>&lt;0.1ms</strong></td>
+</tr>
+<tr>
+<td>훅 오버헤드</td>
+<td>5</td>
+<td>-50%</td>
+<td>⏳ <strong>-50%</strong></td>
+</tr>
+<tr>
+<td>전체 성능</td>
+<td>전체</td>
+<td>+100x</td>
+<td>⏳ <strong>100-600x</strong></td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2>📅 일정</h2>
+<table>
+<thead>
+<tr>
+<th>단계</th>
+<th>기간</th>
+<th>시작</th>
+<th>종료</th>
+<th>상태</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>1주</td>
+<td>Week 1</td>
+<td>Week 1</td>
+<td>✅ 완료</td>
+</tr>
+<tr>
+<td>2</td>
+<td>1주</td>
+<td>Week 1</td>
+<td>Week 2</td>
+<td>✅ 완료</td>
+</tr>
+<tr>
+<td>3</td>
+<td>1-2주</td>
+<td>Week 2</td>
+<td>Week 3-4</td>
+<td>⏳ 진행 중</td>
+</tr>
+<tr>
+<td>4</td>
+<td>2-3주</td>
+<td>Week 4</td>
+<td>Week 6</td>
+<td>📋 준비 완료</td>
+</tr>
+<tr>
+<td>5</td>
+<td>2주</td>
+<td>Week 6</td>
+<td>Week 8</td>
+<td>📋 준비 완료</td>
+</tr>
+<tr>
+<td>6</td>
+<td>2-3주</td>
+<td>Week 8</td>
+<td>Week 10</td>
+<td>📋 준비 완료</td>
+</tr>
+<tr>
+<td>7</td>
+<td>2-3주</td>
+<td>Week 10</td>
+<td>Week 12</td>
+<td>📋 계획됨</td>
+</tr>
+<tr>
+<td>8</td>
+<td>1주</td>
+<td>Week 12</td>
+<td>Week 13</td>
+<td>📋 계획됨</td>
+</tr>
+</tbody>
+</table>
+<p><strong>총 기간</strong>: 약 13주(3개월)
+<strong>목표 출시</strong>: 2026년 1분기</p>
+<hr>
+<p><em>Claude-Flow v2.5.0-alpha.130의 핵심 및 높은 우선순위 기능이 반영된 단계 업데이트</em></p>
+
+  </div>
+</article>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Hanson Kim. All rights reserved.</p>
+  </footer>
+</body>
+</html>

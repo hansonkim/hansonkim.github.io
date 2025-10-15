@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>REASONINGBANK ARCHITECTURE</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="/" class="logo">Hanson Kim</a>
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/blog/">Blog</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    
+<article class="post">
+  <header class="post-header">
+    <h1>REASONINGBANK ARCHITECTURE</h1>
+    <time datetime="2025년 10월 15일">2025년 10월 15일</time>
+    
+    <div class="tags">
+      
+        
+      
+        
+        <span class="tag">Claude-Flow</span>
+        
+      
+        
+        <span class="tag">문서</span>
+        
+      
+        
+        <span class="tag">AI</span>
+        
+      
+    </div>
+    
+  </header>
+
+  <div class="post-content">
+    <h1>ReasoningBank 통합 아키텍처</h1>
+<h2>시스템 개요</h2>
+<pre><code>┌──────────────────────────────────────────────────────────────────┐
+│                     claude-flow v2.7.0                           │
+│                                                                  │
+│  ┌────────────────┐         ┌─────────────────┐                │
+│  │  CLI 레이어    │────────▶│  Agent Executor │                │
+│  │  (agent.js)    │         │  (TypeScript)   │                │
+│  └────────────────┘         └─────────────────┘                │
+│         │                            │                          │
+│         │                            ▼                          │
+│         │                   ┌─────────────────┐                │
+│         │                   │ Provider Manager│                │
+│         │                   │  + RB 구성      │                │
+│         │                   └─────────────────┘                │
+│         │                            │                          │
+│         └────────────────────────────┼──────────────────────┐  │
+│                                      │                      │  │
+│                                      ▼                      ▼  │
+└──────────────────────────────────────┼──────────────────────┼──┘
+                                       │                      │
+                   ┌───────────────────┴──────────────────────┴────┐
+                   │        agentic-flow@1.4.11                    │
+                   │                                                │
+                   │  ┌──────────────────────────────────────┐    │
+                   │  │     ReasoningBank Engine             │    │
+                   │  │                                      │    │
+                   │  │  ┌─────────────────────────────┐    │    │
+                   │  │  │  1. RETRIEVE                │    │    │
+                   │  │  │  • Top-k 유사도 검색        │    │    │
+                   │  │  │  • 4요소 점수화             │    │    │
+                   │  │  │  • 도메인 필터링            │    │    │
+                   │  │  └─────────────────────────────┘    │    │
+                   │  │              ▼                       │    │
+                   │  │  ┌─────────────────────────────┐    │    │
+                   │  │  │  2. JUDGE                   │    │    │
+                   │  │  │  • LLM 기반 평가            │    │    │
+                   │  │  │  • 휴리스틱 폴백            │    │    │
+                   │  │  │  • 신뢰도 점수화            │    │    │
+                   │  │  └─────────────────────────────┘    │    │
+                   │  │              ▼                       │    │
+                   │  │  ┌─────────────────────────────┐    │    │
+                   │  │  │  3. DISTILL                 │    │    │
+                   │  │  │  • 패턴 추출               │    │    │
+                   │  │  │  • PII 정제                │    │    │
+                   │  │  │  • 신뢰도 기반 저장        │    │    │
+                   │  │  └─────────────────────────────┘    │    │
+                   │  │              ▼                       │    │
+                   │  │  ┌─────────────────────────────┐    │    │
+                   │  │  │  4. CONSOLIDATE (20회마다)  │    │    │
+                   │  │  │  • 중복 제거               │    │    │
+                   │  │  │  • 모순 감지               │    │    │
+                   │  │  │  • 오래된 메모리 정리       │    │    │
+                   │  │  └─────────────────────────────┘    │    │
+                   │  └──────────────────────────────────────┘    │
+                   │                    │                          │
+                   │                    ▼                          │
+                   │         ┌─────────────────────┐              │
+                   │         │  SQLite Database    │              │
+                   │         │  .swarm/memory.db   │              │
+                   │         │                     │              │
+                   │         │  • patterns         │              │
+                   │         │  • embeddings       │              │
+                   │         │  • trajectories     │              │
+                   │         │  • metrics          │              │
+                   │         └─────────────────────┘              │
+                   └────────────────────────────────────────────────┘
+</code></pre>
+<h2>데이터 흐름: 메모리 기반 작업 실행</h2>
+<pre><code>┌──────────────────────────────────────────────────────────────────┐
+│                    사용자가 명령을 실행합니다                    │
+└──────────────────────────┬───────────────────────────────────────┘
+                           │
+                           ▼
+┌──────────────────────────────────────────────────────────────────┐
+│  claude-flow agent run coder &quot;Build REST API&quot; --enable-memory   │
+└──────────────────────────┬───────────────────────────────────────┘
+                           │
+                           ▼
+┌──────────────────────────────────────────────────────────────────┐
+│  CLI Parser (agent.js)                                           │
+│  • 플래그 파싱: --enable-memory, --memory-domain 등              │
+│  • AgentExecutionOptions 객체 생성                              │
+└──────────────────────────┬───────────────────────────────────────┘
+                           │
+                           ▼
+┌──────────────────────────────────────────────────────────────────┐
+│  AgentExecutor.execute()                                         │
+│                                                                  │
+│  Step 1: 메모리 초기화(처음인 경우)                            │
+│  ┌────────────────────────────────────────────────────────┐    │
+│  │  initializeMemory()                                     │    │
+│  │  • 실행: agentic-flow reasoningbank init               │    │
+│  │  • .swarm/memory.db 생성                               │    │
+│  │  • memoryEnabled = true 설정                           │    │
+│  └────────────────────────────────────────────────────────┘    │
+│                           │                                      │
+│                           ▼                                      │
+│  Step 2: 메모리 조회(작업 전)                                   │
+│  ┌────────────────────────────────────────────────────────┐    │
+│  │  retrieveMemories(task, options)                        │    │
+│  │  • 질의: &quot;Build REST API&quot;                               │    │
+│  │  • Top-k: 3개의 메모리                                  │    │
+│  │  • 도메인 필터: &quot;api&quot;                                  │    │
+│  │  • 반환: [                                              │    │
+│  │      {id: &quot;m1&quot;, title: &quot;API routing pattern&quot;},         │    │
+│  │      {id: &quot;m2&quot;, title: &quot;Auth middleware&quot;},             │    │
+│  │      {id: &quot;m3&quot;, title: &quot;Error handling&quot;}               │    │
+│  │    ]                                                    │    │
+│  └────────────────────────────────────────────────────────┘    │
+│                           │                                      │
+│                           ▼                                      │
+│  Step 3: 메모리를 프롬프트에 주입                               │
+│  ┌────────────────────────────────────────────────────────┐    │
+│  │  buildCommand(options, memories)                        │    │
+│  │  • 원본: &quot;Build REST API&quot;                               │    │
+│  │  • 확장:                                                 │    │
+│  │    &quot;Memory 1: API routing pattern                       │    │
+│  │     Use express.Router() for modularity                 │    │
+│  │                                                          │    │
+│  │     Memory 2: Auth middleware                           │    │
+│  │     Apply JWT verification before protected routes      │    │
+│  │                                                          │    │
+│  │     Memory 3: Error handling                            │    │
+│  │     Use async/await with try-catch wrapper             │    │
+│  │                                                          │    │
+│  │     ---                                                  │    │
+│  │     Task: Build REST API&quot;                               │    │
+│  └────────────────────────────────────────────────────────┘    │
+│                           │                                      │
+│                           ▼                                      │
+│  Step 4: 에이전트 실행                                           │
+│  ┌────────────────────────────────────────────────────────┐    │
+│  │  execAsync(command)                                     │    │
+│  │  • 실행: npx agentic-flow --agent coder --task &quot;...&quot;   │    │
+│  │  • 에이전트가 컨텍스트로 메모리를 수신                 │    │
+│  │  • 학습한 패턴으로 코드 생성                           │    │
+│  │  • 반환: { stdout, stderr }                             │    │
+│  └────────────────────────────────────────────────────────┘    │
+│                           │                                      │
+│                           ▼                                      │
+│  Step 5: 실행 결과 학습(작업 이후)                               │
+│  ┌────────────────────────────────────────────────────────┐    │
+│  │  learnFromExecution(taskId, result, memories)           │    │
+│  │  • 판정: &quot;success&quot; (작업 완료)                          │    │
+│  │  • 신뢰도: 0.7                                          │    │
+│  │  • 추출: &quot;REST API with Express boilerplate&quot;          │    │
+│  │  • 새 메모리 저장: id &quot;m47&quot;                            │    │
+│  │  • m1, m2, m3 사용 횟수 증가                           │    │
+│  └────────────────────────────────────────────────────────┘    │
+│                           │                                      │
+│                           ▼                                      │
+│  Step 6: 자동 통합 확인                                         │
+│  ┌────────────────────────────────────────────────────────┐    │
+│  │  taskCounter++ → 20 tasks completed                     │    │
+│  │  • consolidateMemories() 호출                           │    │
+│  │  • 중복 제거: 유사한 메모리 2개 병합                    │    │
+│  │  • 정리: 사용되지 않은 오래된 메모리 1개 삭제          │    │
+│  │  • 소요 시간: 8ms                                       │    │
+│  └────────────────────────────────────────────────────────┘    │
+│                           │                                      │
+│                           ▼                                      │
+│  Step 7: 결과 반환                                             │
+│  ┌────────────────────────────────────────────────────────┐    │
+│  │  AgentExecutionResult {                                 │    │
+│  │    success: true,                                       │    │
+│  │    output: &quot;REST API code...&quot;,                          │    │
+│  │    duration: 2847ms,                                    │    │
+│  │    memoryEnabled: true,                                 │    │
+│  │    memoriesRetrieved: 3,                                │    │
+│  │    memoriesUsed: [&quot;m1&quot;, &quot;m2&quot;, &quot;m3&quot;],                    │    │
+│  │    memoryLearned: true,                                 │    │
+│  │    newMemoryIds: [&quot;m47&quot;],                               │    │
+│  │    memoryVerdict: &quot;success&quot;,                            │    │
+│  │    memoryConfidence: 0.7                                │    │
+│  │  }                                                       │    │
+│  └────────────────────────────────────────────────────────┘    │
+└──────────────────────────┬───────────────────────────────────────┘
+                           │
+                           ▼
+┌──────────────────────────────────────────────────────────────────┐
+│  CLI 출력                                                        │
+│                                                                  │
+│  🧠 관련 메모리 3개를 가져왔습니다                               │
+│     메모리 1: API routing pattern (신뢰도: 0.85)                │
+│     메모리 2: Auth middleware (신뢰도: 0.78)                    │
+│     메모리 3: Error handling (신뢰도: 0.71)                     │
+│                                                                  │
+│  [에이전트가 코드 출력을 생성...]                               │
+│                                                                  │
+│  ✅ 작업이 성공적으로 완료되었습니다                            │
+│  📚 새 메모리 1개 학습: REST API with Express boilerplate      │
+│  ⚡ 실행 시간: 2.8s (평균보다 46% 빠름)                         │
+└──────────────────────────────────────────────────────────────────┘
+</code></pre>
+<h2>메모리 점수 산정 알고리즘</h2>
+<pre><code>각 후보 메모리에 대해:
+
+1. 임베딩 유사도 (α = 0.65)
+   ┌─────────────────────────────────────┐
+   │  similarity = cosine(query, memory) │
+   │             = dot(Q, M) / (||Q||·||M||) │
+   │                                      │
+   │  예시:                               │
+   │  Query: &quot;Build REST API&quot;             │
+   │  Memory: &quot;API routing pattern&quot;       │
+   │  → similarity = 0.87                 │
+   └─────────────────────────────────────┘
+
+2. 최신성 (β = 0.15)
+   ┌─────────────────────────────────────┐
+   │  recency = exp(-age_days / 30)       │
+   │                                      │
+   │  예시:                               │
+   │  메모리 생성일: 10일 전              │
+   │  → recency = exp(-10/30) = 0.72      │
+   └─────────────────────────────────────┘
+
+3. 신뢰도 (γ = 0.20)
+   ┌─────────────────────────────────────┐
+   │  reliability = min(                  │
+   │    confidence × sqrt(usage / 10),    │
+   │    1.0                               │
+   │  )                                   │
+   │                                      │
+   │  예시:                               │
+   │  confidence = 0.8, usage = 25        │
+   │  → reliability = min(                │
+   │      0.8 × sqrt(25/10), 1.0          │
+   │    ) = min(0.8 × 1.58, 1.0) = 1.0    │
+   └─────────────────────────────────────┘
+
+4. 다양성 패널티 (δ = 0.10)
+   ┌─────────────────────────────────────┐
+   │  diversity = max_similarity_to_      │
+   │              already_selected         │
+   │                                      │
+   │  중복 메모리를 방지합니다            │
+   └─────────────────────────────────────┘
+
+5. 최종 점수
+   ┌─────────────────────────────────────┐
+   │  score = α·similarity + β·recency +  │
+   │          γ·reliability - δ·diversity │
+   │                                      │
+   │  예시:                               │
+   │  = 0.65×0.87 + 0.15×0.72 +          │
+   │    0.20×1.0 - 0.10×0.10             │
+   │  = 0.566 + 0.108 + 0.20 - 0.01      │
+   │  = 0.864                             │
+   │                                      │
+   │  ✅ 높은 점수 → 조회됩니다            │
+   └─────────────────────────────────────┘
+
+6. 정렬 후 상위 k 선택
+   ┌─────────────────────────────────────┐
+   │  memories.sort(by: score)            │
+   │  return memories.slice(0, k)         │
+   │                                      │
+   │  예시 (k=3):                         │
+   │  [                                   │
+   │    {score: 0.864, title: &quot;m1&quot;},     │
+   │    {score: 0.791, title: &quot;m2&quot;},     │
+   │    {score: 0.746, title: &quot;m3&quot;}      │
+   │  ]                                   │
+   └─────────────────────────────────────┘
+</code></pre>
+<h2>구성 계층</h2>
+<pre><code>┌────────────────────────────────────────────────────────────────┐
+│  레이어 1: 런타임 플래그 (최우선 순위)                          │
+│  • --enable-memory                                             │
+│  • --memory-k 5                                                │
+│  • --memory-domain web                                         │
+│  모든 다른 레이어보다 우선합니다                               │
+└────────────────────────┬───────────────────────────────────────┘
+                         │
+                         ▼
+┌────────────────────────────────────────────────────────────────┐
+│  레이어 2: 사용자 구성 (~/.claude/settings.json)              │
+│  {                                                             │
+│    &quot;claude-flow&quot;: {                                            │
+│      &quot;execution&quot;: {                                            │
+│        &quot;reasoningbank&quot;: {                                      │
+│          &quot;enabled&quot;: true,                                      │
+│          &quot;retrievalK&quot;: 3,                                      │
+│          &quot;domains&quot;: [&quot;web&quot;, &quot;api&quot;]                             │
+│        }                                                       │
+│      }                                                         │
+│    }                                                           │
+│  }                                                             │
+│  세션 간 유지됩니다                                            │
+└────────────────────────┬───────────────────────────────────────┘
+                         │
+                         ▼
+┌────────────────────────────────────────────────────────────────┐
+│  레이어 3: 기본 구성 (provider-manager.ts)                    │
+│  getDefaultConfig() {                                          │
+│    reasoningbank: {                                            │
+│      enabled: false,                                           │
+│      database: '.swarm/memory.db',                             │
+│      retrievalK: 3,                                            │
+│      autoConsolidate: true,                                    │
+│      consolidateEvery: 20,                                     │
+│      minConfidence: 0.5                                        │
+│    }                                                           │
+│  }                                                             │
+│  구성이 없을 때 사용하는 기본값                               │
+└────────────────────────────────────────────────────────────────┘
+</code></pre>
+<p>해결 순서:</p>
+<ol>
+<li>런타임 플래그 확인</li>
+<li>설정되지 않았다면 사용자 구성 확인</li>
+<li>없으면 기본값 사용</li>
+</ol>
+<p>예시:
+$ claude-flow agent run coder &quot;task&quot; --memory-k 5</p>
+<p>결정된 구성:
+{
+enabled: true,        // --enable-memory 플래그에서 설정(암시적)
+retrievalK: 5,        // --memory-k 플래그 값
+database: '.swarm/memory.db',  // 사용자 구성에서 불러옴
+autoConsolidate: true  // 기본값
+}</p>
+<pre><code>
+## 통합 이후 파일 구조
+
+</code></pre>
+<p>claude-flow/
+├── package.json                       # agentic-flow@1.4.11
+│
+├── src/
+│   ├── execution/
+│   │   ├── agent-executor.ts          # ✅ RB 메서드 확장
+│   │   └── provider-manager.ts        # ✅ RB 구성 추가
+│   │
+│   ├── cli/
+│   │   └── simple-commands/
+│   │       └── agent.js               # ✅ --enable-memory 플래그 추가
+│   │                                  # ✅ 메모리 하위 명령 추가
+│   │
+│   └── types/
+│       └── reasoningbank.ts           # 🆕 TypeScript 인터페이스
+│
+├── tests/
+│   ├── unit/
+│   │   ├── agent-executor.test.ts     # 🆕 RB 단위 테스트
+│   │   └── provider-manager.test.ts   # 🆕 구성 테스트
+│   │
+│   └── integration/
+│       └── reasoningbank.test.ts      # 🆕 E2E 테스트
+│
+├── docs/
+│   ├── REASONINGBANK_INTEGRATION_PLAN.md    # 🆕 본 계획 문서
+│   ├── REASONINGBANK_ARCHITECTURE.md        # 🆕 아키텍처
+│   ├── REASONINGBANK_GUIDE.md               # 🆕 사용자 가이드
+│   └── examples/
+│       └── reasoningbank/
+│           ├── basic-usage.md               # 🆕 예제
+│           ├── domain-filtering.md          # 🆕 예제
+│           └── team-sharing.md              # 🆕 예제
+│
+└── .swarm/                            # 런타임에 생성
+└── memory.db                      # SQLite 데이터베이스</p>
+<pre><code>
+## 성능 특성
+
+</code></pre>
+<p>┌───────────────────────────────────────────────────────────────┐
+│  작업 성능 (ms)                                               │
+├───────────────────────────────────────────────────────────────┤
+│                                                               │
+│  데이터베이스 연결        ██ 1ms                              │
+│  메모리 조회 (k=3)        ████ 3ms                            │
+│  메모리 삽입             ██████ 1-2ms                         │
+│  배치 삽입 (100)         ████████████████████ 112ms           │
+│  통합                    ██████ 5-10ms                        │
+│  임베딩 (Claude API)     ███████████████████████ 500ms        │
+│  판단 (Claude API)       ████████████████████████ 800ms       │
+│                                                               │
+└───────────────────────────────────────────────────────────────┘</p>
+<p>API 키 없음(휴리스틱 모드):
+• 조회: 1-3ms (로컬 전용)
+• 판단: &lt;1ms (규칙 기반)
+• 전체 오버헤드: 작업당 &lt;5ms</p>
+<p>API 키 사용(LLM 모드):
+• 조회: 1-3ms (로컬)
+• 판단: 800ms (API 호출)
+• 전체 오버헤드: 작업당 약 1초
+• 정확도: 휴리스틱 70% 대비 95%</p>
+<p>메모리 증가:
+• 1,000개 메모리: 저장소 1MB, 조회 3ms
+• 10,000개 메모리: 저장소 10MB, 조회 8ms
+• 100,000개 메모리: 저장소 100MB, 조회 25ms</p>
+<pre><code>
+## 오류 처리 흐름
+
+</code></pre>
+<p>┌──────────────────────────────────────────────────────────────┐
+│  우아한 성능 저하 전략                                      │
+└──────────────────────────────────────────────────────────────┘</p>
+<p>오류: 메모리 데이터베이스를 찾을 수 없음
+↓
+데이터베이스 자동 초기화
+↓
+초기화 실패 시 → 메모리를 비활성화하고 학습 없이 계속 진행
+✅ 작업은 계속 실행됩니다</p>
+<p>오류: 메모리 조회 실패
+↓
+경고 로그 남김
+↓
+빈 메모리 배열로 계속 진행
+✅ 컨텍스트 없이 작업이 실행됩니다</p>
+<p>오류: 학습 실패
+↓
+경고 로그 남김
+↓
+메모리 생성을 건너뜀
+✅ 작업 결과가 반환됩니다</p>
+<p>오류: 통합 실패
+↓
+경고 로그 남김
+↓
+다음 임계값에서 재시도
+✅ 시스템이 계속 동작합니다</p>
+<p>오류: API 키 없음(LLM 모드)
+↓
+휴리스틱 판단으로 폴백
+↓
+정확도: 70% vs 95%
+✅ 학습은 계속 작동합니다</p>
+<p>오류: 데이터베이스 손상
+↓
+백업 후 재생성
+↓
+백업이 있으면 가져오기
+✅ 시스템이 복구됩니다</p>
+<pre><code>
+---
+
+**다음 단계:**
+1. 팀과 함께 아키텍처 검토
+2. 통합 계획 승인
+3. 1단계 시작: 의존성 업데이트
+4. 2단계 구현: 인터페이스 확장
+5. 테스트 및 반복
+
+**질문이 있으신가요?**
+- GitHub: https://github.com/ruvnet/claude-code-flow/issues
+- Discord: https://discord.gg/claude-flow
+</code></pre>
+
+  </div>
+</article>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Hanson Kim. All rights reserved.</p>
+  </footer>
+</body>
+</html>
