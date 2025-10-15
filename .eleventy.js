@@ -1,8 +1,21 @@
 module.exports = function(eleventyConfig) {
+  // Add date filter for sitemap
+  eleventyConfig.addFilter("date", (dateObj, format) => {
+    const date = new Date(dateObj);
+    if (format === "%Y-%m-%d") {
+      return date.toISOString().split('T')[0];
+    }
+    return date.toISOString();
+  });
+
   // Copy static assets
   eleventyConfig.addPassthroughCopy("src/css");
   eleventyConfig.addPassthroughCopy("src/images");
   eleventyConfig.addPassthroughCopy("src/js");
+  eleventyConfig.addPassthroughCopy("src/robots.txt");
+
+  // Copy Google Search Console verification file (exact filename to avoid template processing)
+  eleventyConfig.addPassthroughCopy("src/google9fa314861bbb6426.html");
 
   // Add date filter for blog posts
   eleventyConfig.addFilter("dateDisplay", (dateObj) => {
@@ -245,6 +258,6 @@ module.exports = function(eleventyConfig) {
     },
     markdownTemplateEngine: "njk",
     htmlTemplateEngine: "njk",
-    templateFormats: ["md", "njk", "html"]
+    templateFormats: ["md", "njk"]
   };
 };
