@@ -6,7 +6,11 @@ module.exports = {
     './src/_layouts/**/*.{html,njk}'
   ],
   theme: {
-    extend: {},
+    extend: {
+      width: {
+        '70': '280px',
+      },
+    },
   },
   plugins: [],
 };
