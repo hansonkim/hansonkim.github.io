@@ -372,5 +372,3 @@ MIT License - 자세한 내용은 [LICENSE](./LICENSE)를 참조하세요
 **Built with ❤️ by [rUv](https://github.com/ruvnet) | Powered by Revolutionary AI**
 
 *v2.7.0-alpha.10 - Semantic Search Fixed + ReasoningBank Node.js Backend*
-
-</div>
