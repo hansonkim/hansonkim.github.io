@@ -4,7 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Hanson Kim&#39;s Blog</title>
+  <link rel="stylesheet" href="/css/tailwind.css">
   <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/search.css">
 
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-79GWVQ2WYD"></script>
@@ -16,86 +18,90 @@
     gtag('config', 'G-79GWVQ2WYD');
   </script>
 </head>
-<body class="">
-  <header>
-    <nav>
-      <a href="/" class="logo">Hanson Kim</a>
-      <ul>
-        <li><a href="/">Home</a></li>
-        <li><a href="/blog/">Blog</a></li>
+<body class="font-sans leading-relaxed text-gray-800 min-h-screen ">
+  <header class="bg-white px-6 md:px-8 py-4 md:py-6 -mx-5 -mt-5 mb-10 shadow-sm backdrop-blur-md border-b border-gray-200 sticky top-0 z-[100]">
+    <nav class="flex justify-between items-center max-w-7xl mx-auto">
+      <a href="/" class="logo text-2xl font-bold no-underline transition-transform duration-300 ease-in-out hover:scale-105">Hanson Kim</a>
+      <ul class="list-none flex gap-4 md:gap-8">
+        <li><a href="/" class="no-underline text-gray-600 transition-all duration-300 ease-in-out font-medium relative hover:text-indigo-500">Home</a></li>
+        <li><a href="/blog/" class="no-underline text-gray-600 transition-all duration-300 ease-in-out font-medium relative hover:text-indigo-500">Blog</a></li>
       </ul>
     </nav>
   </header>
 
-  <main>
+  <main class="max-w-7xl mx-auto px-5">
     
-<div class="blog-header">
-  <h1>태그: Claude</h1>
-  <p>2개의 글</p>
+<div class="blog-header text-center mb-10 px-5 py-10 rounded-2xl">
+  <h1 class="mb-8 text-gray-800 font-bold text-2xl">태그: Claude</h1>
+  <p class="text-gray-600 text-lg mt-2.5">2개의 글</p>
 </div>
 
 <section class="posts">
-  <ul class="post-list"><li>
-      <article>
-        <h2><a href="/posts/2025-10-15-claude-flow-intro/">Claude-Flow 한글 문서 소개: AI 오케스트레이션 플랫폼</a></h2>
-        <time datetime="2025년 10월 15일">2025년 10월 15일</time>
+  <ul class="post-list list-none"><li class="mb-6 transition-transform duration-300 ease-in-out">
+      <article class="bg-white p-5 md:p-7 rounded-2xl shadow-sm border border-gray-200 transition-all duration-300 ease-in-out relative overflow-hidden hover:shadow-lg hover:-translate-y-1 hover:border-indigo-400">
+        <h2 class="mb-2.5 font-bold">
+          <a href="/posts/2025-10-15-claude-flow-intro/" class="no-underline text-gray-800 transition-colors duration-300 ease-in-out relative hover:text-indigo-500">Claude-Flow 한글 문서 소개: AI 오케스트레이션 플랫폼</a>
+        </h2>
+        <time datetime="2025년 10월 15일" class="text-gray-500 text-sm inline-flex items-center mb-3 font-medium">2025년 10월 15일</time>
         
-        <p>Claude-Flow v2.7.0의 한글 문서를 공개합니다. Hive-mind swarm 지능과 영구 메모리를 활용한 엔터프라이즈급 AI 개발 플랫폼을 만나보세요.</p>
+        <p class="text-gray-600 mt-2.5 leading-relaxed">Claude-Flow v2.7.0의 한글 문서를 공개합니다. Hive-mind swarm 지능과 영구 메모리를 활용한 엔터프라이즈급 AI 개발 플랫폼을 만나보세요.</p>
         
         
-        <div class="tags">
+        <div class="tags mt-4 flex gap-2.5 flex-wrap">
           
             
           
             
           
             
-            <a href="/tags/ai/" class="tag">AI</a>
+            <a href="/tags/ai/" class="tag inline-block px-4 py-1.5 rounded-2xl text-xs font-semibold border transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:shadow-md">AI</a>
             
           
             
-            <a href="/tags/claude/" class="tag">Claude</a>
+            <a href="/tags/claude/" class="tag inline-block px-4 py-1.5 rounded-2xl text-xs font-semibold border transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:shadow-md">Claude</a>
             
           
             
-            <a href="/tags/개발도구/" class="tag">개발도구</a>
+            <a href="/tags/개발도구/" class="tag inline-block px-4 py-1.5 rounded-2xl text-xs font-semibold border transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:shadow-md">개발도구</a>
             
           
             
-            <a href="/tags/문서화/" class="tag">문서화</a>
+            <a href="/tags/문서화/" class="tag inline-block px-4 py-1.5 rounded-2xl text-xs font-semibold border transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:shadow-md">문서화</a>
             
           
         </div>
         
       </article>
-    </li><li>
-      <article>
-        <h2><a href="/posts/claude-flow-ko/2025-10-15-claude-flow-ko/">Claude-Flow v2.7.0: 엔터프라이즈 AI 오케스트레이션 플랫폼</a></h2>
-        <time datetime="2025년 10월 14일">2025년 10월 14일</time>
+    </li><li class="mb-6 transition-transform duration-300 ease-in-out">
+      <article class="bg-white p-5 md:p-7 rounded-2xl shadow-sm border border-gray-200 transition-all duration-300 ease-in-out relative overflow-hidden hover:shadow-lg hover:-translate-y-1 hover:border-indigo-400">
+        <h2 class="mb-2.5 font-bold">
+          <a href="/posts/claude-flow-ko/2025-10-15-claude-flow-ko/" class="no-underline text-gray-800 transition-colors duration-300 ease-in-out relative hover:text-indigo-500">Claude-Flow v2.7.0: 엔터프라이즈 AI 오케스트레이션 플랫폼</a>
+        </h2>
+        <time datetime="2025년 10월 14일" class="text-gray-500 text-sm inline-flex items-center mb-3 font-medium">2025년 10월 14일</time>
         
-        <p>hive-mind swarm 지능, 영구 메모리, 그리고 100개 이상의 고급 MCP 도구를 결합한 엔터프라이즈급 AI 오케스트레이션 플랫폼 소개</p>
+        <p class="text-gray-600 mt-2.5 leading-relaxed">hive-mind swarm 지능, 영구 메모리, 그리고 100개 이상의 고급 MCP 도구를 결합한 엔터프라이즈급 AI 오케스트레이션 플랫폼 소개</p>
         
         
-        <div class="tags">
+        <div class="tags mt-4 flex gap-2.5 flex-wrap">
           
             
           
             
           
             
-            <a href="/tags/ai/" class="tag">AI</a>
+            <a href="/tags/ai/" class="tag inline-block px-4 py-1.5 rounded-2xl text-xs font-semibold border transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:shadow-md">AI</a>
             
           
             
-            <a href="/tags/claude/" class="tag">Claude</a>
+            <a href="/tags/claude/" class="tag inline-block px-4 py-1.5 rounded-2xl text-xs font-semibold border transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:shadow-md">Claude</a>
             
           
             
-            <a href="/tags/개발도구/" class="tag">개발도구</a>
+            <a href="/tags/개발도구/" class="tag inline-block px-4 py-1.5 rounded-2xl text-xs font-semibold border transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:shadow-md">개발도구</a>
             
           
             
-            <a href="/tags/오케스트레이션/" class="tag">오케스트레이션</a>
+            <a href="/tags/오케스트레이션/" class="tag inline-block px-4 py-1.5 rounded-2xl text-xs font-semibold border transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:shadow-md">오케스트레이션</a>
             
           
         </div>
@@ -106,9 +112,10 @@
 
   </main>
 
-  <footer>
+  <footer class="mt-20 px-5 py-10 bg-white border-t border-gray-200 text-center text-gray-500 text-sm relative">
     <p>&copy; 2025 Hanson Kim. All rights reserved.</p>
   </footer>
   <script src="/js/tree-navigation.js"></script>
+  <script src="/js/search.js"></script>
 </body>
 </html>
