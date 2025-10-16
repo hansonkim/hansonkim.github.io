@@ -315,20 +315,13 @@ nav ul a:hover::after {
   position: relative;
 }
 
-/* Post sidebar */
+/* Post sidebar - removed width/position to allow Tailwind classes to control */
 .post-sidebar {
-  width: 280px;
-  flex-shrink: 0;
-  position: sticky;
-  top: 100px;
-  max-height: calc(100vh - 120px);
-  overflow-y: auto;
   background: var(--bg-white);
   border-radius: 16px;
   padding: 20px;
   box-shadow: var(--shadow-md);
   border: 1px solid var(--border-color);
-  order: 2;
 }
 
 .sidebar-header {
@@ -442,7 +435,7 @@ nav ul a:hover::after {
   min-width: 0;
   max-width: 900px;
   margin-top: 0;
-  order: 1;
+  /* Removed order: 1 to allow natural HTML order (article left, sidebar right) */
 }
 
 .post-header {
@@ -638,19 +631,8 @@ footer p {
 .post-list li:nth-child(4) { animation-delay: 0.4s; }
 .post-list li:nth-child(5) { animation-delay: 0.5s; }
 
-/* Responsive */
+/* Responsive - removed post-sidebar overrides to allow Tailwind responsive classes */
 @media (max-width: 1024px) {
-  .post-layout {
-    flex-direction: column;
-  }
-
-  .post-sidebar {
-    width: 100%;
-    position: static;
-    max-height: none;
-    margin-bottom: 30px;
-  }
-
   main {
     max-width: 100%;
   }
