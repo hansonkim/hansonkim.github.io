@@ -1,4 +1,7 @@
 module.exports = function(eleventyConfig) {
+  const fs = require('fs');
+  const path = require('path');
+
   // Add date filter for sitemap
   eleventyConfig.addFilter("date", (dateObj, format) => {
     const date = new Date(dateObj);
@@ -247,6 +250,53 @@ module.exports = function(eleventyConfig) {
       });
     }
     return content;
+  });
+
+  // Generate search index after build
+  eleventyConfig.on('eleventy.after', async ({ dir, results, runMode, outputMode }) => {
+    const outputDir = dir.output || '_site';
+    const searchIndexPath = path.join(outputDir, 'search-index.json');
+
+    // Extract search data from all posts
+    const searchIndex = [];
+
+    results.forEach(result => {
+      if (result.url && result.url.includes('/posts/') && result.content) {
+        const htmlContent = result.content;
+
+        // Extract text from HTML (remove tags)
+        const textContent = htmlContent
+          .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
+          .replace(/<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>/gi, '')
+          .replace(/<[^>]+>/g, ' ')
+          .replace(/\s+/g, ' ')
+          .trim();
+
+        // Extract title from result data
+        const titleMatch = htmlContent.match(/<title[^>]*>(.*?)<\/title>/i);
+        const title = titleMatch ? titleMatch[1].replace(/\s*-\s*Hanson Kim's Blog\s*$/, '').trim() : '';
+
+        // Extract first paragraph as description
+        const descriptionMatch = htmlContent.match(/<p[^>]*>(.*?)<\/p>/i);
+        const description = descriptionMatch
+          ? descriptionMatch[1].replace(/<[^>]+>/g, '').substring(0, 200)
+          : textContent.substring(0, 200);
+
+        if (title && textContent.length > 100) {
+          searchIndex.push({
+            title: title,
+            url: result.url,
+            description: description,
+            content: textContent.substring(0, 1000), // First 1000 chars for search
+            fullContent: textContent // Store full content for better search
+          });
+        }
+      }
+    });
+
+    // Write search index
+    fs.writeFileSync(searchIndexPath, JSON.stringify(searchIndex, null, 2));
+    console.log(`✅ Search index generated: ${searchIndex.length} posts indexed`);
   });
 
   return {

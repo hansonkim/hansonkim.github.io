@@ -4,7 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{{ title or "Hanson Kim's Blog" }}</title>
+  <link rel="stylesheet" href="/css/tailwind.css">
   <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/search.css">
 
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-79GWVQ2WYD"></script>
@@ -16,24 +18,25 @@
     gtag('config', 'G-79GWVQ2WYD');
   </script>
 </head>
-<body class="{{ 'has-sidebar' if (page | buildFileTree(collections)).length > 0 else '' }}">
-  <header>
-    <nav>
-      <a href="/" class="logo">Hanson Kim</a>
-      <ul>
-        <li><a href="/">Home</a></li>
-        <li><a href="/blog/">Blog</a></li>
+<body class="font-sans leading-relaxed text-gray-800 min-h-screen {{ 'has-sidebar' if (page | buildFileTree(collections)).length > 0 else '' }}">
+  <header class="bg-white px-6 md:px-8 py-4 md:py-6 -mx-5 -mt-5 mb-10 shadow-sm backdrop-blur-md border-b border-gray-200 sticky top-0 z-[100]">
+    <nav class="flex justify-between items-center max-w-7xl mx-auto">
+      <a href="/" class="logo text-2xl font-bold no-underline transition-transform duration-300 ease-in-out hover:scale-105">Hanson Kim</a>
+      <ul class="list-none flex gap-4 md:gap-8">
+        <li><a href="/" class="no-underline text-gray-600 transition-all duration-300 ease-in-out font-medium relative hover:text-indigo-500">Home</a></li>
+        <li><a href="/blog/" class="no-underline text-gray-600 transition-all duration-300 ease-in-out font-medium relative hover:text-indigo-500">Blog</a></li>
       </ul>
     </nav>
   </header>
 
-  <main>
+  <main class="max-w-7xl mx-auto px-5">
     {{ content | safe }}
   </main>
 
-  <footer>
+  <footer class="mt-20 px-5 py-10 bg-white border-t border-gray-200 text-center text-gray-500 text-sm relative">
     <p>&copy; 2025 Hanson Kim. All rights reserved.</p>
   </footer>
   <script src="/js/tree-navigation.js"></script>
+  <script src="/js/search.js"></script>
 </body>
 </html>

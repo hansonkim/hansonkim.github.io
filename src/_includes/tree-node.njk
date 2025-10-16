@@ -1,11 +1,11 @@
 {% if item.type == 'folder' %}
 <div class="tree-node tree-folder">
-  <div class="tree-node-header" data-toggle="folder">
-    <span class="tree-icon">📁</span>
-    <span class="tree-label">{{ item.title }}</span>
-    <span class="tree-toggle">▶</span>
+  <div class="tree-node-header flex items-center px-2 py-1.5 cursor-pointer rounded-md transition-all duration-200 ease-in-out select-none hover:bg-gradient-to-br hover:from-indigo-50 hover:to-pink-50" data-toggle="folder">
+    <span class="tree-icon mr-2 text-base flex-shrink-0">📁</span>
+    <span class="tree-label flex-1 text-gray-600 font-medium">{{ item.title }}</span>
+    <span class="tree-toggle ml-2 text-xs text-gray-500 transition-transform duration-200 ease-in-out flex-shrink-0">▶</span>
   </div>
-  <div class="tree-children">
+  <div class="tree-children ml-5 pl-3 border-l border-gray-200 hidden">
     {% for child in item.children %}
       {% set item = child %}
       {% include "tree-node.njk" %}
@@ -14,9 +14,9 @@
 </div>
 {% elif item.type == 'file' %}
 <div class="tree-node tree-file">
-  <a href="{{ item.path }}" class="tree-node-link">
-    <span class="tree-icon">📄</span>
-    <span class="tree-label">{{ item.title }}</span>
+  <a href="{{ item.path }}" class="tree-node-link flex items-center px-2 py-1.5 no-underline rounded-md transition-all duration-200 ease-in-out text-gray-600 hover:bg-gradient-to-br hover:from-indigo-100 hover:to-pink-100 hover:text-indigo-500">
+    <span class="tree-icon mr-2 text-base flex-shrink-0">📄</span>
+    <span class="tree-label flex-1 font-medium">{{ item.title }}</span>
   </a>
 </div>
 {% endif %}

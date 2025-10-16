@@ -3,34 +3,36 @@ layout: base.njk
 title: Home
 ---
 
-<div class="hero">
-  <h1>안녕하세요, Hanson Kim입니다</h1>
-  <p>개발, 기술, 그리고 생각들을 공유하는 공간입니다.</p>
+<div class="hero text-center px-5 py-20 -mx-5 mb-10 rounded-3xl relative overflow-hidden">
+  <h1 class="text-3xl md:text-5xl mb-5 text-gray-800 font-extrabold relative z-10">안녕하세요, Hanson Kim입니다</h1>
+  <p class="text-lg md:text-xl text-gray-600 relative z-10 max-w-2xl mx-auto">개발, 기술, 그리고 생각들을 공유하는 공간입니다.</p>
 </div>
 
-<section class="tags-section">
-  <h2>태그</h2>
-  <div class="tags-cloud">
+<section class="tags-section my-10 p-8 bg-white rounded-2xl shadow-sm border border-gray-200">
+  <h2 class="mb-6 text-gray-800 font-bold text-2xl">태그</h2>
+  <div class="tags-cloud flex flex-wrap gap-3 items-center">
     {%- for tag in collections.tagList -%}
     {%- set tagCount = collections[tag].length if collections[tag] else 0 -%}
     {%- if tagCount > 0 -%}
-    <a href="/tags/{{ tag | slugify }}/" class="tag-cloud-item">
-      {{ tag }} <span class="tag-count">({{ tagCount }})</span>
+    <a href="/tags/{{ tag | slugify }}/" class="tag-cloud-item inline-flex items-center gap-1.5 px-5 py-2.5 rounded-3xl text-sm font-semibold border transition-all duration-300 ease-in-out hover:-translate-y-0.5">
+      {{ tag }} <span class="tag-count text-xs font-medium">({{ tagCount }})</span>
     </a>
     {%- endif -%}
     {%- endfor -%}
   </div>
 </section>
 
-<section class="recent-posts">
-  <h2>최근 포스트</h2>
-  <ul class="post-list">
+<section class="recent-posts mt-10">
+  <h2 class="mb-8 text-gray-800 font-bold text-2xl">최근 포스트</h2>
+  <ul class="post-list list-none">
     {%- for post in collections.posts | reverse -%}
-    <li>
-      <article>
-        <h3><a href="{{ post.url }}">{{ post.data.title }}</a></h3>
-        <time datetime="{{ post.data.date | dateDisplay }}">{{ post.data.date | dateDisplay }}</time>
-        <p>{{ post.data.description }}</p>
+    <li class="mb-6 transition-transform duration-300 ease-in-out">
+      <article class="bg-white p-5 md:p-7 rounded-2xl shadow-sm border border-gray-200 transition-all duration-300 ease-in-out relative overflow-hidden hover:shadow-lg hover:-translate-y-1 hover:border-indigo-400">
+        <h3 class="mb-2.5 font-bold">
+          <a href="{{ post.url }}" class="no-underline text-gray-800 transition-colors duration-300 ease-in-out relative hover:text-indigo-500">{{ post.data.title }}</a>
+        </h3>
+        <time datetime="{{ post.data.date | dateDisplay }}" class="text-gray-500 text-sm inline-flex items-center mb-3 font-medium">{{ post.data.date | dateDisplay }}</time>
+        <p class="text-gray-600 mt-2.5 leading-relaxed">{{ post.data.description }}</p>
       </article>
     </li>
     {%- endfor -%}
