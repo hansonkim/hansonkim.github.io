@@ -25,7 +25,7 @@ title: Home
 <section class="recent-posts mt-10">
   <h2 class="mb-8 text-gray-800 font-bold text-2xl">최근 포스트</h2>
   <ul class="post-list list-none">
-    {%- for post in collections.posts | reverse -%}
+    {%- for post in collections.posts -%}
     <li class="mb-6 transition-transform duration-300 ease-in-out">
       <article class="bg-white p-5 md:p-7 rounded-2xl shadow-sm border border-gray-200 transition-all duration-300 ease-in-out relative overflow-hidden hover:shadow-lg hover:-translate-y-1 hover:border-indigo-400">
         <h3 class="mb-2.5 font-bold">

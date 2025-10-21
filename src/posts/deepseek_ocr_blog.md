@@ -1,7 +1,7 @@
 ---
 title: "DeepSeek-OCR: AI의 새로운 메모리 혁명"
 description: "최근 DeepSeek AI가 공개한 DeepSeek-OCR은 단순한 문서 인식 도구가 아닙니다. 이것은 AI의 가장 큰 병목인 토큰 계산량 문제를 근본적으로 해결하는 혁명적인 기술입니다."
-date: 2025-10-21T02:15:09+09:00
+date: 2025-10-20T02:15:09+09:00
 tags:
   - posts
   - AI
