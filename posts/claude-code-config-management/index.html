@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Claude Code 설정을 Git으로 똑똑하게 관리하기</title>
+  <link rel="stylesheet" href="/css/tailwind.css?v=2">
+  <link rel="stylesheet" href="/css/style.css?v=2">
+  <link rel="stylesheet" href="/css/search.css">
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-79GWVQ2WYD"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-79GWVQ2WYD');
+  </script>
+</head>
+<body class="font-sans leading-relaxed text-gray-800 min-h-screen ">
+  <header class="bg-white px-6 md:px-8 py-4 md:py-6 -mx-5 -mt-5 mb-10 shadow-sm backdrop-blur-md border-b border-gray-200 sticky top-0 z-[100]">
+    <nav class="flex justify-between items-center max-w-7xl mx-auto">
+      <a href="/" class="logo text-2xl font-bold no-underline transition-transform duration-300 ease-in-out hover:scale-105">Hanson Kim</a>
+      <ul class="list-none flex gap-4 md:gap-8">
+        <li><a href="/" class="no-underline text-gray-600 transition-all duration-300 ease-in-out font-medium relative hover:text-indigo-500">Home</a></li>
+        <li><a href="/blog/" class="no-underline text-gray-600 transition-all duration-300 ease-in-out font-medium relative hover:text-indigo-500">Blog</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-5">
+    
+
+
+<div class="post-layout flex flex-col lg:flex-row gap-10 mt-10 items-start relative">
+  <article class="post flex-1 min-w-0 max-w-4xl mt-0">
+    <header class="post-header mb-10 pb-5 border-b-2 border-gray-200">
+      <h1 class="text-3xl md:text-4xl mb-4 text-gray-800 font-extrabold leading-tight">Claude Code 설정을 Git으로 똑똑하게 관리하기</h1>
+      <time datetime="2025년 10월 28일" class="text-gray-500 text-sm inline-flex items-center font-medium">2025년 10월 28일</time>
+      
+      <div class="tags mt-4 flex gap-2.5 flex-wrap">
+        
+          
+        
+          
+          <a href="/tags/claude-code/" class="tag inline-block px-4 py-1.5 rounded-2xl text-xs font-semibold border transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:shadow-md">claude-code</a>
+          
+        
+          
+          <a href="/tags/git/" class="tag inline-block px-4 py-1.5 rounded-2xl text-xs font-semibold border transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:shadow-md">git</a>
+          
+        
+          
+          <a href="/tags/development-tools/" class="tag inline-block px-4 py-1.5 rounded-2xl text-xs font-semibold border transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:shadow-md">development-tools</a>
+          
+        
+          
+          <a href="/tags/productivity/" class="tag inline-block px-4 py-1.5 rounded-2xl text-xs font-semibold border transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:shadow-md">productivity</a>
+          
+        
+      </div>
+      
+    </header>
+
+    <div class="post-content leading-relaxed text-lg">
+      <h1>Claude Code 설정을 Git으로 똑똑하게 관리하기</h1>
+<p>Claude Code의 커스텀 agents와 commands를 사용하다 보면 점점 더 많은 설정 파일이 쌓이게 됩니다. 이를 여러 머신에서 동기화하고, 버전 관리하고 싶어지는 건 당연한 일이죠.</p>
+<p>처음에는 단순하게 <code>~/.claude/</code> 디렉토리를 통째로 Git repository로 만들면 되지 않을까 생각했습니다. 하지만 실제로 해보니 예상치 못한 문제들이 발생했습니다.</p>
+<h2>문제: ~/.claude/ 디렉토리의 혼란</h2>
+<p><code>~/.claude/</code> 디렉토리를 들여다보면 단순히 agents와 commands만 있는 게 아닙니다:</p>
+<ul>
+<li>로그 파일들</li>
+<li>캐시 데이터</li>
+<li>세션 정보</li>
+<li>임시 파일들</li>
+<li>Claude Code 런타임이 생성하는 각종 파일들</li>
+</ul>
+<p>이런 파일들이 모두 섞여 있다 보니 몇 가지 문제가 생겼습니다:</p>
+<ol>
+<li>
+<p><strong>AI 컨텍스트 낭비</strong>: Claude Code로 agents나 commands를 수정하려고 하면, AI가 디렉토리를 탐색할 때 불필요한 파일들까지 읽게 됩니다. 토큰을 낭비하고, 작업 효율이 떨어지죠.</p>
+</li>
+<li>
+<p><strong>실수 위험</strong>: AI가 혼동해서 로그 파일이나 내부 설정을 잘못 수정할 수 있습니다. 심각한 경우 Claude Code가 제대로 동작하지 않을 수도 있습니다.</p>
+</li>
+<li>
+<p><strong>Git 관리의 어려움</strong>: 어떤 파일을 커밋해야 하고, 어떤 파일을 무시해야 할까? <code>.gitignore</code>를 완벽하게 설정하기도 쉽지 않습니다.</p>
+</li>
+</ol>
+<h2>해결책: 별도 디렉토리 + Symbolic Link</h2>
+<p>해답은 의외로 간단했습니다. <strong>설정 파일만 별도 디렉토리로 분리</strong>하고, symbolic link로 연결하는 것입니다.</p>
+<h3>구조</h3>
+<pre><code>~/claude-settings/          # Git으로 관리
+├── agents/                 # 커스텀 agents
+├── commands/               # 커스텀 commands
+├── .gitignore
+└── README.md
+
+~/.claude/                  # Claude Code 런타임
+├── agents -&gt; ~/claude-settings/agents/      (symlink)
+├── commands -&gt; ~/claude-settings/commands/  (symlink)
+├── logs/                   # 런타임 파일들
+├── cache/
+└── ...
+</code></pre>
+<h3>설정 방법</h3>
+<pre><code class="language-bash"># 1. 설정 디렉토리 생성 및 Git 초기화
+mkdir -p ~/claude-settings/{agents,commands}
+cd ~/claude-settings
+git init
+
+# 2. .gitignore 생성
+cat &gt; .gitignore &lt;&lt; 'EOF'
+.claude/
+*.env
+*.key
+.DS_Store
+EOF
+
+# 3. 기존 설정 이동 (있다면)
+mv ~/.claude/agents/* ~/claude-settings/agents/
+mv ~/.claude/commands/* ~/claude-settings/commands/
+
+# 4. Symbolic link 생성
+rm -rf ~/.claude/agents ~/.claude/commands
+ln -s ~/claude-settings/agents ~/.claude/agents
+ln -s ~/claude-settings/commands ~/.claude/commands
+
+# 5. GitHub private repository 생성 및 푸시
+gh repo create claude-code-config --private --source=. --remote=origin --push
+</code></pre>
+<h2>이 방식의 장점</h2>
+<h3>1. AI 작업 효율성 향상</h3>
+<p>Claude Code로 agents나 commands를 수정할 때, AI는 이제 필요한 파일만 집중해서 볼 수 있습니다. 컨텍스트 낭비가 없고, 작업 속도도 빨라집니다.</p>
+<h3>2. 명확한 책임 분리</h3>
+<ul>
+<li><code>~/claude-settings/</code> = 사용자가 직접 관리하는 설정 (Git 버전 관리)</li>
+<li><code>~/.claude/</code> = Claude Code가 관리하는 런타임 데이터</li>
+</ul>
+<p>두 영역이 명확히 분리되어 있어 혼란이 없습니다.</p>
+<h3>3. 안전성</h3>
+<p>실수로 Claude Code의 중요한 내부 파일을 손상시킬 위험이 사라집니다. AI가 아무리 잘못 동작해도 설정 파일만 영향을 받습니다.</p>
+<h3>4. Git 관리 용이성</h3>
+<p>어떤 파일을 커밋해야 할지 고민할 필요가 없습니다. <code>~/claude-settings/</code>의 모든 파일은 의미 있는 설정 파일입니다.</p>
+<h3>5. 멀티 머신 동기화</h3>
+<p>새로운 컴퓨터에서도 간단히 설정을 복원할 수 있습니다:</p>
+<pre><code class="language-bash">git clone git@github.com:username/claude-code-config.git ~/claude-settings
+ln -s ~/claude-settings/agents ~/.claude/agents
+ln -s ~/claude-settings/commands ~/.claude/commands
+</code></pre>
+<h3>6. 검색 효율성</h3>
+<p><code>grep</code>, <code>find</code> 등으로 검색할 때 관련 있는 파일만 나옵니다. 로그 파일이나 캐시에서 엉뚱한 결과가 나오지 않습니다.</p>
+<h2>Symbolic Link의 마법</h2>
+<p>Symbolic link의 가장 큰 장점은 <strong>별도의 동기화가 필요 없다</strong>는 것입니다.</p>
+<ul>
+<li><code>~/claude-settings/agents/</code>를 수정하면 → 즉시 <code>~/.claude/agents/</code>에 반영</li>
+<li>Claude Code는 <code>~/.claude/agents/</code>를 읽지만 → 실제로는 <code>~/claude-settings/agents/</code>의 내용을 봄</li>
+<li>동기화 스크립트나 복잡한 설정이 필요 없음</li>
+</ul>
+<h2>실제 사용 경험</h2>
+<p>이 방식을 도입한 후:</p>
+<ol>
+<li>
+<p><strong>AI 작업이 더 빨라졌습니다</strong>: 불필요한 파일 탐색이 없어져 응답 속도가 개선되었습니다.</p>
+</li>
+<li>
+<p><strong>안심하고 수정할 수 있게 되었습니다</strong>: Git으로 관리되니 언제든 이전 버전으로 돌아갈 수 있습니다.</p>
+</li>
+<li>
+<p><strong>새 컴퓨터 세팅이 간편해졌습니다</strong>: 클론 하나면 모든 설정이 복원됩니다.</p>
+</li>
+<li>
+<p><strong>협업 가능성</strong>: private repository로 관리하지만, 팀원과 공유하고 싶다면 권한만 주면 됩니다.</p>
+</li>
+</ol>
+<h2>주의사항</h2>
+<h3>민감 정보 관리</h3>
+<p>agents나 commands에 API 키나 토큰이 포함될 수 있습니다. <code>.gitignore</code>에 패턴을 추가하거나, 환경 변수를 사용하세요:</p>
+<pre><code class="language-gitignore">*secret*
+*api-key*
+*token*
+*.env
+*.key
+</code></pre>
+<h3>Private Repository 유지</h3>
+<p>실수로 public으로 전환하지 않도록 주의하세요. 개인 설정이나 워크플로우가 노출될 수 있습니다.</p>
+<h2>결론</h2>
+<p>Claude Code 설정을 효율적으로 관리하려면:</p>
+<ol>
+<li>✅ 별도 디렉토리로 분리</li>
+<li>✅ Symbolic link로 연결</li>
+<li>✅ Git으로 버전 관리</li>
+<li>✅ Private repository로 백업</li>
+</ol>
+<p>이 방식은 단순하지만 강력합니다. AI 작업 효율성, 안전성, 관리 편의성을 모두 잡을 수 있는 현명한 선택입니다.</p>
+<p>여러분도 한번 시도해보세요. 설정 관리의 스트레스에서 해방될 수 있을 것입니다.</p>
+<hr>
+<p><em>이 글은 Claude Code와 Git을 활용한 설정 관리 경험을 공유한 글입니다.</em></p>
+
+    </div>
+  </article>
+
+  
+</div>
+
+  </main>
+
+  <footer class="mt-20 px-5 py-10 bg-white border-t border-gray-200 text-center text-gray-500 text-sm relative">
+    <p>&copy; 2025 Hanson Kim. All rights reserved.</p>
+  </footer>
+  <script src="/js/tree-navigation.js"></script>
+  <script src="/js/search.js"></script>
+</body>
+</html>
