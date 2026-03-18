@@ -8,6 +8,12 @@ module.exports = function(eleventyConfig) {
     if (format === "%Y-%m-%d") {
       return date.toISOString().split('T')[0];
     }
+    if (format === "%Y-%m-%dT%H:%M:%S+09:00") {
+      const d = new Date(dateObj);
+      const pad = (n) => String(n).padStart(2, '0');
+      const kst = new Date(d.getTime() + 9 * 60 * 60 * 1000);
+      return `${kst.getUTCFullYear()}-${pad(kst.getUTCMonth()+1)}-${pad(kst.getUTCDate())}T${pad(kst.getUTCHours())}:${pad(kst.getUTCMinutes())}:${pad(kst.getUTCSeconds())}+09:00`;
+    }
     return date.toISOString();
   });
 
@@ -27,6 +33,11 @@ module.exports = function(eleventyConfig) {
       month: 'long',
       day: 'numeric'
     });
+  });
+
+  // Add ISO 8601 date filter for datetime attributes
+  eleventyConfig.addFilter("dateISO", (dateObj) => {
+    return new Date(dateObj).toISOString();
   });
 
   // Add humanize filter for text formatting
@@ -81,8 +92,6 @@ module.exports = function(eleventyConfig) {
     if (!currentPage || !currentPage.inputPath || !collections.all) {
       return [];
     }
-
-    const path = require('path');
 
     // Get current page's post directory (e.g., "claude-flow-ko")
     const inputPath = currentPage.inputPath;
@@ -286,8 +295,7 @@ module.exports = function(eleventyConfig) {
             title: title,
             url: result.url,
             description: description,
-            content: textContent.substring(0, 1000), // First 1000 chars for search
-            fullContent: textContent // Store full content for better search
+            fullContent: textContent.substring(0, 500)
           });
         }
       }

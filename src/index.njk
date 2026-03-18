@@ -26,15 +26,7 @@ title: Home
   <h2 class="mb-8 text-gray-800 font-bold text-2xl">최근 포스트</h2>
   <ul class="post-list list-none">
     {%- for post in collections.posts -%}
-    <li class="mb-6 transition-transform duration-300 ease-in-out">
-      <article class="bg-white p-5 md:p-7 rounded-2xl shadow-sm border border-gray-200 transition-all duration-300 ease-in-out relative overflow-hidden hover:shadow-lg hover:-translate-y-1 hover:border-indigo-400">
-        <h3 class="mb-2.5 font-bold">
-          <a href="{{ post.url }}" class="no-underline text-gray-800 transition-colors duration-300 ease-in-out relative hover:text-indigo-500">{{ post.data.title }}</a>
-        </h3>
-        <time datetime="{{ post.data.date | dateDisplay }}" class="text-gray-500 text-sm inline-flex items-center mb-3 font-medium">{{ post.data.date | dateDisplay }}</time>
-        <p class="text-gray-600 mt-2.5 leading-relaxed">{{ post.data.description }}</p>
-      </article>
-    </li>
+    {% set headingLevel = "h3" %}{% set showTags = false %}{% include "post-card.njk" %}
     {%- endfor -%}
   </ul>
 </section>

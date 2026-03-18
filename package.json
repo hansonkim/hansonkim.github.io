@@ -5,10 +5,10 @@
   "main": "index.js",
   "scripts": {
     "start": "npm run build:css && concurrently \"npm run watch:css\" \"eleventy --serve\"",
-    "build": "npm run build:css && eleventy",
-    "build:css": "postcss src/css/tailwind.css -o _site/css/tailwind.css --config config/postcss.config.js",
-    "watch:css": "postcss src/css/tailwind.css -o _site/css/tailwind.css --config config/postcss.config.js --watch",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "eleventy && npm run build:css",
+    "build:css": "postcss src/css/tailwind.src.css -o _site/css/tailwind.css --config config/postcss.config.js",
+    "watch:css": "postcss src/css/tailwind.src.css -o _site/css/tailwind.css --config config/postcss.config.js --watch",
+    "test": "echo \"No tests\" && exit 0",
     "deploy": "npm run build && gh-pages -d _site"
   },
   "repository": {
@@ -25,7 +25,6 @@
   "homepage": "https://github.com/hansonkim/hansonkim.github.io#readme",
   "devDependencies": {
     "@11ty/eleventy": "^3.1.2",
-    "@quasibit/eleventy-plugin-sitemap": "^2.2.0",
     "@tailwindcss/postcss": "^4.1.14",
     "@tailwindcss/typography": "^0.5.19",
     "autoprefixer": "^10.4.21",

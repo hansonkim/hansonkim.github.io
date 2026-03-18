@@ -35,27 +35,6 @@ main {
   padding: 0 20px;
 }
 
-/* Header */
-header {
-  background: var(--bg-white);
-  padding: 1.5rem 2rem;
-  margin: -20px -20px 40px -20px;
-  box-shadow: var(--shadow-sm);
-  backdrop-filter: blur(10px);
-  border-bottom: 1px solid var(--border-color);
-  position: sticky;
-  top: 0;
-  z-index: 100;
-}
-
-nav {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  max-width: 1400px;
-  margin: 0 auto;
-}
-
 .logo {
   font-size: 1.5rem;
   font-weight: 700;
@@ -69,12 +48,6 @@ nav {
 
 .logo:hover {
   transform: scale(1.05);
-}
-
-nav ul {
-  list-style: none;
-  display: flex;
-  gap: 2rem;
 }
 
 nav a {
@@ -482,7 +455,7 @@ nav ul a:hover::after {
 .post-content h3 {
   margin-top: 30px;
   margin-bottom: 15px;
-  color: var(--text-medium);
+  color: var(--text-dark);
   font-weight: 600;
 }
 
@@ -761,5 +734,27 @@ footer p {
   .tree-children {
     margin-left: 12px;
     padding-left: 8px;
+  }
+}
+
+/* 포커스 스타일 */
+:focus-visible {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+}
+
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* 움직임 감소 선호 사용자 지원 */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }
