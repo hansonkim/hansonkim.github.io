@@ -24,6 +24,14 @@
 
     // Store expansion state in sessionStorage
     restoreExpansionState();
+
+    // Smooth scroll to active item
+    const activeLink = document.querySelector('.tree-node-link.active');
+    if (activeLink) {
+      setTimeout(() => {
+        activeLink.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }, 100);
+    }
   }
 
   function highlightCurrentPage() {
@@ -134,13 +142,5 @@
     }
 
     return null;
-  }
-
-  // Add smooth scrolling to active item
-  const activeLink = document.querySelector('.tree-node-link.active');
-  if (activeLink) {
-    setTimeout(() => {
-      activeLink.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    }, 100);
   }
 })();

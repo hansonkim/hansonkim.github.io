@@ -19,6 +19,13 @@ class BlogSearch {
     this.setupFuse();
     this.createSearchModal();
     this.attachEventListeners();
+
+    // 단일 live region 초기화 (DOM 누수 방지)
+    this.liveRegion = document.createElement('div');
+    this.liveRegion.setAttribute('role', 'status');
+    this.liveRegion.setAttribute('aria-live', 'polite');
+    this.liveRegion.className = 'sr-only';
+    document.body.appendChild(this.liveRegion);
   }
 
   /**
@@ -27,6 +34,7 @@ class BlogSearch {
   async loadSearchIndex() {
     try {
       const response = await fetch('/search-index.json');
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
       this.searchIndex = await response.json();
       console.log(`🔍 Search index loaded: ${this.searchIndex.length} posts`);
     } catch (error) {
@@ -228,8 +236,16 @@ class BlogSearch {
 
   /**
    * Add search button to navigation
+   * 이미 정적 HTML에 버튼이 있으면 이벤트만 연결하고, 없으면 동적 생성
    */
   addSearchButton() {
+    const existingBtn = document.querySelector('.search-trigger');
+    if (existingBtn) {
+      existingBtn.addEventListener('click', () => this.open());
+      return;
+    }
+
+    // 정적 HTML에 버튼이 없을 경우 fallback으로 동적 생성
     const nav = document.querySelector('header nav ul');
     if (nav) {
       const li = document.createElement('li');
@@ -313,7 +329,7 @@ class BlogSearch {
 
       return `
         <a
-          href="${item.url}"
+          href="${this.escapeHtml(item.url)}"
           class="search-result-item"
           role="option"
           aria-selected="${index === this.selectedIndex}"
@@ -321,7 +337,7 @@ class BlogSearch {
         >
           <div class="search-result-title">${highlightedTitle}</div>
           <div class="search-result-description">${highlightedDescription}</div>
-          <div class="search-result-url">${item.url}</div>
+          <div class="search-result-url">${this.escapeHtml(item.url)}</div>
         </a>
       `;
     }).join('');
@@ -339,7 +355,7 @@ class BlogSearch {
     if (!text || !query) return this.escapeHtml(text);
 
     const escapedText = this.escapeHtml(text);
-    const escapedQuery = this.escapeHtml(query);
+    const escapedQuery = this.escapeHtml(query).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     const regex = new RegExp(`(${escapedQuery})`, 'gi');
 
     return escapedText.replace(regex, '<mark>$1</mark>');
@@ -403,17 +419,13 @@ class BlogSearch {
   }
 
   /**
-   * Announce to screen readers
+   * 스크린 리더에 메시지 전달 (단일 live region 재사용으로 DOM 누수 방지)
    */
   announce(message) {
-    const announcement = document.createElement('div');
-    announcement.setAttribute('role', 'status');
-    announcement.setAttribute('aria-live', 'polite');
-    announcement.className = 'sr-only';
-    announcement.textContent = message;
-
-    document.body.appendChild(announcement);
-    setTimeout(() => announcement.remove(), 1000);
+    if (this.liveRegion) {
+      this.liveRegion.textContent = '';
+      setTimeout(() => { this.liveRegion.textContent = message; }, 50);
+    }
   }
 }
 
