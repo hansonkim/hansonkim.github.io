@@ -319,6 +319,118 @@ claude mcp add gemini-google-search \
 
 CLAUDE.md에 이 원칙을 명시하면, Claude Code가 자동으로 용도에 맞는 도구를 선택합니다.
 
+## 부록: 쿼리별 상세 결과
+
+<details>
+<summary>Q1: "2026년 3월 한국 부동산 정책 변화" — WS 4 / PX 5 / GM 4</summary>
+
+**WebSearch (4점)**: 소스 10개. 이재명 정부 부동산 정책, 대출 규제, 규제지역 확대 등 주요 흐름을 요약했으나, 시행 시점(1월 vs 3월)이 혼재되어 정확성 저하. 양도세 중과 배제 종료(5월) 등 구체적 수치 누락.
+
+**Perplexity (5점)**: 소스 7개. 3월은 "준비 국면"임을 정확히 구분하여 가장 정확한 맥락 제공. 양도세 종료(5월), 부동산감독원 설립, 청년 월세 지원 등 구체적 항목과 날짜를 인라인 인용과 함께 제시. 정치적 맥락(이재명 vs 국민의힘)까지 포함.
+
+**Gemini (4점)**: 소스 5개. 매매계약 신고 증빙 의무화, 자금조달계획서 개정, 월세 세액공제 확대 등 항목별 정리. "1월부터 시행" 등 시점 표기 포함. 부동산감독원 설립·정치적 맥락 누락. 소스 URL이 Vertex AI redirect.
+
+</details>
+
+<details>
+<summary>Q2: "네이버 하이퍼클로바X 최신 업데이트" — WS 3 / PX 5 / GM 4</summary>
+
+**WebSearch (3점)**: 소스 9개. SEED 32B THINK, SEED 8B Omni 공개, 부산시 공공 서비스 적용 등 포함. 그러나 **클로바X·큐 서비스 2026.04.09 종료**라는 핵심 전략 전환 정보 누락.
+
+**Perplexity (5점)**: 소스 9개. 파라미터 40% 수준, 비용 50% 개선, MMLU 79.6% 등 구체적 수치 제공. 클로바X·큐 종료 및 AI탭 전략 전환을 명확히 포함. 멀티모달 강화 내용도 포함.
+
+**Gemini (4점)**: 소스 8개. AMD GPU 인프라 협력(당일 뉴스) 포함이 인상적. 클로바X 종료, SEED 오픈소스 모델 설명 포함. 정량적 세부(파라미터 감소율, 비용 절감) 부족. Vertex AI redirect URL.
+
+</details>
+
+<details>
+<summary>Q3: "Claude 4 Opus vs GPT-5 benchmark" — WS 3 / PX 4 / GM 4</summary>
+
+**WebSearch (3점)**: 소스 10개. Claude Opus 4.6 vs GPT-5.4 비교로 버전이 쿼리와 불일치. SWE-Bench 80.8% vs 77.2% 등 수치 포함하나 출처 간 상충. 가격 정보($2.50/$15)가 공식 가격($15/$75)과 다름.
+
+**Perplexity (4점)**: 소스 7개. 도메인별 세분화 수치(AIME: 94.6% vs 75.5%, GPQA: 87.3% vs 79.6%) 제공. 개발자 벤치마크(리팩토링 4.9 vs 4.5)도 유용. GPT-5 가격 $1.25/M 표기가 GPT-4.1과 혼동 가능.
+
+**Gemini (4점)**: 소스 10개. anthropic.com 등 신뢰도 높은 출처. SWE-bench, GPQA Diamond, AIME, HLE, TAU-bench, MMMU 등 다양한 벤치마크 커버. 확정적 결론보다 유보적 서술.
+
+</details>
+
+<details>
+<summary>Q4: "Rust 2024 edition new features" — WS 3 / PX 5 / GM 5</summary>
+
+**WebSearch (3점)**: 소스 10개. rust-lang.org 블로그 등 권위 있는 출처 포함. async closures, unsafe 변경, Cargo 개선 언급하나 깊이 부족. `gen` 키워드, match ergonomics, RPIT lifetime capture 등 주요 변경사항 누락.
+
+**Perplexity (5점)**: 소스 8개. async closures, AsyncFn 트레이트, RPIT lifetime capture, temporary scope 단축, unsafe 강화, `gen` 키워드 예약, rustdoc 통합, Cargo rust-version resolver 등 빠짐없이 망라. 업그레이드 주의사항(lint 수정)까지 포함.
+
+**Gemini (5점)**: 소스 4개(모두 1차 출처). rust-lang.org 공식 블로그 직접 참조. RPIT, temporary scope, match ergonomics, unsafe(3가지 세부), async closures, `gen`, macro fragment specifier, never type fallback까지 상세. 표준 라이브러리 추가(Future/IntoFuture prelude)도 포함.
+
+</details>
+
+<details>
+<summary>Q5: "SpaceX Starship latest launch 2026" — WS 4 / PX 2 ✗ / GM 5</summary>
+
+**WebSearch (4점)**: 소스 10개. Starship V3(Flight 12), Raptor 3 엔진, 발사 일정(3월~4월), 높이 124.4m, 페이로드 100톤+, 2025.11 사고 지연 등 핵심 포함. "약 4주 후 발사" 표현의 시점 모호.
+
+**Perplexity (2점, 실패)**: 소스 7개. **"2026년 기준 Starship 발사가 없었다"고 단정**하며 Falcon 9 일정만 나열. Flight 12 정보를 놓치고 Starlab(2029)을 가장 이른 Starship 이벤트로 언급하는 명백한 오류.
+
+**Gemini (5점)**: 소스 3개. 발사 시기(2026년 4월 초), Flight 12, V3 특징(Raptor 3, Starlink V3 탑재), 테스트 목표(소프트 해상 착수), NASA Artemis 연계까지 가장 구체적이고 정확.
+
+</details>
+
+<details>
+<summary>Q6: "FastAPI 0.115 변경사항" — WS 4 / PX 1 ✗ / GM 5</summary>
+
+**WebSearch (4점)**: 소스 10개. traceback 버그, alias+alias_generator 버그, convert_underscores 버그 등 패치 위주 정리. 0.115.0 핵심 신기능(streaming JSON Lines, strict Content-Type, Python 3.13, fastapi-slim 폐기) 누락.
+
+**Perplexity (1점, 실패)**: 소스 8개(모두 무관). **"변경사항을 확인할 수 없다"**고 답변. ComfyUI 예시, AI 백엔드 트렌드, pip 설치 명령 나열. 한국어 쿼리 시 한국어 블로그 편향으로 공식 Release Notes 접근 실패.
+
+**Gemini (5점)**: 소스 4개. 공식 GitHub 릴리스 노트 기반. streaming JSON Lines, strict Content-Type 기본 활성화, Python 3.13 지원, fastapi-slim 폐기, 0.115.10 회귀 버그(422→200)까지 완전 커버.
+
+</details>
+
+<details>
+<summary>Q7: "한국 달 탐사선 다누리 최신 성과 2025" — WS 4 / PX 5 / GM 4</summary>
+
+**WebSearch (4점)**: 소스 10개. 동결궤도 진입(2025-09-24), 달 물 분포 지도, 임무 연장(2027년) 등 핵심 포함. 발사 3주년 공식 발표(2025-08-05), 논문 30편, 착륙 후보지 43곳 등 구체적 수치 누락.
+
+**Perplexity (5점)**: 소스 8개. 발사 3주년 기준, 달 전체 지도(세계 4번째), 착륙 후보지 고해상도 영상, 남·북극 영구음영지역 세계 최초 이미지, 동결궤도 전환, 논문 30편 이상. 탑재체별(LUTI, PolCam, KGRS, KMAG) 성과 구분. Hallucination 없음.
+
+**Gemini (4점)**: 소스 7개. 임무 연장, 동결궤도, 착륙 후보지, 섀도우캠 등 충실. 발사 3주년 맥락 누락, 착륙 후보지 수·논문 수치 일부 부정확.
+
+</details>
+
+<details>
+<summary>Q8: "Deno 2.0 vs Bun performance benchmark" — WS 3 / PX 5 / GM 4</summary>
+
+**WebSearch (3점)**: 소스 10개. Bun 52,000 rps 우위, Deno 안정성·보안 강점이라는 방향은 정확. 수치가 단편적(52,000 vs 22,000 rps 출처 불명확)이고 Bun 2.0 이후 최신 비교 부재.
+
+**Perplexity (5점)**: 소스 8개. HTTP 처리량(Bun 52,000–110,000 vs Deno 29,000–67,000), 동시 접속(100 concurrency: Bun 24,567 vs Deno 11,234), React SSR(Bun 68,000 vs Deno 29,000), 메모리 30% 절약. 14회 테스트 Bun 8승 Deno 5승. 비교표 형식으로 가독성 우수.
+
+**Gemini (4점)**: 소스 8개. Bun JavaScriptCore(Zig) 기반 우위, Next.js 레이턴시에서 Bun 열세 사례 등 균형. Deno 수치를 12,400 rps로 기술하여 Perplexity(22,000~67,000)와 불일치.
+
+</details>
+
+<details>
+<summary>Q9: "Quantum JS framework v3.0 release date" (Hallucination 테스트) — WS 3 / PX 4 / GM 3</summary>
+
+**WebSearch (3점)**: 소스 10개. Hallucination 없음. "specific information을 찾을 수 없다"며 quantum-js npm, Q.js 등 관련 프로젝트 나열. 프레임워크 부존재를 명시적으로 선언하지는 않음.
+
+**Perplexity (4점)**: 소스 8개. Hallucination 없음. **"There is no Quantum JavaScript framework version 3.0"이라고 명확히 선언**. Photon Quantum 3.0(게임 SDK), Quantum Manager 3.0.0(Joomla) 등 혼동 가능한 관련 결과를 구분. 가장 정확한 응답.
+
+**Gemini (3점)**: 소스 4개. Hallucination 없음. "publicly available information이 없다"면서 Quantum.js, Q.js 등 나열. Photon Quantum 3.0.10이 "JS 프레임워크가 아님"을 구분. 부존재 명시적 선언 부재.
+
+</details>
+
+<details>
+<summary>Q10: "Log4Shell CVE-2021-44228 mitigation 2025" — WS 3 / PX 4 / GM 5</summary>
+
+**WebSearch (3점)**: 소스 10개. 패치 버전, JVM 설정, JNDI 비활성화, 네트워크 차단 등 핵심 커버. 2021~2022년 초기 대응 수준에 머무름. SBOM, 공급망 보안, 컨테이너 대응 등 최신 권고 부재.
+
+**Perplexity (4점)**: 소스 9개. Log4j 버전별 대응(2.10+ vs 2.7~2.14.1) 및 구체적 zip 명령어 제시. WAF/IPS, egress 차단, 공격 시뮬레이션 검증 등 심층 방어. CVE-2021-45046, 45105 등 연관 CVE 모니터링 필요성 명시.
+
+**Gemini (5점)**: 소스 11개. Java 버전별 권장 Log4j 버전 세분화(Java 6/7/8+), SBOM 관리, 컨테이너 보안, 네트워크 세그멘테이션, WAF 설정까지 가장 포괄적. CISA, Red Hat, CyberArk 등 신뢰 기관 출처.
+
+</details>
+
 ## 한계 (Limitations)
 
 - **표본 크기**: 10개 쿼리(한국어 4개, 영어 6개)로 경향 파악은 가능하나 통계적 일반화에는 한계
