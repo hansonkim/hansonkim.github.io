@@ -59,14 +59,14 @@
   </script>
   
 </head>
-<body class="font-sans leading-relaxed text-gray-800 min-h-screen">
+<body class="font-sans leading-relaxed min-h-screen" style="color: var(--text-dark)">
   <a href="#main-content" class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[200] focus:bg-white focus:px-4 focus:py-2 focus:rounded-lg focus:shadow-lg focus:text-indigo-600 focus:font-semibold">본문으로 건너뛰기</a>
-  <header class="bg-white px-6 md:px-8 py-4 md:py-6 -mx-5 -mt-5 mb-10 shadow-sm backdrop-blur-md border-b border-gray-200 sticky top-0 z-[100]">
+  <header class="px-6 md:px-8 py-4 md:py-6 -mx-5 -mt-5 mb-10 backdrop-blur-md sticky top-0 z-[100]" style="background: var(--bg-white); border-bottom: 1px solid var(--border-color); box-shadow: var(--shadow-sm)">
     <nav aria-label="메인 메뉴" class="flex justify-between items-center max-w-7xl mx-auto">
       <a href="/" class="logo text-2xl font-bold no-underline transition-transform duration-300 ease-in-out hover:scale-105">Hanson Kim</a>
       <ul class="list-none flex gap-4 md:gap-8">
-        <li><a href="/" class="no-underline text-gray-600 transition-all duration-300 ease-in-out font-medium relative hover:text-indigo-500">Home</a></li>
-        <li><a href="/blog/" class="no-underline text-gray-600 transition-all duration-300 ease-in-out font-medium relative hover:text-indigo-500">Blog</a></li>
+        <li><a href="/" class="no-underline transition-all duration-300 ease-in-out font-medium relative" style="color: var(--text-medium)">Home</a></li>
+        <li><a href="/blog/" class="no-underline transition-all duration-300 ease-in-out font-medium relative" style="color: var(--text-medium)">Blog</a></li>
         <li>
           <button class="search-trigger" aria-label="검색 열기" title="검색 (Ctrl+K)">
             <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
@@ -1956,7 +1956,7 @@ claude-flow agent run debugger &quot;Fix bug&quot; \
 
   </main>
 
-  <footer class="mt-20 px-5 py-10 bg-white border-t border-gray-200 text-center text-gray-500 text-sm relative">
+  <footer class="mt-20 px-5 py-10 text-center text-sm relative" style="background: var(--bg-white); border-top: 1px solid var(--border-color); color: var(--text-light)">
     <p>&copy; 2025 Hanson Kim. All rights reserved.</p>
   </footer>
   <script defer src="/js/tree-navigation.js?v=2"></script>
