@@ -21,7 +21,7 @@
     "title": "웹 검색 MCP 도구 비교: Perplexity vs Gemini Google Search vs WebSearch",
     "url": "/posts/search-mcp-comparison/",
     "description": "Claude Code에서 웹 검색이 필요할 때, 어떤 도구를 써야 할까요? 내장 WebSearch 하나로 충분할까요?",
-    "fullContent": "웹 검색 MCP 도구 비교: Perplexity vs Gemini Google Search vs WebSearch 본문으로 건너뛰기 Hanson Kim Home Blog 웹 검색 MCP 도구 비교: Perplexity vs Gemini Google Search vs WebSearch 2026년 3월 17일 AI 개발도구 문서화 웹개발 웹 검색 MCP 도구 비교: Perplexity vs Gemini Google Search vs WebSearch 들어가며 Claude Code에서 웹 검색이 필요할 때, 어떤 도구를 써야 할까요? 내장 WebSearch 하나로 충분할까요? 이 글에서는 Claude Code에서 사용할 수 있는 3가지 웹 검색 도구를 실제 테스트하고, 속도·품질·용도별 최적 선택 가이드를 제시합니다. MCP란? **MCP(Model Context Protocol)**는 AI 모델이 외부 도구와 데이터 소스에 연결할 수 있게 해주는 표준 프로토콜입니다. Claude Cod"
+    "fullContent": "웹 검색 MCP 도구 비교: Perplexity vs Gemini Google Search vs WebSearch 본문으로 건너뛰기 Hanson Kim Home Blog 웹 검색 MCP 도구 비교: Perplexity vs Gemini Google Search vs WebSearch 2026년 3월 17일 AI 개발도구 문서화 웹개발 웹 검색 MCP 도구 비교: Perplexity vs Gemini Google Search vs WebSearch 들어가며 Claude Code에서 웹 검색이 필요할 때, 어떤 도구를 써야 할까요? 내장 WebSearch 하나로 충분할까요? 이 글에서는 Claude Code에서 사용할 수 있는 3가지 웹 검색 도구를 실제 테스트하고, 속도·품질·용도별 최적 선택 가이드를 제시합니다. 테스트 기준일 : 2025년 3월 (모델 버전: Perplexity sonar , Gemini gemini-2.5-flash-lite ) 모델 업데이트에 따라 결과가 달라질"
   },
   {
     "title": "Claude-Flow v2.7.0: 엔터프라이즈 AI 오케스트레이션 플랫폼",
@@ -390,6 +390,18 @@
     "fullContent": "Epic Sdk Integration 본문으로 건너뛰기 Hanson Kim Home Blog Epic Sdk Integration 2024년 12월 31일 Claude-Flow 문서 AI 에픽: Claude-Flow v3.0.0-alpha.130용 Claude Agent SDK 통합 🎯 에픽 개요 제목 Claude Agent SDK를 기반 레이어로 통합 - 커스텀 구현에서 SDK 프리미티브로 마이그레이션 설명 Claude Agent SDK(@anthropic-ai/claude-code)를 기반 레이어로 활용하도록 Claude-Flow를 리팩터링하여 재시도 로직, 아티팩트 관리, 체크포인트 시스템의 중복 커스텀 구현을 제거합니다. Claude-Flow를 SDK 위에서 구축되는 최고의 멀티 에이전트 오케스트레이션 레이어로 포지셔닝합니다. 가치 제안 &quot;Claude Agent SDK는 단일 에이전트를 탁월하게 다룹니다. Claude-Flow는 그들이 군집처럼 협력하도록 만듭니다."
   },
   {
+    "title": "DEEP REVIEW COMPREHENSIVE REPORT",
+    "url": "/posts/claude-flow-ko/ko-docs/reports/analysis/DEEP_REVIEW_COMPREHENSIVE_REPORT/",
+    "description": "이번 Deep Review는 agentic-flow 실행 계층이 새롭게 통합된 claude-flow v2.6.0-alpha.2의 모든 역량과 기능을 분석합니다. 이 검토는 10개의 주요 역량 영역과 33개의 수정된 파일을 포괄적으로 테스트하고 검증합니다.",
+    "fullContent": "DEEP REVIEW COMPREHENSIVE REPORT 본문으로 건너뛰기 Hanson Kim Home Blog DEEP REVIEW COMPREHENSIVE REPORT 2024년 12월 31일 Claude-Flow 문서 AI Deep Review: 종합 역량 및 기능 보고서 Agentic-Flow 통합이 적용된 Claude-Flow v2.6.0-alpha.2 검토 날짜: 2025-10-11 버전: v2.6.0-alpha.2 검토자: Claude Code Deep Review System 상태: ✅ 프로덕션 배포 준비 완료 (PRODUCTION READY) Executive Summary 이번 Deep Review는 agentic-flow 실행 계층이 새롭게 통합된 claude-flow v2.6.0-alpha.2의 모든 역량과 기능을 분석합니다. 이 검토는 10개의 주요 역량 영역과 33개의 수정된 파일을 포괄적으로 테스트하고 검증합니다. 종합 평가: ✅ PRODUCTION RE"
+  },
+  {
+    "title": "REGRESSION ANALYSIS REPORT",
+    "url": "/posts/claude-flow-ko/ko-docs/reports/analysis/REGRESSION-ANALYSIS-REPORT/",
+    "description": "✅ 회귀 현상이 발견되지 않았습니다 - Agent Booster 통합이 기존 기능에 영향을 주지 않고 완전히 동작합니다.",
+    "fullContent": "REGRESSION ANALYSIS REPORT 본문으로 건너뛰기 Hanson Kim Home Blog REGRESSION ANALYSIS REPORT 2024년 12월 31일 Claude-Flow 문서 AI 회귀 분석 보고서 - Agent Booster 통합 날짜 : 2025-10-12 버전 : v2.6.0-alpha.2 브랜치 : feature/agentic-flow-integration 커밋 : fefad7c5c9234eb605feb716386bb6a45b017a49 요약 ✅ 회귀 현상이 발견되지 않았습니다 - Agent Booster 통합이 기존 기능에 영향을 주지 않고 완전히 동작합니다. 통합 상태 : 프로덕션 배포 준비 완료 테스트 커버리지 : 포괄적 성능 : 검증 완료 (352배 속도 향상 주장 확인됨) 테스트 방법론 9개 중요 영역에 대해 체계적인 회귀 테스트를 수행했습니다: 테스트 스위트 실행 핵심 agent 명령 신규 Agent Booster 기능 빌드 프로세스 S"
+  },
+  {
     "title": "MIGRATION V1.5.13",
     "url": "/posts/claude-flow-ko/ko-docs/integrations/reasoningbank/MIGRATION-v1.5.13/",
     "description": "Claude-Flow는 ReasoningBank에 대해 이전 WASM 어댑터 방식을 대체하여 Node.js backend와 함께 agentic-flow@1.5.13을 사용하도록 업데이트되었습니다.",
@@ -484,18 +496,6 @@
     "url": "/posts/claude-flow-ko/ko-docs/integrations/reasoningbank/REASONINGBANK_INTEGRATION_COMPLETE/",
     "description": "agentic-flow v1.4.11의 ReasoningBank가 이제 claude-flow에 완전히 통합되어, 경험 기반 학습을 통해 에이전트 작업 성공률을 23%에서 98%까지 끌어올리는 클로즈드 루프 메모리 시스템을 제공합니다.",
     "fullContent": "REASONINGBANK INTEGRATION COMPLETE 본문으로 건너뛰기 Hanson Kim Home Blog REASONINGBANK INTEGRATION COMPLETE 2024년 12월 31일 Claude-Flow 문서 AI ReasoningBank 통합 - 완료 ✅ Status : ✅ PRODUCTION READY Date : 2025-10-11 Version : v2.6.0-alpha.2 Integration Level : Full CLI + SDK 🎉 통합 요약 agentic-flow v1.4.11의 ReasoningBank가 이제 claude-flow에 완전히 통합되어, 경험 기반 학습을 통해 에이전트 작업 성공률을 23%에서 98%까지 끌어올리는 클로즈드 루프 메모리 시스템을 제공합니다. 완료된 항목 ✅ 1단계: 의존성 관리 agentic-flow를 v1.4.6 → v1.4.11로 업데이트했습니다 ReasoningBank 버그 수정 사항을 검증했습니다(라우터가"
-  },
-  {
-    "title": "DEEP REVIEW COMPREHENSIVE REPORT",
-    "url": "/posts/claude-flow-ko/ko-docs/reports/analysis/DEEP_REVIEW_COMPREHENSIVE_REPORT/",
-    "description": "이번 Deep Review는 agentic-flow 실행 계층이 새롭게 통합된 claude-flow v2.6.0-alpha.2의 모든 역량과 기능을 분석합니다. 이 검토는 10개의 주요 역량 영역과 33개의 수정된 파일을 포괄적으로 테스트하고 검증합니다.",
-    "fullContent": "DEEP REVIEW COMPREHENSIVE REPORT 본문으로 건너뛰기 Hanson Kim Home Blog DEEP REVIEW COMPREHENSIVE REPORT 2024년 12월 31일 Claude-Flow 문서 AI Deep Review: 종합 역량 및 기능 보고서 Agentic-Flow 통합이 적용된 Claude-Flow v2.6.0-alpha.2 검토 날짜: 2025-10-11 버전: v2.6.0-alpha.2 검토자: Claude Code Deep Review System 상태: ✅ 프로덕션 배포 준비 완료 (PRODUCTION READY) Executive Summary 이번 Deep Review는 agentic-flow 실행 계층이 새롭게 통합된 claude-flow v2.6.0-alpha.2의 모든 역량과 기능을 분석합니다. 이 검토는 10개의 주요 역량 영역과 33개의 수정된 파일을 포괄적으로 테스트하고 검증합니다. 종합 평가: ✅ PRODUCTION RE"
-  },
-  {
-    "title": "REGRESSION ANALYSIS REPORT",
-    "url": "/posts/claude-flow-ko/ko-docs/reports/analysis/REGRESSION-ANALYSIS-REPORT/",
-    "description": "✅ 회귀 현상이 발견되지 않았습니다 - Agent Booster 통합이 기존 기능에 영향을 주지 않고 완전히 동작합니다.",
-    "fullContent": "REGRESSION ANALYSIS REPORT 본문으로 건너뛰기 Hanson Kim Home Blog REGRESSION ANALYSIS REPORT 2024년 12월 31일 Claude-Flow 문서 AI 회귀 분석 보고서 - Agent Booster 통합 날짜 : 2025-10-12 버전 : v2.6.0-alpha.2 브랜치 : feature/agentic-flow-integration 커밋 : fefad7c5c9234eb605feb716386bb6a45b017a49 요약 ✅ 회귀 현상이 발견되지 않았습니다 - Agent Booster 통합이 기존 기능에 영향을 주지 않고 완전히 동작합니다. 통합 상태 : 프로덕션 배포 준비 완료 테스트 커버리지 : 포괄적 성능 : 검증 완료 (352배 속도 향상 주장 확인됨) 테스트 방법론 9개 중요 영역에 대해 체계적인 회귀 테스트를 수행했습니다: 테스트 스위트 실행 핵심 agent 명령 신규 Agent Booster 기능 빌드 프로세스 S"
   },
   {
     "title": "COMMIT SUMMARY",
