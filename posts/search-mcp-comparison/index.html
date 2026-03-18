@@ -491,19 +491,31 @@
 </tbody>
 </table>
 <h3>10개 쿼리별 품질 점수</h3>
-<p><img src="images/chart1_query_scores.png" alt="10개 쿼리별 품질 점수 비교"></p>
-<blockquote>
-<p>파랑: WebSearch / 주황: Perplexity / 초록: Gemini</p>
-</blockquote>
+<p><img src="images/chart1_ws.png" alt="WebSearch 품질 점수">
+<img src="images/chart1_px.png" alt="Perplexity 품질 점수">
+<img src="images/chart1_gm.png" alt="Gemini 품질 점수"></p>
 <details>
 <summary>Mermaid 소스 코드</summary>
-<pre><code class="language-mermaid">xychart-beta
-    title &quot;10개 쿼리별 품질 점수 비교&quot;
+<pre><code class="language-mermaid">%% WebSearch (파랑 #4A90D9)
+xychart-beta
+    title &quot;WebSearch 품질 점수 (평균 3.5)&quot;
     x-axis [&quot;Q1&quot;, &quot;Q2&quot;, &quot;Q3&quot;, &quot;Q4&quot;, &quot;Q5&quot;, &quot;Q6&quot;, &quot;Q7&quot;, &quot;Q8&quot;, &quot;Q9&quot;, &quot;Q10&quot;]
-    y-axis &quot;품질 점수 (5점 만점)&quot; 0 --&gt; 5
-    line &quot;WebSearch&quot; [3, 3, 3, 4, 4, 4, 3, 3, 4, 4]
-    line &quot;Perplexity&quot; [5, 4, 4, 3, 2, 1, 5, 5, 3, 5]
-    line &quot;Gemini&quot; [4, 5, 4, 5, 4, 5, 4, 4, 2, 5]
+    y-axis &quot;점수&quot; 0 --&gt; 5
+    bar [3, 3, 3, 4, 4, 4, 3, 3, 4, 4]
+
+%% Perplexity (주황 #E8854A)
+xychart-beta
+    title &quot;Perplexity 품질 점수 (평균 3.7)&quot;
+    x-axis [&quot;Q1&quot;, &quot;Q2&quot;, &quot;Q3&quot;, &quot;Q4&quot;, &quot;Q5&quot;, &quot;Q6&quot;, &quot;Q7&quot;, &quot;Q8&quot;, &quot;Q9&quot;, &quot;Q10&quot;]
+    y-axis &quot;점수&quot; 0 --&gt; 5
+    bar [5, 4, 4, 3, 2, 1, 5, 5, 3, 5]
+
+%% Gemini (초록 #5BB55B)
+xychart-beta
+    title &quot;Gemini 품질 점수 (평균 4.2)&quot;
+    x-axis [&quot;Q1&quot;, &quot;Q2&quot;, &quot;Q3&quot;, &quot;Q4&quot;, &quot;Q5&quot;, &quot;Q6&quot;, &quot;Q7&quot;, &quot;Q8&quot;, &quot;Q9&quot;, &quot;Q10&quot;]
+    y-axis &quot;점수&quot; 0 --&gt; 5
+    bar [4, 5, 4, 5, 4, 5, 4, 4, 2, 5]
 </code></pre>
 </details>
 <table>
