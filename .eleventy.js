@@ -239,12 +239,15 @@ module.exports = function(eleventyConfig) {
         return `href="${currentDir}/${path}/"`;
       });
 
-      // 2. Convert ../path/file.md links (go up one directory)
-      content = content.replace(/href="\.\.\/([^"]+)\.md"/g, (match, path) => {
-        const parentParts = currentDir.split('/').filter(p => p);
-        parentParts.pop(); // Go up one level
-        const parentDir = '/' + parentParts.join('/');
-        return `href="${parentDir}/${path}/"`;
+      // 2. Convert ../ paths (single or multiple levels)
+      content = content.replace(/href="((?:\.\.\/)+)([^"]+)\.md"/g, (match, dots, filePath) => {
+        const levels = dots.split('../').length - 1;
+        const parts = currentDir.split('/').filter(p => p);
+        for (let i = 0; i < levels; i++) {
+          parts.pop();
+        }
+        const parentDir = '/' + parts.join('/');
+        return `href="${parentDir}/${filePath}/"`;
       });
 
       // 3. Convert relative paths like "subdir/file.md" (no ./ or ../)
