@@ -168,9 +168,9 @@ r/programming 최근 포스트 5개를 선정하여 각각 검색:
 
 ### 10개 쿼리별 품질 점수
 
-![WebSearch 품질 점수](images/search-mcp-comparison/chart1_ws.png)
-![Perplexity 품질 점수](images/search-mcp-comparison/chart1_px.png)
-![Gemini 품질 점수](images/search-mcp-comparison/chart1_gm.png)
+![WebSearch 품질 점수](/images/search-mcp-comparison/chart1_ws.png)
+![Perplexity 품질 점수](/images/search-mcp-comparison/chart1_px.png)
+![Gemini 품질 점수](/images/search-mcp-comparison/chart1_gm.png)
 
 <details>
 <summary>Mermaid 소스 코드</summary>
@@ -218,9 +218,9 @@ xychart-beta
 
 ### 카테고리별 평균 품질
 
-![WebSearch 카테고리별 평균](images/search-mcp-comparison/chart2_ws.png)
-![Perplexity 카테고리별 평균](images/search-mcp-comparison/chart2_px.png)
-![Gemini 카테고리별 평균](images/search-mcp-comparison/chart2_gm.png)
+![WebSearch 카테고리별 평균](/images/search-mcp-comparison/chart2_ws.png)
+![Perplexity 카테고리별 평균](/images/search-mcp-comparison/chart2_px.png)
+![Gemini 카테고리별 평균](/images/search-mcp-comparison/chart2_gm.png)
 
 <details>
 <summary>Mermaid 소스 코드</summary>
@@ -261,7 +261,7 @@ xychart-beta
 
 ### 실패 및 오류 케이스 (확장)
 
-![도구별 실패 건수](images/search-mcp-comparison/chart3_failures.png)
+![도구별 실패 건수](/images/search-mcp-comparison/chart3_failures.png)
 
 <details>
 <summary>Mermaid 소스 코드</summary>
