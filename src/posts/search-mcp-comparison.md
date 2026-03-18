@@ -168,21 +168,34 @@ r/programming 최근 포스트 5개를 선정하여 각각 검색:
 
 ### 10개 쿼리별 품질 점수
 
-![10개 쿼리별 품질 점수 비교](images/chart1_query_scores.png)
-
-> 파랑: WebSearch / 주황: Perplexity / 초록: Gemini
+![WebSearch 품질 점수](images/chart1_ws.png)
+![Perplexity 품질 점수](images/chart1_px.png)
+![Gemini 품질 점수](images/chart1_gm.png)
 
 <details>
 <summary>Mermaid 소스 코드</summary>
 
 ```mermaid
+%% WebSearch (파랑 #4A90D9)
 xychart-beta
-    title "10개 쿼리별 품질 점수 비교"
+    title "WebSearch 품질 점수 (평균 3.5)"
     x-axis ["Q1", "Q2", "Q3", "Q4", "Q5", "Q6", "Q7", "Q8", "Q9", "Q10"]
-    y-axis "품질 점수 (5점 만점)" 0 --> 5
-    line "WebSearch" [3, 3, 3, 4, 4, 4, 3, 3, 4, 4]
-    line "Perplexity" [5, 4, 4, 3, 2, 1, 5, 5, 3, 5]
-    line "Gemini" [4, 5, 4, 5, 4, 5, 4, 4, 2, 5]
+    y-axis "점수" 0 --> 5
+    bar [3, 3, 3, 4, 4, 4, 3, 3, 4, 4]
+
+%% Perplexity (주황 #E8854A)
+xychart-beta
+    title "Perplexity 품질 점수 (평균 3.7)"
+    x-axis ["Q1", "Q2", "Q3", "Q4", "Q5", "Q6", "Q7", "Q8", "Q9", "Q10"]
+    y-axis "점수" 0 --> 5
+    bar [5, 4, 4, 3, 2, 1, 5, 5, 3, 5]
+
+%% Gemini (초록 #5BB55B)
+xychart-beta
+    title "Gemini 품질 점수 (평균 4.2)"
+    x-axis ["Q1", "Q2", "Q3", "Q4", "Q5", "Q6", "Q7", "Q8", "Q9", "Q10"]
+    y-axis "점수" 0 --> 5
+    bar [4, 5, 4, 5, 4, 5, 4, 4, 2, 5]
 ```
 
 </details>
