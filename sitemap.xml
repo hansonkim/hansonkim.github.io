@@ -7,18 +7,6 @@
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://hansonkim.github.io/posts/2025-10-15-claude-flow-intro/</loc>
-    <lastmod>2025-10-15</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://hansonkim.github.io/posts/claude-code-hooks-blog-automation/</loc>
-    <lastmod>2025-10-15</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
     <loc>https://hansonkim.github.io/posts/deepseek_ocr_blog/</loc>
     <lastmod>2025-10-20</lastmod>
     <changefreq>weekly</changefreq>
@@ -32,6 +20,12 @@
   </url>
   <url>
     <loc>https://hansonkim.github.io/posts/search-mcp-comparison/</loc>
+    <lastmod>2026-03-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://hansonkim.github.io/posts/claude-code-hooks-blog-automation/</loc>
     <lastmod>2026-03-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
@@ -625,7 +619,7 @@
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://hansonkim.github.io/tags/ai/</loc>
+    <loc>https://hansonkim.github.io/tags/claude-code/</loc>
     <lastmod>2026-03-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>

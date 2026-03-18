@@ -37,7 +37,7 @@
   <article class="post flex-1 min-w-0 max-w-4xl mt-0">
     <header class="post-header mb-10 pb-5 border-b-2 border-gray-200">
       <h1 class="text-3xl md:text-4xl mb-4 text-gray-800 font-extrabold leading-tight">Claude Code Hooks를 활용한 블로그 자동 배포 시스템</h1>
-      <time datetime="2025년 10월 15일" class="text-gray-500 text-sm inline-flex items-center font-medium">2025년 10월 15일</time>
+      <time datetime="2026년 3월 17일" class="text-gray-500 text-sm inline-flex items-center font-medium">2026년 3월 17일</time>
       
       <div class="tags mt-4 flex gap-2.5 flex-wrap">
         
@@ -71,7 +71,7 @@
 <p>블로그 포스트를 작성할 때마다 반복되는 작업들이 있습니다. Front matter 추가, 파일 복사, Git commit과 push... 이런 작업들을 자동화할 수 있다면 얼마나 좋을까요? Claude Code의 Hooks 시스템을 활용하면 이 모든 과정을 완전히 자동화할 수 있습니다.</p>
 <p>이 글에서는 실제로 구현한 블로그 자동 배포 시스템을 소개합니다. Markdown 파일을 저장하는 순간, Front matter 추가부터 GitHub Pages 배포까지 모든 과정이 자동으로 진행됩니다.</p>
 <p><strong>📦 전체 소스 코드는 GitHub에 공개되어 있습니다:</strong>
-🔗 <strong><a href="https://github.com/hansonkim/claude-code-blog-hook">https://github.com/hansonkim/claude-code-blog-hook</a></strong></p>
+🔗 <strong>[https://github.com/{user name}kim/claude-code-blog-hook](https://github.com/{user name}kim/claude-code-blog-hook)</strong></p>
 <h2>시스템 아키텍처</h2>
 <h3>워크플로우</h3>
 <pre><code>1. Markdown 파일 작성/수정
@@ -91,7 +91,7 @@
 8. GitHub Pages 배포
 </code></pre>
 <h3>디렉토리 구조</h3>
-<pre><code>/Users/hanson/blogs/              # 블로그 작성 디렉토리
+<pre><code>/Users/{user name}/blogs/              # 블로그 작성 디렉토리
 ├── .hooks/
 │   ├── post-write-hook.js        # Hook 스크립트
 │   └── README.md                 # 문서
@@ -100,7 +100,7 @@
 ├── CLAUDE.md                     # 설정 파일
 └── *.md                          # 원본 포스트
 
-~/workspace/hansonkim.github.io/  # GitHub Pages 저장소
+~/workspace/{user name}kim.github.io/  # GitHub Pages 저장소
 └── src/posts/                    # 배포 대상
     └── *.md                      # 최종 파일
 </code></pre>
@@ -198,15 +198,15 @@ ${tags.map(tag =&gt; `  - ${tag}`).join('\n')}
 <h3>3. Claude Code 설정</h3>
 <p>Hook을 Claude Code에 등록합니다:</p>
 <p><strong>방법 1: 설정 파일 편집</strong></p>
-<p><code>~/.claude-code/config.json</code>:</p>
+<p><code>~/.config/claude-code/config.json</code>:</p>
 <pre><code class="language-json">{
   &quot;hooks&quot;: {
-    &quot;post-write&quot;: &quot;/Users/hanson/blogs/.hooks/post-write-hook.js&quot;
+    &quot;post-write&quot;: &quot;/Users/{user name}/blogs/.hooks/post-write-hook.js&quot;
   }
 }
 </code></pre>
 <p><strong>방법 2: CLI 명령</strong></p>
-<pre><code class="language-bash">claude-code config set hooks.post-write &quot;/Users/hanson/blogs/.hooks/post-write-hook.js&quot;
+<pre><code class="language-bash">claude-code config set hooks.post-write &quot;/Users/{user name}/blogs/.hooks/post-write-hook.js&quot;
 </code></pre>
 <h2>사용 예시</h2>
 <h3>자동 실행</h3>
@@ -217,7 +217,7 @@ Excluded directories: .hooks, .obsidian, .claude-flow, _site
 
 Processing: my-new-post.md
   → Formatting: my-new-post.md
-  → Saved to: /Users/hanson/blogs/_site/my-new-post.md
+  → Saved to: /Users/{user name}/blogs/_site/my-new-post.md
 
 === Git Operations ===
   → Pulling latest changes...
@@ -235,7 +235,7 @@ Processing: my-new-post.md
 node .hooks/post-write-hook.js my-post.md
 
 # 디렉토리 전체
-node .hooks/post-write-hook.js /Users/hanson/blogs
+node .hooks/post-write-hook.js /Users/{user name}/blogs
 </code></pre>
 <h2>핵심 기능</h2>
 <h3>1. 지능형 제외 시스템</h3>
@@ -350,7 +350,7 @@ claude-code config get hooks.post-write
 ssh -T git@github.com
 
 # 수동 push 테스트
-cd ~/workspace/hansonkim.github.io
+cd ~/workspace/{user name}kim.github.io
 git push origin main
 </code></pre>
 <h3>Front matter 중복</h3>
@@ -369,10 +369,10 @@ rm -rf _site
 <h2>소스 코드</h2>
 <h3>GitHub Repository</h3>
 <p>전체 소스 코드는 GitHub에 공개되어 있습니다:</p>
-<p><strong>🔗 <a href="https://github.com/hansonkim/claude-code-blog-hook">https://github.com/hansonkim/claude-code-blog-hook</a></strong></p>
+<p><strong>🔗 [https://github.com/{user name}kim/claude-code-blog-hook](https://github.com/{user name}kim/claude-code-blog-hook)</strong></p>
 <h3>설치</h3>
 <pre><code class="language-bash"># Repository clone
-git clone https://github.com/hansonkim/claude-code-blog-hook.git
+git clone https://github.com/{user name}kim/claude-code-blog-hook.git
 
 # 블로그 디렉토리로 복사
 cp -r claude-code-blog-hook /path/to/your/blog/.hooks
@@ -401,7 +401,7 @@ claude-code config set hooks.post-write &quot;$(pwd)/post-write-hook.js&quot;
 <h3>관련 기술</h3>
 <ul>
 <li><strong>Claude Code</strong>: <a href="https://claude.com/claude-code">https://claude.com/claude-code</a></li>
-<li><strong>GitHub Repository</strong>: <a href="https://github.com/hansonkim/claude-code-blog-hook">https://github.com/hansonkim/claude-code-blog-hook</a></li>
+<li><strong>GitHub Repository</strong>: [https://github.com/{user name}kim/claude-code-blog-hook](https://github.com/{user name}kim/claude-code-blog-hook)</li>
 <li><strong>GitHub Pages</strong>: <a href="https://pages.github.com">https://pages.github.com</a></li>
 <li><strong>Eleventy</strong>: <a href="https://www.11ty.dev">https://www.11ty.dev</a></li>
 <li><strong>Node.js</strong>: <a href="https://nodejs.org">https://nodejs.org</a></li>
