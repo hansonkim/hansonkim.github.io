@@ -7,7 +7,7 @@ tags:
   - AI
   - 개발도구
   - 문서화
-  - 웹개발
+  - JavaScript
 ---
 
 # 웹 검색 MCP 도구 비교: Perplexity vs Gemini Google Search vs WebSearch
@@ -46,9 +46,9 @@ Claude Code에서 웹 검색이 필요할 때, 어떤 도구를 써야 할까요
 
 | 도구 | 유형 | 사용 모델 | 비용 |
 |---|---|---|---|
-| **WebSearch** | Claude Code 내장 | Anthropic 자체 검색 엔진 | 포함 |
-| **Perplexity MCP** | MCP 서버 | `sonar` (기본값, `PERPLEXITY_MODEL`로 변경 가능) | API 과금 |
-| **Gemini Google Search** | MCP 서버 | `gemini-2.5-flash-lite` + Google Search Grounding | API 과금 |
+| **WebSearch** | Claude Code 내장 | Anthropic 자체 검색 엔진 | Claude Code 구독에 포함 (Pro $20/월, Max $100~200/월) |
+| **Perplexity MCP** | MCP 서버 ([perplexity-mcp](https://www.npmjs.com/package/perplexity-mcp), 공식) | `sonar` (기본값, `PERPLEXITY_MODEL`로 변경 가능) | $5/1K 요청 (sonar 기준, [가격표](https://docs.perplexity.ai/guides/pricing)) |
+| **Gemini Google Search** | MCP 서버 ([mcp-gemini-google-search](https://www.npmjs.com/package/mcp-gemini-google-search), 커뮤니티) | `gemini-2.5-flash-lite` + Google Search Grounding | 무료 티어 있음, 유료 시 $0.01~0.02/1K 토큰 ([가격표](https://ai.google.dev/pricing)) |
 
 ## 테스트 설계
 
