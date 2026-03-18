@@ -649,25 +649,29 @@ xychart-beta
 </table>
 <h2>도구 선택 가이드</h2>
 <p>테스트 결과를 바탕으로 한 <strong>용도별 최적 선택</strong>:</p>
-<pre><code>┌────────────────────────────────────┐
-│       어떤 검색이 필요한가?           │
-└──────────┬─────────────────────────┘
-           │
-     ┌─────┼──────────┐
-     ▼     ▼          ▼
- 기술 심층  뉴스/한국어  빠른 개요
-     │     기술/보안       │
-     ▼     ▼              ▼
- Perplexity  Gemini    WebSearch
-     │     │
-     │     │ (실패 시)
-     ▼     ▼
- Gemini  WebSearch
-     │
-     │ (실패 시)
-     ▼
- WebSearch
+<p><img src="/images/search-mcp-comparison/chart_flowchart.png" alt="도구 선택 가이드 순서도"></p>
+<details>
+<summary>Mermaid 소스 코드</summary>
+<pre><code class="language-mermaid">flowchart TD
+    A[&quot;어떤 검색이 필요한가?&quot;] --&gt; B{&quot;기술 심층 조사\n(영어 스펙/코드/비교)&quot;}
+    A --&gt; C{&quot;한국어 시사\n과학 뉴스&quot;}
+    A --&gt; D{&quot;최신 뉴스\n한국어 기술/보안&quot;}
+    A --&gt; E{&quot;원문 URL\n빠른 개요&quot;}
+
+    B --&gt; B1[&quot;Perplexity\n(영어로 질의)&quot;]
+    B1 --&gt;|실패 시| B2[&quot;Gemini&quot;]
+    B2 --&gt;|실패 시| B3[&quot;WebSearch&quot;]
+
+    C --&gt; C1[&quot;Perplexity&quot;]
+    C1 --&gt;|실패 시| C2[&quot;Gemini&quot;]
+    C2 --&gt;|실패 시| C3[&quot;WebSearch&quot;]
+
+    D --&gt; D1[&quot;Gemini&quot;]
+    D1 --&gt;|실패 시| D2[&quot;WebSearch&quot;]
+
+    E --&gt; E1[&quot;WebSearch&quot;]
 </code></pre>
+</details>
 <table>
 <thead>
 <tr>
