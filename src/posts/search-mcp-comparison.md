@@ -168,7 +168,7 @@ r/programming 최근 포스트 5개를 선정하여 각각 검색:
 
 ### 10개 쿼리별 품질 점수
 
-![WebSearch 품질 점수](images/chart1_ws.png)
+![WebSearch 품질 점수](images/search-mcp-comparison/chart1_ws.png)
 ![Perplexity 품질 점수](images/chart1_px.png)
 ![Gemini 품질 점수](images/chart1_gm.png)
 
