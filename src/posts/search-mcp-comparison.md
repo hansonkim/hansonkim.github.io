@@ -1,0 +1,216 @@
+---
+title: "웹 검색 MCP 도구 비교: Perplexity vs Gemini Google Search vs WebSearch"
+description: "Claude Code에서 웹 검색이 필요할 때, 어떤 도구를 써야 할까요? 내장 WebSearch 하나로 충분할까요?"
+date: 2026-03-18T01:58:12+09:00
+tags:
+  - posts
+  - AI
+  - 개발도구
+  - 문서화
+  - 웹개발
+---
+
+# 웹 검색 MCP 도구 비교: Perplexity vs Gemini Google Search vs WebSearch
+
+## 들어가며
+
+Claude Code에서 웹 검색이 필요할 때, 어떤 도구를 써야 할까요? 내장 WebSearch 하나로 충분할까요?
+
+이 글에서는 Claude Code에서 사용할 수 있는 3가지 웹 검색 도구를 실제 테스트하고, 속도·품질·용도별 최적 선택 가이드를 제시합니다.
+
+## MCP란?
+
+**MCP(Model Context Protocol)**는 AI 모델이 외부 도구와 데이터 소스에 연결할 수 있게 해주는 표준 프로토콜입니다. Claude Code에서 MCP 서버를 등록하면, AI가 직접 외부 API를 호출하여 실시간 정보를 가져올 수 있습니다.
+
+```json
+// ~/.claude.json 에 MCP 서버 등록 예시
+{
+  "mcpServers": {
+    "perplexity": {
+      "command": "npx",
+      "args": ["-y", "perplexity-mcp"],
+      "env": {
+        "PERPLEXITY_API_KEY": "your-api-key"
+      }
+    }
+  }
+}
+```
+
+이번에 비교한 3가지 도구도 모두 이 MCP 구조 위에서 동작합니다.
+
+## 비교 대상
+
+| 도구 | 유형 | 백엔드 | 비용 |
+|---|---|---|---|
+| **WebSearch** | Claude Code 내장 | Anthropic 자체 | 포함 |
+| **Perplexity MCP** | MCP 서버 | Perplexity Sonar Pro | API 과금 |
+| **Gemini Google Search** | MCP 서버 | Gemini + Google Search Grounding | API 과금 |
+
+## 테스트 설계
+
+### 테스트 1: 시사 뉴스 검색
+
+**질의**: "어제 당정 검찰개혁 협의안 결과와 야당 반응 및 향후 일정"
+
+시의성이 중요한 정치 뉴스로, 최신 정보 반영 능력을 테스트합니다.
+
+### 테스트 2: 기술 제품 정보
+
+**질의**: "ChatGPT 5.4-mini"
+
+최신 출시된 AI 모델의 스펙·가격·기능 정보로, 기술 정확도를 테스트합니다.
+
+### 테스트 3: 개발자 커뮤니티 토픽 (5개)
+
+r/programming 최근 포스트 5개를 선정하여 각각 검색:
+1. Torturing Rustc by Emulating HKTs
+2. Finding a CPU Design Bug in the Xbox 360
+3. Java 26 is here
+4. What is Infrastructure from Code?
+5. The Paxos algorithm, when presented in plain English, is very simple
+
+## 테스트 결과
+
+### 응답 속도
+
+개별 도구 실행 시간을 측정한 결과:
+
+| 도구 | 단독 측정 | 5개 주제 평균 (추정) |
+|---|---|---|
+| **WebSearch** | 48.5s | ~9s |
+| **Perplexity** | 25.2s | ~19s |
+| **Gemini Google Search** | 30.2s | ~16s |
+
+> 단독 측정은 Claude Code 서브프로세스 전체 시간 (모델 응답 생성 포함), 5개 주제 평균은 병렬 실행 내 추정치
+
+단독 실행 시 Perplexity가 가장 빨랐지만, 병렬 환경에서는 WebSearch가 가장 먼저 응답을 반환하는 경향을 보였습니다.
+
+### 테스트 1 결과: 시사 뉴스
+
+| 항목 | WebSearch | Perplexity | Gemini |
+|---|---|---|---|
+| 협의안 상세도 | ★★★★☆ 구체적 조항 | ★★★★★ 가장 정리된 요약 | ★★★☆☆ 개괄적 서술 |
+| 야당 반응 | ★★☆☆☆ 피상적 | ★★☆☆☆ 미확인 고지 | ★★★★★ 필리버스터, 국조특위 |
+| 향후 일정 | ★★★☆☆ 본회의만 | ★★★★☆ 형소법 후속 논의 | ★★★★☆ 국조 협상 전망 |
+| 출처 수 | 10개 | 7개 | 10개 |
+
+**뉴스 검색 승자: Gemini** — 야당 반응, 시민단체 동향까지 가장 폭넓게 커버
+
+### 테스트 2 결과: 기술 제품 정보
+
+| 항목 | WebSearch | Perplexity | Gemini |
+|---|---|---|---|
+| 스펙 정확도 | ★★★★☆ | ★★★★★ API 스펙 최상세 | ★★★☆☆ |
+| 가격 정보 | ★★★★☆ 기본 가격 | ★★★★★ cached/regional까지 | ★☆☆☆☆ 없음 |
+| 기술 상세도 | ★★★★☆ | ★★★★★ cutoff, rate limit 등 | ★★★☆☆ |
+| 활용 시나리오 | ★★★☆☆ | ★★★☆☆ | ★★★★☆ use case 구체적 |
+
+**기술 스펙 승자: Perplexity** — context window, max output, rate limit, cached 가격까지 한 번에 제공
+
+### 테스트 3 결과: 개발자 토픽 5개 종합
+
+| 항목 | WebSearch | Perplexity | Gemini |
+|---|---|---|---|
+| 정보 정확도 | ★★★★☆ | ★★★★★ | ★★★★☆ |
+| 기술 상세도 | ★★★☆☆ | ★★★★★ | ★★★★☆ |
+| 출처 다양성 | ★★★★☆ | ★★★★☆ | ★★★★★ |
+| 원문 링크 발굴 | ★★★★★ | ★★★☆☆ | ★★★★☆ |
+| 구조화 (표/코드) | ★★☆☆☆ | ★★★★★ | ★★★☆☆ |
+
+주제별 차별화 포인트:
+
+| 주제 | WebSearch 강점 | Perplexity 강점 | Gemini 강점 |
+|---|---|---|---|
+| Rust HKTs | 원문 블로그+HN 링크 | 코드 예시 (Functor::fmap) | rusty-hkt crate 등 라이브러리 |
+| Xbox 360 CPU | Bruce Dawson 원문 링크 | MESI 프로토콜 위반 메커니즘 | 디버깅 어려움 관점 |
+| Java 26 | 출시일+JEP 목록 | JEP 전체 표 + AOT 42% 수치 | JVP 생태계 (타 도구 미수록) |
+| IfC | 구현체 6개 나열 | IaC vs IfC 5기준 비교표 | IaC 성숙도 비교 관점 |
+| Paxos | 원문 블로그 링크 | 2f+1 공식 + Phase 단계별 | Raft 비교 + 홀수노드 이유 |
+
+## 최종 비교 요약
+
+| 항목 | WebSearch | Perplexity | Gemini |
+|---|---|---|---|
+| 응답 속도 | ★★★★★ | ★★★☆☆ | ★★★★☆ |
+| 기술 상세도 | ★★★☆☆ | ★★★★★ | ★★★★☆ |
+| 뉴스/시사 | ★★★★☆ | ★★★☆☆ | ★★★★★ |
+| 출처 다양성 | ★★★★☆ | ★★★★☆ | ★★★★★ |
+| 원문 URL 발굴 | ★★★★★ | ★★★☆☆ | ★★★★☆ |
+| 구조화 품질 | ★★☆☆☆ | ★★★★★ | ★★★☆☆ |
+| 추가 비용 | 없음 | API 과금 | API 과금 |
+| **종합** | **★★★★☆** | **★★★★★** | **★★★★☆** |
+
+## 도구 선택 가이드
+
+각 도구는 명확한 강점 영역이 있습니다. 용도에 따라 최적의 도구를 선택하세요.
+
+```
+┌─────────────────────────────────┐
+│     어떤 검색이 필요한가?         │
+└──────────┬──────────────────────┘
+           │
+     ┌─────┴─────┐
+     ▼           ▼
+ 기술 심층 조사   최신 뉴스/폭넓은 수집   원문 URL/빠른 개요
+     │               │                      │
+     ▼               ▼                      ▼
+ Perplexity    Gemini Google Search      WebSearch
+     │               │
+     │ (실패 시)      │ (실패 시)
+     ▼               ▼
+ Gemini         WebSearch
+     │
+     │ (실패 시)
+     ▼
+ WebSearch
+```
+
+| 상황 | 1순위 | fallback |
+|---|---|---|
+| 기술 개념 심층 조사 (스펙, 코드, 비교 분석) | Perplexity | Gemini → WebSearch |
+| 최신 뉴스, 공식 발표, 다각도 정보 수집 | Gemini | WebSearch |
+| 원문 URL 탐색, 빠른 개요 | WebSearch | — |
+| 어떤 도구든 실패 시 최종 fallback | WebSearch | — |
+
+## Claude Code에서 설정하기
+
+### 1. Perplexity MCP 추가
+
+```bash
+claude mcp add perplexity \
+  --env PERPLEXITY_API_KEY="your-key" \
+  -- npx -y perplexity-mcp
+```
+
+제공 도구: `perplexity_search`, `perplexity_ask`, `perplexity_research`, `perplexity_reason`
+
+### 2. Gemini Google Search MCP 추가
+
+```bash
+claude mcp add gemini-google-search \
+  --env GEMINI_API_KEY="your-key" \
+  -- npx -y mcp-gemini-google-search
+```
+
+### 3. CLAUDE.md에 선택 원칙 반영
+
+```markdown
+### 웹 검색 도구 선택 원칙
+- **기술 심층 조사** → perplexity → gemini-google-search → WebSearch
+- **최신 뉴스/폭넓은 수집** → gemini-google-search → WebSearch
+- **원문 URL/빠른 개요** → WebSearch 내장
+- **최종 fallback** → WebSearch 내장
+```
+
+CLAUDE.md에 이 원칙을 명시하면, Claude Code가 자동으로 용도에 맞는 도구를 선택합니다.
+
+## 마치며
+
+하나의 검색 도구로 모든 상황을 커버하기는 어렵습니다. 세 도구는 각각 뚜렷한 강점이 있고, 상호 보완적입니다.
+
+- **Perplexity**: 여러 소스를 합성하여 코드 예시·표·수치까지 포함한 고품질 답변을 만들어냅니다. 기술 조사의 깊이가 압도적입니다.
+- **Gemini Google Search**: Google Search Grounding 기반으로 출처가 가장 다양하고, 뉴스·시사 분야에서 맥락 파악 능력이 뛰어납니다.
+- **WebSearch**: 추가 비용 없이 빠르게 원문 링크를 찾아주는 만능 fallback입니다.
+
+MCP의 진짜 가치는 "하나의 최강 도구"가 아니라, **용도에 맞는 도구를 자유롭게 조합할 수 있다**는 점에 있습니다. CLAUDE.md에 선택 원칙을 명시해두면, AI가 알아서 최적의 도구를 골라 씁니다.
