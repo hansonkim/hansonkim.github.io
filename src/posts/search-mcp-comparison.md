@@ -18,7 +18,7 @@ Claude Code에서 웹 검색이 필요할 때, 어떤 도구를 써야 할까요
 
 이 글에서는 Claude Code에서 사용할 수 있는 3가지 웹 검색 도구를 실제 테스트하고, 속도·품질·용도별 최적 선택 가이드를 제시합니다.
 
-> **테스트 기준일**: 2025년 3월 (모델 버전: Perplexity `sonar`, Gemini `gemini-2.5-flash-lite`)
+> **테스트 기준일**: 2026년 3월 (모델 버전: Perplexity `sonar`, Gemini `gemini-2.5-flash-lite`)
 > 모델 업데이트에 따라 결과가 달라질 수 있습니다.
 
 ## MCP란?
