@@ -208,6 +208,8 @@ r/programming 최근 포스트 5개를 선정하여 각각 검색:
 
 ### 1. Perplexity MCP 추가
 
+[Perplexity API 키 발급](https://docs.perplexity.ai/) → Settings > API Keys에서 생성
+
 ```bash
 claude mcp add perplexity \
   --env PERPLEXITY_API_KEY="your-key" \
@@ -218,11 +220,15 @@ claude mcp add perplexity \
 
 ### 2. Gemini Google Search MCP 추가
 
+[Google AI Studio API 키 발급](https://aistudio.google.com/apikey) → "Create API key"로 생성
+
 ```bash
 claude mcp add gemini-google-search \
   --env GEMINI_API_KEY="your-key" \
   -- npx -y mcp-gemini-google-search
 ```
+
+> 이 패키지(`mcp-gemini-google-search`)는 커뮤니티 개발 패키지입니다. Google 공식 MCP 서버가 아닌 점 참고하세요.
 
 ### 3. CLAUDE.md에 선택 원칙 반영
 
