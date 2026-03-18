@@ -218,8 +218,8 @@ xychart-beta
 
 ### 카테고리별 평균 품질
 
-![WebSearch 카테고리별 평균](images/chart2_ws.png)
-![Perplexity 카테고리별 평균](images/chart2_px.png)
+![WebSearch 카테고리별 평균](images/search-mcp-comparison/chart2_ws.png)
+![Perplexity 카테고리별 평균](images/search-mcp-comparison/chart2_px.png)
 ![Gemini 카테고리별 평균](images/chart2_gm.png)
 
 <details>
