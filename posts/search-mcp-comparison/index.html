@@ -557,16 +557,21 @@
 </table>
 <h2>Claude Code에서 설정하기</h2>
 <h3>1. Perplexity MCP 추가</h3>
+<p><a href="https://docs.perplexity.ai/">Perplexity API 키 발급</a> → Settings &gt; API Keys에서 생성</p>
 <pre><code class="language-bash">claude mcp add perplexity \
   --env PERPLEXITY_API_KEY=&quot;your-key&quot; \
   -- npx -y perplexity-mcp
 </code></pre>
 <p>제공 도구: <code>perplexity_search</code>, <code>perplexity_ask</code>, <code>perplexity_research</code>, <code>perplexity_reason</code></p>
 <h3>2. Gemini Google Search MCP 추가</h3>
+<p><a href="https://aistudio.google.com/apikey">Google AI Studio API 키 발급</a> → &quot;Create API key&quot;로 생성</p>
 <pre><code class="language-bash">claude mcp add gemini-google-search \
   --env GEMINI_API_KEY=&quot;your-key&quot; \
   -- npx -y mcp-gemini-google-search
 </code></pre>
+<blockquote>
+<p>이 패키지(<code>mcp-gemini-google-search</code>)는 커뮤니티 개발 패키지입니다. Google 공식 MCP 서버가 아닌 점 참고하세요.</p>
+</blockquote>
 <h3>3. CLAUDE.md에 선택 원칙 반영</h3>
 <pre><code class="language-markdown">### 웹 검색 도구 선택 원칙
 - **기술 심층 조사** → perplexity → gemini-google-search → WebSearch
