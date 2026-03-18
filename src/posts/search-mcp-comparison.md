@@ -147,17 +147,136 @@ r/programming 최근 포스트 5개를 선정하여 각각 검색:
 | IfC | 구현체 6개 나열 | IaC vs IfC 5기준 비교표 | IaC 성숙도 비교 관점 |
 | Paxos | 원문 블로그 링크 | 2f+1 공식 + Phase 단계별 | Raft 비교 + 홀수노드 이유 |
 
-### 실패 및 오류 케이스
+## 확장 테스트: 10개 쿼리 통계
 
-테스트 중 발견된 각 도구의 한계도 기록합니다:
+초기 테스트(7개 쿼리)의 표본 한계를 보완하기 위해, 추가로 10개 쿼리를 설계하여 3개 도구에 동일 조건으로 실행했습니다.
 
-| 도구 | 실패/오류 사례 |
-|---|---|
-| **WebSearch** | Java 26 검색 시 JEP 목록을 나열했으나, JEP 번호 일부가 실제와 다른 값을 반환 (hallucination 가능성) |
-| **Perplexity** | 시사 뉴스(테스트 1)에서 "확인되지 않은 정보" 고지를 반환하며 야당 반응을 거의 제공하지 못함. 한국어 소스 접근이 제한적 |
-| **Gemini** | ChatGPT 5.4-mini 가격 정보를 아예 반환하지 못함 (★☆☆☆☆). 기술 스펙 쿼리에서 수치 데이터가 약함 |
+### 확장 테스트 쿼리 목록
 
-> 완벽한 도구는 없습니다. 각 도구의 약점을 인지하고 fallback 전략을 세우는 것이 중요합니다.
+| # | 쿼리 | 카테고리 | 언어 |
+|---|---|---|---|
+| Q1 | 2026년 3월 한국 부동산 정책 변화 | 시사 | 한국어 |
+| Q2 | 네이버 하이퍼클로바X 최신 업데이트 | 기술 | 한국어 |
+| Q3 | Claude 4 Opus vs GPT-5 benchmark comparison | 기술 비교 | 영어 |
+| Q4 | Rust 2024 edition new features | 프로그래밍 | 영어 |
+| Q5 | SpaceX Starship latest launch 2026 | 뉴스 | 영어 |
+| Q6 | FastAPI 0.115 변경사항 | 개발 | 한국어 |
+| Q7 | 한국 달 탐사선 다누리 최신 성과 2025 | 과학 | 한국어 |
+| Q8 | Deno 2.0 vs Bun performance benchmark | 기술 비교 | 영어 |
+| Q9 | Quantum JavaScript framework v3.0 release date | **Hallucination 유도** | 영어 |
+| Q10 | Log4Shell CVE-2021-44228 mitigation best practices 2025 | 보안 | 영어 |
+
+### 10개 쿼리별 품질 점수
+
+![10개 쿼리별 품질 점수 비교](images/chart1_query_scores.png)
+
+> 파랑: WebSearch / 주황: Perplexity / 초록: Gemini
+
+<details>
+<summary>Mermaid 소스 코드</summary>
+
+```mermaid
+xychart-beta
+    title "10개 쿼리별 품질 점수 비교"
+    x-axis ["Q1", "Q2", "Q3", "Q4", "Q5", "Q6", "Q7", "Q8", "Q9", "Q10"]
+    y-axis "품질 점수 (5점 만점)" 0 --> 5
+    line "WebSearch" [3, 3, 3, 4, 4, 4, 3, 3, 4, 4]
+    line "Perplexity" [5, 4, 4, 3, 2, 1, 5, 5, 3, 5]
+    line "Gemini" [4, 5, 4, 5, 4, 5, 4, 4, 2, 5]
+```
+
+</details>
+
+| # | 쿼리 | WebSearch | Perplexity | Gemini |
+|---|---|---|---|---|
+| Q1 | 한국 부동산 정책 | ★★★ | ★★★★★ | ★★★★ |
+| Q2 | 하이퍼클로바X | ★★★ | ★★★★ | ★★★★★ |
+| Q3 | Claude vs GPT-5 | ★★★ | ★★★★ | ★★★★ |
+| Q4 | Rust 2024 | ★★★★ | ★★★ | ★★★★★ |
+| Q5 | SpaceX Starship | ★★★★ | ★★ | ★★★★ |
+| Q6 | FastAPI 0.115 | ★★★★ | ★ | ★★★★★ |
+| Q7 | 다누리 탐사선 | ★★★ | ★★★★★ | ★★★★ |
+| Q8 | Deno vs Bun | ★★★ | ★★★★★ | ★★★★ |
+| Q9 | 가짜 프레임워크 | ★★★★ | ★★★ | ★★ |
+| Q10 | Log4Shell 보안 | ★★★★ | ★★★★★ | ★★★★★ |
+| | **평균** | **3.5** | **3.7** | **4.2** |
+
+**핵심 발견**: WebSearch는 안정적이지만 평범(3~4점), Perplexity는 편차가 극단적(1점~5점), Gemini는 고르게 높은 점수(4~5점)를 기록했습니다.
+
+### 카테고리별 평균 품질
+
+![카테고리별 평균 품질 점수](images/chart2_category_avg.png)
+
+> 파랑: WebSearch / 주황: Perplexity / 초록: Gemini
+
+<details>
+<summary>Mermaid 소스 코드</summary>
+
+```mermaid
+xychart-beta
+    title "카테고리별 평균 품질 점수"
+    x-axis ["KR 시사/과학", "KR 기술/개발", "EN 기술", "EN 뉴스", "보안", "Hallucination"]
+    y-axis "평균 점수 (5점 만점)" 0 --> 5
+    line "WebSearch" [3.0, 3.5, 3.3, 4.0, 4.0, 4.0]
+    line "Perplexity" [5.0, 2.5, 4.0, 2.0, 5.0, 3.0]
+    line "Gemini" [4.0, 5.0, 4.3, 4.0, 5.0, 2.0]
+```
+
+</details>
+
+| 카테고리 | WebSearch | Perplexity | Gemini | 승자 |
+|---|---|---|---|---|
+| 한국어 시사/과학 (Q1, Q7) | 3.0 | **5.0** | 4.0 | Perplexity |
+| 한국어 기술/개발 (Q2, Q6) | 3.5 | 2.5 | **5.0** | Gemini |
+| 영어 기술 (Q3, Q4, Q8) | 3.3 | 4.0 | **4.3** | Gemini |
+| 영어 뉴스 (Q5) | **4.0** | 2.0 | **4.0** | WebSearch = Gemini |
+| 보안 (Q10) | 4.0 | **5.0** | **5.0** | Perplexity = Gemini |
+| Hallucination 방어 (Q9) | **4.0** | 3.0 | 2.0 | WebSearch |
+
+### 실패 및 오류 케이스 (확장)
+
+![도구별 실패 건수](images/chart3_failures.png)
+
+<details>
+<summary>Mermaid 소스 코드</summary>
+
+```mermaid
+xychart-beta
+    title "도구별 실패/오류 건수 (10개 쿼리 중)"
+    x-axis ["WebSearch", "Perplexity", "Gemini"]
+    y-axis "실패 건수" 0 --> 4
+    bar [0, 3, 1]
+```
+
+</details>
+
+**WebSearch — 실패 0건, 오류 0건**
+
+가장 안정적. 10개 쿼리 모두 관련 정보를 반환했습니다. 다만 깊이가 얕고 저품질 SEO 사이트 결과가 혼입되는 경향이 있습니다 (Q3에서 신뢰도 낮은 마케팅 블로그 다수 포함).
+
+**Perplexity — 실패 3건**
+
+| 쿼리 | 실패 유형 | 상세 |
+|---|---|---|
+| Q5 SpaceX | 정보 누락 | Starship Flight 12 준비 정보를 전혀 반영하지 못하고 "2026년 스타십 발사 일정이 없다"고 오답 |
+| Q6 FastAPI | 완전 실패 | "FastAPI 0.115 변경사항이 확인되지 않는다"고 답변. 공식 Release Notes 접근 실패. 한국어 쿼리 시 영문 공식 소스를 놓침 |
+| Q2 하이퍼클로바X | API 오류 | 1차 시도에서 `MCP error -32603` 발생 (쿼리에 "2026" 포함 시). 재시도 후 성공 |
+
+추가 주의사항:
+- Q4 Rust 2024에서 **사실 오류**: `array IntoIterator`(Rust 1.53에서 도입)와 `or-patterns`를 2024 Edition 신기능으로 잘못 소개
+- Q2에서 "엑사원 3.0 독자 모델 결합" 표현이 LG AI 연구원의 엑사원과 혼동 가능
+
+**Gemini — 실패 1건**
+
+| 쿼리 | 실패 유형 | 상세 |
+|---|---|---|
+| Q9 가짜 프레임워크 | **부분 Hallucination** | "Quantum.js released a new version on December 15, 2025"라는 검증 불가 날짜를 `iot-sdn.space`라는 불명확한 출처에서 인용. 존재하지 않는 프레임워크에 대해 실존하는 것처럼 정보 생성 |
+
+추가 주의사항:
+- Q3에서 "Claude Opus 4.6" 등 미확정 모델명 언급 (hallucination 경계)
+- 출처 URL이 일관되게 `vertexaisearch.cloud.google.com` 리다이렉트 형태로, 원본 URL 직접 확인이 어려움
+
+> **종합**: WebSearch는 "못하지만 틀리지 않는" 안전한 도구, Perplexity는 "잘하거나 실패하거나" 극단적, Gemini는 "대체로 잘하지만 가끔 만들어낸다"는 패턴을 보였습니다.
 
 ## 최종 비교 요약
 
@@ -169,8 +288,11 @@ r/programming 최근 포스트 5개를 선정하여 각각 검색:
 | 출처 다양성 | ★★★★☆ | ★★★★☆ | ★★★★★ |
 | 원문 URL 발굴 | ★★★★★ | ★★★☆☆ | ★★★★☆ |
 | 구조화 품질 | ★★☆☆☆ | ★★★★★ | ★★★☆☆ |
+| 안정성 (실패율) | ★★★★★ 0/10 | ★★☆☆☆ 3/10 | ★★★★☆ 1/10 |
+| Hallucination 방어 | ★★★★★ | ★★★★☆ | ★★★☆☆ |
+| 한국어 쿼리 | ★★★☆☆ | ★★★☆☆ | ★★★★★ |
 | 추가 비용 | 없음 | API 과금 | API 과금 |
-| **종합** | **★★★★☆** | **★★★★★** | **★★★★☆** |
+| **10개 쿼리 평균** | **3.5/5** | **3.7/5** | **4.2/5** |
 
 ## 도구 선택 가이드
 
