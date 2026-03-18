@@ -192,16 +192,16 @@
     "fullContent": "AGENTS 본문으로 건너뛰기 Hanson Kim Home Blog AGENTS 2025년 10월 14일 Claude-Flow 문서 AI 🤖 Claude-Flow Agent 참조 65개 이상의 특화된 AI Agent에 대한 완벽한 가이드 Claude-Flow는 엔터프라이즈급 소프트웨어 개발, 조정 및 자동화를 위해 설계된 특화된 AI agent의 포괄적인 생태계를 제공합니다. 각 agent는 특정 작업과 도메인에 최적화되어 지능형 swarm 조정 및 자율 workflow 실행을 가능하게 합니다. 📊 Agent 개요 카테고리 수량 설명 Core Development 5 필수 개발 agent (coder, planner, researcher, reviewer, tester) Swarm Coordination 5 Swarm topology 및 조정 관리 Consensus &amp; Fault Tolerance 7 분산 consensus 및 Byzantine fault tolerance"
   },
   {
-    "title": "SPARC",
-    "url": "/posts/claude-flow-ko/ko-docs/reference/SPARC/",
-    "description": "SPARC (Specification → Pseudocode → Architecture → Refinement → Code)는 다양한 소프트웨어 개발 작업을 위한 구조화된 모드 기반 개발 환경을 제공하는 체계적인 개발 방법론입니다. 이 종합적인 접근 방식은 모든 개발 단계에서 일관되고 고품질의 결과를 보장합니다.",
-    "fullContent": "SPARC 본문으로 건너뛰기 Hanson Kim Home Blog SPARC 2025년 10월 14일 Claude-Flow 문서 AI SPARC 방법론 문서 개요 SPARC (Specification → Pseudocode → Architecture → Refinement → Code)는 다양한 소프트웨어 개발 작업을 위한 구조화된 모드 기반 개발 환경을 제공하는 체계적인 개발 방법론입니다. 이 종합적인 접근 방식은 모든 개발 단계에서 일관되고 고품질의 결과를 보장합니다. 핵심 철학 SPARC는 개발을 임시적인 코딩에서 체계적인 엔지니어링으로 전환합니다: Specification 우선 : 구축하기 전에 무엇을 구축해야 하는지 정의 Pseudocode 계획 : 구현 전에 로직 사고 Architecture 설계 : 시스템 구조 및 관계 계획 Refinement 프로세스 : 설계 및 구현의 반복적 개선 Code 구현 : 명확한 방향 및 검증된 접근 방식으로 실행 주요 이점 체계적 접근 :"
-  },
-  {
     "title": "MCP TOOLS",
     "url": "/posts/claude-flow-ko/ko-docs/reference/MCP_TOOLS/",
     "description": "이 문서는 Claude Flow 생태계에서 사용 가능한 112개의 MCP (Model Context Protocol) tool에 대한 포괄적인 참조를 제공합니다.",
     "fullContent": "MCP TOOLS 본문으로 건너뛰기 Hanson Kim Home Blog MCP TOOLS 2025년 10월 14일 Claude-Flow 문서 AI Claude Flow MCP Tools 참조 이 문서는 Claude Flow 생태계에서 사용 가능한 112개의 MCP (Model Context Protocol) tool에 대한 포괄적인 참조를 제공합니다. 개요 Claude Flow는 두 가지 MCP tool 제공자와 통합됩니다: claude-flow tools : 87개의 핵심 기능 tool ruv-swarm tools : 25개의 고급 swarm intelligence tool 모든 tool은 다음 명명 규칙을 따릅니다: mcp__provider__tool_name Claude Flow Tools (87개 tool) claude-flow tool은 8개 카테고리로 구성되어 종합적인 개발, 조정 및 시스템 관리 기능을 제공합니다. Swarm Coordination (12개 tool) "
+  },
+  {
+    "title": "SPARC",
+    "url": "/posts/claude-flow-ko/ko-docs/reference/SPARC/",
+    "description": "SPARC (Specification → Pseudocode → Architecture → Refinement → Code)는 다양한 소프트웨어 개발 작업을 위한 구조화된 모드 기반 개발 환경을 제공하는 체계적인 개발 방법론입니다. 이 종합적인 접근 방식은 모든 개발 단계에서 일관되고 고품질의 결과를 보장합니다.",
+    "fullContent": "SPARC 본문으로 건너뛰기 Hanson Kim Home Blog SPARC 2025년 10월 14일 Claude-Flow 문서 AI SPARC 방법론 문서 개요 SPARC (Specification → Pseudocode → Architecture → Refinement → Code)는 다양한 소프트웨어 개발 작업을 위한 구조화된 모드 기반 개발 환경을 제공하는 체계적인 개발 방법론입니다. 이 종합적인 접근 방식은 모든 개발 단계에서 일관되고 고품질의 결과를 보장합니다. 핵심 철학 SPARC는 개발을 임시적인 코딩에서 체계적인 엔지니어링으로 전환합니다: Specification 우선 : 구축하기 전에 무엇을 구축해야 하는지 정의 Pseudocode 계획 : 구현 전에 로직 사고 Architecture 설계 : 시스템 구조 및 관계 계획 Refinement 프로세스 : 설계 및 구현의 반복적 개선 Code 구현 : 명확한 방향 및 검증된 접근 방식으로 실행 주요 이점 체계적 접근 :"
   },
   {
     "title": "SWARM",
