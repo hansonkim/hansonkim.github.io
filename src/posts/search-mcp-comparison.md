@@ -44,7 +44,7 @@ Claude Code에서 웹 검색이 필요할 때, 어떤 도구를 써야 할까요
 | 도구 | 유형 | 사용 모델 | 비용 |
 |---|---|---|---|
 | **WebSearch** | Claude Code 내장 | Anthropic 자체 검색 엔진 | 포함 |
-| **Perplexity MCP** | MCP 서버 | `sonar-pro` (Perplexity Sonar Pro) | API 과금 |
+| **Perplexity MCP** | MCP 서버 | `sonar` (기본값, `PERPLEXITY_MODEL`로 변경 가능) | API 과금 |
 | **Gemini Google Search** | MCP 서버 | `gemini-2.5-flash-lite` + Google Search Grounding | API 과금 |
 
 ## 테스트 설계
