@@ -242,26 +242,33 @@ Q6(FastAPI)에서 Perplexity가 완전 실패한 원인을 추적하기 위해, 
 
 테스트 결과를 바탕으로 한 **용도별 최적 선택**:
 
+![도구 선택 가이드 순서도](/images/search-mcp-comparison/chart_flowchart.png)
+
+<details>
+<summary>Mermaid 소스 코드</summary>
+
+```mermaid
+flowchart TD
+    A["어떤 검색이 필요한가?"] --> B{"기술 심층 조사\n(영어 스펙/코드/비교)"}
+    A --> C{"한국어 시사\n과학 뉴스"}
+    A --> D{"최신 뉴스\n한국어 기술/보안"}
+    A --> E{"원문 URL\n빠른 개요"}
+
+    B --> B1["Perplexity\n(영어로 질의)"]
+    B1 -->|실패 시| B2["Gemini"]
+    B2 -->|실패 시| B3["WebSearch"]
+
+    C --> C1["Perplexity"]
+    C1 -->|실패 시| C2["Gemini"]
+    C2 -->|실패 시| C3["WebSearch"]
+
+    D --> D1["Gemini"]
+    D1 -->|실패 시| D2["WebSearch"]
+
+    E --> E1["WebSearch"]
 ```
-┌────────────────────────────────────┐
-│       어떤 검색이 필요한가?           │
-└──────────┬─────────────────────────┘
-           │
-     ┌─────┼──────────┐
-     ▼     ▼          ▼
- 기술 심층  뉴스/한국어  빠른 개요
-     │     기술/보안       │
-     ▼     ▼              ▼
- Perplexity  Gemini    WebSearch
-     │     │
-     │     │ (실패 시)
-     ▼     ▼
- Gemini  WebSearch
-     │
-     │ (실패 시)
-     ▼
- WebSearch
-```
+
+</details>
 
 | 상황 | 1순위 | fallback | 근거 |
 |---|---|---|---|
