@@ -132,24 +132,6 @@
     "fullContent": "Training Pipeline Real Only 본문으로 건너뛰기 Hanson Kim Home Blog Training Pipeline Real Only 2024년 12월 31일 Claude-Flow 문서 AI Training Pipeline - 실제 코드 실행만 개요 Claude Flow Training Pipeline은 이제 실제 코드 실행만 독점적으로 사용 합니다. 시뮬레이션 모드는 없습니다 - 모든 training이 실제 코드 파일에서 실제 npm 테스트를 실행하여 진정한 학습과 개선을 제공합니다. 변경사항 이전 (v1 - 시뮬레이션 모드) Math.random() 을 사용하여 테스트 결과 시뮬레이션 실제 코드 실행 없음 현실을 반영하지 않는 인위적인 점수 무작위 데이터로부터 학습 현재 (v2 - 실제 실행만) 실제 코드로 실제 JavaScript 파일 생성 실제 npm install 및 npm test 명령어 실행 실제 Jest 테스트 실행 진정한 테스트 결과로부터 학습 "
   },
   {
-    "title": "USER GUIDE",
-    "url": "/posts/claude-flow-ko/ko-docs/guides/USER_GUIDE/",
-    "description": "Claude-Flow 종합 사용자 가이드에 오신 것을 환영합니다! 이 문서는 기본 설치부터 고급 swarm 협업까지, 플랫폼을 시작하고 마스터하는 데 필요한 모든 것을 제공합니다.",
-    "fullContent": "USER GUIDE 본문으로 건너뛰기 Hanson Kim Home Blog USER GUIDE 2024년 12월 31일 Claude-Flow 문서 AI 📖 Claude-Flow 사용자 가이드 Claude-Flow v2.0.0 완전 실용 가이드 Claude-Flow 종합 사용자 가이드에 오신 것을 환영합니다! 이 문서는 기본 설치부터 고급 swarm 협업까지, 플랫폼을 시작하고 마스터하는 데 필요한 모든 것을 제공합니다. 📋 목차 시작하기 기본 개념 일반적인 워크플로 단계별 튜토리얼 구성 가이드 문제 해결 성능 최적화 통합 FAQ 🚀 시작하기 사전 요구사항 Claude-Flow를 시작하기 전에 다음을 준비하세요: Node.js ≥ 20.0.0 ( 다운로드 ) npm ≥ 9.0.0 (Node.js와 함께 제공됨) Claude Code ( 설정 가이드 ) 선호하는 AI provider의 API 키 빠른 설치 # 옵션 1: npx 사용 (처음 사용자에게 권장) npx claude-fl"
-  },
-  {
-    "title": "Token Tracking Guide",
-    "url": "/posts/claude-flow-ko/ko-docs/guides/token-tracking-guide/",
-    "description": "Claude Flow는 이제 시뮬레이션 데이터가 아닌 실제 Claude API 사용량을 캡처하는 실제 token 추적 기능을 포함합니다. 이 가이드는 Claude Code CLI로 token 추적을 활성화하고 사용하는 방법을 보여줍니다.",
-    "fullContent": "Token Tracking Guide 본문으로 건너뛰기 Hanson Kim Home Blog Token Tracking Guide 2024년 12월 31일 Claude-Flow 문서 AI Claude Token 추적 가이드 개요 Claude Flow는 이제 시뮬레이션 데이터가 아닌 실제 Claude API 사용량을 캡처하는 실제 token 추적 기능을 포함합니다. 이 가이드는 Claude Code CLI로 token 추적을 활성화하고 사용하는 방법을 보여줍니다. 빠른 시작 단계 1: Telemetry 활성화 먼저 token 추적을 위한 telemetry를 활성화하세요: ./claude-flow analysis setup-telemetry 이 명령은 다음을 수행합니다: CLAUDE_CODE_ENABLE_TELEMETRY=1 환경 변수 설정 telemetry 설정으로 .env 파일 생성 token 추적 디렉토리 초기화 ( .claude-flow/metrics/ ) 단계 2: Token "
-  },
-  {
-    "title": "README",
-    "url": "/posts/claude-flow-ko/ko-docs/integrations/README/",
-    "description": "이 디렉터리에는 Claude Flow와 연동되는 주요 플랫폼 통합 문서가 모두 들어 있습니다.",
-    "fullContent": "README 본문으로 건너뛰기 Hanson Kim Home Blog README 2025년 10월 14일 Claude-Flow 문서 AI 🔌 플랫폼 통합 이 디렉터리에는 Claude Flow와 연동되는 주요 플랫폼 통합 문서가 모두 들어 있습니다. 📂 통합 범주 🧠 ReasoningBank ( reasoningbank/ ) WASM 가속을 활용하는 고급 AI 추론 및 의사 결정 통합입니다. 주요 문서: REASONINGBANK-STATUS.md - 현재 통합 상태를 다룹니다. REASONINGBANK_ARCHITECTURE.md - 시스템 아키텍처를 설명합니다. REASONINGBANK_INTEGRATION_PLAN.md - 구현 로드맵을 제공합니다. REASONINGBANK-BENCHMARK.md - 성능 벤치마크를 정리합니다. REASONINGBANK-DEMO.md - 사용 예시를 소개합니다. REASONINGBANK-AGENT-CREATION-GUIDE.md - 에이전트 "
-  },
-  {
     "title": "RIEMANN HYPOTHESIS PROOF",
     "url": "/posts/claude-flow-ko/ko-docs/experimental/RIEMANN_HYPOTHESIS_PROOF/",
     "description": "리만 제타 함수 ζ(s)의 모든 비자명한 영점은 실수부가 1/2입니다.",
@@ -184,6 +166,24 @@
     "url": "/posts/claude-flow-ko/ko-docs/experimental/visualization_insights/",
     "description": "이 문서는 고급 시각화 기법과 GOAP 방법론을 결합하여 리만 제타 함수에서 숨겨진 패턴을 밝혀낼 수 있는 방법을 탐구합니다. 이를 통해 돌파구가 될 통찰을 얻을 가능성을 모색합니다.",
     "fullContent": "Visualization Insights 본문으로 건너뛰기 Hanson Kim Home Blog Visualization Insights 2024년 12월 31일 Claude-Flow 문서 AI 리만 가설을 위한 시각화와 패턴 발견 시각적 GOAP: 시각화를 통한 수학적 돌파구 이 문서는 고급 시각화 기법과 GOAP 방법론을 결합하여 리만 제타 함수에서 숨겨진 패턴을 밝혀낼 수 있는 방법을 탐구합니다. 이를 통해 돌파구가 될 통찰을 얻을 가능성을 모색합니다. 개요: 발견 도구로서의 시각 수학 시각화가 리만 가설(RH)에 중요한 이유 패턴 인식 : 인간의 시각 시스템은 패턴 탐지에 뛰어납니다 기하학적 직관 : 복소해석은 기하학적 이해에서 큰 이점을 얻습니다 고차원 데이터 : 영점은 풍부한 구조를 지닌 복소 공간에 존재합니다 창발 현상 : 집단 행동은 시각화를 통해서만 드러납니다 GOAP 기반 시각화 전략 목표: RH 증명으로 이어지는 시각적 패턴 발견 ├── 하위 목표 1: 영점 지형"
+  },
+  {
+    "title": "USER GUIDE",
+    "url": "/posts/claude-flow-ko/ko-docs/guides/USER_GUIDE/",
+    "description": "Claude-Flow 종합 사용자 가이드에 오신 것을 환영합니다! 이 문서는 기본 설치부터 고급 swarm 협업까지, 플랫폼을 시작하고 마스터하는 데 필요한 모든 것을 제공합니다.",
+    "fullContent": "USER GUIDE 본문으로 건너뛰기 Hanson Kim Home Blog USER GUIDE 2024년 12월 31일 Claude-Flow 문서 AI 📖 Claude-Flow 사용자 가이드 Claude-Flow v2.0.0 완전 실용 가이드 Claude-Flow 종합 사용자 가이드에 오신 것을 환영합니다! 이 문서는 기본 설치부터 고급 swarm 협업까지, 플랫폼을 시작하고 마스터하는 데 필요한 모든 것을 제공합니다. 📋 목차 시작하기 기본 개념 일반적인 워크플로 단계별 튜토리얼 구성 가이드 문제 해결 성능 최적화 통합 FAQ 🚀 시작하기 사전 요구사항 Claude-Flow를 시작하기 전에 다음을 준비하세요: Node.js ≥ 20.0.0 ( 다운로드 ) npm ≥ 9.0.0 (Node.js와 함께 제공됨) Claude Code ( 설정 가이드 ) 선호하는 AI provider의 API 키 빠른 설치 # 옵션 1: npx 사용 (처음 사용자에게 권장) npx claude-fl"
+  },
+  {
+    "title": "Token Tracking Guide",
+    "url": "/posts/claude-flow-ko/ko-docs/guides/token-tracking-guide/",
+    "description": "Claude Flow는 이제 시뮬레이션 데이터가 아닌 실제 Claude API 사용량을 캡처하는 실제 token 추적 기능을 포함합니다. 이 가이드는 Claude Code CLI로 token 추적을 활성화하고 사용하는 방법을 보여줍니다.",
+    "fullContent": "Token Tracking Guide 본문으로 건너뛰기 Hanson Kim Home Blog Token Tracking Guide 2024년 12월 31일 Claude-Flow 문서 AI Claude Token 추적 가이드 개요 Claude Flow는 이제 시뮬레이션 데이터가 아닌 실제 Claude API 사용량을 캡처하는 실제 token 추적 기능을 포함합니다. 이 가이드는 Claude Code CLI로 token 추적을 활성화하고 사용하는 방법을 보여줍니다. 빠른 시작 단계 1: Telemetry 활성화 먼저 token 추적을 위한 telemetry를 활성화하세요: ./claude-flow analysis setup-telemetry 이 명령은 다음을 수행합니다: CLAUDE_CODE_ENABLE_TELEMETRY=1 환경 변수 설정 telemetry 설정으로 .env 파일 생성 token 추적 디렉토리 초기화 ( .claude-flow/metrics/ ) 단계 2: Token "
+  },
+  {
+    "title": "README",
+    "url": "/posts/claude-flow-ko/ko-docs/integrations/README/",
+    "description": "이 디렉터리에는 Claude Flow와 연동되는 주요 플랫폼 통합 문서가 모두 들어 있습니다.",
+    "fullContent": "README 본문으로 건너뛰기 Hanson Kim Home Blog README 2025년 10월 14일 Claude-Flow 문서 AI 🔌 플랫폼 통합 이 디렉터리에는 Claude Flow와 연동되는 주요 플랫폼 통합 문서가 모두 들어 있습니다. 📂 통합 범주 🧠 ReasoningBank ( reasoningbank/ ) WASM 가속을 활용하는 고급 AI 추론 및 의사 결정 통합입니다. 주요 문서: REASONINGBANK-STATUS.md - 현재 통합 상태를 다룹니다. REASONINGBANK_ARCHITECTURE.md - 시스템 아키텍처를 설명합니다. REASONINGBANK_INTEGRATION_PLAN.md - 구현 로드맵을 제공합니다. REASONINGBANK-BENCHMARK.md - 성능 벤치마크를 정리합니다. REASONINGBANK-DEMO.md - 사용 예시를 소개합니다. REASONINGBANK-AGENT-CREATION-GUIDE.md - 에이전트 "
   },
   {
     "title": "AGENTS",

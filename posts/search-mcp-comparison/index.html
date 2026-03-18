@@ -610,19 +610,31 @@ xychart-beta
 </table>
 <p><strong>핵심 발견</strong>: WebSearch는 안정적이지만 평범(3~4점), Perplexity는 편차가 극단적(1점~5점), Gemini는 고르게 높은 점수(4~5점)를 기록했습니다.</p>
 <h3>카테고리별 평균 품질</h3>
-<p><img src="images/chart2_category_avg.png" alt="카테고리별 평균 품질 점수"></p>
-<blockquote>
-<p>파랑: WebSearch / 주황: Perplexity / 초록: Gemini</p>
-</blockquote>
+<p><img src="images/chart2_ws.png" alt="WebSearch 카테고리별 평균">
+<img src="images/chart2_px.png" alt="Perplexity 카테고리별 평균">
+<img src="images/chart2_gm.png" alt="Gemini 카테고리별 평균"></p>
 <details>
 <summary>Mermaid 소스 코드</summary>
-<pre><code class="language-mermaid">xychart-beta
-    title &quot;카테고리별 평균 품질 점수&quot;
-    x-axis [&quot;KR 시사/과학&quot;, &quot;KR 기술/개발&quot;, &quot;EN 기술&quot;, &quot;EN 뉴스&quot;, &quot;보안&quot;, &quot;Hallucination&quot;]
-    y-axis &quot;평균 점수 (5점 만점)&quot; 0 --&gt; 5
-    line &quot;WebSearch&quot; [3.0, 3.5, 3.3, 4.0, 4.0, 4.0]
-    line &quot;Perplexity&quot; [5.0, 2.5, 4.0, 2.0, 5.0, 3.0]
-    line &quot;Gemini&quot; [4.0, 5.0, 4.3, 4.0, 5.0, 2.0]
+<pre><code class="language-mermaid">%% WebSearch (파랑 #4A90D9)
+xychart-beta
+    title &quot;WebSearch 카테고리별 평균&quot;
+    x-axis [&quot;KR 시사&quot;, &quot;KR 기술&quot;, &quot;EN 기술&quot;, &quot;EN 뉴스&quot;, &quot;보안&quot;, &quot;Anti-H&quot;]
+    y-axis &quot;점수&quot; 0 --&gt; 5
+    bar [3.0, 3.5, 3.3, 4.0, 4.0, 4.0]
+
+%% Perplexity (주황 #E8854A)
+xychart-beta
+    title &quot;Perplexity 카테고리별 평균&quot;
+    x-axis [&quot;KR 시사&quot;, &quot;KR 기술&quot;, &quot;EN 기술&quot;, &quot;EN 뉴스&quot;, &quot;보안&quot;, &quot;Anti-H&quot;]
+    y-axis &quot;점수&quot; 0 --&gt; 5
+    bar [5.0, 2.5, 4.0, 2.0, 5.0, 3.0]
+
+%% Gemini (초록 #5BB55B)
+xychart-beta
+    title &quot;Gemini 카테고리별 평균&quot;
+    x-axis [&quot;KR 시사&quot;, &quot;KR 기술&quot;, &quot;EN 기술&quot;, &quot;EN 뉴스&quot;, &quot;보안&quot;, &quot;Anti-H&quot;]
+    y-axis &quot;점수&quot; 0 --&gt; 5
+    bar [4.0, 5.0, 4.3, 4.0, 5.0, 2.0]
 </code></pre>
 </details>
 <table>
