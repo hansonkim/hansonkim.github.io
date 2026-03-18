@@ -527,6 +527,101 @@ nav ul a:hover::after {
   margin-bottom: 10px;
 }
 
+/* Post content - additional elements */
+
+/* 테이블 — 반응형 래퍼 + 깔끔한 셀 디자인 */
+.post-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 24px;
+  font-size: 0.95rem;
+  display: block;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.post-content thead {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(236, 72, 153, 0.08));
+}
+
+.post-content th {
+  padding: 12px 16px;
+  text-align: left;
+  font-weight: 700;
+  color: var(--text-dark);
+  border: 1px solid var(--border-color);
+  white-space: nowrap;
+}
+
+.post-content td {
+  padding: 10px 16px;
+  border: 1px solid var(--border-color);
+  color: var(--text-medium);
+  vertical-align: top;
+}
+
+/* 홀수 행 줄무늬 배경 */
+.post-content tbody tr:nth-child(odd) {
+  background-color: var(--bg-light);
+}
+
+.post-content tbody tr:hover {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.05), rgba(236, 72, 153, 0.03));
+}
+
+/* blockquote — 왼쪽 accent bar + 연한 배경 */
+.post-content blockquote {
+  margin: 24px 0;
+  padding: 16px 20px;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.05), rgba(236, 72, 153, 0.03));
+  border-left: 4px solid var(--primary-color);
+  border-radius: 0 8px 8px 0;
+  color: var(--text-medium);
+  font-style: italic;
+}
+
+.post-content blockquote p {
+  margin-bottom: 0;
+}
+
+/* hr — gradient 구분선 */
+.post-content hr {
+  border: none;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--primary-light), var(--secondary-color), var(--primary-light), transparent);
+  margin: 40px 0;
+  border-radius: 2px;
+}
+
+/* img — 반응형, 둥근 모서리, 그림자 */
+.post-content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 12px;
+  box-shadow: var(--shadow-md);
+  display: block;
+  margin: 20px auto;
+}
+
+/* strong — 강조색 적용 */
+.post-content strong {
+  font-weight: 700;
+  color: var(--primary-dark);
+}
+
+/* a (링크) — primary color, hover 밑줄 */
+.post-content a {
+  color: var(--primary-color);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s ease, text-decoration 0.2s ease;
+}
+
+.post-content a:hover {
+  color: var(--primary-dark);
+  text-decoration: underline;
+}
+
 /* Tags */
 .tags {
   margin-top: 15px;
