@@ -23,10 +23,7 @@ module.exports = {
       const filePath = data.page.inputPath;
       const shouldExclude = excludedPaths.some(path => filePath.includes(path));
 
-      // 제외 경로가 아니고, ko-docs 내의 파일이면 posts에 포함
-      if (!shouldExclude && filePath.includes('/ko-docs/')) {
-        return ["posts", ...baseTags];
-      }
+      // ko-docs 문서는 블로그 포스트가 아니므로 posts 태그 제외
       return baseTags;
     },
     title: (data) => {

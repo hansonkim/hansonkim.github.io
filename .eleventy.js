@@ -52,10 +52,9 @@ module.exports = function(eleventyConfig) {
 
   // Create posts collection sorted by date (newest first)
   eleventyConfig.addCollection("posts", function(collectionApi) {
-    const posts = collectionApi.getFilteredByTag("posts");
-    // getFilteredByTag returns posts sorted by date ascending (oldest first)
-    // So we just need to reverse it to get newest first
-    return posts.slice().reverse();
+    return collectionApi.getFilteredByTag("posts").sort((a, b) => {
+      return new Date(b.data.date) - new Date(a.data.date);
+    });
   });
 
   // Create a collection of all tags with post counts
