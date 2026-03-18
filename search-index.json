@@ -354,12 +354,6 @@
     "fullContent": "AGENT BOOSTER INTEGRATION 본문으로 건너뛰기 Hanson Kim Home Blog AGENT BOOSTER INTEGRATION 2024년 12월 31일 Claude-Flow 문서 AI Agent Booster 통합 - 초고속 코드 편집 상태 : ✅ 완전 통합 (v2.6.0-alpha.2) 성능 : LLM API보다 352배 빠름 비용 : $0 (100% 무료) 🚀 개요 Agent Booster는 로컬 WASM 처리를 사용하여 초고속 코드 편집 기능을 제공하며, 품질을 유지하면서 API 지연 시간과 비용을 제거합니다. 주요 이점 LLM API 코드 편집보다 352배 빠름 (편집당 1ms vs 352ms) 비용 $0 - API 호출 필요 없음 동일한 정확도 - 12/12 벤치마크 성공으로 입증 즉각적인 피드백을 위한 밀리초 미만 의 지연 시간 배치 작업 - 1초에 1000개 파일 처리 📋 사용 가능한 명령어 claude-flow agent booster edit"
   },
   {
-    "title": "Epic Sdk Integration",
-    "url": "/posts/claude-flow-ko/ko-docs/integrations/epic-sdk/epic-sdk-integration/",
-    "description": "Claude Agent SDK를 기반 레이어로 통합 - 커스텀 구현에서 SDK 프리미티브로 마이그레이션",
-    "fullContent": "Epic Sdk Integration 본문으로 건너뛰기 Hanson Kim Home Blog Epic Sdk Integration 2024년 12월 31일 Claude-Flow 문서 AI 에픽: Claude-Flow v3.0.0-alpha.130용 Claude Agent SDK 통합 🎯 에픽 개요 제목 Claude Agent SDK를 기반 레이어로 통합 - 커스텀 구현에서 SDK 프리미티브로 마이그레이션 설명 Claude Agent SDK(@anthropic-ai/claude-code)를 기반 레이어로 활용하도록 Claude-Flow를 리팩터링하여 재시도 로직, 아티팩트 관리, 체크포인트 시스템의 중복 커스텀 구현을 제거합니다. Claude-Flow를 SDK 위에서 구축되는 최고의 멀티 에이전트 오케스트레이션 레이어로 포지셔닝합니다. 가치 제안 &quot;Claude Agent SDK는 단일 에이전트를 탁월하게 다룹니다. Claude-Flow는 그들이 군집처럼 협력하도록 만듭니다."
-  },
-  {
     "title": "AGENTIC FLOW INTEGRATION GUIDE",
     "url": "/posts/claude-flow-ko/ko-docs/integrations/agentic-flow/AGENTIC-FLOW-INTEGRATION-GUIDE/",
     "description": "Claude-Flow v2.6.0+는 agentic-flow와의 깊은 통합을 포함하여, 66개 이상의 전문 AI agent, 멀티 프로바이더 지원, ReasoningBank 메모리, 지능형 모델 최적화 기능을 제공합니다.",
@@ -390,16 +384,10 @@
     "fullContent": "AGENTIC FLOW SECURITY TEST REPORT 본문으로 건너뛰기 Hanson Kim Home Blog AGENTIC FLOW SECURITY TEST REPORT 2024년 12월 31일 Claude-Flow 문서 AI 🔒 Agentic-Flow Integration - 보안 및 테스트 보고서 ✅ 보안 검증 완료 브랜치: feature/agentic-flow-integration 버전: v2.6.0-alpha.1 테스트 일자: 2025-10-10 상태: SECURE - 모든 테스트 통과 🛡️ 구현된 보안 조치 1. API 키 보호 보호되는 파일: .env - 모든 API 키와 시크릿 저장 환경 변수 (Anthropic, OpenRouter, Gemini, Supabase 등 20개 이상의 키) 보호 메커니즘: ✅ .env 가 .gitignore 에 포함됨 (검증 완료) ✅ .env.local 과 .env.*.local 패턴이 .gitignore 에 포함됨 ✅ Git"
   },
   {
-    "title": "DEEP REVIEW COMPREHENSIVE REPORT",
-    "url": "/posts/claude-flow-ko/ko-docs/reports/analysis/DEEP_REVIEW_COMPREHENSIVE_REPORT/",
-    "description": "이번 Deep Review는 agentic-flow 실행 계층이 새롭게 통합된 claude-flow v2.6.0-alpha.2의 모든 역량과 기능을 분석합니다. 이 검토는 10개의 주요 역량 영역과 33개의 수정된 파일을 포괄적으로 테스트하고 검증합니다.",
-    "fullContent": "DEEP REVIEW COMPREHENSIVE REPORT 본문으로 건너뛰기 Hanson Kim Home Blog DEEP REVIEW COMPREHENSIVE REPORT 2024년 12월 31일 Claude-Flow 문서 AI Deep Review: 종합 역량 및 기능 보고서 Agentic-Flow 통합이 적용된 Claude-Flow v2.6.0-alpha.2 검토 날짜: 2025-10-11 버전: v2.6.0-alpha.2 검토자: Claude Code Deep Review System 상태: ✅ 프로덕션 배포 준비 완료 (PRODUCTION READY) Executive Summary 이번 Deep Review는 agentic-flow 실행 계층이 새롭게 통합된 claude-flow v2.6.0-alpha.2의 모든 역량과 기능을 분석합니다. 이 검토는 10개의 주요 역량 영역과 33개의 수정된 파일을 포괄적으로 테스트하고 검증합니다. 종합 평가: ✅ PRODUCTION RE"
-  },
-  {
-    "title": "REGRESSION ANALYSIS REPORT",
-    "url": "/posts/claude-flow-ko/ko-docs/reports/analysis/REGRESSION-ANALYSIS-REPORT/",
-    "description": "✅ 회귀 현상이 발견되지 않았습니다 - Agent Booster 통합이 기존 기능에 영향을 주지 않고 완전히 동작합니다.",
-    "fullContent": "REGRESSION ANALYSIS REPORT 본문으로 건너뛰기 Hanson Kim Home Blog REGRESSION ANALYSIS REPORT 2024년 12월 31일 Claude-Flow 문서 AI 회귀 분석 보고서 - Agent Booster 통합 날짜 : 2025-10-12 버전 : v2.6.0-alpha.2 브랜치 : feature/agentic-flow-integration 커밋 : fefad7c5c9234eb605feb716386bb6a45b017a49 요약 ✅ 회귀 현상이 발견되지 않았습니다 - Agent Booster 통합이 기존 기능에 영향을 주지 않고 완전히 동작합니다. 통합 상태 : 프로덕션 배포 준비 완료 테스트 커버리지 : 포괄적 성능 : 검증 완료 (352배 속도 향상 주장 확인됨) 테스트 방법론 9개 중요 영역에 대해 체계적인 회귀 테스트를 수행했습니다: 테스트 스위트 실행 핵심 agent 명령 신규 Agent Booster 기능 빌드 프로세스 S"
+    "title": "Epic Sdk Integration",
+    "url": "/posts/claude-flow-ko/ko-docs/integrations/epic-sdk/epic-sdk-integration/",
+    "description": "Claude Agent SDK를 기반 레이어로 통합 - 커스텀 구현에서 SDK 프리미티브로 마이그레이션",
+    "fullContent": "Epic Sdk Integration 본문으로 건너뛰기 Hanson Kim Home Blog Epic Sdk Integration 2024년 12월 31일 Claude-Flow 문서 AI 에픽: Claude-Flow v3.0.0-alpha.130용 Claude Agent SDK 통합 🎯 에픽 개요 제목 Claude Agent SDK를 기반 레이어로 통합 - 커스텀 구현에서 SDK 프리미티브로 마이그레이션 설명 Claude Agent SDK(@anthropic-ai/claude-code)를 기반 레이어로 활용하도록 Claude-Flow를 리팩터링하여 재시도 로직, 아티팩트 관리, 체크포인트 시스템의 중복 커스텀 구현을 제거합니다. Claude-Flow를 SDK 위에서 구축되는 최고의 멀티 에이전트 오케스트레이션 레이어로 포지셔닝합니다. 가치 제안 &quot;Claude Agent SDK는 단일 에이전트를 탁월하게 다룹니다. Claude-Flow는 그들이 군집처럼 협력하도록 만듭니다."
   },
   {
     "title": "MIGRATION V1.5.13",
@@ -498,16 +486,16 @@
     "fullContent": "REASONINGBANK INTEGRATION COMPLETE 본문으로 건너뛰기 Hanson Kim Home Blog REASONINGBANK INTEGRATION COMPLETE 2024년 12월 31일 Claude-Flow 문서 AI ReasoningBank 통합 - 완료 ✅ Status : ✅ PRODUCTION READY Date : 2025-10-11 Version : v2.6.0-alpha.2 Integration Level : Full CLI + SDK 🎉 통합 요약 agentic-flow v1.4.11의 ReasoningBank가 이제 claude-flow에 완전히 통합되어, 경험 기반 학습을 통해 에이전트 작업 성공률을 23%에서 98%까지 끌어올리는 클로즈드 루프 메모리 시스템을 제공합니다. 완료된 항목 ✅ 1단계: 의존성 관리 agentic-flow를 v1.4.6 → v1.4.11로 업데이트했습니다 ReasoningBank 버그 수정 사항을 검증했습니다(라우터가"
   },
   {
-    "title": "HOOKS V2 MODIFICATION",
-    "url": "/posts/claude-flow-ko/ko-docs/technical/fixes/HOOKS-V2-MODIFICATION/",
-    "description": "Claude Flow에 Claude Code v2.0.10+의 PreToolUse 입력 수정 기능을 활용하는 세 가지 수정 훅이 추가되었습니다.",
-    "fullContent": "HOOKS V2 MODIFICATION 본문으로 건너뛰기 Hanson Kim Home Blog HOOKS V2 MODIFICATION 2024년 12월 31일 Claude-Flow 문서 AI PreToolUse Modification 훅 (v2.0.10+) ✅ 구현 완료 Claude Flow에 Claude Code v2.0.10+의 PreToolUse 입력 수정 기능을 활용하는 세 가지 수정 훅이 추가되었습니다. 🎯 신규 훅 1. modify-bash - Bash 명령어 수정 특징: 안전성 : rm 명령어에 -i 플래그를 자동으로 추가하여 대화형 확인을 수행합니다 Alias 변환 : ll → ls -lah , la → ls -la 경로 보정 : 테스트 파일 출력을 /tmp/ 로 리다이렉트합니다 비밀 탐지 : 명령어에서 민감한 키워드를 경고합니다 예시: echo '{&quot;tool_input&quot;:{&quot;command&quot;:&quot;rm test.txt&quot"
+    "title": "DEEP REVIEW COMPREHENSIVE REPORT",
+    "url": "/posts/claude-flow-ko/ko-docs/reports/analysis/DEEP_REVIEW_COMPREHENSIVE_REPORT/",
+    "description": "이번 Deep Review는 agentic-flow 실행 계층이 새롭게 통합된 claude-flow v2.6.0-alpha.2의 모든 역량과 기능을 분석합니다. 이 검토는 10개의 주요 역량 영역과 33개의 수정된 파일을 포괄적으로 테스트하고 검증합니다.",
+    "fullContent": "DEEP REVIEW COMPREHENSIVE REPORT 본문으로 건너뛰기 Hanson Kim Home Blog DEEP REVIEW COMPREHENSIVE REPORT 2024년 12월 31일 Claude-Flow 문서 AI Deep Review: 종합 역량 및 기능 보고서 Agentic-Flow 통합이 적용된 Claude-Flow v2.6.0-alpha.2 검토 날짜: 2025-10-11 버전: v2.6.0-alpha.2 검토자: Claude Code Deep Review System 상태: ✅ 프로덕션 배포 준비 완료 (PRODUCTION READY) Executive Summary 이번 Deep Review는 agentic-flow 실행 계층이 새롭게 통합된 claude-flow v2.6.0-alpha.2의 모든 역량과 기능을 분석합니다. 이 검토는 10개의 주요 역량 영역과 33개의 수정된 파일을 포괄적으로 테스트하고 검증합니다. 종합 평가: ✅ PRODUCTION RE"
   },
   {
-    "title": "WASM ESM FIX SUMMARY",
-    "url": "/posts/claude-flow-ko/ko-docs/technical/fixes/WASM-ESM-FIX-SUMMARY/",
-    "description": "ReasoningBank WASM 통합은 직접 ESM import와 검증된 성능으로 완전하게 동작합니다!",
-    "fullContent": "WASM ESM FIX SUMMARY 본문으로 건너뛰기 Hanson Kim Home Blog WASM ESM FIX SUMMARY 2024년 12월 31일 Claude-Flow 문서 AI ReasoningBank WASM 통합 - 완료 ✅ 상태: 프로덕션 준비 완료 버전: claude-flow@2.7.0-alpha.7 + agentic-flow@1.5.12 날짜: 2025-10-13 🎉 성공 요약 ReasoningBank WASM 통합은 직접 ESM import와 검증된 성능으로 완전하게 동작 합니다! 주요 성과 ✅ 근본 원인 파악 : ESM 패키지에서 CommonJS WASM 사용(agentic-flow@1.5.11) ✅ 업스트림 수정 적용 : 순수 ESM WASM 바인딩을 제공하는 agentic-flow@1.5.12 ✅ 통합 검증 완료 : 우회 없이 직접 import가 정상 동작 ✅ 성능 확인 완료 : 스토리지 3ms, 쿼리 &lt;1ms로 발표 수치 검증 🔍 문제 v2.7."
+    "title": "REGRESSION ANALYSIS REPORT",
+    "url": "/posts/claude-flow-ko/ko-docs/reports/analysis/REGRESSION-ANALYSIS-REPORT/",
+    "description": "✅ 회귀 현상이 발견되지 않았습니다 - Agent Booster 통합이 기존 기능에 영향을 주지 않고 완전히 동작합니다.",
+    "fullContent": "REGRESSION ANALYSIS REPORT 본문으로 건너뛰기 Hanson Kim Home Blog REGRESSION ANALYSIS REPORT 2024년 12월 31일 Claude-Flow 문서 AI 회귀 분석 보고서 - Agent Booster 통합 날짜 : 2025-10-12 버전 : v2.6.0-alpha.2 브랜치 : feature/agentic-flow-integration 커밋 : fefad7c5c9234eb605feb716386bb6a45b017a49 요약 ✅ 회귀 현상이 발견되지 않았습니다 - Agent Booster 통합이 기존 기능에 영향을 주지 않고 완전히 동작합니다. 통합 상태 : 프로덕션 배포 준비 완료 테스트 커버리지 : 포괄적 성능 : 검증 완료 (352배 속도 향상 주장 확인됨) 테스트 방법론 9개 중요 영역에 대해 체계적인 회귀 테스트를 수행했습니다: 테스트 스위트 실행 핵심 agent 명령 신규 Agent Booster 기능 빌드 프로세스 S"
   },
   {
     "title": "COMMIT SUMMARY",
@@ -532,12 +520,6 @@
     "url": "/posts/claude-flow-ko/ko-docs/reports/releases/RELEASE_v2.6.0-alpha.2/",
     "description": "이번 릴리스는 Claude-Flow 발전의 중요한 이정표로서 다음을 도입합니다:",
     "fullContent": "RELEASE V2.6.0 Alpha.2 본문으로 건너뛰기 Hanson Kim Home Blog RELEASE V2.6.0 Alpha.2 2024년 12월 31일 Claude-Flow 문서 AI 🚀 릴리스 v2.6.0-alpha.2 - Agentic-Flow 통합 및 보안 강화 릴리스 날짜: 추후 결정 (최종 검토 대기 중) 브랜치: feature/agentic-flow-integration 상태: 🔒 SECURE &amp; TESTED - 릴리스 준비 완료 📋 릴리스 개요 이번 릴리스는 Claude-Flow 발전의 중요한 이정표 로서 다음을 도입합니다: 멀티 프로바이더 AI 실행 - agentic-flow 통합으로 비용 99% 절감 종합 보안 시스템 - 모든 작업에서 API 키 마스킹 66개 이상의 특화 에이전트 - 엔터프라이즈급 에이전트 라이브러리 접근 비호환 변경 없음 - 기존 버전과 100% 하위 호환 유지 🎯 주요 기능 1. 🤖 Agentic-Flow 통합 (1단계"
-  },
-  {
-    "title": "PERFORMANCE SYSTEMS STATUS",
-    "url": "/posts/claude-flow-ko/ko-docs/technical/performance/PERFORMANCE-SYSTEMS-STATUS/",
-    "description": "영향: 코드 편집 352배 빨라짐, 비용 $0, 자율 리팩터링",
-    "fullContent": "PERFORMANCE SYSTEMS STATUS 본문으로 건너뛰기 Hanson Kim Home Blog PERFORMANCE SYSTEMS STATUS 2024년 12월 31일 Claude-Flow 문서 AI Claude-Flow 성능 시스템 상태 최종 업데이트 : 2025-10-12 상태 : ReasoningBank ✅ | Agent Booster ⚠️ ✅ 완전 통합: ReasoningBank (46% 더 빠름 + 학습) 현재 보유한 항목: # ReasoningBank 통합 완료 claude-flow agent run coder &quot;Build API&quot; --enable-memory claude-flow agent memory init claude-flow agent memory status claude-flow init --env # API 키용 .env 설정 지금 즉시 누릴 수 있는 성능 향상: +26% 성공률 (70% → 88%) -25% 토큰 사용량 (비용 절감"
   },
   {
     "title": "COMMAND VERIFICATION REPORT",
@@ -604,5 +586,23 @@
     "url": "/posts/claude-flow-ko/ko-docs/reports/validation/VALIDATION-SUMMARY/",
     "description": "NPM 설치:",
     "fullContent": "VALIDATION SUMMARY 본문으로 건너뛰기 Hanson Kim Home Blog VALIDATION SUMMARY 2024년 12월 31일 Claude-Flow 문서 AI Claude-Flow v2.7.0-alpha.7 - 검증 요약 🎯 전체 상태: ✅ 프로덕션 준비 완료 날짜 : 2025-10-13 버전 : v2.7.0-alpha.7 통합 구성 : agentic-flow@1.5.12 (ESM WASM 수정) ✅ 해결된 사항 근본 원인 (v2.7.0-alpha.6) 문제 : ESM 패키지(agentic-flow@1.5.11)에서 CommonJS WASM 래퍼 사용 영향 : Cannot find module 'reasoningbank_wasm' import 오류 환경 : 모든 플랫폼(로컬, Docker, CI/CD) 해결 (v2.7.0-alpha.7) 업스트림 수정 : 순수 ESM WASM 바인딩이 포함된 agentic-flow@1.5.12 기술적 조치 : wasm-pack"
+  },
+  {
+    "title": "HOOKS V2 MODIFICATION",
+    "url": "/posts/claude-flow-ko/ko-docs/technical/fixes/HOOKS-V2-MODIFICATION/",
+    "description": "Claude Flow에 Claude Code v2.0.10+의 PreToolUse 입력 수정 기능을 활용하는 세 가지 수정 훅이 추가되었습니다.",
+    "fullContent": "HOOKS V2 MODIFICATION 본문으로 건너뛰기 Hanson Kim Home Blog HOOKS V2 MODIFICATION 2024년 12월 31일 Claude-Flow 문서 AI PreToolUse Modification 훅 (v2.0.10+) ✅ 구현 완료 Claude Flow에 Claude Code v2.0.10+의 PreToolUse 입력 수정 기능을 활용하는 세 가지 수정 훅이 추가되었습니다. 🎯 신규 훅 1. modify-bash - Bash 명령어 수정 특징: 안전성 : rm 명령어에 -i 플래그를 자동으로 추가하여 대화형 확인을 수행합니다 Alias 변환 : ll → ls -lah , la → ls -la 경로 보정 : 테스트 파일 출력을 /tmp/ 로 리다이렉트합니다 비밀 탐지 : 명령어에서 민감한 키워드를 경고합니다 예시: echo '{&quot;tool_input&quot;:{&quot;command&quot;:&quot;rm test.txt&quot"
+  },
+  {
+    "title": "WASM ESM FIX SUMMARY",
+    "url": "/posts/claude-flow-ko/ko-docs/technical/fixes/WASM-ESM-FIX-SUMMARY/",
+    "description": "ReasoningBank WASM 통합은 직접 ESM import와 검증된 성능으로 완전하게 동작합니다!",
+    "fullContent": "WASM ESM FIX SUMMARY 본문으로 건너뛰기 Hanson Kim Home Blog WASM ESM FIX SUMMARY 2024년 12월 31일 Claude-Flow 문서 AI ReasoningBank WASM 통합 - 완료 ✅ 상태: 프로덕션 준비 완료 버전: claude-flow@2.7.0-alpha.7 + agentic-flow@1.5.12 날짜: 2025-10-13 🎉 성공 요약 ReasoningBank WASM 통합은 직접 ESM import와 검증된 성능으로 완전하게 동작 합니다! 주요 성과 ✅ 근본 원인 파악 : ESM 패키지에서 CommonJS WASM 사용(agentic-flow@1.5.11) ✅ 업스트림 수정 적용 : 순수 ESM WASM 바인딩을 제공하는 agentic-flow@1.5.12 ✅ 통합 검증 완료 : 우회 없이 직접 import가 정상 동작 ✅ 성능 확인 완료 : 스토리지 3ms, 쿼리 &lt;1ms로 발표 수치 검증 🔍 문제 v2.7."
+  },
+  {
+    "title": "PERFORMANCE SYSTEMS STATUS",
+    "url": "/posts/claude-flow-ko/ko-docs/technical/performance/PERFORMANCE-SYSTEMS-STATUS/",
+    "description": "영향: 코드 편집 352배 빨라짐, 비용 $0, 자율 리팩터링",
+    "fullContent": "PERFORMANCE SYSTEMS STATUS 본문으로 건너뛰기 Hanson Kim Home Blog PERFORMANCE SYSTEMS STATUS 2024년 12월 31일 Claude-Flow 문서 AI Claude-Flow 성능 시스템 상태 최종 업데이트 : 2025-10-12 상태 : ReasoningBank ✅ | Agent Booster ⚠️ ✅ 완전 통합: ReasoningBank (46% 더 빠름 + 학습) 현재 보유한 항목: # ReasoningBank 통합 완료 claude-flow agent run coder &quot;Build API&quot; --enable-memory claude-flow agent memory init claude-flow agent memory status claude-flow init --env # API 키용 .env 설정 지금 즉시 누릴 수 있는 성능 향상: +26% 성공률 (70% → 88%) -25% 토큰 사용량 (비용 절감"
   }
 ]
