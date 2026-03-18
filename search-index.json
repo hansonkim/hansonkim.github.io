@@ -354,6 +354,12 @@
     "fullContent": "AGENT BOOSTER INTEGRATION 본문으로 건너뛰기 Hanson Kim Home Blog AGENT BOOSTER INTEGRATION 2024년 12월 31일 Claude-Flow 문서 AI Agent Booster 통합 - 초고속 코드 편집 상태 : ✅ 완전 통합 (v2.6.0-alpha.2) 성능 : LLM API보다 352배 빠름 비용 : $0 (100% 무료) 🚀 개요 Agent Booster는 로컬 WASM 처리를 사용하여 초고속 코드 편집 기능을 제공하며, 품질을 유지하면서 API 지연 시간과 비용을 제거합니다. 주요 이점 LLM API 코드 편집보다 352배 빠름 (편집당 1ms vs 352ms) 비용 $0 - API 호출 필요 없음 동일한 정확도 - 12/12 벤치마크 성공으로 입증 즉각적인 피드백을 위한 밀리초 미만 의 지연 시간 배치 작업 - 1초에 1000개 파일 처리 📋 사용 가능한 명령어 claude-flow agent booster edit"
   },
   {
+    "title": "Epic Sdk Integration",
+    "url": "/posts/claude-flow-ko/ko-docs/integrations/epic-sdk/epic-sdk-integration/",
+    "description": "Claude Agent SDK를 기반 레이어로 통합 - 커스텀 구현에서 SDK 프리미티브로 마이그레이션",
+    "fullContent": "Epic Sdk Integration 본문으로 건너뛰기 Hanson Kim Home Blog Epic Sdk Integration 2024년 12월 31일 Claude-Flow 문서 AI 에픽: Claude-Flow v3.0.0-alpha.130용 Claude Agent SDK 통합 🎯 에픽 개요 제목 Claude Agent SDK를 기반 레이어로 통합 - 커스텀 구현에서 SDK 프리미티브로 마이그레이션 설명 Claude Agent SDK(@anthropic-ai/claude-code)를 기반 레이어로 활용하도록 Claude-Flow를 리팩터링하여 재시도 로직, 아티팩트 관리, 체크포인트 시스템의 중복 커스텀 구현을 제거합니다. Claude-Flow를 SDK 위에서 구축되는 최고의 멀티 에이전트 오케스트레이션 레이어로 포지셔닝합니다. 가치 제안 &quot;Claude Agent SDK는 단일 에이전트를 탁월하게 다룹니다. Claude-Flow는 그들이 군집처럼 협력하도록 만듭니다."
+  },
+  {
     "title": "AGENTIC FLOW INTEGRATION GUIDE",
     "url": "/posts/claude-flow-ko/ko-docs/integrations/agentic-flow/AGENTIC-FLOW-INTEGRATION-GUIDE/",
     "description": "Claude-Flow v2.6.0+는 agentic-flow와의 깊은 통합을 포함하여, 66개 이상의 전문 AI agent, 멀티 프로바이더 지원, ReasoningBank 메모리, 지능형 모델 최적화 기능을 제공합니다.",
@@ -382,12 +388,6 @@
     "url": "/posts/claude-flow-ko/ko-docs/integrations/agentic-flow/AGENTIC_FLOW_SECURITY_TEST_REPORT/",
     "description": "보호되는 파일:",
     "fullContent": "AGENTIC FLOW SECURITY TEST REPORT 본문으로 건너뛰기 Hanson Kim Home Blog AGENTIC FLOW SECURITY TEST REPORT 2024년 12월 31일 Claude-Flow 문서 AI 🔒 Agentic-Flow Integration - 보안 및 테스트 보고서 ✅ 보안 검증 완료 브랜치: feature/agentic-flow-integration 버전: v2.6.0-alpha.1 테스트 일자: 2025-10-10 상태: SECURE - 모든 테스트 통과 🛡️ 구현된 보안 조치 1. API 키 보호 보호되는 파일: .env - 모든 API 키와 시크릿 저장 환경 변수 (Anthropic, OpenRouter, Gemini, Supabase 등 20개 이상의 키) 보호 메커니즘: ✅ .env 가 .gitignore 에 포함됨 (검증 완료) ✅ .env.local 과 .env.*.local 패턴이 .gitignore 에 포함됨 ✅ Git"
-  },
-  {
-    "title": "Epic Sdk Integration",
-    "url": "/posts/claude-flow-ko/ko-docs/integrations/epic-sdk/epic-sdk-integration/",
-    "description": "Claude Agent SDK를 기반 레이어로 통합 - 커스텀 구현에서 SDK 프리미티브로 마이그레이션",
-    "fullContent": "Epic Sdk Integration 본문으로 건너뛰기 Hanson Kim Home Blog Epic Sdk Integration 2024년 12월 31일 Claude-Flow 문서 AI 에픽: Claude-Flow v3.0.0-alpha.130용 Claude Agent SDK 통합 🎯 에픽 개요 제목 Claude Agent SDK를 기반 레이어로 통합 - 커스텀 구현에서 SDK 프리미티브로 마이그레이션 설명 Claude Agent SDK(@anthropic-ai/claude-code)를 기반 레이어로 활용하도록 Claude-Flow를 리팩터링하여 재시도 로직, 아티팩트 관리, 체크포인트 시스템의 중복 커스텀 구현을 제거합니다. Claude-Flow를 SDK 위에서 구축되는 최고의 멀티 에이전트 오케스트레이션 레이어로 포지셔닝합니다. 가치 제안 &quot;Claude Agent SDK는 단일 에이전트를 탁월하게 다룹니다. Claude-Flow는 그들이 군집처럼 협력하도록 만듭니다."
   },
   {
     "title": "MIGRATION V1.5.13",
