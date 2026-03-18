@@ -420,16 +420,16 @@
     "fullContent": "REASONINGBANK BENCHMARK RESULTS 본문으로 건너뛰기 Hanson Kim Home Blog REASONINGBANK BENCHMARK RESULTS 2024년 12월 31일 Claude-Flow 문서 AI ReasoningBank 벤치마크 결과 개요 이 문서는 실제 소프트웨어 엔지니어링 시나리오 5건을 대상으로 ReasoningBank를 테스트한 벤치마크 결과를 담고 있습니다. 테스트 실행 날짜: 2025-10-11 버전: 1.5.8 명령어: npx tsx src/reasoningbank/demo-comparison.ts 초기 데모 결과 1차 라운드(콜드 스타트) 기존 방식: CSRF와 rate limiting 오류로 실패했습니다 ReasoningBank: 실패했지만 실패에서 2개의 메모리를 생성했습니다 2차 라운드(두 번째 시도) 기존 방식: 동일한 오류로 실패했습니다(학습 없음) ReasoningBank: 학습한 전략을 적용해 성공했습니다 3차 라운드(세 번"
   },
   {
-    "title": "REASONINGBANK CLI INTEGRATION",
-    "url": "/posts/claude-flow-ko/ko-docs/integrations/reasoningbank/REASONINGBANK-CLI-INTEGRATION/",
-    "description": "핵심 알고리즘 (5 files)",
-    "fullContent": "REASONINGBANK CLI INTEGRATION 본문으로 건너뛰기 Hanson Kim Home Blog REASONINGBANK CLI INTEGRATION 2024년 12월 31일 Claude-Flow 문서 AI ReasoningBank CLI 통합 검증 Status : ✅ 100% 완료 및 동작 중 Date : 2025-10-10 Version : 1.0.0 ✅ 구현 요약 생성된 파일: 25 핵심 알고리즘 (5 files) src/reasoningbank/core/retrieve.ts - MMR 기반 Top-k 검색 src/reasoningbank/core/judge.ts - LLM-as-judge 궤적 평가 src/reasoningbank/core/distill.ts - 메모리 추출 src/reasoningbank/core/consolidate.ts - 중복 제거/정리/모순 처리 src/reasoningbank/core/matts.ts - 병렬 및 순차 확장 데이터베이스 "
-  },
-  {
     "title": "REASONINGBANK BENCHMARK",
     "url": "/posts/claude-flow-ko/ko-docs/integrations/reasoningbank/REASONINGBANK-BENCHMARK/",
     "description": "✅ 모든 벤치마크 통과 - ReasoningBank가 모든 지표에서 뛰어난 성능을 보여줍니다.",
     "fullContent": "REASONINGBANK BENCHMARK 본문으로 건너뛰기 Hanson Kim Home Blog REASONINGBANK BENCHMARK 2024년 12월 31일 Claude-Flow 문서 AI ReasoningBank 성능 벤치마크 보고서 날짜 : 2025-10-10 버전 : 1.0.0 시스템 : Linux 6.8.0-1030-azure (Docker container) Node.js : v22.17.0 데이터베이스 : SQLite 3.x (WAL 모드) 요약 ✅ 모든 벤치마크 통과 - ReasoningBank가 모든 지표에서 뛰어난 성능을 보여줍니다. 주요 결과 메모리 작업 : 초당 840~19,169회 (요구 수준을 크게 상회) 검색 속도 : 메모리 2,431개 기준 24ms (임계값 대비 2.5배 빠름) 코사인 유사도 : 초당 213,076회 (매우 빠름) 선형 확장성 : 메모리 1,000개 이상 스트레스 테스트로 확인 데이터베이스 크기 : 메모리당 5.32 KB (효율적"
+  },
+  {
+    "title": "REASONINGBANK CLI INTEGRATION",
+    "url": "/posts/claude-flow-ko/ko-docs/integrations/reasoningbank/REASONINGBANK-CLI-INTEGRATION/",
+    "description": "핵심 알고리즘 (5 files)",
+    "fullContent": "REASONINGBANK CLI INTEGRATION 본문으로 건너뛰기 Hanson Kim Home Blog REASONINGBANK CLI INTEGRATION 2024년 12월 31일 Claude-Flow 문서 AI ReasoningBank CLI 통합 검증 Status : ✅ 100% 완료 및 동작 중 Date : 2025-10-10 Version : 1.0.0 ✅ 구현 요약 생성된 파일: 25 핵심 알고리즘 (5 files) src/reasoningbank/core/retrieve.ts - MMR 기반 Top-k 검색 src/reasoningbank/core/judge.ts - LLM-as-judge 궤적 평가 src/reasoningbank/core/distill.ts - 메모리 추출 src/reasoningbank/core/consolidate.ts - 중복 제거/정리/모순 처리 src/reasoningbank/core/matts.ts - 병렬 및 순차 확장 데이터베이스 "
   },
   {
     "title": "REASONINGBANK CORE INTEGRATION",
