@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>웹 검색 MCP 도구 비교: Perplexity vs Gemini Google Search vs WebSearch</title>
+  <link rel="stylesheet" href="/css/tailwind.css?v=2">
+  <link rel="stylesheet" href="/css/style.css?v=2">
+  <link rel="stylesheet" href="/css/search.css">
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-79GWVQ2WYD"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-79GWVQ2WYD');
+  </script>
+</head>
+<body class="font-sans leading-relaxed text-gray-800 min-h-screen ">
+  <header class="bg-white px-6 md:px-8 py-4 md:py-6 -mx-5 -mt-5 mb-10 shadow-sm backdrop-blur-md border-b border-gray-200 sticky top-0 z-[100]">
+    <nav class="flex justify-between items-center max-w-7xl mx-auto">
+      <a href="/" class="logo text-2xl font-bold no-underline transition-transform duration-300 ease-in-out hover:scale-105">Hanson Kim</a>
+      <ul class="list-none flex gap-4 md:gap-8">
+        <li><a href="/" class="no-underline text-gray-600 transition-all duration-300 ease-in-out font-medium relative hover:text-indigo-500">Home</a></li>
+        <li><a href="/blog/" class="no-underline text-gray-600 transition-all duration-300 ease-in-out font-medium relative hover:text-indigo-500">Blog</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-5">
+    
+
+
+<div class="post-layout flex flex-col lg:flex-row gap-10 mt-10 items-start relative">
+  <article class="post flex-1 min-w-0 max-w-4xl mt-0">
+    <header class="post-header mb-10 pb-5 border-b-2 border-gray-200">
+      <h1 class="text-3xl md:text-4xl mb-4 text-gray-800 font-extrabold leading-tight">웹 검색 MCP 도구 비교: Perplexity vs Gemini Google Search vs WebSearch</h1>
+      <time datetime="2026년 3월 17일" class="text-gray-500 text-sm inline-flex items-center font-medium">2026년 3월 17일</time>
+      
+      <div class="tags mt-4 flex gap-2.5 flex-wrap">
+        
+          
+        
+          
+        
+          
+          <a href="/tags/ai/" class="tag inline-block px-4 py-1.5 rounded-2xl text-xs font-semibold border transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:shadow-md">AI</a>
+          
+        
+          
+          <a href="/tags/개발도구/" class="tag inline-block px-4 py-1.5 rounded-2xl text-xs font-semibold border transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:shadow-md">개발도구</a>
+          
+        
+          
+          <a href="/tags/문서화/" class="tag inline-block px-4 py-1.5 rounded-2xl text-xs font-semibold border transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:shadow-md">문서화</a>
+          
+        
+          
+          <a href="/tags/웹개발/" class="tag inline-block px-4 py-1.5 rounded-2xl text-xs font-semibold border transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:shadow-md">웹개발</a>
+          
+        
+      </div>
+      
+    </header>
+
+    <div class="post-content leading-relaxed text-lg">
+      <h1>웹 검색 MCP 도구 비교: Perplexity vs Gemini Google Search vs WebSearch</h1>
+<h2>들어가며</h2>
+<p>Claude Code에서 웹 검색이 필요할 때, 어떤 도구를 써야 할까요? 내장 WebSearch 하나로 충분할까요?</p>
+<p>이 글에서는 Claude Code에서 사용할 수 있는 3가지 웹 검색 도구를 실제 테스트하고, 속도·품질·용도별 최적 선택 가이드를 제시합니다.</p>
+<h2>MCP란?</h2>
+<p>**MCP(Model Context Protocol)**는 AI 모델이 외부 도구와 데이터 소스에 연결할 수 있게 해주는 표준 프로토콜입니다. Claude Code에서 MCP 서버를 등록하면, AI가 직접 외부 API를 호출하여 실시간 정보를 가져올 수 있습니다.</p>
+<pre><code class="language-json">// ~/.claude.json 에 MCP 서버 등록 예시
+{
+  &quot;mcpServers&quot;: {
+    &quot;perplexity&quot;: {
+      &quot;command&quot;: &quot;npx&quot;,
+      &quot;args&quot;: [&quot;-y&quot;, &quot;perplexity-mcp&quot;],
+      &quot;env&quot;: {
+        &quot;PERPLEXITY_API_KEY&quot;: &quot;your-api-key&quot;
+      }
+    }
+  }
+}
+</code></pre>
+<p>이번에 비교한 3가지 도구도 모두 이 MCP 구조 위에서 동작합니다.</p>
+<h2>비교 대상</h2>
+<table>
+<thead>
+<tr>
+<th>도구</th>
+<th>유형</th>
+<th>백엔드</th>
+<th>비용</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>WebSearch</strong></td>
+<td>Claude Code 내장</td>
+<td>Anthropic 자체</td>
+<td>포함</td>
+</tr>
+<tr>
+<td><strong>Perplexity MCP</strong></td>
+<td>MCP 서버</td>
+<td>Perplexity Sonar Pro</td>
+<td>API 과금</td>
+</tr>
+<tr>
+<td><strong>Gemini Google Search</strong></td>
+<td>MCP 서버</td>
+<td>Gemini + Google Search Grounding</td>
+<td>API 과금</td>
+</tr>
+</tbody>
+</table>
+<h2>테스트 설계</h2>
+<h3>테스트 1: 시사 뉴스 검색</h3>
+<p><strong>질의</strong>: &quot;어제 당정 검찰개혁 협의안 결과와 야당 반응 및 향후 일정&quot;</p>
+<p>시의성이 중요한 정치 뉴스로, 최신 정보 반영 능력을 테스트합니다.</p>
+<h3>테스트 2: 기술 제품 정보</h3>
+<p><strong>질의</strong>: &quot;ChatGPT 5.4-mini&quot;</p>
+<p>최신 출시된 AI 모델의 스펙·가격·기능 정보로, 기술 정확도를 테스트합니다.</p>
+<h3>테스트 3: 개발자 커뮤니티 토픽 (5개)</h3>
+<p>r/programming 최근 포스트 5개를 선정하여 각각 검색:</p>
+<ol>
+<li>Torturing Rustc by Emulating HKTs</li>
+<li>Finding a CPU Design Bug in the Xbox 360</li>
+<li>Java 26 is here</li>
+<li>What is Infrastructure from Code?</li>
+<li>The Paxos algorithm, when presented in plain English, is very simple</li>
+</ol>
+<h2>테스트 결과</h2>
+<h3>응답 속도</h3>
+<p>개별 도구 실행 시간을 측정한 결과:</p>
+<table>
+<thead>
+<tr>
+<th>도구</th>
+<th>단독 측정</th>
+<th>5개 주제 평균 (추정)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>WebSearch</strong></td>
+<td>48.5s</td>
+<td>~9s</td>
+</tr>
+<tr>
+<td><strong>Perplexity</strong></td>
+<td>25.2s</td>
+<td>~19s</td>
+</tr>
+<tr>
+<td><strong>Gemini Google Search</strong></td>
+<td>30.2s</td>
+<td>~16s</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>단독 측정은 Claude Code 서브프로세스 전체 시간 (모델 응답 생성 포함), 5개 주제 평균은 병렬 실행 내 추정치</p>
+</blockquote>
+<p>단독 실행 시 Perplexity가 가장 빨랐지만, 병렬 환경에서는 WebSearch가 가장 먼저 응답을 반환하는 경향을 보였습니다.</p>
+<h3>테스트 1 결과: 시사 뉴스</h3>
+<table>
+<thead>
+<tr>
+<th>항목</th>
+<th>WebSearch</th>
+<th>Perplexity</th>
+<th>Gemini</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>협의안 상세도</td>
+<td>★★★★☆ 구체적 조항</td>
+<td>★★★★★ 가장 정리된 요약</td>
+<td>★★★☆☆ 개괄적 서술</td>
+</tr>
+<tr>
+<td>야당 반응</td>
+<td>★★☆☆☆ 피상적</td>
+<td>★★☆☆☆ 미확인 고지</td>
+<td>★★★★★ 필리버스터, 국조특위</td>
+</tr>
+<tr>
+<td>향후 일정</td>
+<td>★★★☆☆ 본회의만</td>
+<td>★★★★☆ 형소법 후속 논의</td>
+<td>★★★★☆ 국조 협상 전망</td>
+</tr>
+<tr>
+<td>출처 수</td>
+<td>10개</td>
+<td>7개</td>
+<td>10개</td>
+</tr>
+</tbody>
+</table>
+<p><strong>뉴스 검색 승자: Gemini</strong> — 야당 반응, 시민단체 동향까지 가장 폭넓게 커버</p>
+<h3>테스트 2 결과: 기술 제품 정보</h3>
+<table>
+<thead>
+<tr>
+<th>항목</th>
+<th>WebSearch</th>
+<th>Perplexity</th>
+<th>Gemini</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>스펙 정확도</td>
+<td>★★★★☆</td>
+<td>★★★★★ API 스펙 최상세</td>
+<td>★★★☆☆</td>
+</tr>
+<tr>
+<td>가격 정보</td>
+<td>★★★★☆ 기본 가격</td>
+<td>★★★★★ cached/regional까지</td>
+<td>★☆☆☆☆ 없음</td>
+</tr>
+<tr>
+<td>기술 상세도</td>
+<td>★★★★☆</td>
+<td>★★★★★ cutoff, rate limit 등</td>
+<td>★★★☆☆</td>
+</tr>
+<tr>
+<td>활용 시나리오</td>
+<td>★★★☆☆</td>
+<td>★★★☆☆</td>
+<td>★★★★☆ use case 구체적</td>
+</tr>
+</tbody>
+</table>
+<p><strong>기술 스펙 승자: Perplexity</strong> — context window, max output, rate limit, cached 가격까지 한 번에 제공</p>
+<h3>테스트 3 결과: 개발자 토픽 5개 종합</h3>
+<table>
+<thead>
+<tr>
+<th>항목</th>
+<th>WebSearch</th>
+<th>Perplexity</th>
+<th>Gemini</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>정보 정확도</td>
+<td>★★★★☆</td>
+<td>★★★★★</td>
+<td>★★★★☆</td>
+</tr>
+<tr>
+<td>기술 상세도</td>
+<td>★★★☆☆</td>
+<td>★★★★★</td>
+<td>★★★★☆</td>
+</tr>
+<tr>
+<td>출처 다양성</td>
+<td>★★★★☆</td>
+<td>★★★★☆</td>
+<td>★★★★★</td>
+</tr>
+<tr>
+<td>원문 링크 발굴</td>
+<td>★★★★★</td>
+<td>★★★☆☆</td>
+<td>★★★★☆</td>
+</tr>
+<tr>
+<td>구조화 (표/코드)</td>
+<td>★★☆☆☆</td>
+<td>★★★★★</td>
+<td>★★★☆☆</td>
+</tr>
+</tbody>
+</table>
+<p>주제별 차별화 포인트:</p>
+<table>
+<thead>
+<tr>
+<th>주제</th>
+<th>WebSearch 강점</th>
+<th>Perplexity 강점</th>
+<th>Gemini 강점</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Rust HKTs</td>
+<td>원문 블로그+HN 링크</td>
+<td>코드 예시 (Functor::fmap)</td>
+<td>rusty-hkt crate 등 라이브러리</td>
+</tr>
+<tr>
+<td>Xbox 360 CPU</td>
+<td>Bruce Dawson 원문 링크</td>
+<td>MESI 프로토콜 위반 메커니즘</td>
+<td>디버깅 어려움 관점</td>
+</tr>
+<tr>
+<td>Java 26</td>
+<td>출시일+JEP 목록</td>
+<td>JEP 전체 표 + AOT 42% 수치</td>
+<td>JVP 생태계 (타 도구 미수록)</td>
+</tr>
+<tr>
+<td>IfC</td>
+<td>구현체 6개 나열</td>
+<td>IaC vs IfC 5기준 비교표</td>
+<td>IaC 성숙도 비교 관점</td>
+</tr>
+<tr>
+<td>Paxos</td>
+<td>원문 블로그 링크</td>
+<td>2f+1 공식 + Phase 단계별</td>
+<td>Raft 비교 + 홀수노드 이유</td>
+</tr>
+</tbody>
+</table>
+<h2>최종 비교 요약</h2>
+<table>
+<thead>
+<tr>
+<th>항목</th>
+<th>WebSearch</th>
+<th>Perplexity</th>
+<th>Gemini</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>응답 속도</td>
+<td>★★★★★</td>
+<td>★★★☆☆</td>
+<td>★★★★☆</td>
+</tr>
+<tr>
+<td>기술 상세도</td>
+<td>★★★☆☆</td>
+<td>★★★★★</td>
+<td>★★★★☆</td>
+</tr>
+<tr>
+<td>뉴스/시사</td>
+<td>★★★★☆</td>
+<td>★★★☆☆</td>
+<td>★★★★★</td>
+</tr>
+<tr>
+<td>출처 다양성</td>
+<td>★★★★☆</td>
+<td>★★★★☆</td>
+<td>★★★★★</td>
+</tr>
+<tr>
+<td>원문 URL 발굴</td>
+<td>★★★★★</td>
+<td>★★★☆☆</td>
+<td>★★★★☆</td>
+</tr>
+<tr>
+<td>구조화 품질</td>
+<td>★★☆☆☆</td>
+<td>★★★★★</td>
+<td>★★★☆☆</td>
+</tr>
+<tr>
+<td>추가 비용</td>
+<td>없음</td>
+<td>API 과금</td>
+<td>API 과금</td>
+</tr>
+<tr>
+<td><strong>종합</strong></td>
+<td><strong>★★★★☆</strong></td>
+<td><strong>★★★★★</strong></td>
+<td><strong>★★★★☆</strong></td>
+</tr>
+</tbody>
+</table>
+<h2>도구 선택 가이드</h2>
+<p>각 도구는 명확한 강점 영역이 있습니다. 용도에 따라 최적의 도구를 선택하세요.</p>
+<pre><code>┌─────────────────────────────────┐
+│     어떤 검색이 필요한가?         │
+└──────────┬──────────────────────┘
+           │
+     ┌─────┴─────┐
+     ▼           ▼
+ 기술 심층 조사   최신 뉴스/폭넓은 수집   원문 URL/빠른 개요
+     │               │                      │
+     ▼               ▼                      ▼
+ Perplexity    Gemini Google Search      WebSearch
+     │               │
+     │ (실패 시)      │ (실패 시)
+     ▼               ▼
+ Gemini         WebSearch
+     │
+     │ (실패 시)
+     ▼
+ WebSearch
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>상황</th>
+<th>1순위</th>
+<th>fallback</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>기술 개념 심층 조사 (스펙, 코드, 비교 분석)</td>
+<td>Perplexity</td>
+<td>Gemini → WebSearch</td>
+</tr>
+<tr>
+<td>최신 뉴스, 공식 발표, 다각도 정보 수집</td>
+<td>Gemini</td>
+<td>WebSearch</td>
+</tr>
+<tr>
+<td>원문 URL 탐색, 빠른 개요</td>
+<td>WebSearch</td>
+<td>—</td>
+</tr>
+<tr>
+<td>어떤 도구든 실패 시 최종 fallback</td>
+<td>WebSearch</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<h2>Claude Code에서 설정하기</h2>
+<h3>1. Perplexity MCP 추가</h3>
+<pre><code class="language-bash">claude mcp add perplexity \
+  --env PERPLEXITY_API_KEY=&quot;your-key&quot; \
+  -- npx -y perplexity-mcp
+</code></pre>
+<p>제공 도구: <code>perplexity_search</code>, <code>perplexity_ask</code>, <code>perplexity_research</code>, <code>perplexity_reason</code></p>
+<h3>2. Gemini Google Search MCP 추가</h3>
+<pre><code class="language-bash">claude mcp add gemini-google-search \
+  --env GEMINI_API_KEY=&quot;your-key&quot; \
+  -- npx -y mcp-gemini-google-search
+</code></pre>
+<h3>3. CLAUDE.md에 선택 원칙 반영</h3>
+<pre><code class="language-markdown">### 웹 검색 도구 선택 원칙
+- **기술 심층 조사** → perplexity → gemini-google-search → WebSearch
+- **최신 뉴스/폭넓은 수집** → gemini-google-search → WebSearch
+- **원문 URL/빠른 개요** → WebSearch 내장
+- **최종 fallback** → WebSearch 내장
+</code></pre>
+<p>CLAUDE.md에 이 원칙을 명시하면, Claude Code가 자동으로 용도에 맞는 도구를 선택합니다.</p>
+<h2>마치며</h2>
+<p>하나의 검색 도구로 모든 상황을 커버하기는 어렵습니다. 세 도구는 각각 뚜렷한 강점이 있고, 상호 보완적입니다.</p>
+<ul>
+<li><strong>Perplexity</strong>: 여러 소스를 합성하여 코드 예시·표·수치까지 포함한 고품질 답변을 만들어냅니다. 기술 조사의 깊이가 압도적입니다.</li>
+<li><strong>Gemini Google Search</strong>: Google Search Grounding 기반으로 출처가 가장 다양하고, 뉴스·시사 분야에서 맥락 파악 능력이 뛰어납니다.</li>
+<li><strong>WebSearch</strong>: 추가 비용 없이 빠르게 원문 링크를 찾아주는 만능 fallback입니다.</li>
+</ul>
+<p>MCP의 진짜 가치는 &quot;하나의 최강 도구&quot;가 아니라, <strong>용도에 맞는 도구를 자유롭게 조합할 수 있다</strong>는 점에 있습니다. CLAUDE.md에 선택 원칙을 명시해두면, AI가 알아서 최적의 도구를 골라 씁니다.</p>
+
+    </div>
+  </article>
+
+  
+</div>
+
+  </main>
+
+  <footer class="mt-20 px-5 py-10 bg-white border-t border-gray-200 text-center text-gray-500 text-sm relative">
+    <p>&copy; 2025 Hanson Kim. All rights reserved.</p>
+  </footer>
+  <script src="/js/tree-navigation.js"></script>
+  <script src="/js/search.js"></script>
+</body>
+</html>
