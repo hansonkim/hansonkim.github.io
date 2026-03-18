@@ -171,253 +171,39 @@
 </tbody>
 </table>
 <h2>테스트 설계</h2>
-<p>총 7개 쿼리로 3가지 카테고리를 테스트했습니다. 각 도구에 동일한 쿼리를 동일 시점에 실행하고, 단독 실행과 병렬 실행 각 1회씩 측정했습니다.</p>
+<p>6가지 카테고리(한국어 시사, 한국어 기술, 영어 기술, 영어 뉴스, 보안, hallucination 방어)를 커버하는 10개 쿼리를 설계하고, 3개 도구에 동일 시점에 실행했습니다.</p>
 <h3>평가 기준 (루브릭)</h3>
-<p>별점은 다음 기준으로 매겼습니다:</p>
 <table>
 <thead>
 <tr>
-<th>등급</th>
+<th>점수</th>
 <th>기준</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>★★★★★</td>
-<td>질의 의도를 완전히 충족하고, 구체적 수치/예시/출처까지 포함</td>
+<td>5</td>
+<td>질의 의도를 완전히 충족. 구체적 수치, 출처, 예시까지 포함</td>
 </tr>
 <tr>
-<td>★★★★</td>
+<td>4</td>
 <td>핵심 정보를 정확히 제공하나, 일부 세부사항 누락</td>
 </tr>
 <tr>
-<td>★★★</td>
-<td>개괄적 답변은 제공하나, 깊이가 부족하거나 일부 부정확</td>
+<td>3</td>
+<td>개괄적 답변은 제공하나, 깊이 부족하거나 일부 부정확</td>
 </tr>
 <tr>
-<td>★★</td>
+<td>2</td>
 <td>관련 정보를 일부만 제공하거나, 피상적 수준</td>
 </tr>
 <tr>
-<td>★</td>
+<td>1</td>
 <td>거의 유용한 정보 없음 또는 명백한 오류</td>
 </tr>
 </tbody>
 </table>
-<h3>테스트 1: 시사 뉴스 검색 (한국어)</h3>
-<p><strong>질의</strong>: &quot;어제 당정 검찰개혁 협의안 결과와 야당 반응 및 향후 일정&quot;</p>
-<p>시의성이 중요한 한국 정치 뉴스로, <strong>한국어 최신 정보 반영 능력</strong>을 테스트합니다.</p>
-<h3>테스트 2: 기술 제품 정보 (영어)</h3>
-<p><strong>질의</strong>: &quot;ChatGPT 5.4-mini&quot;</p>
-<p>최신 출시된 AI 모델의 스펙·가격·기능 정보로, 기술 정확도를 테스트합니다.</p>
-<h3>테스트 3: 개발자 커뮤니티 토픽 5개 (영어)</h3>
-<p>r/programming 최근 포스트 5개를 선정하여 각각 검색:</p>
-<ol>
-<li>Torturing Rustc by Emulating HKTs</li>
-<li>Finding a CPU Design Bug in the Xbox 360</li>
-<li>Java 26 is here</li>
-<li>What is Infrastructure from Code?</li>
-<li>The Paxos algorithm, when presented in plain English, is very simple</li>
-</ol>
-<h2>테스트 결과</h2>
-<h3>응답 속도</h3>
-<p>개별 도구 실행 시간을 측정한 결과:</p>
-<table>
-<thead>
-<tr>
-<th>도구</th>
-<th>단독 측정</th>
-<th>5개 주제 평균 (추정)</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>WebSearch</strong></td>
-<td>48.5s</td>
-<td>~9s</td>
-</tr>
-<tr>
-<td><strong>Perplexity</strong></td>
-<td>25.2s</td>
-<td>~19s</td>
-</tr>
-<tr>
-<td><strong>Gemini Google Search</strong></td>
-<td>30.2s</td>
-<td>~16s</td>
-</tr>
-</tbody>
-</table>
-<blockquote>
-<p><strong>측정 방법</strong>: 단독 측정은 Claude Code 서브에이전트(Agent 도구) 1회 실행의 전체 시간 (API 호출 + 모델 응답 생성 포함). 5개 주제 평균은 동일 5개 쿼리를 병렬 실행한 세션에서 각 도구가 응답을 반환한 시간의 평균 추정치입니다. 각 조건당 1회 실행이므로 통계적 유의성은 제한적입니다.</p>
-</blockquote>
-<p>단독 실행 시 Perplexity가 가장 빨랐지만, 병렬 환경에서는 WebSearch가 가장 먼저 응답을 반환하는 경향을 보였습니다.</p>
-<h3>테스트 1 결과: 시사 뉴스</h3>
-<table>
-<thead>
-<tr>
-<th>항목</th>
-<th>WebSearch</th>
-<th>Perplexity</th>
-<th>Gemini</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>협의안 상세도</td>
-<td>★★★★ 구체적 조항</td>
-<td>★★★★★ 가장 정리된 요약</td>
-<td>★★★ 개괄적 서술</td>
-</tr>
-<tr>
-<td>야당 반응</td>
-<td>★★ 피상적</td>
-<td>★★ 미확인 고지</td>
-<td>★★★★★ 필리버스터, 국조특위</td>
-</tr>
-<tr>
-<td>향후 일정</td>
-<td>★★★ 본회의만</td>
-<td>★★★★ 형소법 후속 논의</td>
-<td>★★★★ 국조 협상 전망</td>
-</tr>
-<tr>
-<td>출처 수</td>
-<td>10개</td>
-<td>7개</td>
-<td>10개</td>
-</tr>
-</tbody>
-</table>
-<p><strong>뉴스 검색 승자: Gemini</strong> — 야당 반응, 시민단체 동향까지 가장 폭넓게 커버</p>
-<p><strong>한국어 검색 특이사항</strong>: Gemini는 Google Search Grounding 덕분에 한국 뉴스 소스(연합뉴스, 한겨레 등)를 직접 인덱싱하여 한국어 쿼리에서 가장 강력했습니다. Perplexity는 한국어 쿼리를 영어 소스 중심으로 처리하는 경향이 있어, 한국 시사 뉴스에서는 상대적으로 약했습니다. WebSearch는 한국어 소스를 적절히 반환했으나 맥락 요약이 얕았습니다.</p>
-<h3>테스트 2 결과: 기술 제품 정보</h3>
-<table>
-<thead>
-<tr>
-<th>항목</th>
-<th>WebSearch</th>
-<th>Perplexity</th>
-<th>Gemini</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>스펙 정확도</td>
-<td>★★★★</td>
-<td>★★★★★ API 스펙 최상세</td>
-<td>★★★</td>
-</tr>
-<tr>
-<td>가격 정보</td>
-<td>★★★★ 기본 가격</td>
-<td>★★★★★ cached/regional까지</td>
-<td>★ 없음</td>
-</tr>
-<tr>
-<td>기술 상세도</td>
-<td>★★★★</td>
-<td>★★★★★ cutoff, rate limit 등</td>
-<td>★★★</td>
-</tr>
-<tr>
-<td>활용 시나리오</td>
-<td>★★★</td>
-<td>★★★</td>
-<td>★★★★ use case 구체적</td>
-</tr>
-</tbody>
-</table>
-<p><strong>기술 스펙 승자: Perplexity</strong> — context window, max output, rate limit, cached 가격까지 한 번에 제공</p>
-<h3>테스트 3 결과: 개발자 토픽 5개 종합</h3>
-<table>
-<thead>
-<tr>
-<th>항목</th>
-<th>WebSearch</th>
-<th>Perplexity</th>
-<th>Gemini</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>정보 정확도</td>
-<td>★★★★</td>
-<td>★★★★★</td>
-<td>★★★★</td>
-</tr>
-<tr>
-<td>기술 상세도</td>
-<td>★★★</td>
-<td>★★★★★</td>
-<td>★★★★</td>
-</tr>
-<tr>
-<td>출처 다양성</td>
-<td>★★★★</td>
-<td>★★★★</td>
-<td>★★★★★</td>
-</tr>
-<tr>
-<td>원문 링크 발굴</td>
-<td>★★★★★</td>
-<td>★★★</td>
-<td>★★★★</td>
-</tr>
-<tr>
-<td>구조화 (표/코드)</td>
-<td>★★</td>
-<td>★★★★★</td>
-<td>★★★</td>
-</tr>
-</tbody>
-</table>
-<p>주제별 차별화 포인트:</p>
-<table>
-<thead>
-<tr>
-<th>주제</th>
-<th>WebSearch 강점</th>
-<th>Perplexity 강점</th>
-<th>Gemini 강점</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Rust HKTs</td>
-<td>원문 블로그+HN 링크</td>
-<td>코드 예시 (Functor::fmap)</td>
-<td>rusty-hkt crate 등 라이브러리</td>
-</tr>
-<tr>
-<td>Xbox 360 CPU</td>
-<td>Bruce Dawson 원문 링크</td>
-<td>MESI 프로토콜 위반 메커니즘</td>
-<td>디버깅 어려움 관점</td>
-</tr>
-<tr>
-<td>Java 26</td>
-<td>출시일+JEP 목록</td>
-<td>JEP 전체 표 + AOT 42% 수치</td>
-<td>JVP 생태계 (타 도구 미수록)</td>
-</tr>
-<tr>
-<td>IfC</td>
-<td>구현체 6개 나열</td>
-<td>IaC vs IfC 5기준 비교표</td>
-<td>IaC 성숙도 비교 관점</td>
-</tr>
-<tr>
-<td>Paxos</td>
-<td>원문 블로그 링크</td>
-<td>2f+1 공식 + Phase 단계별</td>
-<td>Raft 비교 + 홀수노드 이유</td>
-</tr>
-</tbody>
-</table>
-<h2>확장 테스트: 10개 쿼리 통계</h2>
-<p>초기 테스트(7개 쿼리)의 표본 한계를 보완하기 위해, 추가로 10개 쿼리를 설계하여 3개 도구에 동일 조건으로 실행했습니다.</p>
-<h3>확장 테스트 쿼리 목록</h3>
+<h3>테스트 쿼리 목록</h3>
 <table>
 <thead>
 <tr>
@@ -490,7 +276,8 @@
 </tr>
 </tbody>
 </table>
-<h3>10개 쿼리별 품질 점수</h3>
+<h2>테스트 결과</h2>
+<h3>쿼리별 품질 점수</h3>
 <p><img src="/images/search-mcp-comparison/chart1_ws.png" alt="WebSearch 품질 점수">
 <img src="/images/search-mcp-comparison/chart1_px.png" alt="Perplexity 품질 점수">
 <img src="/images/search-mcp-comparison/chart1_gm.png" alt="Gemini 품질 점수"></p>
@@ -498,24 +285,24 @@
 <summary>Mermaid 소스 코드</summary>
 <pre><code class="language-mermaid">%% WebSearch (파랑 #4A90D9)
 xychart-beta
-    title &quot;WebSearch 품질 점수 (평균 3.5)&quot;
+    title &quot;WebSearch 품질 점수 (평균 3.4)&quot;
     x-axis [&quot;Q1&quot;, &quot;Q2&quot;, &quot;Q3&quot;, &quot;Q4&quot;, &quot;Q5&quot;, &quot;Q6&quot;, &quot;Q7&quot;, &quot;Q8&quot;, &quot;Q9&quot;, &quot;Q10&quot;]
     y-axis &quot;점수&quot; 0 --&gt; 5
-    bar [3, 3, 3, 4, 4, 4, 3, 3, 4, 4]
+    bar [4, 3, 3, 3, 4, 4, 4, 3, 3, 3]
 
 %% Perplexity (주황 #E8854A)
 xychart-beta
-    title &quot;Perplexity 품질 점수 (평균 3.7)&quot;
+    title &quot;Perplexity 품질 점수 (평균 4.0)&quot;
     x-axis [&quot;Q1&quot;, &quot;Q2&quot;, &quot;Q3&quot;, &quot;Q4&quot;, &quot;Q5&quot;, &quot;Q6&quot;, &quot;Q7&quot;, &quot;Q8&quot;, &quot;Q9&quot;, &quot;Q10&quot;]
     y-axis &quot;점수&quot; 0 --&gt; 5
-    bar [5, 4, 4, 3, 2, 1, 5, 5, 3, 5]
+    bar [5, 5, 4, 5, 2, 1, 5, 5, 4, 4]
 
 %% Gemini (초록 #5BB55B)
 xychart-beta
-    title &quot;Gemini 품질 점수 (평균 4.2)&quot;
+    title &quot;Gemini 품질 점수 (평균 4.3)&quot;
     x-axis [&quot;Q1&quot;, &quot;Q2&quot;, &quot;Q3&quot;, &quot;Q4&quot;, &quot;Q5&quot;, &quot;Q6&quot;, &quot;Q7&quot;, &quot;Q8&quot;, &quot;Q9&quot;, &quot;Q10&quot;]
     y-axis &quot;점수&quot; 0 --&gt; 5
-    bar [4, 5, 4, 5, 4, 5, 4, 4, 2, 5]
+    bar [4, 4, 4, 5, 5, 5, 4, 4, 3, 5]
 </code></pre>
 </details>
 <table>
@@ -526,89 +313,100 @@ xychart-beta
 <th>WebSearch</th>
 <th>Perplexity</th>
 <th>Gemini</th>
+<th>비고</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>Q1</td>
 <td>한국 부동산 정책</td>
-<td>★★★</td>
-<td>★★★★★</td>
-<td>★★★★</td>
+<td>4</td>
+<td><strong>5</strong></td>
+<td>4</td>
+<td>PX: 3월은 &quot;준비 국면&quot;임을 정확히 구분</td>
 </tr>
 <tr>
 <td>Q2</td>
 <td>하이퍼클로바X</td>
-<td>★★★</td>
-<td>★★★★</td>
-<td>★★★★★</td>
+<td>3</td>
+<td><strong>5</strong></td>
+<td>4</td>
+<td>PX: 수치(MMLU 79.6%, 비용 50%↓) 포함. GM: 당일 AMD 뉴스 반영</td>
 </tr>
 <tr>
 <td>Q3</td>
 <td>Claude vs GPT-5</td>
-<td>★★★</td>
-<td>★★★★</td>
-<td>★★★★</td>
+<td>3</td>
+<td>4</td>
+<td>4</td>
+<td>WS: 저품질 SEO 사이트 혼입</td>
 </tr>
 <tr>
 <td>Q4</td>
 <td>Rust 2024</td>
-<td>★★★★</td>
-<td>★★★</td>
-<td>★★★★★</td>
+<td>3</td>
+<td><strong>5</strong></td>
+<td><strong>5</strong></td>
+<td>WS: RPIT, match ergonomics 등 주요 변경사항 누락</td>
 </tr>
 <tr>
 <td>Q5</td>
 <td>SpaceX Starship</td>
-<td>★★★★</td>
-<td>★★</td>
-<td>★★★★</td>
+<td>4</td>
+<td><strong>2</strong> ✗</td>
+<td><strong>5</strong></td>
+<td>PX: &quot;발사 일정 없다&quot;고 오답. GM: Flight 12 상세 스펙 제공</td>
 </tr>
 <tr>
 <td>Q6</td>
 <td>FastAPI 0.115</td>
-<td>★★★★</td>
-<td>★</td>
-<td>★★★★★</td>
+<td>4</td>
+<td><strong>1</strong> ✗</td>
+<td><strong>5</strong></td>
+<td>PX: 완전 실패 (한국어 소스 편향). GM: 공식 Release Notes 완전 커버</td>
 </tr>
 <tr>
 <td>Q7</td>
 <td>다누리 탐사선</td>
-<td>★★★</td>
-<td>★★★★★</td>
-<td>★★★★</td>
+<td>4</td>
+<td><strong>5</strong></td>
+<td>4</td>
+<td>PX: 탑재체별 성과, 논문 30편 등 최상세</td>
 </tr>
 <tr>
 <td>Q8</td>
 <td>Deno vs Bun</td>
-<td>★★★</td>
-<td>★★★★★</td>
-<td>★★★★</td>
+<td>3</td>
+<td><strong>5</strong></td>
+<td>4</td>
+<td>PX: 14회 테스트 승패, 브레이킹 포인트 수치</td>
 </tr>
 <tr>
 <td>Q9</td>
 <td>가짜 프레임워크</td>
-<td>★★★★</td>
-<td>★★★</td>
-<td>★★</td>
+<td>3</td>
+<td><strong>4</strong></td>
+<td>3</td>
+<td>PX: &quot;존재하지 않음&quot;을 명시 선언. WS/GM: 소극적 표현</td>
 </tr>
 <tr>
 <td>Q10</td>
 <td>Log4Shell 보안</td>
-<td>★★★★</td>
-<td>★★★★★</td>
-<td>★★★★★</td>
+<td>3</td>
+<td>4</td>
+<td><strong>5</strong></td>
+<td>GM: Java 버전별 세분화, SBOM, 컨테이너 보안까지</td>
 </tr>
 <tr>
 <td></td>
 <td><strong>평균</strong></td>
-<td><strong>3.5</strong></td>
-<td><strong>3.7</strong></td>
-<td><strong>4.2</strong></td>
+<td><strong>3.4</strong></td>
+<td><strong>4.0</strong></td>
+<td><strong>4.3</strong></td>
+<td></td>
 </tr>
 </tbody>
 </table>
-<p><strong>핵심 발견</strong>: WebSearch는 안정적이지만 평범(3~4점), Perplexity는 편차가 극단적(1점~5점), Gemini는 고르게 높은 점수(4~5점)를 기록했습니다.</p>
 <h3>카테고리별 평균 품질</h3>
 <p><img src="/images/search-mcp-comparison/chart2_ws.png" alt="WebSearch 카테고리별 평균">
 <img src="/images/search-mcp-comparison/chart2_px.png" alt="Perplexity 카테고리별 평균">
@@ -620,21 +418,21 @@ xychart-beta
     title &quot;WebSearch 카테고리별 평균&quot;
     x-axis [&quot;KR 시사&quot;, &quot;KR 기술&quot;, &quot;EN 기술&quot;, &quot;EN 뉴스&quot;, &quot;보안&quot;, &quot;Anti-H&quot;]
     y-axis &quot;점수&quot; 0 --&gt; 5
-    bar [3.0, 3.5, 3.3, 4.0, 4.0, 4.0]
+    bar [4.0, 3.5, 3.0, 4.0, 3.0, 3.0]
 
 %% Perplexity (주황 #E8854A)
 xychart-beta
     title &quot;Perplexity 카테고리별 평균&quot;
     x-axis [&quot;KR 시사&quot;, &quot;KR 기술&quot;, &quot;EN 기술&quot;, &quot;EN 뉴스&quot;, &quot;보안&quot;, &quot;Anti-H&quot;]
     y-axis &quot;점수&quot; 0 --&gt; 5
-    bar [5.0, 2.5, 4.0, 2.0, 5.0, 3.0]
+    bar [5.0, 3.0, 4.7, 2.0, 4.0, 4.0]
 
 %% Gemini (초록 #5BB55B)
 xychart-beta
     title &quot;Gemini 카테고리별 평균&quot;
     x-axis [&quot;KR 시사&quot;, &quot;KR 기술&quot;, &quot;EN 기술&quot;, &quot;EN 뉴스&quot;, &quot;보안&quot;, &quot;Anti-H&quot;]
     y-axis &quot;점수&quot; 0 --&gt; 5
-    bar [4.0, 5.0, 4.3, 4.0, 5.0, 2.0]
+    bar [4.0, 4.5, 4.3, 5.0, 5.0, 3.0]
 </code></pre>
 </details>
 <table>
@@ -650,62 +448,62 @@ xychart-beta
 <tbody>
 <tr>
 <td>한국어 시사/과학 (Q1, Q7)</td>
-<td>3.0</td>
+<td>4.0</td>
 <td><strong>5.0</strong></td>
 <td>4.0</td>
-<td>Perplexity</td>
+<td><strong>Perplexity</strong></td>
 </tr>
 <tr>
 <td>한국어 기술/개발 (Q2, Q6)</td>
 <td>3.5</td>
-<td>2.5</td>
-<td><strong>5.0</strong></td>
-<td>Gemini</td>
+<td>3.0</td>
+<td><strong>4.5</strong></td>
+<td><strong>Gemini</strong></td>
 </tr>
 <tr>
 <td>영어 기술 (Q3, Q4, Q8)</td>
-<td>3.3</td>
-<td>4.0</td>
-<td><strong>4.3</strong></td>
-<td>Gemini</td>
+<td>3.0</td>
+<td><strong>4.7</strong></td>
+<td>4.3</td>
+<td><strong>Perplexity</strong></td>
 </tr>
 <tr>
 <td>영어 뉴스 (Q5)</td>
-<td><strong>4.0</strong></td>
+<td>4.0</td>
 <td>2.0</td>
-<td><strong>4.0</strong></td>
-<td>WebSearch = Gemini</td>
+<td><strong>5.0</strong></td>
+<td><strong>Gemini</strong></td>
 </tr>
 <tr>
 <td>보안 (Q10)</td>
+<td>3.0</td>
 <td>4.0</td>
 <td><strong>5.0</strong></td>
-<td><strong>5.0</strong></td>
-<td>Perplexity = Gemini</td>
+<td><strong>Gemini</strong></td>
 </tr>
 <tr>
 <td>Hallucination 방어 (Q9)</td>
+<td>3.0</td>
 <td><strong>4.0</strong></td>
 <td>3.0</td>
-<td>2.0</td>
-<td>WebSearch</td>
+<td><strong>Perplexity</strong></td>
 </tr>
 </tbody>
 </table>
-<h3>실패 및 오류 케이스 (확장)</h3>
+<h3>실패 및 오류 케이스</h3>
 <p><img src="/images/search-mcp-comparison/chart3_failures.png" alt="도구별 실패 건수"></p>
 <details>
 <summary>Mermaid 소스 코드</summary>
 <pre><code class="language-mermaid">xychart-beta
-    title &quot;도구별 실패/오류 건수 (10개 쿼리 중)&quot;
+    title &quot;도구별 실패 건수 (10개 쿼리 중)&quot;
     x-axis [&quot;WebSearch&quot;, &quot;Perplexity&quot;, &quot;Gemini&quot;]
-    y-axis &quot;실패 건수&quot; 0 --&gt; 4
-    bar [0, 3, 1]
+    y-axis &quot;실패 건수&quot; 0 --&gt; 3
+    bar [0, 2, 0]
 </code></pre>
 </details>
-<p><strong>WebSearch — 실패 0건, 오류 0건</strong></p>
-<p>가장 안정적. 10개 쿼리 모두 관련 정보를 반환했습니다. 다만 깊이가 얕고 저품질 SEO 사이트 결과가 혼입되는 경향이 있습니다 (Q3에서 신뢰도 낮은 마케팅 블로그 다수 포함).</p>
-<p><strong>Perplexity — 실패 3건</strong></p>
+<p><strong>WebSearch — 실패 0건</strong></p>
+<p>10개 쿼리 모두 관련 정보를 반환. 가장 안정적이지만 깊이가 일관되게 얕고(평균 3.4), 저품질 SEO 사이트 결과 혼입 경향이 있습니다.</p>
+<p><strong>Perplexity — 실패 2건</strong></p>
 <table>
 <thead>
 <tr>
@@ -717,51 +515,23 @@ xychart-beta
 <tbody>
 <tr>
 <td>Q5 SpaceX</td>
-<td>정보 누락</td>
-<td>Starship Flight 12 준비 정보를 전혀 반영하지 못하고 &quot;2026년 스타십 발사 일정이 없다&quot;고 오답</td>
+<td>정보 오판</td>
+<td>Starship Flight 12가 임박했음에도 &quot;2026년 스타십 발사 일정이 없다&quot;고 단정. Falcon 9 일정만 나열</td>
 </tr>
 <tr>
 <td>Q6 FastAPI</td>
 <td>완전 실패</td>
-<td>&quot;FastAPI 0.115 변경사항이 확인되지 않는다&quot;고 답변. 공식 Release Notes 접근 실패. 한국어 쿼리 시 영문 공식 소스를 놓침</td>
-</tr>
-<tr>
-<td>Q2 하이퍼클로바X</td>
-<td>API 오류</td>
-<td>1차 시도에서 <code>MCP error -32603</code> 발생 (쿼리에 &quot;2026&quot; 포함 시). 재시도 후 성공</td>
+<td>&quot;변경사항을 확인할 수 없다&quot;며 무관한 ComfyUI 정보 제공. 한국어 쿼리 시 공식 영문 Release Notes 접근 실패</td>
 </tr>
 </tbody>
 </table>
-<p>추가 주의사항:</p>
+<p><strong>Perplexity의 패턴</strong>: 잘할 때는 5점(Q1, Q2, Q4, Q7, Q8)으로 압도적이지만, 실패할 때는 1~2점으로 완전히 무너집니다. 특히 <strong>한국어로 된 개발 쿼리</strong>(Q6)와 <strong>최신 뉴스</strong>(Q5)에서 반복적으로 취약합니다.</p>
+<p><strong>Gemini — 실패 0건</strong></p>
+<p>10개 쿼리 모두 Pass. 다만 주의할 점:</p>
 <ul>
-<li>Q4 Rust 2024에서 <strong>사실 오류</strong>: <code>array IntoIterator</code>(Rust 1.53에서 도입)와 <code>or-patterns</code>를 2024 Edition 신기능으로 잘못 소개</li>
-<li>Q2에서 &quot;엑사원 3.0 독자 모델 결합&quot; 표현이 LG AI 연구원의 엑사원과 혼동 가능</li>
+<li>출처 URL이 <code>vertexaisearch.cloud.google.com</code> 리다이렉트 형태로, 원본 URL 직접 확인이 어려움</li>
+<li>Q8에서 Deno 처리량을 12,400 rps로 기술하여 다른 소스(22,000~29,000 rps)와 불일치</li>
 </ul>
-<p><strong>Gemini — 실패 1건</strong></p>
-<table>
-<thead>
-<tr>
-<th>쿼리</th>
-<th>실패 유형</th>
-<th>상세</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Q9 가짜 프레임워크</td>
-<td><strong>부분 Hallucination</strong></td>
-<td>&quot;Quantum.js released a new version on December 15, 2025&quot;라는 검증 불가 날짜를 <code>iot-sdn.space</code>라는 불명확한 출처에서 인용. 존재하지 않는 프레임워크에 대해 실존하는 것처럼 정보 생성</td>
-</tr>
-</tbody>
-</table>
-<p>추가 주의사항:</p>
-<ul>
-<li>Q3에서 &quot;Claude Opus 4.6&quot; 등 미확정 모델명 언급 (hallucination 경계)</li>
-<li>출처 URL이 일관되게 <code>vertexaisearch.cloud.google.com</code> 리다이렉트 형태로, 원본 URL 직접 확인이 어려움</li>
-</ul>
-<blockquote>
-<p><strong>종합</strong>: WebSearch는 &quot;못하지만 틀리지 않는&quot; 안전한 도구, Perplexity는 &quot;잘하거나 실패하거나&quot; 극단적, Gemini는 &quot;대체로 잘하지만 가끔 만들어낸다&quot;는 패턴을 보였습니다.</p>
-</blockquote>
 <h2>최종 비교 요약</h2>
 <table>
 <thead>
@@ -774,58 +544,58 @@ xychart-beta
 </thead>
 <tbody>
 <tr>
-<td>응답 속도</td>
-<td>★★★★★</td>
-<td>★★★</td>
-<td>★★★★</td>
-</tr>
-<tr>
-<td>기술 상세도</td>
-<td>★★★</td>
-<td>★★★★★</td>
-<td>★★★★</td>
-</tr>
-<tr>
-<td>뉴스/시사</td>
-<td>★★★★</td>
-<td>★★★</td>
-<td>★★★★★</td>
-</tr>
-<tr>
-<td>출처 다양성</td>
-<td>★★★★</td>
-<td>★★★★</td>
-<td>★★★★★</td>
-</tr>
-<tr>
-<td>원문 URL 발굴</td>
-<td>★★★★★</td>
-<td>★★★</td>
-<td>★★★★</td>
-</tr>
-<tr>
-<td>구조화 품질</td>
-<td>★★</td>
-<td>★★★★★</td>
-<td>★★★</td>
+<td><strong>10개 쿼리 평균</strong></td>
+<td><strong>3.4/5</strong></td>
+<td><strong>4.0/5</strong></td>
+<td><strong>4.3/5</strong></td>
 </tr>
 <tr>
 <td>안정성 (실패율)</td>
 <td>★★★★★ 0/10</td>
-<td>★★ 3/10</td>
-<td>★★★★ 1/10</td>
+<td>★★★ 2/10</td>
+<td>★★★★★ 0/10</td>
+</tr>
+<tr>
+<td>기술 심층 조사</td>
+<td>★★★</td>
+<td>★★★★★</td>
+<td>★★★★</td>
+</tr>
+<tr>
+<td>한국어 시사/과학</td>
+<td>★★★★</td>
+<td>★★★★★</td>
+<td>★★★★</td>
+</tr>
+<tr>
+<td>한국어 기술/개발</td>
+<td>★★★</td>
+<td>★★★</td>
+<td>★★★★★</td>
+</tr>
+<tr>
+<td>영어 뉴스/최신 정보</td>
+<td>★★★★</td>
+<td>★★</td>
+<td>★★★★★</td>
+</tr>
+<tr>
+<td>보안/전문 분야</td>
+<td>★★★</td>
+<td>★★★★</td>
+<td>★★★★★</td>
+</tr>
+<tr>
+<td>출처 투명성</td>
+<td>★★★★★ 직접 URL</td>
+<td>★★★★ 인라인 인용</td>
+<td>★★★ redirect URL</td>
 </tr>
 <tr>
 <td>Hallucination 방어</td>
-<td>★★★★★</td>
+<td>★★★</td>
 <td>★★★★</td>
 <td>★★★</td>
-</tr>
-<tr>
-<td>한국어 쿼리</td>
-<td>★★★</td>
-<td>★★★</td>
-<td>★★★★★</td>
 </tr>
 <tr>
 <td>추가 비용</td>
@@ -833,30 +603,24 @@ xychart-beta
 <td>API 과금</td>
 <td>API 과금</td>
 </tr>
-<tr>
-<td><strong>10개 쿼리 평균</strong></td>
-<td><strong>3.5/5</strong></td>
-<td><strong>3.7/5</strong></td>
-<td><strong>4.2/5</strong></td>
-</tr>
 </tbody>
 </table>
 <h2>도구 선택 가이드</h2>
-<p>각 도구는 명확한 강점 영역이 있습니다. 용도에 따라 최적의 도구를 선택하세요.</p>
-<pre><code>┌─────────────────────────────────┐
-│     어떤 검색이 필요한가?         │
-└──────────┬──────────────────────┘
+<p>테스트 결과를 바탕으로 한 <strong>용도별 최적 선택</strong>:</p>
+<pre><code>┌────────────────────────────────────┐
+│       어떤 검색이 필요한가?           │
+└──────────┬─────────────────────────┘
            │
-     ┌─────┴─────┐
-     ▼           ▼
- 기술 심층 조사   최신 뉴스/폭넓은 수집   원문 URL/빠른 개요
-     │               │                      │
-     ▼               ▼                      ▼
- Perplexity    Gemini Google Search      WebSearch
-     │               │
-     │ (실패 시)      │ (실패 시)
-     ▼               ▼
- Gemini         WebSearch
+     ┌─────┼──────────┐
+     ▼     ▼          ▼
+ 기술 심층  뉴스/한국어  빠른 개요
+     │     기술/보안       │
+     ▼     ▼              ▼
+ Perplexity  Gemini    WebSearch
+     │     │
+     │     │ (실패 시)
+     ▼     ▼
+ Gemini  WebSearch
      │
      │ (실패 시)
      ▼
@@ -868,31 +632,51 @@ xychart-beta
 <th>상황</th>
 <th>1순위</th>
 <th>fallback</th>
+<th>근거</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>기술 개념 심층 조사 (스펙, 코드, 비교 분석)</td>
+<td>기술 개념 심층 조사 (스펙, 코드, 비교)</td>
 <td>Perplexity</td>
 <td>Gemini → WebSearch</td>
+<td>영어 기술 평균 4.7로 최고</td>
 </tr>
 <tr>
-<td>최신 뉴스, 공식 발표, 다각도 정보 수집</td>
-<td>Gemini</td>
+<td>한국어 시사, 과학 뉴스</td>
+<td>Perplexity</td>
+<td>Gemini → WebSearch</td>
+<td>한국어 시사 평균 5.0</td>
+</tr>
+<tr>
+<td>최신 뉴스, 한국어 기술/개발</td>
+<td><strong>Gemini</strong></td>
 <td>WebSearch</td>
+<td>뉴스 5.0, 한국어 기술 4.5. Perplexity는 이 영역에서 실패 이력</td>
+</tr>
+<tr>
+<td>보안, 전문 분야 심층 분석</td>
+<td><strong>Gemini</strong></td>
+<td>Perplexity → WebSearch</td>
+<td>보안 5.0, 공식 기관 소스 활용 우수</td>
 </tr>
 <tr>
 <td>원문 URL 탐색, 빠른 개요</td>
 <td>WebSearch</td>
 <td>—</td>
+<td>추가 비용 없음, 실패율 0%</td>
 </tr>
 <tr>
-<td>어떤 도구든 실패 시 최종 fallback</td>
+<td>최종 fallback</td>
 <td>WebSearch</td>
 <td>—</td>
+<td>어떤 상황에서든 3~4점 보장</td>
 </tr>
 </tbody>
 </table>
+<blockquote>
+<p><strong>이전 가이드와의 차이</strong>: Gemini의 역할이 확대되었습니다. 기존에는 &quot;뉴스/시사 전문&quot;으로만 추천했으나, 테스트 결과 한국어 기술 문서, 보안, 최신 뉴스 등 <strong>Perplexity가 실패하는 영역 전반에서 Gemini가 안정적으로 높은 점수</strong>를 기록했습니다. Perplexity는 &quot;잘하면 최고&quot;이지만 실패 위험이 있으므로, <strong>확실한 영역(영어 기술 심층, 한국어 시사)에만 1순위로 사용</strong>하고 나머지는 Gemini를 우선하는 것이 안전합니다.</p>
+</blockquote>
 <h2>Claude Code에서 설정하기</h2>
 <h3>1. Perplexity MCP 추가</h3>
 <p><a href="https://docs.perplexity.ai/">Perplexity API 키 발급</a> → Settings &gt; API Keys에서 생성</p>
@@ -912,28 +696,26 @@ xychart-beta
 </blockquote>
 <h3>3. CLAUDE.md에 선택 원칙 반영</h3>
 <pre><code class="language-markdown">### 웹 검색 도구 선택 원칙
-- **기술 심층 조사** → perplexity → gemini-google-search → WebSearch
-- **최신 뉴스/폭넓은 수집** → gemini-google-search → WebSearch
+- **기술 심층 조사 (영어)** → perplexity → gemini-google-search → WebSearch
+- **한국어 시사/과학** → perplexity → gemini-google-search → WebSearch
+- **최신 뉴스/한국어 기술/보안** → gemini-google-search → WebSearch
 - **원문 URL/빠른 개요** → WebSearch 내장
 - **최종 fallback** → WebSearch 내장
 </code></pre>
 <p>CLAUDE.md에 이 원칙을 명시하면, Claude Code가 자동으로 용도에 맞는 도구를 선택합니다.</p>
 <h2>한계 (Limitations)</h2>
-<p>이 비교는 다음 제약 하에서 이루어졌습니다:</p>
 <ul>
-<li><strong>표본 크기</strong>: 초기 7개 + 확장 10개 = 총 17개 쿼리입니다. 경향은 파악할 수 있으나, 통계적 일반화에는 한계가 있습니다</li>
-<li><strong>단일 실행</strong>: 각 쿼리당 1회 실행입니다. 네트워크 상태, API 서버 부하 등에 따라 결과가 달라질 수 있습니다</li>
-<li><strong>속도 측정 한계</strong>: 확장 테스트에서 에이전트 내부 셸 호출 구조로 인해 정밀한 응답 시간 측정이 어려웠습니다. 속도 데이터는 초기 테스트(단독 실행) 기준을 참고하세요</li>
-<li><strong>한국어 테스트</strong>: 확장 테스트에서 한국어 쿼리를 4개(Q1, Q2, Q6, Q7)로 늘렸으나, 여전히 영어 쿼리 대비 소수입니다</li>
-<li><strong>모델 버전 의존</strong>: Perplexity <code>sonar</code>, Gemini <code>gemini-2.5-flash-lite</code>는 지속적으로 업데이트됩니다. 이 글의 결과는 2026년 3월 기준이며, 향후 모델 개선으로 순위가 바뀔 수 있습니다</li>
-<li><strong>평가 주관성</strong>: 별점은 필자의 판단에 기반합니다. 위 루브릭을 참고하되, 독자의 용도에 따라 평가가 다를 수 있습니다</li>
+<li><strong>표본 크기</strong>: 10개 쿼리(한국어 4개, 영어 6개)로 경향 파악은 가능하나 통계적 일반화에는 한계</li>
+<li><strong>단일 실행</strong>: 각 쿼리당 1회 실행. 네트워크 상태, API 서버 부하에 따라 결과가 달라질 수 있음</li>
+<li><strong>모델 버전 의존</strong>: Perplexity <code>sonar</code>, Gemini <code>gemini-2.5-flash-lite</code>는 지속 업데이트됨. 2026년 3월 기준</li>
+<li><strong>평가 주관성</strong>: 점수는 위 루브릭에 따르되, 독자의 용도에 따라 평가가 다를 수 있음</li>
 </ul>
 <h2>마치며</h2>
-<p>17개 쿼리 테스트를 통해 확인된 각 도구의 성격을 한 줄로 요약하면:</p>
+<p>10개 쿼리 테스트를 통해 확인된 각 도구의 성격:</p>
 <ul>
-<li><strong>WebSearch</strong> (평균 3.5/5): &quot;못하지만 틀리지 않는다.&quot; 실패율 0%, 가장 안정적. 추가 비용 없이 빠르게 원문 링크를 찾아주는 만능 fallback입니다.</li>
-<li><strong>Perplexity</strong> (평균 3.7/5): &quot;잘하거나 실패하거나.&quot; 잘 되면 코드 예시·표·수치까지 포함한 압도적 깊이를 보여주지만, 한국어 개발 쿼리나 최신 뉴스에서 완전 실패하는 경우가 있습니다 (실패율 30%).</li>
-<li><strong>Gemini Google Search</strong> (평균 4.2/5): &quot;고르게 잘하지만 가끔 만들어낸다.&quot; Google Search Grounding 기반으로 출처 다양성과 한국어 검색이 가장 강력하지만, 존재하지 않는 정보에 대해 hallucination 위험이 있습니다.</li>
+<li><strong>Gemini</strong> (평균 4.3/5, 실패 0건): &quot;고르게 잘한다.&quot; 실패율 0%에 평균 점수도 최고. 한국어 기술 문서, 뉴스, 보안 등 폭넓은 영역에서 안정적. 출처 URL이 리다이렉트인 점만 아쉽습니다.</li>
+<li><strong>Perplexity</strong> (평균 4.0/5, 실패 2건): &quot;잘하면 최고, 실패하면 바닥.&quot; 5점을 6번 기록하며 깊이는 압도적이지만, 최신 뉴스와 한국어 개발 쿼리에서 완전 실패하는 리스크가 있습니다.</li>
+<li><strong>WebSearch</strong> (평균 3.4/5, 실패 0건): &quot;틀리지 않는 만능 fallback.&quot; 추가 비용 없이 어디서든 3~4점을 보장하지만, 깊이 있는 조사에는 부족합니다.</li>
 </ul>
 <p>결국 하나의 최강 도구는 없습니다. MCP의 진짜 가치는 <strong>용도에 맞는 도구를 자유롭게 조합하고, 서로의 약점을 fallback으로 보완할 수 있다</strong>는 점에 있습니다. CLAUDE.md에 선택 원칙을 명시해두면, AI가 알아서 최적의 도구를 골라 씁니다.</p>
 
