@@ -220,7 +220,7 @@ xychart-beta
 
 ![WebSearch 카테고리별 평균](images/search-mcp-comparison/chart2_ws.png)
 ![Perplexity 카테고리별 평균](images/search-mcp-comparison/chart2_px.png)
-![Gemini 카테고리별 평균](images/chart2_gm.png)
+![Gemini 카테고리별 평균](images/search-mcp-comparison/chart2_gm.png)
 
 <details>
 <summary>Mermaid 소스 코드</summary>
@@ -261,7 +261,7 @@ xychart-beta
 
 ### 실패 및 오류 케이스 (확장)
 
-![도구별 실패 건수](images/chart3_failures.png)
+![도구별 실패 건수](images/search-mcp-comparison/chart3_failures.png)
 
 <details>
 <summary>Mermaid 소스 코드</summary>
