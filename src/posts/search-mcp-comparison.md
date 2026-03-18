@@ -218,21 +218,34 @@ xychart-beta
 
 ### 카테고리별 평균 품질
 
-![카테고리별 평균 품질 점수](images/chart2_category_avg.png)
-
-> 파랑: WebSearch / 주황: Perplexity / 초록: Gemini
+![WebSearch 카테고리별 평균](images/chart2_ws.png)
+![Perplexity 카테고리별 평균](images/chart2_px.png)
+![Gemini 카테고리별 평균](images/chart2_gm.png)
 
 <details>
 <summary>Mermaid 소스 코드</summary>
 
 ```mermaid
+%% WebSearch (파랑 #4A90D9)
 xychart-beta
-    title "카테고리별 평균 품질 점수"
-    x-axis ["KR 시사/과학", "KR 기술/개발", "EN 기술", "EN 뉴스", "보안", "Hallucination"]
-    y-axis "평균 점수 (5점 만점)" 0 --> 5
-    line "WebSearch" [3.0, 3.5, 3.3, 4.0, 4.0, 4.0]
-    line "Perplexity" [5.0, 2.5, 4.0, 2.0, 5.0, 3.0]
-    line "Gemini" [4.0, 5.0, 4.3, 4.0, 5.0, 2.0]
+    title "WebSearch 카테고리별 평균"
+    x-axis ["KR 시사", "KR 기술", "EN 기술", "EN 뉴스", "보안", "Anti-H"]
+    y-axis "점수" 0 --> 5
+    bar [3.0, 3.5, 3.3, 4.0, 4.0, 4.0]
+
+%% Perplexity (주황 #E8854A)
+xychart-beta
+    title "Perplexity 카테고리별 평균"
+    x-axis ["KR 시사", "KR 기술", "EN 기술", "EN 뉴스", "보안", "Anti-H"]
+    y-axis "점수" 0 --> 5
+    bar [5.0, 2.5, 4.0, 2.0, 5.0, 3.0]
+
+%% Gemini (초록 #5BB55B)
+xychart-beta
+    title "Gemini 카테고리별 평균"
+    x-axis ["KR 시사", "KR 기술", "EN 기술", "EN 뉴스", "보안", "Anti-H"]
+    y-axis "점수" 0 --> 5
+    bar [4.0, 5.0, 4.3, 4.0, 5.0, 2.0]
 ```
 
 </details>
