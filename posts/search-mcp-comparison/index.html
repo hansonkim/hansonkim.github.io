@@ -897,21 +897,20 @@
 <h2>한계 (Limitations)</h2>
 <p>이 비교는 다음 제약 하에서 이루어졌습니다:</p>
 <ul>
-<li><strong>표본 크기</strong>: 초기 7개 + 확장 10개 = 총 17개 쿼리입니다. 경향은 파악할 수 있으나, 통계적 일반화에는 한계가 있습니다</li>
-<li><strong>단일 실행</strong>: 각 쿼리당 1회 실행입니다. 네트워크 상태, API 서버 부하 등에 따라 결과가 달라질 수 있습니다</li>
-<li><strong>속도 측정 한계</strong>: 확장 테스트에서 에이전트 내부 셸 호출 구조로 인해 정밀한 응답 시간 측정이 어려웠습니다. 속도 데이터는 초기 테스트(단독 실행) 기준을 참고하세요</li>
-<li><strong>한국어 테스트</strong>: 확장 테스트에서 한국어 쿼리를 4개(Q1, Q2, Q6, Q7)로 늘렸으나, 여전히 영어 쿼리 대비 소수입니다</li>
-<li><strong>모델 버전 의존</strong>: Perplexity <code>sonar</code>, Gemini <code>gemini-2.5-flash-lite</code>는 지속적으로 업데이트됩니다. 이 글의 결과는 2026년 3월 기준이며, 향후 모델 개선으로 순위가 바뀔 수 있습니다</li>
+<li><strong>소규모 테스트</strong>: 총 7개 쿼리(한국어 1개, 영어 6개)로, 결과를 일반화하기엔 표본이 작습니다</li>
+<li><strong>단일 실행</strong>: 각 조건당 1회 실행으로 통계적 유의성이 없습니다. 네트워크 상태, API 서버 부하 등에 따라 속도는 크게 달라질 수 있습니다</li>
+<li><strong>한국어 테스트 부족</strong>: 시사 뉴스 1개만 한국어로 테스트했으므로, 한국어 검색 품질에 대한 결론은 제한적입니다</li>
+<li><strong>모델 버전 의존</strong>: Perplexity <code>sonar</code>, Gemini <code>gemini-2.5-flash-lite</code>는 지속적으로 업데이트됩니다. 이 글의 결과는 2025년 3월 기준이며, 향후 모델 개선으로 순위가 바뀔 수 있습니다</li>
 <li><strong>평가 주관성</strong>: 별점은 필자의 판단에 기반합니다. 위 루브릭을 참고하되, 독자의 용도에 따라 평가가 다를 수 있습니다</li>
 </ul>
 <h2>마치며</h2>
-<p>17개 쿼리 테스트를 통해 확인된 각 도구의 성격을 한 줄로 요약하면:</p>
+<p>하나의 검색 도구로 모든 상황을 커버하기는 어렵습니다. 세 도구는 각각 뚜렷한 강점이 있고, 상호 보완적입니다.</p>
 <ul>
-<li><strong>WebSearch</strong> (평균 3.5/5): &quot;못하지만 틀리지 않는다.&quot; 실패율 0%, 가장 안정적. 추가 비용 없이 빠르게 원문 링크를 찾아주는 만능 fallback입니다.</li>
-<li><strong>Perplexity</strong> (평균 3.7/5): &quot;잘하거나 실패하거나.&quot; 잘 되면 코드 예시·표·수치까지 포함한 압도적 깊이를 보여주지만, 한국어 개발 쿼리나 최신 뉴스에서 완전 실패하는 경우가 있습니다 (실패율 30%).</li>
-<li><strong>Gemini Google Search</strong> (평균 4.2/5): &quot;고르게 잘하지만 가끔 만들어낸다.&quot; Google Search Grounding 기반으로 출처 다양성과 한국어 검색이 가장 강력하지만, 존재하지 않는 정보에 대해 hallucination 위험이 있습니다.</li>
+<li><strong>Perplexity</strong>: 여러 소스를 합성하여 코드 예시·표·수치까지 포함한 고품질 답변을 만들어냅니다. 기술 조사의 깊이가 압도적입니다.</li>
+<li><strong>Gemini Google Search</strong>: Google Search Grounding 기반으로 출처가 가장 다양하고, 뉴스·시사 분야에서 맥락 파악 능력이 뛰어납니다.</li>
+<li><strong>WebSearch</strong>: 추가 비용 없이 빠르게 원문 링크를 찾아주는 만능 fallback입니다.</li>
 </ul>
-<p>결국 하나의 최강 도구는 없습니다. MCP의 진짜 가치는 <strong>용도에 맞는 도구를 자유롭게 조합하고, 서로의 약점을 fallback으로 보완할 수 있다</strong>는 점에 있습니다. CLAUDE.md에 선택 원칙을 명시해두면, AI가 알아서 최적의 도구를 골라 씁니다.</p>
+<p>MCP의 진짜 가치는 &quot;하나의 최강 도구&quot;가 아니라, <strong>용도에 맞는 도구를 자유롭게 조합할 수 있다</strong>는 점에 있습니다. CLAUDE.md에 선택 원칙을 명시해두면, AI가 알아서 최적의 도구를 골라 씁니다.</p>
 
     </div>
   </article>
