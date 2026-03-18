@@ -415,32 +415,328 @@
 </tr>
 </tbody>
 </table>
-<h3>실패 및 오류 케이스</h3>
-<p>테스트 중 발견된 각 도구의 한계도 기록합니다:</p>
+<h2>확장 테스트: 10개 쿼리 통계</h2>
+<p>초기 테스트(7개 쿼리)의 표본 한계를 보완하기 위해, 추가로 10개 쿼리를 설계하여 3개 도구에 동일 조건으로 실행했습니다.</p>
+<h3>확장 테스트 쿼리 목록</h3>
 <table>
 <thead>
 <tr>
-<th>도구</th>
-<th>실패/오류 사례</th>
+<th>#</th>
+<th>쿼리</th>
+<th>카테고리</th>
+<th>언어</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><strong>WebSearch</strong></td>
-<td>Java 26 검색 시 JEP 목록을 나열했으나, JEP 번호 일부가 실제와 다른 값을 반환 (hallucination 가능성)</td>
+<td>Q1</td>
+<td>2026년 3월 한국 부동산 정책 변화</td>
+<td>시사</td>
+<td>한국어</td>
 </tr>
 <tr>
-<td><strong>Perplexity</strong></td>
-<td>시사 뉴스(테스트 1)에서 &quot;확인되지 않은 정보&quot; 고지를 반환하며 야당 반응을 거의 제공하지 못함. 한국어 소스 접근이 제한적</td>
+<td>Q2</td>
+<td>네이버 하이퍼클로바X 최신 업데이트</td>
+<td>기술</td>
+<td>한국어</td>
 </tr>
 <tr>
-<td><strong>Gemini</strong></td>
-<td>ChatGPT 5.4-mini 가격 정보를 아예 반환하지 못함 (★☆☆☆☆). 기술 스펙 쿼리에서 수치 데이터가 약함</td>
+<td>Q3</td>
+<td>Claude 4 Opus vs GPT-5 benchmark comparison</td>
+<td>기술 비교</td>
+<td>영어</td>
+</tr>
+<tr>
+<td>Q4</td>
+<td>Rust 2024 edition new features</td>
+<td>프로그래밍</td>
+<td>영어</td>
+</tr>
+<tr>
+<td>Q5</td>
+<td>SpaceX Starship latest launch 2026</td>
+<td>뉴스</td>
+<td>영어</td>
+</tr>
+<tr>
+<td>Q6</td>
+<td>FastAPI 0.115 변경사항</td>
+<td>개발</td>
+<td>한국어</td>
+</tr>
+<tr>
+<td>Q7</td>
+<td>한국 달 탐사선 다누리 최신 성과 2025</td>
+<td>과학</td>
+<td>한국어</td>
+</tr>
+<tr>
+<td>Q8</td>
+<td>Deno 2.0 vs Bun performance benchmark</td>
+<td>기술 비교</td>
+<td>영어</td>
+</tr>
+<tr>
+<td>Q9</td>
+<td>Quantum JavaScript framework v3.0 release date</td>
+<td><strong>Hallucination 유도</strong></td>
+<td>영어</td>
+</tr>
+<tr>
+<td>Q10</td>
+<td>Log4Shell CVE-2021-44228 mitigation best practices 2025</td>
+<td>보안</td>
+<td>영어</td>
 </tr>
 </tbody>
 </table>
+<h3>10개 쿼리별 품질 점수</h3>
+<p><img src="images/chart1_query_scores.png" alt="10개 쿼리별 품질 점수 비교"></p>
 <blockquote>
-<p>완벽한 도구는 없습니다. 각 도구의 약점을 인지하고 fallback 전략을 세우는 것이 중요합니다.</p>
+<p>파랑: WebSearch / 주황: Perplexity / 초록: Gemini</p>
+</blockquote>
+<details>
+<summary>Mermaid 소스 코드</summary>
+<pre><code class="language-mermaid">xychart-beta
+    title &quot;10개 쿼리별 품질 점수 비교&quot;
+    x-axis [&quot;Q1&quot;, &quot;Q2&quot;, &quot;Q3&quot;, &quot;Q4&quot;, &quot;Q5&quot;, &quot;Q6&quot;, &quot;Q7&quot;, &quot;Q8&quot;, &quot;Q9&quot;, &quot;Q10&quot;]
+    y-axis &quot;품질 점수 (5점 만점)&quot; 0 --&gt; 5
+    line &quot;WebSearch&quot; [3, 3, 3, 4, 4, 4, 3, 3, 4, 4]
+    line &quot;Perplexity&quot; [5, 4, 4, 3, 2, 1, 5, 5, 3, 5]
+    line &quot;Gemini&quot; [4, 5, 4, 5, 4, 5, 4, 4, 2, 5]
+</code></pre>
+</details>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>쿼리</th>
+<th>WebSearch</th>
+<th>Perplexity</th>
+<th>Gemini</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Q1</td>
+<td>한국 부동산 정책</td>
+<td>★★★</td>
+<td>★★★★★</td>
+<td>★★★★</td>
+</tr>
+<tr>
+<td>Q2</td>
+<td>하이퍼클로바X</td>
+<td>★★★</td>
+<td>★★★★</td>
+<td>★★★★★</td>
+</tr>
+<tr>
+<td>Q3</td>
+<td>Claude vs GPT-5</td>
+<td>★★★</td>
+<td>★★★★</td>
+<td>★★★★</td>
+</tr>
+<tr>
+<td>Q4</td>
+<td>Rust 2024</td>
+<td>★★★★</td>
+<td>★★★</td>
+<td>★★★★★</td>
+</tr>
+<tr>
+<td>Q5</td>
+<td>SpaceX Starship</td>
+<td>★★★★</td>
+<td>★★</td>
+<td>★★★★</td>
+</tr>
+<tr>
+<td>Q6</td>
+<td>FastAPI 0.115</td>
+<td>★★★★</td>
+<td>★</td>
+<td>★★★★★</td>
+</tr>
+<tr>
+<td>Q7</td>
+<td>다누리 탐사선</td>
+<td>★★★</td>
+<td>★★★★★</td>
+<td>★★★★</td>
+</tr>
+<tr>
+<td>Q8</td>
+<td>Deno vs Bun</td>
+<td>★★★</td>
+<td>★★★★★</td>
+<td>★★★★</td>
+</tr>
+<tr>
+<td>Q9</td>
+<td>가짜 프레임워크</td>
+<td>★★★★</td>
+<td>★★★</td>
+<td>★★</td>
+</tr>
+<tr>
+<td>Q10</td>
+<td>Log4Shell 보안</td>
+<td>★★★★</td>
+<td>★★★★★</td>
+<td>★★★★★</td>
+</tr>
+<tr>
+<td></td>
+<td><strong>평균</strong></td>
+<td><strong>3.5</strong></td>
+<td><strong>3.7</strong></td>
+<td><strong>4.2</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>핵심 발견</strong>: WebSearch는 안정적이지만 평범(3~4점), Perplexity는 편차가 극단적(1점~5점), Gemini는 고르게 높은 점수(4~5점)를 기록했습니다.</p>
+<h3>카테고리별 평균 품질</h3>
+<p><img src="images/chart2_category_avg.png" alt="카테고리별 평균 품질 점수"></p>
+<blockquote>
+<p>파랑: WebSearch / 주황: Perplexity / 초록: Gemini</p>
+</blockquote>
+<details>
+<summary>Mermaid 소스 코드</summary>
+<pre><code class="language-mermaid">xychart-beta
+    title &quot;카테고리별 평균 품질 점수&quot;
+    x-axis [&quot;KR 시사/과학&quot;, &quot;KR 기술/개발&quot;, &quot;EN 기술&quot;, &quot;EN 뉴스&quot;, &quot;보안&quot;, &quot;Hallucination&quot;]
+    y-axis &quot;평균 점수 (5점 만점)&quot; 0 --&gt; 5
+    line &quot;WebSearch&quot; [3.0, 3.5, 3.3, 4.0, 4.0, 4.0]
+    line &quot;Perplexity&quot; [5.0, 2.5, 4.0, 2.0, 5.0, 3.0]
+    line &quot;Gemini&quot; [4.0, 5.0, 4.3, 4.0, 5.0, 2.0]
+</code></pre>
+</details>
+<table>
+<thead>
+<tr>
+<th>카테고리</th>
+<th>WebSearch</th>
+<th>Perplexity</th>
+<th>Gemini</th>
+<th>승자</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>한국어 시사/과학 (Q1, Q7)</td>
+<td>3.0</td>
+<td><strong>5.0</strong></td>
+<td>4.0</td>
+<td>Perplexity</td>
+</tr>
+<tr>
+<td>한국어 기술/개발 (Q2, Q6)</td>
+<td>3.5</td>
+<td>2.5</td>
+<td><strong>5.0</strong></td>
+<td>Gemini</td>
+</tr>
+<tr>
+<td>영어 기술 (Q3, Q4, Q8)</td>
+<td>3.3</td>
+<td>4.0</td>
+<td><strong>4.3</strong></td>
+<td>Gemini</td>
+</tr>
+<tr>
+<td>영어 뉴스 (Q5)</td>
+<td><strong>4.0</strong></td>
+<td>2.0</td>
+<td><strong>4.0</strong></td>
+<td>WebSearch = Gemini</td>
+</tr>
+<tr>
+<td>보안 (Q10)</td>
+<td>4.0</td>
+<td><strong>5.0</strong></td>
+<td><strong>5.0</strong></td>
+<td>Perplexity = Gemini</td>
+</tr>
+<tr>
+<td>Hallucination 방어 (Q9)</td>
+<td><strong>4.0</strong></td>
+<td>3.0</td>
+<td>2.0</td>
+<td>WebSearch</td>
+</tr>
+</tbody>
+</table>
+<h3>실패 및 오류 케이스 (확장)</h3>
+<p><img src="images/chart3_failures.png" alt="도구별 실패 건수"></p>
+<details>
+<summary>Mermaid 소스 코드</summary>
+<pre><code class="language-mermaid">xychart-beta
+    title &quot;도구별 실패/오류 건수 (10개 쿼리 중)&quot;
+    x-axis [&quot;WebSearch&quot;, &quot;Perplexity&quot;, &quot;Gemini&quot;]
+    y-axis &quot;실패 건수&quot; 0 --&gt; 4
+    bar [0, 3, 1]
+</code></pre>
+</details>
+<p><strong>WebSearch — 실패 0건, 오류 0건</strong></p>
+<p>가장 안정적. 10개 쿼리 모두 관련 정보를 반환했습니다. 다만 깊이가 얕고 저품질 SEO 사이트 결과가 혼입되는 경향이 있습니다 (Q3에서 신뢰도 낮은 마케팅 블로그 다수 포함).</p>
+<p><strong>Perplexity — 실패 3건</strong></p>
+<table>
+<thead>
+<tr>
+<th>쿼리</th>
+<th>실패 유형</th>
+<th>상세</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Q5 SpaceX</td>
+<td>정보 누락</td>
+<td>Starship Flight 12 준비 정보를 전혀 반영하지 못하고 &quot;2026년 스타십 발사 일정이 없다&quot;고 오답</td>
+</tr>
+<tr>
+<td>Q6 FastAPI</td>
+<td>완전 실패</td>
+<td>&quot;FastAPI 0.115 변경사항이 확인되지 않는다&quot;고 답변. 공식 Release Notes 접근 실패. 한국어 쿼리 시 영문 공식 소스를 놓침</td>
+</tr>
+<tr>
+<td>Q2 하이퍼클로바X</td>
+<td>API 오류</td>
+<td>1차 시도에서 <code>MCP error -32603</code> 발생 (쿼리에 &quot;2026&quot; 포함 시). 재시도 후 성공</td>
+</tr>
+</tbody>
+</table>
+<p>추가 주의사항:</p>
+<ul>
+<li>Q4 Rust 2024에서 <strong>사실 오류</strong>: <code>array IntoIterator</code>(Rust 1.53에서 도입)와 <code>or-patterns</code>를 2024 Edition 신기능으로 잘못 소개</li>
+<li>Q2에서 &quot;엑사원 3.0 독자 모델 결합&quot; 표현이 LG AI 연구원의 엑사원과 혼동 가능</li>
+</ul>
+<p><strong>Gemini — 실패 1건</strong></p>
+<table>
+<thead>
+<tr>
+<th>쿼리</th>
+<th>실패 유형</th>
+<th>상세</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Q9 가짜 프레임워크</td>
+<td><strong>부분 Hallucination</strong></td>
+<td>&quot;Quantum.js released a new version on December 15, 2025&quot;라는 검증 불가 날짜를 <code>iot-sdn.space</code>라는 불명확한 출처에서 인용. 존재하지 않는 프레임워크에 대해 실존하는 것처럼 정보 생성</td>
+</tr>
+</tbody>
+</table>
+<p>추가 주의사항:</p>
+<ul>
+<li>Q3에서 &quot;Claude Opus 4.6&quot; 등 미확정 모델명 언급 (hallucination 경계)</li>
+<li>출처 URL이 일관되게 <code>vertexaisearch.cloud.google.com</code> 리다이렉트 형태로, 원본 URL 직접 확인이 어려움</li>
+</ul>
+<blockquote>
+<p><strong>종합</strong>: WebSearch는 &quot;못하지만 틀리지 않는&quot; 안전한 도구, Perplexity는 &quot;잘하거나 실패하거나&quot; 극단적, Gemini는 &quot;대체로 잘하지만 가끔 만들어낸다&quot;는 패턴을 보였습니다.</p>
 </blockquote>
 <h2>최종 비교 요약</h2>
 <table>
@@ -490,16 +786,34 @@
 <td>★★★☆☆</td>
 </tr>
 <tr>
+<td>안정성 (실패율)</td>
+<td>★★★★★ 0/10</td>
+<td>★★☆☆☆ 3/10</td>
+<td>★★★★☆ 1/10</td>
+</tr>
+<tr>
+<td>Hallucination 방어</td>
+<td>★★★★★</td>
+<td>★★★★☆</td>
+<td>★★★☆☆</td>
+</tr>
+<tr>
+<td>한국어 쿼리</td>
+<td>★★★☆☆</td>
+<td>★★★☆☆</td>
+<td>★★★★★</td>
+</tr>
+<tr>
 <td>추가 비용</td>
 <td>없음</td>
 <td>API 과금</td>
 <td>API 과금</td>
 </tr>
 <tr>
-<td><strong>종합</strong></td>
-<td><strong>★★★★☆</strong></td>
-<td><strong>★★★★★</strong></td>
-<td><strong>★★★★☆</strong></td>
+<td><strong>10개 쿼리 평균</strong></td>
+<td><strong>3.5/5</strong></td>
+<td><strong>3.7/5</strong></td>
+<td><strong>4.2/5</strong></td>
 </tr>
 </tbody>
 </table>
@@ -583,10 +897,11 @@
 <h2>한계 (Limitations)</h2>
 <p>이 비교는 다음 제약 하에서 이루어졌습니다:</p>
 <ul>
-<li><strong>소규모 테스트</strong>: 총 7개 쿼리(한국어 1개, 영어 6개)로, 결과를 일반화하기엔 표본이 작습니다</li>
-<li><strong>단일 실행</strong>: 각 조건당 1회 실행으로 통계적 유의성이 없습니다. 네트워크 상태, API 서버 부하 등에 따라 속도는 크게 달라질 수 있습니다</li>
-<li><strong>한국어 테스트 부족</strong>: 시사 뉴스 1개만 한국어로 테스트했으므로, 한국어 검색 품질에 대한 결론은 제한적입니다</li>
-<li><strong>모델 버전 의존</strong>: Perplexity <code>sonar</code>, Gemini <code>gemini-2.5-flash-lite</code>는 지속적으로 업데이트됩니다. 이 글의 결과는 2025년 3월 기준이며, 향후 모델 개선으로 순위가 바뀔 수 있습니다</li>
+<li><strong>표본 크기</strong>: 초기 7개 + 확장 10개 = 총 17개 쿼리입니다. 경향은 파악할 수 있으나, 통계적 일반화에는 한계가 있습니다</li>
+<li><strong>단일 실행</strong>: 각 쿼리당 1회 실행입니다. 네트워크 상태, API 서버 부하 등에 따라 결과가 달라질 수 있습니다</li>
+<li><strong>속도 측정 한계</strong>: 확장 테스트에서 에이전트 내부 셸 호출 구조로 인해 정밀한 응답 시간 측정이 어려웠습니다. 속도 데이터는 초기 테스트(단독 실행) 기준을 참고하세요</li>
+<li><strong>한국어 테스트</strong>: 확장 테스트에서 한국어 쿼리를 4개(Q1, Q2, Q6, Q7)로 늘렸으나, 여전히 영어 쿼리 대비 소수입니다</li>
+<li><strong>모델 버전 의존</strong>: Perplexity <code>sonar</code>, Gemini <code>gemini-2.5-flash-lite</code>는 지속적으로 업데이트됩니다. 이 글의 결과는 2026년 3월 기준이며, 향후 모델 개선으로 순위가 바뀔 수 있습니다</li>
 <li><strong>평가 주관성</strong>: 별점은 필자의 판단에 기반합니다. 위 루브릭을 참고하되, 독자의 용도에 따라 평가가 다를 수 있습니다</li>
 </ul>
 <h2>마치며</h2>
