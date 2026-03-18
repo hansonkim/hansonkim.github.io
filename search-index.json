@@ -120,16 +120,16 @@
     "fullContent": "Token Tracking Status 본문으로 건너뛰기 Hanson Kim Home Blog Token Tracking Status 2024년 12월 31일 Claude-Flow 문서 AI Token 추적 구현 상태 요약 Claude API 호출에 대한 실제 token 추적 기능을 연구하고 구현했습니다. 구현은 Claude Code CLI에서 실제 token 사용량을 캡처하기 위한 인프라를 제공하지만, Claude Code가 interactive 모드에서 telemetry를 처리하는 방식으로 인한 제한사항이 있습니다. 구현된 사항 1. 연구 결과 Claude Code는 telemetry를 위한 기본 OpenTelemetry 지원 보유 Token 사용량은 CLAUDE_CODE_ENABLE_TELEMETRY=1 을 통해 추적됨 Claude는 input_tokens , output_tokens , cache_read_tokens , cache_creation_tokens 등의 metri"
   },
   {
-    "title": "Training Pipeline Real Only",
-    "url": "/posts/claude-flow-ko/ko-docs/development/training-pipeline-real-only/",
-    "description": "Claude Flow Training Pipeline은 이제 실제 코드 실행만 독점적으로 사용합니다. 시뮬레이션 모드는 없습니다 - 모든 training이 실제 코드 파일에서 실제 npm 테스트를 실행하여 진정한 학습과 개선을 제공합니다.",
-    "fullContent": "Training Pipeline Real Only 본문으로 건너뛰기 Hanson Kim Home Blog Training Pipeline Real Only 2024년 12월 31일 Claude-Flow 문서 AI Training Pipeline - 실제 코드 실행만 개요 Claude Flow Training Pipeline은 이제 실제 코드 실행만 독점적으로 사용 합니다. 시뮬레이션 모드는 없습니다 - 모든 training이 실제 코드 파일에서 실제 npm 테스트를 실행하여 진정한 학습과 개선을 제공합니다. 변경사항 이전 (v1 - 시뮬레이션 모드) Math.random() 을 사용하여 테스트 결과 시뮬레이션 실제 코드 실행 없음 현실을 반영하지 않는 인위적인 점수 무작위 데이터로부터 학습 현재 (v2 - 실제 실행만) 실제 코드로 실제 JavaScript 파일 생성 실제 npm install 및 npm test 명령어 실행 실제 Jest 테스트 실행 진정한 테스트 결과로부터 학습 "
-  },
-  {
     "title": "Training Pipeline Demo",
     "url": "/posts/claude-flow-ko/ko-docs/development/training-pipeline-demo/",
     "description": "Training Pipeline이 이제 Claude Flow에 완전히 통합되어, 시간이 지남에 따라 agent 성능을 향상시키는 실제 machine learning 기능을 제공합니다.",
     "fullContent": "Training Pipeline Demo 본문으로 건너뛰기 Hanson Kim Home Blog Training Pipeline Demo 2024년 12월 31일 Claude-Flow 문서 AI Training Pipeline Demo - Alpha 89 개요 Training Pipeline이 이제 Claude Flow에 완전히 통합되어, 시간이 지남에 따라 agent 성능을 향상시키는 실제 machine learning 기능을 제공합니다. 시연된 내용 1. 전체 Pipeline 실행 ./claude-flow train-pipeline run --complexity medium --iterations 3 결과: 27개 training 작업 실행 (3 작업 × 3 전략 × 3 반복) 3가지 전략 테스트: conservative, balanced, aggressive 최적 전략 식별: balanced , 평균 점수 89.5% 2. Agent 성능 프로필 Training 후 시스템이 학습"
+  },
+  {
+    "title": "Training Pipeline Real Only",
+    "url": "/posts/claude-flow-ko/ko-docs/development/training-pipeline-real-only/",
+    "description": "Claude Flow Training Pipeline은 이제 실제 코드 실행만 독점적으로 사용합니다. 시뮬레이션 모드는 없습니다 - 모든 training이 실제 코드 파일에서 실제 npm 테스트를 실행하여 진정한 학습과 개선을 제공합니다.",
+    "fullContent": "Training Pipeline Real Only 본문으로 건너뛰기 Hanson Kim Home Blog Training Pipeline Real Only 2024년 12월 31일 Claude-Flow 문서 AI Training Pipeline - 실제 코드 실행만 개요 Claude Flow Training Pipeline은 이제 실제 코드 실행만 독점적으로 사용 합니다. 시뮬레이션 모드는 없습니다 - 모든 training이 실제 코드 파일에서 실제 npm 테스트를 실행하여 진정한 학습과 개선을 제공합니다. 변경사항 이전 (v1 - 시뮬레이션 모드) Math.random() 을 사용하여 테스트 결과 시뮬레이션 실제 코드 실행 없음 현실을 반영하지 않는 인위적인 점수 무작위 데이터로부터 학습 현재 (v2 - 실제 실행만) 실제 코드로 실제 JavaScript 파일 생성 실제 npm install 및 npm test 명령어 실행 실제 Jest 테스트 실행 진정한 테스트 결과로부터 학습 "
   },
   {
     "title": "RIEMANN HYPOTHESIS PROOF",
@@ -588,6 +588,12 @@
     "fullContent": "VALIDATION SUMMARY 본문으로 건너뛰기 Hanson Kim Home Blog VALIDATION SUMMARY 2024년 12월 31일 Claude-Flow 문서 AI Claude-Flow v2.7.0-alpha.7 - 검증 요약 🎯 전체 상태: ✅ 프로덕션 준비 완료 날짜 : 2025-10-13 버전 : v2.7.0-alpha.7 통합 구성 : agentic-flow@1.5.12 (ESM WASM 수정) ✅ 해결된 사항 근본 원인 (v2.7.0-alpha.6) 문제 : ESM 패키지(agentic-flow@1.5.11)에서 CommonJS WASM 래퍼 사용 영향 : Cannot find module 'reasoningbank_wasm' import 오류 환경 : 모든 플랫폼(로컬, Docker, CI/CD) 해결 (v2.7.0-alpha.7) 업스트림 수정 : 순수 ESM WASM 바인딩이 포함된 agentic-flow@1.5.12 기술적 조치 : wasm-pack"
   },
   {
+    "title": "PERFORMANCE SYSTEMS STATUS",
+    "url": "/posts/claude-flow-ko/ko-docs/technical/performance/PERFORMANCE-SYSTEMS-STATUS/",
+    "description": "영향: 코드 편집 352배 빨라짐, 비용 $0, 자율 리팩터링",
+    "fullContent": "PERFORMANCE SYSTEMS STATUS 본문으로 건너뛰기 Hanson Kim Home Blog PERFORMANCE SYSTEMS STATUS 2024년 12월 31일 Claude-Flow 문서 AI Claude-Flow 성능 시스템 상태 최종 업데이트 : 2025-10-12 상태 : ReasoningBank ✅ | Agent Booster ⚠️ ✅ 완전 통합: ReasoningBank (46% 더 빠름 + 학습) 현재 보유한 항목: # ReasoningBank 통합 완료 claude-flow agent run coder &quot;Build API&quot; --enable-memory claude-flow agent memory init claude-flow agent memory status claude-flow init --env # API 키용 .env 설정 지금 즉시 누릴 수 있는 성능 향상: +26% 성공률 (70% → 88%) -25% 토큰 사용량 (비용 절감"
+  },
+  {
     "title": "HOOKS V2 MODIFICATION",
     "url": "/posts/claude-flow-ko/ko-docs/technical/fixes/HOOKS-V2-MODIFICATION/",
     "description": "Claude Flow에 Claude Code v2.0.10+의 PreToolUse 입력 수정 기능을 활용하는 세 가지 수정 훅이 추가되었습니다.",
@@ -598,11 +604,5 @@
     "url": "/posts/claude-flow-ko/ko-docs/technical/fixes/WASM-ESM-FIX-SUMMARY/",
     "description": "ReasoningBank WASM 통합은 직접 ESM import와 검증된 성능으로 완전하게 동작합니다!",
     "fullContent": "WASM ESM FIX SUMMARY 본문으로 건너뛰기 Hanson Kim Home Blog WASM ESM FIX SUMMARY 2024년 12월 31일 Claude-Flow 문서 AI ReasoningBank WASM 통합 - 완료 ✅ 상태: 프로덕션 준비 완료 버전: claude-flow@2.7.0-alpha.7 + agentic-flow@1.5.12 날짜: 2025-10-13 🎉 성공 요약 ReasoningBank WASM 통합은 직접 ESM import와 검증된 성능으로 완전하게 동작 합니다! 주요 성과 ✅ 근본 원인 파악 : ESM 패키지에서 CommonJS WASM 사용(agentic-flow@1.5.11) ✅ 업스트림 수정 적용 : 순수 ESM WASM 바인딩을 제공하는 agentic-flow@1.5.12 ✅ 통합 검증 완료 : 우회 없이 직접 import가 정상 동작 ✅ 성능 확인 완료 : 스토리지 3ms, 쿼리 &lt;1ms로 발표 수치 검증 🔍 문제 v2.7."
-  },
-  {
-    "title": "PERFORMANCE SYSTEMS STATUS",
-    "url": "/posts/claude-flow-ko/ko-docs/technical/performance/PERFORMANCE-SYSTEMS-STATUS/",
-    "description": "영향: 코드 편집 352배 빨라짐, 비용 $0, 자율 리팩터링",
-    "fullContent": "PERFORMANCE SYSTEMS STATUS 본문으로 건너뛰기 Hanson Kim Home Blog PERFORMANCE SYSTEMS STATUS 2024년 12월 31일 Claude-Flow 문서 AI Claude-Flow 성능 시스템 상태 최종 업데이트 : 2025-10-12 상태 : ReasoningBank ✅ | Agent Booster ⚠️ ✅ 완전 통합: ReasoningBank (46% 더 빠름 + 학습) 현재 보유한 항목: # ReasoningBank 통합 완료 claude-flow agent run coder &quot;Build API&quot; --enable-memory claude-flow agent memory init claude-flow agent memory status claude-flow init --env # API 키용 .env 설정 지금 즉시 누릴 수 있는 성능 향상: +26% 성공률 (70% → 88%) -25% 토큰 사용량 (비용 절감"
   }
 ]
