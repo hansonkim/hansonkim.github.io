@@ -1,7 +1,7 @@
 ---
 title: "Claude Code Hooks를 활용한 블로그 자동 배포 시스템"
 description: "블로그 포스트를 작성할 때마다 반복되는 작업들이 있습니다. Front matter 추가, 파일 복사, Git commit과 push... 이런 작업들을 자동화할 수 있다면 얼마나 좋을까요? Claude Code의 Hooks 시스템을 활용하면 이 모든 과정을 완전히..."
-date: 2025-10-15T16:30:10+09:00
+date: 2026-03-20T20:28:21+09:00
 tags:
   - posts
   - AI

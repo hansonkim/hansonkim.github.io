@@ -1,7 +1,7 @@
 ---
 title: "웹 검색 MCP 도구 비교: Perplexity vs Gemini Google Search vs WebSearch"
 description: "Claude Code에서 웹 검색이 필요할 때, 어떤 도구를 써야 할까요? 내장 WebSearch 하나로 충분할까요?"
-date: 2026-03-18T01:58:12+09:00
+date: 2026-03-20T20:28:21+09:00
 tags:
   - posts
   - AI
@@ -83,9 +83,9 @@ Claude Code에서 웹 검색이 필요할 때, 어떤 도구를 써야 할까요
 
 ### 쿼리별 품질 점수
 
-![WebSearch 품질 점수](/images/search-mcp-comparison/chart1_ws.png)
-![Perplexity 품질 점수](/images/search-mcp-comparison/chart1_px.png)
-![Gemini 품질 점수](/images/search-mcp-comparison/chart1_gm.png)
+![WebSearch 품질 점수](images/search-mcp-comparison/chart1_ws.png)
+![Perplexity 품질 점수](images/search-mcp-comparison/chart1_px.png)
+![Gemini 품질 점수](images/search-mcp-comparison/chart1_gm.png)
 
 <details>
 <summary>Mermaid 소스 코드</summary>
@@ -131,9 +131,9 @@ xychart-beta
 
 ### 카테고리별 평균 품질
 
-![WebSearch 카테고리별 평균](/images/search-mcp-comparison/chart2_ws.png)
-![Perplexity 카테고리별 평균](/images/search-mcp-comparison/chart2_px.png)
-![Gemini 카테고리별 평균](/images/search-mcp-comparison/chart2_gm.png)
+![WebSearch 카테고리별 평균](images/search-mcp-comparison/chart2_ws.png)
+![Perplexity 카테고리별 평균](images/search-mcp-comparison/chart2_px.png)
+![Gemini 카테고리별 평균](images/search-mcp-comparison/chart2_gm.png)
 
 <details>
 <summary>Mermaid 소스 코드</summary>
@@ -174,7 +174,7 @@ xychart-beta
 
 ### 실패 및 오류 케이스
 
-![도구별 실패 건수](/images/search-mcp-comparison/chart3_failures.png)
+![도구별 실패 건수](images/search-mcp-comparison/chart3_failures.png)
 
 <details>
 <summary>Mermaid 소스 코드</summary>
@@ -242,7 +242,7 @@ Q6(FastAPI)에서 Perplexity가 완전 실패한 원인을 추적하기 위해, 
 
 테스트 결과를 바탕으로 한 **용도별 최적 선택**:
 
-![도구 선택 가이드 순서도](/images/search-mcp-comparison/chart_flowchart.png)
+![도구 선택 가이드 순서도](images/search-mcp-comparison/chart_flowchart.png)
 
 <details>
 <summary>Mermaid 소스 코드</summary>
