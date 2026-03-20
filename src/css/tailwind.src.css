@@ -1,3 +1,0 @@
-@import "tailwindcss";
-@source "../../src/**/*.{njk,md,html,js}";
-@config "../../config/tailwind.config.js";

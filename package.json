@@ -1,37 +1,21 @@
 {
-  "name": "hansonkim.github.io",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "name": "astro-blog",
+  "type": "module",
+  "version": "0.0.1",
+  "engines": {
+    "node": ">=22.12.0"
+  },
   "scripts": {
-    "start": "npm run build:css && concurrently \"npm run watch:css\" \"eleventy --serve\"",
-    "build": "eleventy && npm run build:css",
-    "build:css": "postcss src/css/tailwind.src.css -o _site/css/tailwind.css --config config/postcss.config.js",
-    "watch:css": "postcss src/css/tailwind.src.css -o _site/css/tailwind.css --config config/postcss.config.js --watch",
-    "test": "echo \"No tests\" && exit 0",
-    "deploy": "npm run build && gh-pages -d _site"
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/hansonkim/hansonkim.github.io.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs",
-  "bugs": {
-    "url": "https://github.com/hansonkim/hansonkim.github.io/issues"
-  },
-  "homepage": "https://github.com/hansonkim/hansonkim.github.io#readme",
-  "devDependencies": {
-    "@11ty/eleventy": "^3.1.2",
-    "@tailwindcss/postcss": "^4.1.14",
-    "@tailwindcss/typography": "^0.5.19",
-    "autoprefixer": "^10.4.21",
-    "concurrently": "^9.2.1",
-    "gh-pages": "^6.3.0",
-    "postcss": "^8.5.6",
-    "postcss-cli": "^11.0.1",
-    "tailwindcss": "^4.1.14"
+  "dependencies": {
+    "@astrojs/mdx": "^5.0.2",
+    "@astrojs/rss": "^4.0.17",
+    "@astrojs/sitemap": "^3.7.1",
+    "astro": "^6.0.8",
+    "astro-icon": "^1.1.5"
   }
 }

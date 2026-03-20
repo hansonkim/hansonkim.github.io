@@ -1,0 +1,145 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import ScrollProgress from '../components/ScrollProgress.astro';
+import TOC from '../components/TOC.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  date: Date;
+  modified?: Date;
+  tags?: string[];
+  category?: string;
+  readingTime: string;
+  headings: { depth: number; slug: string; text: string }[];
+}
+
+const { title, description, date, modified, tags = [], category, readingTime, headings } = Astro.props;
+
+const formattedDate = date.toLocaleDateString('ko-KR', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+
+const formattedModified = modified?.toLocaleDateString('ko-KR', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+---
+
+<BaseLayout title={title} description={description}>
+  <ScrollProgress />
+  <article>
+    <div class="post-layout">
+      <div class="post-content">
+        {/* Breadcrumb */}
+        <nav class="breadcrumb" aria-label="breadcrumb" style="margin-top: 2rem;">
+          <a href="/">홈</a>
+          <span class="separator">/</span>
+          <a href="/blog">블로그</a>
+          <span class="separator">/</span>
+          <span class="current">{title}</span>
+        </nav>
+
+        {/* Title */}
+        <h1>{title}</h1>
+
+        {/* Meta */}
+        <div class="post-meta">
+          <time datetime={date.toISOString()}>{formattedDate}</time>
+          {formattedModified && (
+            <>
+              <span class="divider" />
+              <span>수정: {formattedModified}</span>
+            </>
+          )}
+          <span class="divider" />
+          <span>{readingTime}</span>
+          {category && (
+            <>
+              <span class="divider" />
+              <span>{category}</span>
+            </>
+          )}
+        </div>
+
+        {/* Tags */}
+        {tags.length > 0 && (
+          <div style="display: flex; gap: 0.35rem; margin-bottom: 2rem; flex-wrap: wrap;">
+            {tags.map((tag) => (
+              <span class="tag">{tag}</span>
+            ))}
+          </div>
+        )}
+
+        {/* Mobile TOC */}
+        <TOC headings={headings} />
+
+        {/* Content */}
+        <div class="prose">
+          <slot />
+        </div>
+      </div>
+
+      {/* Desktop Sidebar TOC */}
+      <aside class="post-sidebar">
+        <div class="toc-wrapper" style="display: block;">
+          <nav class="toc" aria-label="목차">
+            <div class="toc-title">목차</div>
+            <ul class="toc-list">
+              {headings.filter((h) => h.depth >= 2 && h.depth <= 3).map((h) => (
+                <li>
+                  <a
+                    href={`#${h.slug}`}
+                    class:list={[{ 'depth-3': h.depth === 3 }]}
+                    data-toc-link
+                  >
+                    {h.text}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        </div>
+      </aside>
+    </div>
+  </article>
+</BaseLayout>
+
+<script>
+  function initPostToc() {
+    // Scroll-synced active state for desktop sidebar TOC
+    const tocLinks = document.querySelectorAll('[data-toc-link]');
+    if (tocLinks.length === 0) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            tocLinks.forEach((link) => link.classList.remove('active'));
+            document
+              .querySelectorAll(`[data-toc-link][href="#${entry.target.id}"]`)
+              .forEach((el) => el.classList.add('active'));
+          }
+        }
+      },
+      { rootMargin: '-80px 0px -75% 0px', threshold: 0 }
+    );
+
+    const headingIds = Array.from(tocLinks).map(
+      (link) => (link as HTMLAnchorElement).getAttribute('href')?.slice(1)
+    );
+
+    headingIds.forEach((id) => {
+      if (id) {
+        const el = document.getElementById(id);
+        if (el) observer.observe(el);
+      }
+    });
+  }
+
+  initPostToc();
+  document.addEventListener('astro:after-swap', initPostToc);
+</script>

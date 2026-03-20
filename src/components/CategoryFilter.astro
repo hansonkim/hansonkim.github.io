@@ -1,0 +1,27 @@
+---
+interface Props {
+  categories: string[];
+  current: string;
+}
+
+const { categories, current } = Astro.props;
+---
+
+<div class="category-filter" id="category-filter">
+  <button
+    class:list={['category-btn', { active: current === 'all' }]}
+    data-category="all"
+    type="button"
+  >
+    전체
+  </button>
+  {categories.map((cat) => (
+    <button
+      class:list={['category-btn', { active: current === cat }]}
+      data-category={cat}
+      type="button"
+    >
+      {cat}
+    </button>
+  ))}
+</div>

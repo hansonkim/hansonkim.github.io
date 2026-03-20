@@ -1,0 +1,40 @@
+---
+interface Props {
+  title: string;
+  description: string;
+  date: Date;
+  slug: string;
+  tags?: string[];
+  category?: string;
+  readingTime?: string;
+}
+
+const { title, description, date, slug, tags = [], readingTime } = Astro.props;
+
+const formattedDate = date.toLocaleDateString('ko-KR', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+---
+
+<a href={`/blog/${slug}`} class="blog-card">
+  <h3 class="card-title">{title}</h3>
+  <p class="card-desc">{description}</p>
+  <div class="card-meta">
+    <time datetime={date.toISOString()}>{formattedDate}</time>
+    {readingTime && (
+      <>
+        <span>&middot;</span>
+        <span>{readingTime}</span>
+      </>
+    )}
+  </div>
+  {tags.length > 0 && (
+    <div class="card-tags">
+      {tags.slice(0, 3).map((tag) => (
+        <span class="tag">{tag}</span>
+      ))}
+    </div>
+  )}
+</a>
