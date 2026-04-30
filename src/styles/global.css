@@ -1,43 +1,44 @@
 /* ===== CSS Custom Properties ===== */
 :root {
-  /* Light mode (overridden by [data-theme="dark"]) */
   --bg-primary: #f8fafc;
-  --bg-secondary: #f1f5f9;
-  --bg-tertiary: #e2e8f0;
-  --text-primary: #1e293b;
-  --text-secondary: #475569;
-  --text-muted: #94a3b8;
-  --accent: #3b82f6;
-  --accent-hover: #2563eb;
-  --accent-subtle: #dbeafe;
-  --border: #e2e8f0;
-  --shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
-  --shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.1);
-  --code-bg: #1e293b;
-  --code-inline-bg: #f1f5f9;
-  --code-inline-text: #d946ef;
+  --bg-secondary: #eef2f7;
+  --bg-tertiary: #e4e9f1;
+  --text-primary: #101827;
+  --text-secondary: #4b5871;
+  --text-muted: #7b879c;
+  --accent: #e11d48;
+  --accent-hover: #be123c;
+  --accent-subtle: #ffe4ec;
+  --accent-2: #14b8a6;
+  --border: #d8dee8;
+  --shadow: 0 1px 2px rgba(15, 23, 42, 0.08);
+  --shadow-lg: 0 18px 48px rgba(15, 23, 42, 0.12);
+  --code-bg: #0f1722;
+  --code-inline-bg: #fff1f4;
+  --code-inline-text: #be123c;
   --card-bg: #ffffff;
-  --scroll-progress: #3b82f6;
+  --scroll-progress: #e11d48;
 }
 
 [data-theme="dark"] {
-  --bg-primary: #0f172a;
-  --bg-secondary: #1e293b;
-  --bg-tertiary: #334155;
-  --text-primary: #e2e8f0;
-  --text-secondary: #94a3b8;
-  --text-muted: #64748b;
-  --accent: #3b82f6;
-  --accent-hover: #60a5fa;
-  --accent-subtle: #1e3a5f;
-  --border: #334155;
-  --shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-  --shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.4);
-  --code-bg: #0d1117;
-  --code-inline-bg: #1e293b;
-  --code-inline-text: #f472b6;
-  --card-bg: #1e293b;
-  --scroll-progress: #3b82f6;
+  --bg-primary: #0b1020;
+  --bg-secondary: #111827;
+  --bg-tertiary: #1b2434;
+  --text-primary: #edf2ff;
+  --text-secondary: #aab5c8;
+  --text-muted: #748098;
+  --accent: #fb2d5f;
+  --accent-hover: #ff6d8e;
+  --accent-subtle: #361626;
+  --accent-2: #22d3c6;
+  --border: #293244;
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.34);
+  --shadow-lg: 0 22px 60px rgba(0, 0, 0, 0.44);
+  --code-bg: #080c14;
+  --code-inline-bg: #1f1b2a;
+  --code-inline-text: #ff7a9b;
+  --card-bg: #101723;
+  --scroll-progress: #fb2d5f;
 }
 
 /* ===== Reset & Base ===== */
@@ -57,7 +58,9 @@ html {
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial,
     'Noto Sans KR', sans-serif;
-  background-color: var(--bg-primary);
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--bg-secondary) 38%, transparent), transparent 420px),
+    var(--bg-primary);
   color: var(--text-primary);
   line-height: 1.7;
   transition: background-color 0.2s ease, color 0.2s ease;
@@ -101,14 +104,14 @@ p {
 
 /* ===== Layout ===== */
 .container {
-  max-width: 768px;
+  max-width: 900px;
   margin: 0 auto;
   padding: 0 1.5rem;
   width: 100%;
 }
 
 .container-wide {
-  max-width: 1200px;
+  max-width: 1480px;
   margin: 0 auto;
   padding: 0 1.5rem;
   width: 100%;
@@ -291,7 +294,7 @@ main {
   align-items: center;
   justify-content: space-between;
   height: 3.5rem;
-  max-width: 1200px;
+  max-width: 1480px;
   margin: 0 auto;
   padding: 0 1.5rem;
 }
@@ -300,7 +303,7 @@ main {
   font-size: 1.1rem;
   font-weight: 700;
   color: var(--text-primary);
-  letter-spacing: -0.02em;
+  letter-spacing: 0;
 }
 
 .site-header nav {
@@ -311,7 +314,8 @@ main {
 
 .site-header nav a {
   color: var(--text-secondary);
-  font-size: 0.9rem;
+  font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+  font-size: 0.82rem;
   font-weight: 500;
   transition: color 0.15s ease;
 }
@@ -404,12 +408,14 @@ main {
 /* ===== Tags ===== */
 .tag {
   display: inline-block;
-  padding: 0.15rem 0.6rem;
+  padding: 0.2rem 0.55rem;
   font-size: 0.75rem;
   font-weight: 500;
-  background: var(--accent-subtle);
+  font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+  background: transparent;
   color: var(--accent);
-  border-radius: 9999px;
+  border: 1px solid color-mix(in srgb, var(--accent) 60%, var(--border));
+  border-radius: 6px;
   transition: background-color 0.15s ease;
 }
 
@@ -421,10 +427,12 @@ main {
 /* ===== Blog Card ===== */
 .blog-card {
   display: block;
-  padding: 1.25rem;
+  min-height: 210px;
+  padding: 1.35rem;
   background: var(--card-bg);
   border: 1px solid var(--border);
-  border-radius: 10px;
+  border-left: 4px solid var(--accent);
+  border-radius: 8px;
   transition: box-shadow 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
 }
 
@@ -435,7 +443,7 @@ main {
 }
 
 .blog-card .card-title {
-  font-size: 1.1rem;
+  font-size: clamp(1.1rem, 1.4vw, 1.35rem);
   font-weight: 600;
   color: var(--text-primary);
   margin-bottom: 0.5rem;
@@ -458,6 +466,7 @@ main {
   align-items: center;
   gap: 0.5rem;
   font-size: 0.8rem;
+  font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
   color: var(--text-muted);
 }
 
@@ -651,22 +660,23 @@ main {
 
 /* ===== Post Layout with TOC ===== */
 .post-layout {
-  max-width: 1200px;
+  width: min(100% - 96px, 1920px);
+  max-width: none;
   margin: 0 auto;
-  padding: 0 1.5rem;
-  display: flex;
-  gap: 3rem;
+  padding: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: 4rem;
 }
 
 .post-content {
-  flex: 1;
   min-width: 0;
-  max-width: 768px;
+  max-width: none;
 }
 
 .post-sidebar {
   display: none;
-  width: 240px;
+  width: 320px;
   flex-shrink: 0;
 }
 
@@ -681,22 +691,22 @@ main {
 
 /* ===== Hero (Home) ===== */
 .hero {
-  padding: 4rem 0 3rem;
-  text-align: center;
+  padding: 5.2rem 0 3.5rem;
 }
 
 .hero h1 {
-  font-size: 2.5rem;
+  font-size: clamp(3rem, 7vw, 7rem);
   font-weight: 800;
-  letter-spacing: -0.03em;
+  letter-spacing: 0;
+  line-height: 0.95;
   margin-bottom: 1rem;
 }
 
 .hero p {
-  font-size: 1.15rem;
+  font-size: 1.08rem;
   color: var(--text-secondary);
-  max-width: 480px;
-  margin: 0 auto 2rem;
+  max-width: 620px;
+  margin: 0 0 2rem;
 }
 
 .hero-link {
@@ -717,11 +727,133 @@ main {
   color: #fff;
 }
 
+.hero-link.secondary {
+  background: transparent;
+  color: var(--accent-2);
+  border: 1px solid color-mix(in srgb, var(--accent-2) 62%, var(--border));
+}
+
+.home-shell {
+  width: min(100% - 48px, 1480px);
+  margin: 0 auto;
+}
+
+.hero .home-shell {
+  display: grid;
+  grid-template-columns: minmax(0, 1.08fr) minmax(430px, 0.82fr);
+  gap: 36px;
+  align-items: end;
+}
+
+.hero-copy {
+  min-width: 0;
+}
+
+.eyebrow {
+  margin: 0 0 14px;
+  color: var(--accent);
+  font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.release-panel {
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--card-bg);
+  box-shadow: var(--shadow-lg);
+}
+
+.terminal-bar {
+  display: flex;
+  gap: 8px;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border);
+  background: var(--code-bg);
+}
+
+.terminal-bar span {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: #ef4444;
+}
+
+.terminal-bar span:nth-child(2) {
+  background: #f59e0b;
+}
+
+.terminal-bar span:nth-child(3) {
+  background: #22c55e;
+}
+
+.command-line {
+  display: flex;
+  gap: 10px;
+  padding: 16px 18px 10px;
+  color: var(--accent);
+  font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+  font-size: 0.84rem;
+}
+
+.command-line code {
+  color: var(--text-secondary);
+}
+
+.commit-list {
+  display: grid;
+  gap: 0;
+  padding: 0 18px 18px;
+  list-style: none;
+}
+
+.commit-list li {
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.commit-list li:last-child {
+  border-bottom: none;
+}
+
+.commit-list code {
+  display: block;
+  overflow: hidden;
+  color: var(--text-primary);
+  font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+  font-size: 0.78rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.latest-section {
+  padding-bottom: 4rem;
+}
+
+.section-header {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 1.5rem;
+  border-top: 1px solid var(--border);
+  padding-top: 1.5rem;
+}
+
 /* ===== Section Title ===== */
 .section-title {
   font-size: 1.35rem;
   font-weight: 700;
-  margin-bottom: 1.5rem;
+  margin: 0;
 }
 
 /* ===== Responsive ===== */
@@ -731,6 +863,12 @@ main {
   }
 
   h1 { font-size: 2.25rem; }
+}
+
+@media (min-width: 1180px) {
+  .blog-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
 }
 
 @media (min-width: 1024px) {
@@ -744,6 +882,34 @@ main {
 
   .post-sidebar {
     display: block;
+  }
+}
+
+@media (max-width: 860px) {
+  .home-shell,
+  .hero .home-shell {
+    width: min(100% - 28px, 1480px);
+  }
+
+  .hero {
+    padding-top: 3.25rem;
+  }
+
+  .hero .home-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .release-panel {
+    max-width: 100%;
+  }
+
+  .section-header {
+    display: block;
+  }
+
+  .post-layout {
+    width: min(100% - 28px, 1920px);
+    grid-template-columns: 1fr;
   }
 }
 
