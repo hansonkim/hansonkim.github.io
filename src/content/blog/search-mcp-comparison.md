@@ -1,7 +1,7 @@
 ---
 title: "웹 검색 MCP 도구 비교: Perplexity vs Gemini Google Search vs WebSearch"
 description: "Claude Code에서 웹 검색이 필요할 때, 어떤 도구를 써야 할까요? 내장 WebSearch 하나로 충분할까요?"
-date: 2026-04-30
+date: 2026-05-06
 tags: ["posts", "AI", "개발도구", "문서화", "JavaScript"]
 category: "AI"
 ---

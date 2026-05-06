@@ -1,7 +1,7 @@
 ---
 title: "LLM ISMS-P Policy Pack을 만든 이유"
 description: "개발팀에서 Claude Code, Codex, Gemini CLI 같은 에이전트를 쓰기 시작하면 생산성은 빠르게 올라갑니다. 문제는 에이전트가 너무 자연스럽게 일을 잘한다는 데 있습니다."
-date: 2026-04-30
+date: 2026-05-06
 tags: ["posts", "AI", "개발도구", "문서화", "웹개발"]
 category: "AI"
 ---
