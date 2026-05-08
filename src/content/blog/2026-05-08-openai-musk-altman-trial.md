@@ -32,6 +32,9 @@ Musk는 그 한 단어에 빡쳐서 "구글의 정반대"를 만들기로 결심
 
 법정에 들어선 세계 최고 부자는 진술대에 앉아 자기 자신을 이렇게 묘사했다. "약 3,800만 달러를 기부할 정도로 어리석었다."[^5]
 
+![Sam Altman과 Greg Brockman이 연방법원에 도착하는 장면](/images/2026-05-08-openai-musk-altman-trial/altman-brockman-federal-court-arrival.jpg)
+*OpenAI CEO Sam Altman과 공동창업자 Greg Brockman이 연방법원에 도착하는 장면. 보도사진 캡션 기준: Karl Mondon/Getty Images, Sherwood News.[^47]*
+
 ---
 
 ## 2. 진짜 결정권자: 판사 Yvonne Gonzalez Rogers
@@ -259,3 +262,4 @@ OpenAI 측은 그녀의 증언을 통해 결정적 한 방을 노린다. Musk가
 [^44]: 판사의 "Scam Altman" 게시 자제 경고. — Al Jazeera.
 [^45]: Musk → Brockman 협박 문자(재판 이틀 전). — TheNextWeb, CNBC.
 [^46]: Samuel Handwerger(메릴랜드대) 인용: *"You cannot have your cake and eat it too… a very expensive teaching tool."* — Newswise, 2026년 5월 7일.
+[^47]: Sherwood News, *OpenAI President Greg Brockman wanted a billion dollars — now his stake is worth $30 billion*, 2026년 5월 5일. 원문 이미지 캡션: “OpenAI CEO Sam Altman and Greg Brockman, OpenAI president and co-founder, arrive at the federal ...” 및 “(Karl Mondon/Getty Images)”. 이미지 URL: https://sherwoodnews.imgix.net/mwphzyq69oso/en-US/assets/files/2273247109_openai-ceo-sam-altman-and-greg-brockman-openai-president-and-co-founder-arrive-at-the-federal.jpg
