@@ -10,15 +10,16 @@ tags:
   - AI거버넌스
   - 투자
 draft: false
-category: AI
-description: "!Musk vs Altman OpenAI 재판
-세계 최고 부자가 자신이 만든 회사를 법정에 세웠다. ⓒ Indian Express"
+description: "!OpenAI v. Musk
+세계 최고 부자가 자신이 만든 회사를 법정에 세웠다."
+category: "AI"
 modified: 2026-05-08
 ---
+
 # OpenAI의 영혼을 건 재판: 자선의 가면과 8,520억 달러의 그림자
 
-![Musk vs Altman OpenAI 재판](https://images.indianexpress.com/2025/05/elon-musk-2.jpg)
-*세계 최고 부자가 자신이 만든 회사를 법정에 세웠다. ⓒ Indian Express*
+![OpenAI v. Musk](assets/01-hero-courtroom.svg)
+*세계 최고 부자가 자신이 만든 회사를 법정에 세웠다.*
 
 ---
 
@@ -28,7 +29,7 @@ modified: 2026-05-08
 
 Musk는 그 한 단어에 빡쳐서 "구글의 정반대"를 만들기로 결심했다. 답은 자명했다. **오픈소스 비영리 연구소**. 2015년 12월, 그렇게 OpenAI가 탄생했다. Sam Altman, Greg Brockman, Ilya Sutskever와 함께. Musk는 약 3,800만 달러를 기부했다. 인류의 미래를 위해서였다.[^2]
 
-![OpenAI Logo](https://logowik.com/content/uploads/images/openai8235.logowik.com.webp)
+![OpenAI From Nonprofit to PBC](assets/02-openai-logo.svg)
 *비영리로 시작한 회사가 10년 만에 8,520억 달러 기업이 됐다.*
 
 10년이 흘렀다. 그 비영리 연구소는 ChatGPT를 만들었고, 2025년 10월 영리 법인 "OpenAI Group PBC"로 전환되며 8,520억 달러 가치를 인정받았다. Microsoft가 27%, OpenAI Foundation이 26%를 보유한다.[^3] 그리고 2026년 4월 27일, 캘리포니아 오클랜드 연방법원에 9명의 배심원이 앉았다. Musk는 OpenAI, Altman, Brockman을 상대로 1,500억 달러의 손해배상과 두 사람의 경영진 퇴출, 영리 전환의 무효화를 요구했다.[^4]
@@ -39,7 +40,7 @@ Musk는 그 한 단어에 빡쳐서 "구글의 정반대"를 만들기로 결심
 
 ## 2. 진짜 결정권자: 판사 Yvonne Gonzalez Rogers
 
-![Judge Yvonne Gonzalez Rogers](https://www.lawnext.com/wp-content/uploads/2025/05/yvonne-gonzalez-rogers.jpg)
+![Judge Yvonne Gonzalez Rogers](assets/03-judge-rogers.svg)
 *판사 Yvonne Gonzalez Rogers. Apple-Epic 사건의 그 판사다.*
 
 이 재판에서 가장 결정적인 인물은 사실 배심원이 아니다. 9명의 배심원이 내릴 평결은 **권고적(advisory) 효력**에 불과하다. 진짜 칼을 쥔 사람은 한 명, **Yvonne Gonzalez Rogers** 판사다.[^6]
@@ -48,7 +49,7 @@ Musk는 그 한 단어에 빡쳐서 "구글의 정반대"를 만들기로 결심
 
 이력은 흥미롭다. 캘리포니아 알라메다 카운티에서 변호사로 활동하다가 2008년, 공화당 슈워제네거 주지사가 민주당원이었던 그녀를 주 고등법원 판사로 임명했다. 2011년 오바마 대통령이 연방법원으로 발탁했고, 상원은 89-6으로 인준했다. 그녀는 캘리포니아 북부 연방법원의 첫 라티나(Latina) 연방판사다.[^7]
 
-![Apple Epic Games Trial](https://www.phoneworld.com.pk/wp-content/uploads/2025/06/Apple-Epic-Games.jpg)
+![Apple v Epic Games precedent](assets/04-apple-epic.svg)
 *Apple-Epic 사건의 4년에 걸친 후속 진행이 보여주는 그녀의 패턴.*
 
 Apple-Epic 사건은 그녀의 성향을 가장 잘 보여준다. 2021년 9월, 그녀는 Epic의 10개 청구 중 9개에서 Apple 손을 들어줬다. 즉 *Apple은 독점기업이 아니다*라고 단호히 결론지었다. 그러나 마지막 한 개 — **앱 외부 결제 안내 금지(anti-steering)** 조항 — 에서는 캘리포니아 부정경쟁법(Unfair Competition Law)을 적용해 Apple을 단번에 베어버렸다. 판결 분량은 185페이지. 항소심에서 뒤집히지 않도록 사실관계를 빈틈없이 쌓아 올린 명품 판결이었다.[^8]
@@ -89,12 +90,12 @@ Musk의 변호사 Steven Molo는 첫날 이렇게 정리했다. "자선단체를
 
 ## 4. Brockman의 일기장 — 도덕의 이중장부
 
-![Greg Brockman OpenAI President](https://www.deccanchronicle.com/h-upload/2024/08/06/1119024-gregbrockman.jpg)
+![Greg Brockman, OpenAI President](assets/05-greg-brockman.svg)
 *Greg Brockman. OpenAI 사장. 그의 일기장이 이번 재판의 폭탄이 됐다.*
 
 이번 재판 최대의 폭탄은 Greg Brockman의 개인 일기와 노트였다. 본인이 직접 손으로 쓴 글들이 법정에 공개됐는데, 변명이 통하지 않는 종류의 증거였다.
 
-![handwritten journal](https://i.pinimg.com/originals/e8/3d/a3/e83da3d11a8c95cf17c43ec9a87bfe14.jpg)
+![It was a lie - from the journal](assets/06-journal.svg)
 *손글씨 일기는 가장 강력한 증거가 된다. 본인 필체이기 때문이다.*
 
 **2017년 11월 6일.** Sutskever와의 아침 식사 메모: *"우리가 비영리에 헌신한다고는 말할 수 없다(cannot say that we are committed to the non-profit)."*[^19]
@@ -129,8 +130,8 @@ Brockman은 변명했다. "Shivon Zilis(이사회 멤버, Musk 자녀들의 어�
 
 ## 6. Microsoft 거래 — Musk가 부른 "미끼와 바꿔치기"
 
-![Satya Nadella Microsoft OpenAI](https://images.moneycontrol.com/static-mcnews/2024/02/Microsoft-CEO-Satya-Nadella-770x433.jpg)
-*Microsoft CEO Satya Nadella. 100억 달러 투자가 모든 것을 바꿨다.*
+![Microsoft OpenAI partnership](assets/07-satya-nadella.svg)
+*Microsoft의 100억 달러 투자가 모든 것을 바꿨다.*
 
 2022년 말, Musk는 Altman에게 텍스트 메시지를 보냈다. Microsoft가 OpenAI에 100억 달러를 투자한다는 소식을 듣고서였다. Musk는 이를 "**bait and switch(미끼 던지고 바꿔치기)**"라고 불렀다. 처음엔 비영리라며 사람들에게 돈을 받고, 갑자기 영리 거래로 갈아탔다는 비난이었다.[^25]
 
@@ -142,7 +143,7 @@ Microsoft도 피고로 추가됐다. 자선신탁 위반을 방조했다는 혐�
 
 ## 7. "Speciesist"의 반전: Musk의 화성과 Tesla
 
-![Mars city SpaceX](https://www.humanmars.net/wp-content/uploads/2018/06/spacex-mars-city.jpg)
+![Mars city, estimated cost $80B](assets/08-mars-city.svg)
 *Musk가 OpenAI 통제권을 원했던 진짜 이유 중 하나는 화성 도시 자금이었다.*
 
 Musk는 "인류를 위해 OpenAI를 만들었다"는 서사를 내세웠다. 그러나 Brockman이 진술대에 서서 그 서사에 큰 균열을 냈다.
@@ -163,12 +164,12 @@ OpenAI 측 Savitt 변호사는 Musk가 사내에서 AI 안전 담당자들을 �
 
 ## 8. 2023년 11월의 쿠데타 — 첩보 영화의 72시간
 
-![Sam Altman OpenAI fired](https://www.presidentofgalaxy.com/wp-content/uploads/2023/11/sam-altman-openai-fired-960x540.jpg)
+![November 17, 2023 - 5 days that shook AI](assets/09-altman-fired.svg)
 *2023년 11월 17일, Altman은 5일간 CEO 자리에서 쫓겨났다.*
 
 2023년 11월 17일 금요일, OpenAI 이사회가 Sam Altman을 해고했다. 그가 "이사회에 일관되게 솔직하지 않았다"는 이유였다.[^30] CTO Mira Murati가 임시 CEO가 됐다. 다음 주 수요일 Altman이 복귀했다. 무슨 일이 있었는지는 2년 동안 베일에 싸여 있었다.
 
-![Ilya Sutskever OpenAI](https://cdn.mos.cms.futurecdn.net/Z2GoYS9Bc8ASRbqpWaBxZX-1200-80.jpg)
+![Ilya Sutskever, 52-page memo](assets/10-ilya-sutskever.svg)
 *Ilya Sutskever. "최소 1년 전부터" 이 순간을 기다렸다고 증언했다.*
 
 이번 재판의 사전 증언 단계에서 공개된 **Ilya Sutskever의 365페이지 증언 녹취록**(2025년 10월 1일, 약 10시간 분량)이 그 베일을 벗겼다.
@@ -189,7 +190,7 @@ Sutskever 본인은 "그건 정말 원하지 않았다"고 증언했다. 그러�
 
 ## 9. Shivon Zilis — 가장 복잡한 증인
 
-![Shivon Zilis](https://www.dgtlinfra.com/wp-content/uploads/2022/05/Shivon-Zilis-Neuralink.jpg)
+![Shivon Zilis, board member and Musk's confidante](assets/12-shivon-zilis.svg)
 *Shivon Zilis. Musk 자녀 4명의 어머니이자, OpenAI 이사로서 Microsoft 거래에 찬성표를 던진 인물.*
 
 이 재판에서 가장 기묘한 인물은 Shivon Zilis다. 그녀는 2020~2023년 OpenAI 이사회 멤버였고, Musk의 측근이며, Musk와 사이에 네 자녀(2021년 쌍둥이 포함)를 두고 있다.[^37] 그리고 2023년 Microsoft와의 100억 달러 계약 — Musk가 "자선단체를 훔친 순간"이라 부르는 그 계약 — 에 찬성표를 던진 사람이다.
@@ -202,7 +203,7 @@ OpenAI 측은 그녀의 증언을 통해 결정적 한 방을 노린다. Musk가
 
 ## 10. 투자자에게 닿는 그림자: MSFT, ORCL, CRWV
 
-![AI Stocks Market Chart](https://www.kiplinger.com/kipimages/pages/26095.jpg)
+![MSFT, ORCL, CRWV - The OpenAI exposure](assets/11-stock-chart.svg)
 *OpenAI의 가치 평가가 흔들리면 같이 흔들리는 종목들이 있다.*
 
 이 재판이 한낱 두 거물의 자존심 싸움이 아닌 이유는, OpenAI가 이미 글로벌 자본시장의 주축이 되었기 때문이다.
