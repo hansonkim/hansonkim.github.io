@@ -1,22 +1,86 @@
 ---
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import { SITE } from '../site.config';
 import '../styles/global.css';
 
 interface Props {
   title: string;
   description?: string;
   ogImage?: string;
+  canonical?: string;
+  pageType?: 'website' | 'article';
+  publishedTime?: Date | string;
+  modifiedTime?: Date | string;
+  tags?: string[];
+  noindex?: boolean;
 }
 
 const {
   title,
-  description = "Hanson의 기술 블로그",
+  description = SITE.description,
   ogImage,
+  canonical,
+  pageType = 'website',
+  publishedTime,
+  modifiedTime,
+  tags = [],
+  noindex = false,
 } = Astro.props;
 
-const canonicalURL = new URL(Astro.url.pathname, Astro.site);
-const fullTitle = title === "Hanson's Blog" ? title : `${title} | Hanson's Blog`;
+const canonicalURL = new URL(canonical ?? Astro.url.pathname, Astro.site);
+const fullTitle = title === SITE.title ? title : `${title} | ${SITE.title}`;
+const absoluteOgImage = ogImage ? new URL(ogImage, Astro.site).toString() : undefined;
+const publishedIso = publishedTime ? new Date(publishedTime).toISOString() : undefined;
+const modifiedIso = modifiedTime ? new Date(modifiedTime).toISOString() : publishedIso;
+const ogType = pageType === 'article' ? 'article' : 'website';
+const robots = noindex ? 'noindex, nofollow' : 'index, follow, max-image-preview:large';
+const personSchema = {
+  '@type': 'Person',
+  name: SITE.author.name,
+  url: SITE.author.url,
+};
+const pageSchema = pageType === 'article'
+  ? {
+      '@type': 'BlogPosting',
+      '@id': `${canonicalURL}#article`,
+      headline: title,
+      description,
+      url: canonicalURL.toString(),
+      mainEntityOfPage: canonicalURL.toString(),
+      datePublished: publishedIso,
+      dateModified: modifiedIso,
+      author: personSchema,
+      publisher: personSchema,
+      image: absoluteOgImage ? [absoluteOgImage] : undefined,
+      keywords: tags.length > 0 ? tags.join(', ') : undefined,
+      inLanguage: SITE.language,
+    }
+  : {
+      '@type': 'WebPage',
+      '@id': `${canonicalURL}#webpage`,
+      name: fullTitle,
+      description,
+      url: canonicalURL.toString(),
+      isPartOf: { '@id': `${SITE.url}/#website` },
+      inLanguage: SITE.language,
+    };
+const schema = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'WebSite',
+      '@id': `${SITE.url}/#website`,
+      name: SITE.title,
+      description: SITE.description,
+      url: SITE.url,
+      inLanguage: SITE.language,
+      publisher: personSchema,
+    },
+    pageSchema,
+  ],
+};
+const schemaJson = JSON.stringify(schema).replace(/</g, '\\u003c');
 ---
 
 <!doctype html>
@@ -25,21 +89,35 @@ const fullTitle = title === "Hanson's Blog" ? title : `${title} | Hanson's Blog`
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="generator" content={Astro.generator} />
+    <meta name="theme-color" content="#111827" />
+    <meta name="robots" content={robots} />
+    <meta name="author" content={SITE.author.name} />
     <link rel="canonical" href={canonicalURL} />
     <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link
       rel="alternate"
       type="application/rss+xml"
-      title="Hanson's Blog"
+      title={SITE.title}
       href="/rss.xml"
     />
     <meta name="description" content={description} />
-    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={SITE.title} />
+    <meta property="og:locale" content={SITE.locale} />
+    <meta property="og:type" content={ogType} />
     <meta property="og:url" content={canonicalURL} />
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={description} />
-    {ogImage && <meta property="og:image" content={ogImage} />}
+    {absoluteOgImage && <meta property="og:image" content={absoluteOgImage} />}
+    {pageType === 'article' && publishedIso && <meta property="article:published_time" content={publishedIso} />}
+    {pageType === 'article' && modifiedIso && <meta property="article:modified_time" content={modifiedIso} />}
+    {pageType === 'article' && tags.map((tag) => <meta property="article:tag" content={tag} />)}
+    <meta name="twitter:card" content={absoluteOgImage ? 'summary_large_image' : 'summary'} />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+    {absoluteOgImage && <meta name="twitter:image" content={absoluteOgImage} />}
     <title>{fullTitle}</title>
+    <script type="application/ld+json" set:html={schemaJson} />
     <script is:inline>
       // Prevent flash of wrong theme
       (function() {

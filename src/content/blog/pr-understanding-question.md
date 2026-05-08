@@ -1,9 +1,10 @@
 ---
 title: "리뷰어가 정말 이 PR을 이해하고 승인하는가"
-description: 'PR 리뷰는 보통 "코드가 잘 짜였나"를 본다. diff를 읽고, 컨벤션을 확인하고, 의심스러운 부분에 코멘트를 단다. 이 흐름은 익숙하다.'
+description: "PR 리뷰어가 diff를 훑는 수준을 넘어 설계 의도와 실패 조건을 설명할 수 있는지 확인하는 pr-understanding-question 워크플로를 소개합니다."
 date: 2026-05-06
-tags: ["posts", "AI", "개발도구", "웹개발", "보안"]
-category: "AI"
+modified: 2026-05-08
+tags: ["posts", "AI", "개발도구", "코드리뷰", "검증"]
+category: "개발도구"
 ---
 
 # 리뷰어가 정말 이 PR을 이해하고 승인하는가

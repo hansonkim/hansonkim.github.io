@@ -10,11 +10,13 @@ interface Props {
   modified?: Date;
   tags?: string[];
   category?: string;
+  ogImage?: string;
+  canonical?: string;
   readingTime: string;
   headings: { depth: number; slug: string; text: string }[];
 }
 
-const { title, description, date, modified, tags = [], category, readingTime, headings } = Astro.props;
+const { title, description, date, modified, tags = [], category, ogImage, canonical, readingTime, headings } = Astro.props;
 
 const formattedDate = date.toLocaleDateString('ko-KR', {
   year: 'numeric',
@@ -29,7 +31,16 @@ const formattedModified = modified?.toLocaleDateString('ko-KR', {
 });
 ---
 
-<BaseLayout title={title} description={description}>
+<BaseLayout
+  title={title}
+  description={description}
+  ogImage={ogImage}
+  canonical={canonical}
+  pageType="article"
+  publishedTime={date}
+  modifiedTime={modified}
+  tags={tags}
+>
   <ScrollProgress />
   <article>
     <div class="post-layout">
