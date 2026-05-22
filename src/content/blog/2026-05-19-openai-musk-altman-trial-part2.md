@@ -20,7 +20,7 @@ modified: 2026-05-23
 ![오클랜드 연방법원, 재판이 진행된 Ronald V. Dellums 연방빌딩](/images/2026-05-19-openai-musk-altman-trial-part2/hero-verdict.jpg)
 *3주의 증언, 4년의 다툼, 11년의 균열. 그 모든 것이 1시간 53분 만에 결판났다.*
 
-> 1부에서 우리는 [판사 Yvonne Gonzalez Rogers가 어떤 사람인지](2026-05-08-openai-musk-altman-trial), 그녀의 Apple-Epic 판결 패턴이 OpenAI 재판에 어떤 함의를 던지는지 살펴봤다. 그러나 그녀는 이번에는 *"Cook chose poorly"* 같은 한 줄을 남기지 않았다. 대신 평결은 본안에 들어가기도 전에 끝났다. Musk 본인은 그것을 *"달력상의 트집"*이라 불렀다.
+> 1부에서 우리는 [판사 Yvonne Gonzalez Rogers가 어떤 사람인지](/blog/2026-05-08-openai-musk-altman-trial/), 그녀의 Apple-Epic 판결 패턴이 OpenAI 재판에 어떤 함의를 던지는지 살펴봤다. 그러나 그녀는 이번에는 *"Cook chose poorly"* 같은 한 줄을 남기지 않았다. 대신 평결은 본안에 들어가기도 전에 끝났다. Musk 본인은 그것을 *"달력상의 트집"*이라 불렀다.
 
 ---
 
