@@ -208,7 +208,7 @@ OpenAI 측은 그녀의 증언을 통해 결정적 한 방을 노린다. Musk가
 
 메릴랜드 대학 회계학 강사 Samuel Handwerger는 이렇게 정리했다. *"케이크는 자선단체의 것이고, 그 케이크를 먹는 것도 자선단체의 것이다. 케이크를 두 번 먹을 수는 없다."*[^46] 비슷한 자선 구조를 가진 모든 단체 — 대학, 푸드뱅크, 박물관 — 가 이 판결을 지켜보고 있다는 뜻이다. Levine이 2년 전에 던졌던 비영리 거버넌스의 본질적 모순이 이제는 가장 비싼 법정에서 답을 찾고 있다.
 
-판사 Yvonne Gonzalez Rogers는 Apple에 *"Cook chose poorly(Cook의 선택은 잘못된 것이었다)"*라는 한 줄을 남겼다. 만약 그녀가 이번 재판에서 비슷한 한 줄을 남긴다면, 그 문장은 어쩌면 이렇게 읽힐 수도 있다. *"Altman chose poorly."* 또는 *"Musk chose poorly."* 어느 쪽이 됐든, 미국 비영리 법제와 빅테크 거버넌스의 풍경은 그날부로 달라진다.
+판사 Yvonne Gonzalez Rogers는 Apple에 *"Cook chose poorly(Cook의 선택은 잘못된 것이었다)"*라는 한 줄을 남겼다. 만약 그녀가 이번 재판에서 비슷한 한 줄을 남긴다면, 그 문장은 어쩌면 이렇게 읽힐 수도 있다. *"Altman chose poorly."* (Altman의 선택은 잘못된 것이었다) 또는 *"Musk chose poorly."* (Musk의 선택은 잘못된 것이었다) 어느 쪽이 됐든, 미국 비영리 법제와 빅테크 거버넌스의 풍경은 그날부로 달라진다.
 
 판결이 어느 쪽으로 나든 한 가지는 분명하다. 이 재판은 이미 ***"매우 비싼 교육 도구"***가 되었다.[^46]
 
@@ -220,11 +220,11 @@ OpenAI 측은 그녀의 증언을 통해 결정적 한 방을 노린다. Musk가
 [^2]: OpenAI는 2015년 12월 비영리로 설립. Musk의 약 3,800만 달러 기부는 Musk 측 소장의 핵심 사실 진술.
 [^3]: 2025년 10월 OpenAI Group PBC 재편 시 가치 8,520억 달러, OpenAI Foundation 26%, Microsoft 27% 보유. — TheNextWeb, 2026년 5월 4일 보도. <https://thenextweb.com/news/musk-loses-openai-lawsuit-altman-jury-verdict>
 [^4]: 2026년 4월 27일 9인 배심원 선정. Musk는 1,500억 달러 손해배상, Altman·Brockman 퇴출, 2025년 10월 영리 전환 무효화 청구. — Prism News, Betanews 보도. <https://www.cnbc.com/2026/04/27/musk-altman-trial-openai-jury-selection.html>
-[^5]: Musk 진술. *"foolish enough to donate roughly $38 million."* — Newswise(메릴랜드대 Handwerger 인터뷰 정리), 2026년 5월 7일. <https://www.newswise.com/articles/musk-openai-trial-puts-nonprofit-law-in-the-spotlight>
+[^5]: Musk 진술. *"foolish enough to donate roughly $38 million."* (약 3,800만 달러를 기부할 만큼 멍청했다) — Newswise(메릴랜드대 Handwerger 인터뷰 정리), 2026년 5월 7일. <https://www.newswise.com/articles/musk-openai-trial-puts-nonprofit-law-in-the-spotlight>
 [^6]: 배심원 평결의 권고적(advisory) 성격. — Fortune, Jeremy Kahn 분석, 2026년 5월 5일. <https://fortune.com/2026/05/05/musk-court-fight-openai/>
 [^7]: Yvonne Gonzalez Rogers 이력: 2008년 슈워제네거 주지사 임명, 2011년 오바마 대통령 연방법원 임명, 상원 89-6 인준, 캘리포니아 북부 연방법원 첫 라티나 판사. — Wikipedia, 인준 기록. <https://en.wikipedia.org/wiki/Yvonne_Gonzalez_Rogers>
 [^8]: Apple-Epic 2021년 9월 판결: 10개 청구 중 9개 Apple 승소, anti-steering 1개에서 캘리포니아 부정경쟁법 위반. 판결문 185페이지. — Wikipedia(Epic Games v. Apple), MacStories 분석. <https://en.wikipedia.org/wiki/Epic_Games_v._Apple>
-[^9]: 2025년 4월 30일 후속 판결. *"Cook chose poorly."* — Daring Fireball 원문 발췌, CNBC. <https://daringfireball.net/2025/04/gonzales_rogers_apple_app_store_ruling>
+[^9]: 2025년 4월 30일 후속 판결. *"Cook chose poorly."* (Cook의 선택은 잘못된 것이었다) — Daring Fireball 원문 발췌, CNBC. <https://daringfireball.net/2025/04/gonzales_rogers_apple_app_store_ruling>
 [^10]: Apple과 부사장 Alex Roman을 미 연방검사에 형사 법정모욕 수사 회부. — MacRumors, Above the Law, 2025년 5월 1일. <https://www.macrumors.com/2025/05/01/apple-vp-criminal-contempt-outright-lies-epic-case/>
 [^11]: 2026년 5월 대법관 Elena Kagan, Apple의 긴급 정지 신청을 1시간 내 단독 기각. — TheNextWeb, Thurrott. <https://www.thurrott.com/apple/335741/u-s-supreme-court-rejects-apple-emergency-stay-in-epic-games-case>
 [^12]: 26개 청구 중 2개(자선신탁 위반, 부당이득)만 잔존. — CNBC, 2026년 4월 28일 재판 첫날 보도. <https://www.cnbc.com/2026/04/28/openai-trial-elon-musk-sam-altman-live-updates.html>
@@ -232,34 +232,34 @@ OpenAI 측은 그녀의 증언을 통해 결정적 한 방을 노린다. Musk가
 [^14]: Apple-Epic 판결문 인용: *"success is not illegal."* — CNBC, 2021년 9월 10일. <https://www.cnbc.com/2021/09/10/epic-games-v-apple-judge-reaches-decision-.html>
 [^15]: 자선신탁 성립 여부가 사건의 핵심. — Fortune, Jeremy Kahn 분석. <https://fortune.com/2026/05/05/musk-court-fight-openai/>
 [^16]: 판사 Gonzalez Rogers의 사전 발언: *"이건 AI의 안전성에 관한 재판이 아닙니다."* — ABC7 San Francisco. <https://abc7news.com/live-updates/elon-musk-sam-altman-live-updates-week-1-trial-could-alter-direction-artificial-intelligence/18968485/>
-[^17]: Musk 첫날 증언: *"If we make it OK to loot a charity, the entire foundation of charitable giving in America will be destroyed."* — Al Jazeera, 2026년 4월 28일. <https://www.aljazeera.com/economy/2026/4/28/musk-testifies-at-openai-trial-its-not-ok-to-loot-a-charity>
+[^17]: Musk 첫날 증언: *"If we make it OK to loot a charity, the entire foundation of charitable giving in America will be destroyed."* (자선단체를 약탈하는 것이 용인된다면, 미국 자선 기부의 근간 전체가 무너질 것이다) — Al Jazeera, 2026년 4월 28일. <https://www.aljazeera.com/economy/2026/4/28/musk-testifies-at-openai-trial-its-not-ok-to-loot-a-charity>
 [^18]: OpenAI 측 William Savitt 변호사 모두진술. — CNBC 및 Newswise. <https://www.cnbc.com/2026/04/28/openai-trial-elon-musk-sam-altman-live-updates.html>
 [^19]: Brockman의 2017년 11월 6일 일기. — Sherwood News, 2026년 5월 5일. <https://sherwood.news/tech/openais-president-greg-brockman-wanted-a-billion-dollars-now-his-stake-is-worth-30-billion/>
 [^20]: Brockman의 2018년 8월 21일 일기. — Sherwood News(법정 공개 기록). <https://sherwood.news/tech/openais-president-greg-brockman-wanted-a-billion-dollars-now-his-stake-is-worth-30-billion/>
 [^21]: 2014년 Brockman → Marissa Mayer 이메일. Molo의 반대심문 인용. — Sherwood News, Courthouse News, DNYUZ, Betanews. <https://courthousenews.com/openai-president-testifies-in-musk-altman-feud/>
-[^22]: Sherwood News 법정 참관 기자의 직접 관찰. *"I glanced over to Altman to see his reaction — he was pulling his blazer up over part of his face."* <https://sherwood.news/tech/openais-president-greg-brockman-wanted-a-billion-dollars-now-his-stake-is-worth-30-billion/>
+[^22]: Sherwood News 법정 참관 기자의 직접 관찰. *"I glanced over to Altman to see his reaction — he was pulling his blazer up over part of his face."* (Altman의 반응을 보려고 옆을 흘끔 봤더니, 그는 재킷을 끌어올려 얼굴 일부를 가리고 있었다) <https://sherwood.news/tech/openais-president-greg-brockman-wanted-a-billion-dollars-now-his-stake-is-worth-30-billion/>
 [^23]: Brockman의 CoreWeave, Helion Energy 지분 및 OpenAI 거래 — Sherwood News, Courthouse News. <https://courthousenews.com/openai-president-testifies-in-musk-altman-feud/>
 [^24]: Brockman의 외부 발언("도덕적 우위") vs 내부 일기. — Courthouse News. <https://courthousenews.com/openai-president-testifies-in-musk-altman-feud/>
-[^25]: Musk의 "bait and switch" 텍스트 메시지, Altman의 *"I agree this feels bad"* 답변, Musk의 "뇌물 같았다" 발언. — Reuters/Investing.com, U.S. News, 2026년 5월 1일. <https://www.usnews.com/news/top-news/articles/2026-05-01/key-takeaways-from-musks-testimony-at-openai-trial>
+[^25]: Musk의 "bait and switch" 텍스트 메시지, Altman의 *"I agree this feels bad"* (기분이 나쁘다는 데 동의한다) 답변, Musk의 "뇌물 같았다" 발언. — Reuters/Investing.com, U.S. News, 2026년 5월 1일. <https://www.usnews.com/news/top-news/articles/2026-05-01/key-takeaways-from-musks-testimony-at-openai-trial>
 [^26]: Microsoft 측 Russell Cohen 변호사 진술. — CNBC, 2026년 4월 28일. <https://www.cnbc.com/2026/04/28/openai-trial-elon-musk-sam-altman-live-updates.html>
 [^27]: Brockman의 반대 심문 폭로. — CNBC, 2026년 5월 5일자 Brockman 증언 기사. <https://www.cnbc.com/2026/05/05/open-ai-altman-musk-trial-brockman-testimony.html>
 [^28]: Musk가 xAI의 OpenAI 모델 사용을 인정. — MIT Technology Review, 2026년 5월 1일. <https://www.technologyreview.com/2026/05/01/1136800/musk-v-altman-week-1-musk-says-he-was-duped-warns-ai-could-kill-us-all-and-admits-that-xai-distills-openais-models/>
 [^29]: Savitt의 모두진술 인용. — Al Jazeera, 2026년 4월 28일. <https://www.aljazeera.com/economy/2026/4/28/musk-testifies-at-openai-trial-its-not-ok-to-loot-a-charity>
-[^30]: 2023년 11월 17일 OpenAI 이사회 성명: *"not consistently candid with the board."* — Prism News. <https://www.prismnews.com/news/sutskever-says-he-gathered-evidence-for-year-to-oust-altman>
+[^30]: 2023년 11월 17일 OpenAI 이사회 성명: *"not consistently candid with the board."* (이사회와의 의사소통에서 일관되게 솔직하지 않았다) — Prism News. <https://www.prismnews.com/news/sutskever-says-he-gathered-evidence-for-year-to-oust-altman>
 [^31]: Sutskever의 52페이지 메모, 첫 단어 "Lying", "사라지는 이메일" 사용. — Decrypt, 2025년 11월 4일자 Sutskever 증언 녹취록 분석. <https://decrypt.co/347349/inside-deposition-showed-openai-nearly-destroyed-itself>
 [^32]: Murati의 Slack/HR 기록 일부가 메모 근거. — The New Yorker 조사 보도(Storyboard18 인용). <https://www.storyboard18.com/trending/why-was-openai-chief-sam-altman-fired-in-2023-report-mentions-sociopath-label-lying-allegations-94620.htm>
-[^33]: Sutskever 직접 증언. *"At least a year… that the majority of the board is not obviously friendly with Sam."* — The Neuron, Decrypt. <https://decrypt.co/347349/inside-deposition-showed-openai-nearly-destroyed-itself>
+[^33]: Sutskever 직접 증언. *"At least a year… that the majority of the board is not obviously friendly with Sam."* (적어도 1년은… 이사회 과반이 Sam에게 명백히 우호적이지 않다는 것을) — The Neuron, Decrypt. <https://decrypt.co/347349/inside-deposition-showed-openai-nearly-destroyed-itself>
 [^34]: Helen Toner의 발언 *"OpenAI를 파괴하는 것도 회사의 안전 미션과 일치할 수 있다."* — Decrypt. <https://decrypt.co/347349/inside-deposition-showed-openai-nearly-destroyed-itself>
-[^35]: Sutskever 직원 반응 오판: *"astounded… I had not expected them to feel strongly either way."* — Decrypt. <https://decrypt.co/347349/inside-deposition-showed-openai-nearly-destroyed-itself>
+[^35]: Sutskever 직원 반응 오판: *"astounded… I had not expected them to feel strongly either way."* (충격이었다… 직원들이 어느 쪽으로든 강한 감정을 가질 거라고 예상하지 못했다) — Decrypt. <https://decrypt.co/347349/inside-deposition-showed-openai-nearly-destroyed-itself>
 [^36]: Matt Levine, *Money Stuff* (Bloomberg), 2023년 11월. — Mutual Fund Observer 인용. <https://www.bloomberg.com/opinion/articles/2023-11-21/openai-is-a-strange-nonprofit>
 [^37]: Shivon Zilis와 Musk 사이 네 자녀, 2021년 쌍둥이 포함. — ABC7 San Francisco. <https://abc7news.com/live-updates/elon-musk-sam-altman-live-updates-trial-enters-2nd-week-focus-shifting-openai-president-greg-brockman/19036397/>
-[^38]: Zilis 증언. *"Do you prefer I stay close and friendly to keep information flowing or begin to disassociate?"* — ABC7 San Francisco. <https://abc7news.com/live-updates/elon-musk-sam-altman-live-updates-trial-enters-2nd-week-focus-shifting-openai-president-greg-brockman/19036397/>
-[^39]: Musk가 OpenAI 영리 자회사 설립을 알고 있었고 투자 검토. *"supportive in spirit."* — ABC7 San Francisco, OpenAI 측 반대 심문. <https://abc7news.com/live-updates/elon-musk-sam-altman-live-updates-trial-enters-2nd-week-focus-shifting-openai-president-greg-brockman/19036397/>
+[^38]: Zilis 증언. *"Do you prefer I stay close and friendly to keep information flowing or begin to disassociate?"* (제가 가까이 친한 척하며 정보를 흘려드리는 게 좋을까요, 아니면 거리를 두기 시작할까요?) — ABC7 San Francisco. <https://abc7news.com/live-updates/elon-musk-sam-altman-live-updates-trial-enters-2nd-week-focus-shifting-openai-president-greg-brockman/19036397/>
+[^39]: Musk가 OpenAI 영리 자회사 설립을 알고 있었고 투자 검토. *"supportive in spirit."* (정신적으로는 지지한다) — ABC7 San Francisco, OpenAI 측 반대 심문. <https://abc7news.com/live-updates/elon-musk-sam-altman-live-updates-trial-enters-2nd-week-focus-shifting-openai-president-greg-brockman/19036397/>
 [^40]: Microsoft 27% 지분, 피고 지위. — TheNextWeb, CNBC. <https://thenextweb.com/news/musk-loses-openai-lawsuit-altman-jury-verdict>
 [^41]: Brockman의 CoreWeave 지분과 OpenAI 거래의 이해상충. — Sherwood News, Courthouse News. <https://sherwood.news/tech/openais-president-greg-brockman-wanted-a-billion-dollars-now-his-stake-is-worth-30-billion/>
 [^42]: Brockman의 IPO 가능성 인정. 사우디 아람코 290억 달러 기록 비교. — Betanews, DNYUZ. <https://betanews.com/article/openai-brockman-30b-stake-musk-trial/>
 [^43]: Fortune, 2026년 5월 5일. Jeremy Kahn의 *"more heat than light"* 비평. <https://fortune.com/2026/05/05/musk-court-fight-openai/>
 [^44]: 판사의 "Scam Altman" 게시 자제 경고. — Al Jazeera. <https://www.aljazeera.com/economy/2026/4/28/musk-testifies-at-openai-trial-its-not-ok-to-loot-a-charity>
 [^45]: Musk → Brockman 협박 문자(재판 이틀 전). — TheNextWeb, CNBC. <https://thenextweb.com/news/openai-trial-brockman-journals-nonprofit-settlement>
-[^46]: Samuel Handwerger(메릴랜드대) 인용: *"You cannot have your cake and eat it too… a very expensive teaching tool."* — Newswise, 2026년 5월 7일. <https://www.newswise.com/articles/musk-openai-trial-puts-nonprofit-law-in-the-spotlight>
+[^46]: Samuel Handwerger(메릴랜드대) 인용: *"You cannot have your cake and eat it too… a very expensive teaching tool."* (케이크를 갖고 있으면서 먹을 수는 없다… 매우 비싼 교육 도구다) — Newswise, 2026년 5월 7일. <https://www.newswise.com/articles/musk-openai-trial-puts-nonprofit-law-in-the-spotlight>
 [^47]: Sherwood News, *OpenAI President Greg Brockman wanted a billion dollars — now his stake is worth $30 billion*, 2026년 5월 5일. 원문 이미지 캡션: “OpenAI CEO Sam Altman and Greg Brockman, OpenAI president and co-founder, arrive at the federal ...” 및 “(Karl Mondon/Getty Images)”. 이미지 URL: https://sherwoodnews.imgix.net/mwphzyq69oso/en-US/assets/files/2273247109_openai-ceo-sam-altman-and-greg-brockman-openai-president-and-co-founder-arrive-at-the-federal.jpg

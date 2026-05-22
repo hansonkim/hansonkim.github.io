@@ -20,7 +20,7 @@ modified: 2026-05-23
 ![오클랜드 연방법원, 재판이 진행된 Ronald V. Dellums 연방빌딩](/images/2026-05-19-openai-musk-altman-trial-part2/hero-verdict.jpg)
 *3주의 증언, 4년의 다툼, 11년의 균열. 그 모든 것이 1시간 53분 만에 결판났다.*
 
-> 1부에서 우리는 [판사 Yvonne Gonzalez Rogers가 어떤 사람인지](/blog/2026-05-08-openai-musk-altman-trial/), 그녀의 Apple-Epic 판결 패턴이 OpenAI 재판에 어떤 함의를 던지는지 살펴봤다. 그러나 그녀는 이번에는 *"Cook chose poorly"* 같은 한 줄을 남기지 않았다. 대신 평결은 본안에 들어가기도 전에 끝났다. Musk 본인은 그것을 *"달력상의 트집"*이라 불렀다.
+> 1부에서 우리는 [판사 Yvonne Gonzalez Rogers가 어떤 사람인지](/blog/2026-05-08-openai-musk-altman-trial/), 그녀의 Apple-Epic 판결 패턴이 OpenAI 재판에 어떤 함의를 던지는지 살펴봤다. 그러나 그녀는 이번에는 *"Cook chose poorly"* (Cook의 선택은 잘못된 것이었다) 같은 한 줄을 남기지 않았다. 대신 평결은 본안에 들어가기도 전에 끝났다. Musk 본인은 그것을 *"달력상의 트집"*이라 불렀다.
 
 ---
 
@@ -31,6 +31,8 @@ modified: 2026-05-23
 오전 10시 23분. 법정 직원 Edwin Cuenco가 판사석에 다가가 쪽지를 건넸다. 판사는 잠시 침묵한 뒤 짧게 말했다.
 
 > ***"We have a verdict."***
+>
+> *(평결이 나왔다.)*
 
 구제 심리가 그 자리에서 중단됐다. 평의 개시 1시간 53분 만이었다.[^1]
 
@@ -44,7 +46,9 @@ modified: 2026-05-23
 
 Musk의 변호인 Steven Molo는 곧바로 일어섰다.
 
-> *"With all due respect to the court, we will immediately pursue an appeal."*[^4]
+> *"With all due respect to the court, we will immediately pursue an appeal."*
+>
+> *(법원에 모든 존중을 담아 말씀드리지만, 즉각 항소에 착수하겠다.)*[^4]
 
 판사는 회의적이었다. 시효 판단은 **사실 문제(question of fact)**이고, 사실 문제에 대한 배심의 만장일치 판단을 항소심이 뒤집는 경우는 매우 드물다. 그녀는 이 점을 법정에서 직접 시사했다.[^5]
 
@@ -112,7 +116,9 @@ Musk의 첫 소송은 언제 제기됐는가? **2024년 2월** 캘리포니아 �
 
 OpenAI 측 변호인 William Savitt이 모두진술에서 한 말의 진짜 무게는 그때 드러났다.
 
-> *"He waited too long to sue."*[^12]
+> *"He waited too long to sue."*
+>
+> *(그는 너무 늦게 소송을 걸었다.)*[^12]
 
 1부에서 우리가 Altman의 신뢰성 공방, Brockman의 일기, Sutskever의 52페이지 메모에 시선이 쏠렸을 때, OpenAI는 이미 다른 무기를 갈고 있었다. *"그가 너무 늦게 왔다."* — 본안에는 들어가지도 않을 무기였다.
 
@@ -260,8 +266,10 @@ Musk가 평결 후 X에 적은 *"calendar technicality"* — 달력상의 트집
 판사 Gonzalez Rogers는 결국 *"Cook chose poorly"* 같은 한 줄을 남기지 않았다. 그러나 그녀가 본안에 들어가지 않은 채로 종결시킨 평결문 자체가 다른 종류의 한 줄을 남겼다.
 
 > ***"He waited too long."***
+>
+> *(그는 너무 늦게 왔다.)*
 
-11년 전 한 단어 *"Speciesist"*에 빡쳐서 OpenAI를 만든 사람의 11년이, 결국 또 다른 한 단어 *"Late"*로 마무리됐다. 그의 인생에서 가장 비싼 어휘 두 개였을지 모른다.
+11년 전 한 단어 *"Speciesist"* (종차별주의자)에 빡쳐서 OpenAI를 만든 사람의 11년이, 결국 또 다른 한 단어 *"Late"* (늦었다)로 마무리됐다. 그의 인생에서 가장 비싼 어휘 두 개였을지 모른다.
 
 ![Musk의 11년을 인과의 사슬로 시각화한 다이어그램](/images/2026-05-19-openai-musk-altman-trial-part2/musk-causal-chain.png)
 *다섯 개의 선택, 다섯 개의 결과. Musk의 11년은 본인이 만든 시효의 절벽으로 향하는 직선이었다.*
@@ -316,7 +324,7 @@ OpenAI는 평결로 영리 전환을 지켰지만, 그 회사의 도덕적 토�
 
 ### 주석
 
-[^1]: 평결 시점과 흐름. *"We have a verdict."* — CNBC, Reuters, NPR 2026년 5월 18일 보도. 평의 개시 오전 8:30, 평결 도달 10:23. Gonzalez Rogers 판사가 같은 시간 다른 법정에서 구제 단계 심리 중단. https://www.cnbc.com/2026/05/18/musk-altman-openai-trial-verdict.html https://www.npr.org/2026/05/18/nx-s1-5822366/musk-altman-openai-jury-verdict-claims-dismissed
+[^1]: 평결 시점과 흐름. *"We have a verdict."* (평결이 나왔다) — CNBC, Reuters, NPR 2026년 5월 18일 보도. 평의 개시 오전 8:30, 평결 도달 10:23. Gonzalez Rogers 판사가 같은 시간 다른 법정에서 구제 단계 심리 중단. https://www.cnbc.com/2026/05/18/musk-altman-openai-trial-verdict.html https://www.npr.org/2026/05/18/nx-s1-5822366/musk-altman-openai-jury-verdict-claims-dismissed
 
 [^2]: 9인 배심 만장일치, 두 청구 모두 소멸시효 도과로 기각. — CNBC 평결 당일 속보, Courthouse News. https://www.cnbc.com/2026/05/18/musk-altman-openai-trial-verdict.html
 
