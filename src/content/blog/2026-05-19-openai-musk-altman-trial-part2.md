@@ -10,14 +10,14 @@ tags:
   - AI거버넌스
   - 투자
 draft: false
-description: "!오클랜드 연방법원 외경, 평결 발표 직후
+description: "!오클랜드 연방법원, 재판이 진행된 Ronald V. Dellums 연방빌딩
 3주의 증언, 4년의 다툼, 11년의 균열. 그 모든 것이 1시간 53분 만에 결판났다."
 category: "AI"
 modified: 2026-05-22
 ---
 # OpenAI의 영혼을 건 재판 (2부): 1시간 53분, 그리고 달력의 트집
 
-![오클랜드 연방법원 외경, 평결 발표 직후](/images/2026-05-19-openai-musk-altman-trial-part2/hero-verdict.png)
+![오클랜드 연방법원, 재판이 진행된 Ronald V. Dellums 연방빌딩](/images/2026-05-19-openai-musk-altman-trial-part2/hero-verdict.jpg)
 *3주의 증언, 4년의 다툼, 11년의 균열. 그 모든 것이 1시간 53분 만에 결판났다.*
 
 > 1부에서 우리는 [판사 Yvonne Gonzalez Rogers가 어떤 사람인지](2026-05-08-openai-musk-altman-trial), 그녀의 Apple-Epic 판결 패턴이 OpenAI 재판에 어떤 함의를 던지는지 살펴봤다. 그러나 그녀는 이번에는 *"Cook chose poorly"* 같은 한 줄을 남기지 않았다. 대신 평결은 본안에 들어가기도 전에 끝났다. Musk 본인은 그것을 *"달력상의 트집"*이라 불렀다.
@@ -50,8 +50,8 @@ Musk의 변호인 Steven Molo는 곧바로 일어섰다.
 
 법정을 나서는 OpenAI 변호인단은 서로 등을 두드렸다. 누군가는 짧게 포옹했다. 법정 밖 보도에는 반-AI 시위대 6명이 피켓을 들고 있었다. 그날 Musk는 법정에 없었다. Trump 대통령과 함께 중국 출장 중이었다.[^6]
 
-![법정에서 평결을 듣는 알트만과 브로크먼의 안도하는 모습](/images/2026-05-19-openai-musk-altman-trial-part2/courtroom-verdict-relief.png)
-*변호인단의 안도와 시위대의 분노가 같은 보도 위에서 공존했다.*
+![Sam Altman](/images/2026-05-19-openai-musk-altman-trial-part2/courtroom-verdict-relief.jpg)
+*Altman은 11년 전 Napa 디너에서 시작된 회사를 결국 지켜냈다. 본안 판단 없이.*
 
 ---
 
@@ -136,7 +136,7 @@ Musk 본인이 5년 전에 적어둔 한 문장. 그게 9인 배심을 1시간 5
 
 자선법 변호사들 사이에 도는 격언이 있다. *"의뢰인의 트위터 계정은 가장 위험한 증거 보관소다."* Musk는 그 격언의 살아있는 사례가 됐다.
 
-![Musk의 2020년 트윗을 법정 증거 슬라이드로 재구성한 이미지](/images/2026-05-19-openai-musk-altman-trial-part2/musk-tweet-evidence.png)
+![Musk의 2020년 9월 트윗과 그 법적 함의](/images/2026-05-19-openai-musk-altman-trial-part2/musk-tweet-evidence.png)
 *Musk의 5년 전 트윗 한 줄이 배심 평결의 결정적 증거가 됐다.*
 
 ---
@@ -289,6 +289,15 @@ OpenAI는 평결로 영리 전환을 지켰지만, 그 회사의 도덕적 토�
 다음 1년의 진짜 드라마는 OpenAI IPO다. Musk의 항소는 9th Circuit에서 천천히 흐를 것이고, 그동안 Altman은 1조 달러 평가의 자본시장 진입을 추진할 것이다. 만약 IPO가 성공한다면, OpenAI는 *"자선의 옷을 입고 시작해 1조 달러 상장사로 끝낸"* 미국 역사상 가장 거대한 거버넌스 전환의 완성형이 된다. 그 전환의 정당성에 대한 법적 판단은 결국 이뤄지지 않는다.
 
 그러니까 진짜 질문은 이제 이것이다. *"미국 자선법은 이 사건에서 무엇을 배웠는가?"* 캘리포니아 주 법무부가 자선신탁 시효의 발견주의 도입을 검토 중이라는 소식은 그 자체로 한 답이다. 다른 답은 다음 10년의 빅테크 거버넌스 설계가 보여줄 것이다. 다음 비영리 AI 연구소를 시작하는 누군가는, 2026년 5월의 이 1시간 53분을 매우 자세히 들여다보고 있을 것이 분명하다.
+
+---
+
+### 이미지 출처
+
+- **Hero**: Ronald V. Dellums Federal Building, Oakland — V Smoothe, CC BY 2.0 / Wikimedia Commons
+- **§1 Sam Altman 사진**: TechCrunch Disrupt SF 2019 — TechCrunch, CC BY 2.0 / Wikimedia Commons
+- **§4 Elon Musk 사진**: 공식 포트레이트 (Royal Society 컬렉션) — Debbie Rowe, CC BY-SA 3.0 / Wikimedia Commons. 트윗 인용은 X 공개 게시물(2020.09).
+- **§10 인과 사슬 다이어그램**: 본 글을 위해 직접 제작
 
 ---
 
