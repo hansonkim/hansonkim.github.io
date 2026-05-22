@@ -316,49 +316,49 @@ OpenAI는 평결로 영리 전환을 지켰지만, 그 회사의 도덕적 토�
 
 ### 주석
 
-[^1]: 평결 시점과 흐름. *"We have a verdict."* — CNBC, Reuters, NPR 2026년 5월 18일 보도. 평의 개시 오전 8:30, 평결 도달 10:23. Gonzalez Rogers 판사가 같은 시간 다른 법정에서 구제 단계 심리 중단.
+[^1]: 평결 시점과 흐름. *"We have a verdict."* — CNBC, Reuters, NPR 2026년 5월 18일 보도. 평의 개시 오전 8:30, 평결 도달 10:23. Gonzalez Rogers 판사가 같은 시간 다른 법정에서 구제 단계 심리 중단. https://www.cnbc.com/2026/05/18/musk-altman-openai-trial-verdict.html https://www.npr.org/2026/05/18/nx-s1-5822366/musk-altman-openai-jury-verdict-claims-dismissed
 
-[^2]: 9인 배심 만장일치, 두 청구 모두 소멸시효 도과로 기각. — CNBC 평결 당일 속보, Courthouse News.
+[^2]: 9인 배심 만장일치, 두 청구 모두 소멸시효 도과로 기각. — CNBC 평결 당일 속보, Courthouse News. https://www.cnbc.com/2026/05/18/musk-altman-openai-trial-verdict.html
 
-[^3]: 판사의 평결 채택 발언. — Reuters, NPR 인용.
+[^3]: 판사의 평결 채택 발언. — Reuters, NPR 인용. https://www.npr.org/2026/05/18/nx-s1-5822366/musk-altman-openai-jury-verdict-claims-dismissed
 
-[^4]: Molo의 즉시 항소 선언. — CNBC 법정 속보.
+[^4]: Molo의 즉시 항소 선언. — CNBC 법정 속보. https://www.cnbc.com/2026/05/18/musk-altman-openai-trial-verdict.html
 
 [^5]: 판사의 항소 회의적 시사. *"시효는 사실 문제이므로 항소 검토가 매우 좁다."* — Courthouse News 분석.
 
-[^6]: 변호인단의 자축 묘사, 시위대 6명, Musk의 중국 출장 부재. — Sherwood News 법정 참관, CNBC.
+[^6]: 변호인단의 자축 묘사, 시위대 6명, Musk의 중국 출장 부재. — Sherwood News 법정 참관, CNBC. https://sherwood.news/business/jury-rules-against-musk-in-lawsuit-against-openai-and-altman/ https://www.cnbc.com/2026/05/18/musk-altman-openai-trial-verdict.html
 
-[^7]: Musk 측 자진 취하 신청서 인용. — PACER Dkt. 485 (2026년 4월 24일 제출). CourtListener 도켓.
+[^7]: Musk 측 자진 취하 신청서 인용. — PACER Dkt. 485 (2026년 4월 24일 제출). CourtListener 도켓. https://storage.courtlistener.com/recap/gov.uscourts.cand.433688/gov.uscourts.cand.433688.485.0_1.pdf https://www.courtlistener.com/docket/69013420/musk-v-altman/
 
 [^8]: 발견주의(discovery rule) 및 적극적 은폐(fraudulent concealment) 항변의 법리. — *Agency Holding Corp. v. Malley-Duff* (US 1987), *Rotella v. Wood* (US 2000). 캘리포니아 민사법 §338.
 
 [^9]: Musk–Altman "bait and switch" 문자, 2023년 1월. 1부 §6 참조. — Musk 측 소장 첨부.
 
-[^10]: OpenAI LP 설립(2019.03), Microsoft 첫 10억 달러 투자(2019.07). — OpenAI 공식 블로그, Microsoft 보도자료.
+[^10]: OpenAI LP 설립(2019.03), Microsoft 첫 10억 달러 투자(2019.07). — OpenAI 공식 블로그, Microsoft 보도자료. https://techcrunch.com/2019/07/22/microsoft-invests-1-billion-in-openai-in-new-multiyear-partnership/
 
-[^11]: Musk 첫 제소(2024.02 캘리포니아 주법원), 자진 취하 후 연방 재제소(2024.08). — CourtListener 도켓 4:24-cv-04722.
+[^11]: Musk 첫 제소(2024.02 캘리포니아 주법원), 자진 취하 후 연방 재제소(2024.08). — CourtListener 도켓 4:24-cv-04722. https://www.courtlistener.com/docket/69013420/musk-v-altman/
 
-[^12]: Savitt의 모두진술. — CNBC, 2026년 4월 28일 모두진술 보도.
+[^12]: Savitt의 모두진술. — CNBC, 2026년 4월 28일 모두진술 보도. https://www.cnbc.com/2026/04/28/openai-trial-elon-musk-sam-altman-live-updates.html
 
 [^13]: Musk의 2020년 9월 트윗 (Twitter, 현 X). 원문: *"OpenAI should be more open imo. … OpenAI is essentially captured by Microsoft."* — 평결 당시 양측 모두 인용.
 
-[^14]: Microsoft 측 Cohen 변호인의 모두진술. — Reuters, 2026년 4월 28일.
+[^14]: Microsoft 측 Cohen 변호인의 모두진술. — Reuters, 2026년 4월 28일. https://www.cnbc.com/2026/04/28/openai-trial-elon-musk-sam-altman-live-updates.html
 
-[^15]: Microsoft-OpenAI 계약 개정 발표, 2026년 4월 27일. — Microsoft 보도자료, OpenAI 블로그 동시 발표.
+[^15]: Microsoft-OpenAI 계약 개정 발표, 2026년 4월 27일. — Microsoft 보도자료, OpenAI 블로그 동시 발표. https://blogs.microsoft.com/blog/2026/04/27/the-next-phase-of-the-microsoft-openai-partnership/ https://openai.com/index/next-phase-of-microsoft-partnership/
 
-[^16]: Cohen의 "real-time facts" 모두진술 인용 및 판사의 허용. — Courthouse News, 2026년 4월 28일.
+[^16]: Cohen의 "real-time facts" 모두진술 인용 및 판사의 허용. — Courthouse News, 2026년 4월 28일. https://www.cnbc.com/2026/04/28/openai-trial-elon-musk-sam-altman-live-updates.html
 
-[^17]: OpenAI IPO 추진, 사우디 아람코 290억 달러 기록 비교. 1부 §10 참조. — Betanews, DNYUZ.
+[^17]: OpenAI IPO 추진, 사우디 아람코 290억 달러 기록 비교. 1부 §10 참조. — Betanews, DNYUZ. https://betanews.com/article/altman-musk-openai-trial-testimony/ https://dnyuz.com/2026/05/04/5-things-you-missed-as-greg-brockman-took-the-stand-at-the-openai-trial/
 
-[^18]: Musk의 평결 후 X 게시물 2건. — X 공개 게시물, 2026년 5월 18일.
+[^18]: Musk의 평결 후 X 게시물 2건. — X 공개 게시물, 2026년 5월 18일. https://www.cnbc.com/2026/05/18/musk-altman-openai-trial-verdict.html
 
-[^19]: Savitt의 평결 직후 기자 브리핑. — CNBC.
+[^19]: Savitt의 평결 직후 기자 브리핑. — CNBC. https://www.cnbc.com/2026/05/18/musk-altman-openai-trial-verdict.html
 
-[^20]: Samuel Handwerger 인용. 1부 §11 참조. — Newswise, 2026년 5월 7일.
+[^20]: Samuel Handwerger 인용. 1부 §11 참조. — Newswise, 2026년 5월 7일. https://www.newswise.com/articles/musk-openai-trial-puts-nonprofit-law-in-the-spotlight
 
-[^21]: Apple-Epic 사건의 9th Circuit, 대법원 검토 통과. 1부 §2 참조. — TheNextWeb, Thurrott.
+[^21]: Apple-Epic 사건의 9th Circuit, 대법원 검토 통과. 1부 §2 참조. — TheNextWeb, Thurrott. https://thenextweb.com/news/supreme-court-apple-epic-contempt-stay-denial https://www.thurrott.com/apple/335741/u-s-supreme-court-rejects-apple-emergency-stay-in-epic-games-case
 
-[^22]: Musk 측 자진 취하 신청서의 명시적 사유. — PACER Dkt. 485.
+[^22]: Musk 측 자진 취하 신청서의 명시적 사유. — PACER Dkt. 485. https://storage.courtlistener.com/recap/gov.uscourts.cand.433688/gov.uscourts.cand.433688.485.0_1.pdf
 
 [^23]: Handwerger 평결 후 코멘트. — Newswise 후속 인터뷰, 2026년 5월 19일.
 
@@ -368,4 +368,4 @@ OpenAI는 평결로 영리 전환을 지켰지만, 그 회사의 도덕적 토�
 
 [^26]: OpenAI IPO 평가가치 1조 달러 추정. — Bloomberg, *Financial Times*.
 
-[^27]: Musk의 xAI/Grok 학습 출처 인정. 1부 §7 참조. — MIT Technology Review.
+[^27]: Musk의 xAI/Grok 학습 출처 인정. 1부 §7 참조. — MIT Technology Review. https://www.technologyreview.com/2026/05/01/1136800/musk-v-altman-week-1-musk-says-he-was-duped-warns-ai-could-kill-us-all-and-admits-that-xai-distills-openais-models/
