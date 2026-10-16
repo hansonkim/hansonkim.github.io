@@ -86,6 +86,14 @@ const schemaJson = JSON.stringify(schema).replace(/</g, '\\u003c');
 <!doctype html>
 <html lang="ko" data-theme="dark">
   <head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-79GWVQ2WYD"></script>
+    <script is:inline>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-79GWVQ2WYD');
+    </script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="generator" content={Astro.generator} />
